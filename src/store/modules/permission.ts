@@ -1,22 +1,15 @@
-import { RouteRecordRaw } from "vue-router";
-import { defineStore } from "pinia";
-import { asyncRoutes, constantRoutes } from "@/router";
-import { store } from "@/store";
+import { PermissionState } from './types';
+import { RouteRecordRaw } from 'vue-router';
+import { defineStore } from 'pinia';
+import { constantRoutes, asyncRoutes } from '@/router';
+import { listRoutes } from '@/api/system/menu';
 
-const modules = import.meta.glob("../../views/**/**.vue");
-const Layout = () => import("@/layout/index.vue");
+const modules = import.meta.glob('../../views/**/**.vue');
+export const Layout = () => import('@/layout/index.vue');
 
-/**
- * Use meta.role to determine if the current user has permission
- *
- * @param roles 用户角色集合
- * @param route 路由
- * @returns
- */
 const hasPermission = (roles: string[], route: RouteRecordRaw) => {
   if (route.meta && route.meta.roles) {
-    // 角色【超级管理员】拥有所有权限，忽略校验
-    if (roles.includes("ROOT")) {
+    if (roles.includes('ROOT')) {
       return true;
     }
     return roles.some((role) => {
@@ -28,76 +21,42 @@ const hasPermission = (roles: string[], route: RouteRecordRaw) => {
   return false;
 };
 
-/**
- * 递归过滤有权限的异步(动态)路由
- *
- * @param routes 接口返回的异步(动态)路由
- * @param roles 用户角色集合
- * @returns 返回用户有权限的异步(动态)路由
- */
-const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
-  const asyncRoutes: RouteRecordRaw[] = [];
-
+export const filterAsyncRoutes = (
+  routes: RouteRecordRaw[],
+  roles: string[]
+) => {
+  const res: RouteRecordRaw[] = [];
   routes.forEach((route) => {
-    const tmpRoute = { ...route }; // ES6扩展运算符复制新对象
-
-    // 判断用户(角色)是否有该路由的访问权限
-    if (hasPermission(roles, tmpRoute)) {
-      if (tmpRoute.component?.toString() == "Layout") {
-        tmpRoute.component = Layout;
-        console.log();
-      } else {
-        const component = modules[`../../views/${tmpRoute.component}.vue`];
-        if (component) {
-          tmpRoute.component = component;
-        } else {
-          tmpRoute.component = modules[`../../views/error-page/404.vue`];
-        }
+    const tmp = { ...route } as any;
+    if (hasPermission(roles, tmp)) {
+      res.push(tmp);
+      if (tmp.children) {
+        tmp.children = filterAsyncRoutes(tmp.children, roles);
       }
-
-      if (tmpRoute.children) {
-        tmpRoute.children = filterAsyncRoutes(tmpRoute.children, roles);
-      }
-
-      asyncRoutes.push(tmpRoute);
     }
   });
-
-  return asyncRoutes;
+  return res;
 };
 
-// setup
-export const usePermissionStore = defineStore("permission", () => {
-  // state
-  const routes = ref<RouteRecordRaw[]>([]);
-
-  // actions
-  function setRoutes(newRoutes: RouteRecordRaw[]) {
-    routes.value = constantRoutes.concat(newRoutes);
-  }
-  /**
-   * 生成动态路由
-   *
-   * @param roles 用户角色集合
-   * @returns
-   */
-  function generateRoutes(roles: string[]) {
-    return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      let accessedRoutes: RouteRecordRaw[]
-      // if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes ?? []
-      // } else {
-      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      // }
-      // 404 page must be placed at the end !!!
-      setRoutes(accessedRoutes)
-      resolve(accessedRoutes)
-    });
-  }
-  return { routes, setRoutes, generateRoutes };
+const usePermissionStore = defineStore({
+  id: 'permission',
+  state: (): PermissionState => ({
+    routes: [],
+    addRoutes: [],
+  }),
+  actions: {
+    setRoutes(routes: RouteRecordRaw[]) {
+      this.addRoutes = routes;
+      this.routes = constantRoutes.concat(routes);
+    },
+    generateRoutes(roles: string[]) {
+      return new Promise((resolve, reject) => {
+        const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
+        this.setRoutes(accessedRoutes);
+        resolve(accessedRoutes);
+      });
+    },
+  },
 });
 
-// 非setup
-export function usePermissionStoreHook() {
-  return usePermissionStore(store);
-}
+export default usePermissionStore;

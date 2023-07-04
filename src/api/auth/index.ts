@@ -1,45 +1,39 @@
-import request from "@/utils/request";
-import { AxiosPromise } from "axios";
-import { CaptchaResult, LoginData, LoginResult } from "./types";
+import request from '@/utils/request';
+import { AxiosPromise } from 'axios';
+import { LoginForm, LoginResult, VerifyCode } from './types';
 
 /**
- * 登录API
  *
- * @param data {LoginData}
+ * @param data {LoginForm}
  * @returns
  */
-export function loginApi(data: LoginData): AxiosPromise<LoginResult> {
-  const formData = new FormData();
-  formData.append("username", data.username);
-  formData.append("password", data.password);
-  formData.append("verifyCodeKey", data.verifyCodeKey || "");
-  formData.append("verifyCode", data.verifyCode || "");
+export function loginApi(data: LoginForm): AxiosPromise<LoginResult> {
   return request({
-    url: "/api/v1/auth/login",
-    method: "post",
-    data: formData,
+    url: '/youlai-auth/oauth/token',
+    method: 'post',
+    params: data,
     headers: {
-      "Content-Type": "multipart/form-data",
+      Authorization: 'Basic bWFsbC1hZG1pbjoxMjM0NTY=', // 客户端信息Base64明文：mall-admin:123456
     },
   });
 }
 
 /**
- * 注销API
+ * 注销
  */
 export function logoutApi() {
   return request({
-    url: "/api/v1/auth/logout",
-    method: "delete",
+    url: '/youlai-auth/oauth/logout',
+    method: 'delete',
   });
 }
 
 /**
- * 获取验证码
+ * 获取图片验证码
  */
-export function getCaptchaApi(): AxiosPromise<CaptchaResult> {
+export function getCaptcha(): AxiosPromise<VerifyCode> {
   return request({
-    url: "/api/v1/auth/captcha",
-    method: "get",
+    url: '/captcha?t=' + new Date().getTime().toString(),
+    method: 'get',
   });
 }

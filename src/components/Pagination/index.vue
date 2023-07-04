@@ -1,9 +1,9 @@
 <template>
-  <div :class="'pagination ' + { hidden: hidden }">
+  <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
+      :background="background"
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
-      :background="background"
       :layout="layout"
       :page-sizes="pageSizes"
       :total="total"
@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue";
-import { scrollTo } from "@/utils/scroll-to";
+import { computed, PropType } from 'vue';
+import { scrollTo } from '@/utils/scroll-to';
 
 const props = defineProps({
   total: {
@@ -39,7 +39,7 @@ const props = defineProps({
   },
   layout: {
     type: String,
-    default: "total, sizes, prev, pager, next, jumper",
+    default: 'total, sizes, prev, pager, next, jumper',
   },
   background: {
     type: Boolean,
@@ -55,14 +55,26 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["pagination", "update:page", "update:limit"]);
+const emit = defineEmits(['update:page', 'update:limit', 'pagination']);
 
-const currentPage = useVModel(props, "page", emit);
+const currentPage = computed<number | undefined>({
+  get: () => props.page,
+  set: (value) => {
+    emit('update:page', value);
+  },
+});
 
-const pageSize = useVModel(props, "limit", emit);
+const pageSize = computed<number | undefined>({
+  get() {
+    return props.limit;
+  },
+  set(val) {
+    emit('update:limit', val);
+  },
+});
 
 function handleSizeChange(val: number) {
-  emit("pagination", { page: currentPage, limit: val });
+  emit('pagination', { page: currentPage, limit: val });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
@@ -70,19 +82,20 @@ function handleSizeChange(val: number) {
 
 function handleCurrentChange(val: number) {
   currentPage.value = val;
-  emit("pagination", { page: val, limit: props.limit });
+  emit('pagination', { page: val, limit: props.limit });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.pagination {
-  padding: 12px;
+<style scoped>
+.pagination-container {
+  background: #fff;
+  padding: 32px 16px;
+}
 
-  &.hidden {
-    display: none;
-  }
+.pagination-container.hidden {
+  display: none;
 }
 </style>

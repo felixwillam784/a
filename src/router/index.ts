@@ -1,512 +1,619 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import useStore from '@/store';
 
-export const Layout = () => import("@/layout/index.vue");
+export const Layout = () => import('@/layout/index.vue');
 
+// 参数说明: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
 // 静态路由
-export const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes: Array<RouteRecordRaw> = [
   {
-    path: "/redirect",
+    path: '/redirect',
     component: Layout,
     meta: { hidden: true },
     children: [
       {
-        path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index.vue"),
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index.vue'),
       },
     ],
   },
-
   {
-    path: "/login",
-    component: () => import("@/views/login/index.vue"),
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
+    meta: { hidden: true },
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404.vue'),
     meta: { hidden: true },
   },
 
   {
-    path: "/",
+    path: '/',
     component: Layout,
-    redirect: "/dashboard",
+    redirect: '/dashboard',
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        name: "Dashboard",
-        meta: { title: "dashboard", icon: "homepage", affix: true },
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'homepage', affix: true },
       },
       {
-        path: "401",
-        component: () => import("@/views/error-page/401.vue"),
+        path: '401',
+        component: () => import('@/views/error-page/401.vue'),
         meta: { hidden: true },
-      },
-      {
-        path: "404",
-        component: () => import("@/views/error-page/404.vue"),
-        meta: { hidden: true },
-      },
+      }
     ],
   },
 ];
 
-export const asyncRoutes: RouteRecordRaw[] = [
+export const asyncRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/permission',
+    path: "/data/analysis",
     component: Layout,
-    redirect: '/permission/page',
-    name: 'Permission',
+    redirect: "/user/new",
     meta: {
-      hidden: false,
+      title: "data_analysis",
       icon: "system",
-      keepAlive: true,
+      hidden: false,
+      alwaysShow: true,
       roles: ["ADMIN"],
-      title: "数据分析",
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "user/new",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "New User",
         meta: {
-          title: '新增用户',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "新增用户",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "user/active",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Active User",
         meta: {
-          title: '活跃用户'
-          // if do not set roles, means: this page does not require permission
+          title: "活跃用户",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role.vue'),
-        name: '付费率',
+        path: "pay/rate",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Pay Rate",
         meta: {
-          title: '付费率',
-          roles: ['admin']
+          title: "付费率",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户留存',
+        path: "user/retention",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "User Retention",
         meta: {
-          title: '用户留存'
-          // if do not set roles, means: this page does not require permission
+          title: "用户留存",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户习惯',
+        path: "customer/habbit",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Customer Habbit",
         meta: {
-          title: '用户习惯'
-          // if do not set roles, means: this page does not require permission
+          title: "用户习惯",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '游戏报表',
+        path: "game/report",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Game Report",
         meta: {
-          title: '游戏报表'
-          // if do not set roles, means: this page does not require permission
+          title: "游戏报表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '平台报表',
+        path: "platform/report",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Platform Report",
         meta: {
-          title: '平台报表'
-          // if do not set roles, means: this page does not require permission
+          title: "平台报表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活动报表',
+        path: "activity/statement",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Activity Statement",
         meta: {
-          title: '活动报表'
-          // if do not set roles, means: this page does not require permission
+          title: "活动报表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '提充报表',
+        path: "withdrawal/report",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Withdrawal Report",
         meta: {
-          title: '提充报表'
-          // if do not set roles, means: this page does not require permission
+          title: "提充报表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '数据总表',
+        path: "data/summary",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Data Summary",
         meta: {
-          title: '数据总表'
-          // if do not set roles, means: this page does not require permission
+          title: "数据总表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '数据总表',
+        path: "pool/report",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Prize Pool Report",
         meta: {
-          title: '数据总表'
-          // if do not set roles, means: this page does not require permission
+          title: "奖池报表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/player/management",
     component: Layout,
-    redirect: '/permission/page',
-    name: 'Permission',
+    redirect: "/user/list",
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "玩家管理",
+      icon: "system",
+      hidden: false,
+      alwaysShow: true,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "user/list",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "User List",
         meta: {
-          title: '用户列表',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "用户列表",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "user/flow",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "User Flow",
         meta: {
-          title: '用户流水'
-          // if do not set roles, means: this page does not require permission
+          title: "用户流水",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role.vue'),
-        name: '付费率',
+        path: "vip/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "VIP Management",
         meta: {
-          title: 'VIP管理',
-          roles: ['admin']
+          title: "VIP管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户留存',
+        path: "agent/mangement",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Agent Management",
         meta: {
-          title: '代理管理'
-          // if do not set roles, means: this page does not require permission
+          title: "代理管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户习惯',
+        path: "gift/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Gift Management",
         meta: {
-          title: '赠送管理'
-          // if do not set roles, means: this page does not require permission
+          title: "赠送管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '预警管理',
+        path: "warning/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Early Warning Managment",
         meta: {
-          title: '预警管理'
-          // if do not set roles, means: this page does not require permission
+          title: "预警管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '平台报表',
+        path: "information/push",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Information Push",
         meta: {
-          title: '信息推送'
-          // if do not set roles, means: this page does not require permission
+          title: "信息推送",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/webpage/management",
     component: Layout,
-    redirect: '/permission/page',
-    name: '1',
+    redirect: "/top/management",
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "网页管理",
+      icon: "system",
+      hidden: false,
+      alwaysShow: true,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "top/management",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "Top Management",
         meta: {
-          title: '顶部管理',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "顶部管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "sidebar/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Sidebar Management",
         meta: {
-          title: '侧边栏管理'
-          // if do not set roles, means: this page does not require permission
+          title: "侧边栏管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role.vue'),
-        name: '付费率',
+        path: "pop-up/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Popup Management",
         meta: {
-          title: '弹窗管理',
-          roles: ['admin']
+          title: "弹窗管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户留存',
+        path: "tag/mangement",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Tag Management",
         meta: {
-          title: '标签管理'
-          // if do not set roles, means: this page does not require permission
+          title: "标签管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户习惯',
+        path: "service/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Customer Service Management",
         meta: {
-          title: '客服管理'
-          // if do not set roles, means: this page does not require permission
+          title: "客服管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/withdrawal/management",
     component: Layout,
-    redirect: '/permission/page',
-    name: '2',
+    redirect: "/cash/review",
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "提充管理",
+      icon: "system",
+      hidden: false,
+      alwaysShow: true,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "cash/review",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "Cash Withdrawal Review",
         meta: {
-          title: '提现审核',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "提现审核",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "withdrawal/ban",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Withdrawal Ban",
         meta: {
-          title: '提现封禁'
-          // if do not set roles, means: this page does not require permission
+          title: "提现封禁",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role.vue'),
-        name: '付费率',
+        path: "blacklist",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Black List",
         meta: {
-          title: '黑名单',
-          roles: ['admin']
+          title: "黑名单",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户留存',
+        path: "cash/channel",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Cash Withdrawal Channel",
         meta: {
-          title: '提现渠道'
-          // if do not set roles, means: this page does not require permission
+          title: "提现渠道",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户习惯',
+        path: "recharge/configuration",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Recharge Configuration",
         meta: {
-          title: '充值配置'
-          // if do not set roles, means: this page does not require permission
+          title: "充值配置",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '用户习惯',
+        path: "payment/configuration",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "payment Configuration",
         meta: {
-          title: '支付配置'
-          // if do not set roles, means: this page does not require permission
+          title: "支付配置",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/event/management",
     component: Layout,
-    redirect: '/permission/page',
-    name: '3',
+    redirect: "/top/management",
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "活动管理",
+      icon: "system",
+      hidden: false,
+      alwaysShow: true,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "activity/configuration",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "Check-in Activity Configuration",
         meta: {
-          title: '签到活动配置',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "签到活动配置",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "financial/configuration",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Financial Management Activity Configuration",
         meta: {
-          title: '理财活动配置'
-          // if do not set roles, means: this page does not require permission
+          title: "理财活动配置",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/game/management",
     component: Layout,
-    redirect: '/permission/page',
-    name: '44',
+    redirect: "",
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "游戏管理",
+      icon: "system",
+      hidden: false,
+      alwaysShow: true,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "Game Management",
         meta: {
-          title: '游戏管理',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "游戏管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "bet/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Bet Management",
         meta: {
-          title: '下注管理'
-          // if do not set roles, means: this page does not require permission
+          title: "下注管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "pool/management",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Pool Management",
         meta: {
-          title: '奖池管理'
-          // if do not set roles, means: this page does not require permission
+          title: "奖池管理",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive.vue'),
-        name: '活跃用户',
+        path: "robot/configuration",
+        component: () => import('@/views/system/role/index.vue'),
+        name: "Robot Configuration",
         meta: {
-          title: '机器人配置'
-          // if do not set roles, means: this page does not require permission
+          title: "机器人配置",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/thirdparty",
     component: Layout,
-    redirect: '/permission/page',
-    name: '5',
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "第三方管理",
+      icon: "system",
+      hidden: false,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "management",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "ThirdParty Management",
         meta: {
-          title: '第三方管理',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "第三方管理",
+          icon: "system",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
   {
-    path: '/permission',
+    path: "/authority",
     component: Layout,
-    redirect: '/permission/page',
-    name: '6',
     meta: {
-      hidden: false,
-      icon: "system",
-      keepAlive: true,
-      roles: ["ADMIN"],
       title: "权限管理",
+      icon: "system",
+      hidden: false,
+      roles: ["ADMIN"],
+      keepAlive: true
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page.vue'),
-        name: 'PagePermission',
+        path: "management",
+        component: () => import('@/views/system/user/index.vue'),
+        name: "Authority Management",
         meta: {
-          title: '权限管理',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: "权限管理",
+          icon: "system",
+          hidden: false,
+          alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
         }
       },
     ]
   },
-  { path: '/:pathMatch(.*)', redirect: '/404' }
 ]
 
-/**
- * 创建路由
- */
+// 创建路由
 const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoutes as RouteRecordRaw[],
@@ -514,11 +621,15 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
 
-/**
- * 重置路由
- */
+// 重置路由
 export function resetRouter() {
-  router.replace({ path: "/login" });
+  const { permission } = useStore();
+  permission.routes.forEach((route) => {
+    const name = route.name;
+    if (name && router.hasRoute(name)) {
+      router.removeRoute(name);
+    }
+  });
 }
 
 export default router;

@@ -1,7 +1,8 @@
 <!--
   多图上传组件
-  @author: youlaitech
+  @author: haoxr
   @date 2022/11/20
+  @link https://element-plus.gitee.io/zh-CN/component/upload.html
 -->
 
 <template>
@@ -11,28 +12,32 @@
     :before-upload="handleBeforeUpload"
     :http-request="handleUpload"
     :on-remove="handleRemove"
-    :on-preview="previewImg"
+    :on-preview="handlePreview"
     :limit="props.limit"
   >
-    <i-ep-plus />
+    <el-icon><Plus /></el-icon>
   </el-upload>
 
   <el-dialog v-model="dialogVisible">
-    <img w-full :src="previewImgUrl" alt="Preview Image" />
+    <img w-full :src="dialogImageUrl" alt="Preview Image" />
   </el-dialog>
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
+import { Plus } from '@element-plus/icons-vue';
 import {
+  ElMessage,
+  ElUpload,
   UploadRawFile,
   UploadRequestOptions,
   UploadUserFile,
   UploadFile,
   UploadProps,
-} from "element-plus";
-import { uploadFileApi, deleteFileApi } from "@/api/file";
+} from 'element-plus';
+import { uploadFileApi, deleteFileApi } from '@/api/file';
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
   /**
@@ -47,17 +52,18 @@ const props = defineProps({
    */
   limit: {
     type: Number,
-    default: 10,
+    default: 5,
   },
 });
 
-const previewImgUrl = ref("");
+const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 
 const fileList = ref([] as UploadUserFile[]);
 watch(
   () => props.modelValue,
   (newVal: string[]) => {
+    console.log('newVal', newVal);
     const filePaths = fileList.value.map((file) => file.url);
     // 监听modelValue文件集合值未变化时，跳过赋值
     if (
@@ -82,7 +88,6 @@ watch(
  * @param params
  */
 async function handleUpload(options: UploadRequestOptions): Promise<any> {
-  // 上传API调用
   const { data: fileInfo } = await uploadFileApi(options.file);
 
   // 上传成功需手动替换文件路径为远程URL，否则图片地址为预览地址 blob:http://
@@ -96,7 +101,7 @@ async function handleUpload(options: UploadRequestOptions): Promise<any> {
   } as UploadUserFile);
 
   emit(
-    "update:modelValue",
+    'update:modelValue',
     fileList.value.map((file) => file.url)
   );
 }
@@ -109,9 +114,8 @@ function handleRemove(removeFile: UploadFile) {
 
   if (filePath) {
     deleteFileApi(filePath).then(() => {
-      // 删除成功回调
       emit(
-        "update:modelValue",
+        'update:modelValue',
         fileList.value.map((file) => file.url)
       );
     });
@@ -123,17 +127,17 @@ function handleRemove(removeFile: UploadFile) {
  */
 function handleBeforeUpload(file: UploadRawFile) {
   if (file.size > 2 * 1048 * 1048) {
-    ElMessage.warning("上传图片不能大于2M");
+    ElMessage.warning('上传图片不能大于2M');
     return false;
   }
   return true;
 }
 
 /**
- * 预览图片
+ * 图片预览
  */
-const previewImg: UploadProps["onPreview"] = (uploadFile) => {
-  previewImgUrl.value = uploadFile.url!;
+const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
 </script>

@@ -1,59 +1,32 @@
 /**
- * 登录请求参数
+ * 登录表单类型声明
  */
-export interface LoginData {
-  /**
-   * 用户名
-   */
+export interface LoginForm {
   username: string;
-  /**
-   * 密码
-   */
   password: string;
-
+  grant_type: string;
   /**
-   * 验证码缓存key
+   * 验证码Code
    */
-  verifyCodeKey?: string;
-
+  verifyCode: string;
   /**
-   * 验证码
-   */
-  verifyCode?: string;
-}
-
-/**
- * 登录响应
- */
-export interface LoginResult {
-  /**
-   * 访问token
-   */
-  accessToken?: string;
-  /**
-   * 过期时间(单位：毫秒)
-   */
-  expires?: number;
-  /**
-   * 刷新token
-   */
-  refreshToken?: string;
-  /**
-   * token 类型
-   */
-  tokenType?: string;
-}
-
-/**
- * 验证码响应
- */
-export interface CaptchaResult {
-  /**
-   * 验证码缓存key
+   * 验证码Code服务端缓存key(UUID)
    */
   verifyCodeKey: string;
-  /**
-   * 验证码图片Base64字符串
-   */
-  verifyCodeBase64: string;
+}
+
+/**
+ * 登录响应类型声明
+ */
+export interface LoginResult {
+  access_token: string;
+  token_type: string;
+}
+
+/**
+ * 验证码类型声明
+ */
+export interface VerifyCode {
+  verifyCodeImg: string;
+  verifyCodeKey: string;
 }

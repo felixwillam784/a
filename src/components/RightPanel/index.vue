@@ -1,8 +1,42 @@
+<template>
+  <div ref="rightPanel" :class="{ show: show }" class="rightPanel-container">
+    <div class="rightPanel-background" />
+    <div class="rightPanel">
+      <div
+        class="handle-button"
+        :style="{ top: buttonTop + 'px', 'background-color': theme }"
+        @click="show = !show"
+      >
+        <Close
+          style="width: 1em; height: 1em; vertical-align: middle"
+          v-show="show"
+        />
+        <Setting
+          style="width: 1em; height: 1em; vertical-align: middle"
+          v-show="!show"
+        />
+      </div>
+      <div class="rightPanel-items">
+        <slot />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-import { addClass, removeClass } from "@/utils/index";
+import { addClass, removeClass } from '@/utils/index';
 
+import useStore from '@/store';
+
+// 图标依赖
+import { Close, Setting } from '@element-plus/icons-vue';
+import { ElColorPicker } from 'element-plus';
+
+const { setting } = useStore();
+
+const theme = computed(() => setting.theme);
 const show = ref(false);
 
 defineProps({
@@ -17,30 +51,36 @@ watch(show, (value) => {
     addEventClick();
   }
   if (value) {
-    addClass(document.body, "showRightPanel");
+    addClass(document.body, 'showRightPanel');
   } else {
-    removeClass(document.body, "showRightPanel");
+    removeClass(document.body, 'showRightPanel');
   }
 });
 
 function addEventClick() {
-  window.addEventListener("click", closeSidebar, { passive: true });
+  window.addEventListener('click', closeSidebar);
 }
 
 function closeSidebar(evt: any) {
   // 主题选择点击不关闭
-  let parent = evt.target.closest(".right-panel-container");
+  let parent = evt.target.closest('.theme-picker-dropdown');
+  if (parent) {
+    return;
+  }
+
+  parent = evt.target.closest('.rightPanel');
   if (!parent) {
     show.value = false;
-    window.removeEventListener("click", closeSidebar);
+    window.removeEventListener('click', closeSidebar);
   }
 }
 
-const rightPanel = ref();
+const rightPanel = ref(ElColorPicker);
 
 function insertToBody() {
-  const body = document.querySelector("body") as any;
-  body.insertBefore(rightPanel.value, body.firstChild);
+  const elx = rightPanel.value as any;
+  const body = document.querySelector('body') as any;
+  body.insertBefore(elx, body.firstChild);
 }
 
 onMounted(() => {
@@ -48,89 +88,76 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  rightPanel.value.remove();
+  const elx = rightPanel.value as any;
+  elx.remove();
 });
 </script>
 
-<template>
-  <div ref="rightPanel" :class="{ show: show }">
-    <div class="right-panel-overlay" />
-    <div class="right-panel-container">
-      <div
-        class="right-panel-btn"
-        :style="{
-          top: buttonTop + 'px',
-        }"
-        @click="show = !show"
-      >
-        <i-ep-close v-show="show" />
-        <i-ep-setting v-show="!show" />
-      </div>
-      <div>
-        <slot />
-      </div>
-    </div>
-  </div>
-</template>
-
-<style lang="scss" scoped>
+<style>
 .showRightPanel {
+  overflow: hidden;
   position: relative;
   width: calc(100% - 15px);
-  overflow: hidden;
 }
+</style>
 
-.right-panel-overlay {
+<style lang="scss" scoped>
+.rightPanel-background {
   position: fixed;
   top: 0;
   left: 0;
-  background: rgb(0 0 0 / 20%);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
 }
 
-.right-panel-container {
+.rightPanel {
+  width: 100%;
+  max-width: 260px;
+  height: 100vh;
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 999;
-  width: 100%;
-  max-width: 300px;
-  height: 100vh;
-  background-color: var(--el-bg-color-overlay);
-  box-shadow: 0 0 15px 0 rgb(0 0 0 / 5%);
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
   transition: all 0.25s cubic-bezier(0.7, 0.3, 0.1, 1);
   transform: translate(100%);
+  background: #fff;
+  z-index: 40000;
 }
 
 .show {
   transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
 
-  .right-panel-overlay {
-    z-index: 99;
+  .rightPanel-background {
+    z-index: 20000;
+    opacity: 1;
     width: 100%;
     height: 100%;
-    opacity: 1;
   }
 
-  .right-panel-container {
+  .rightPanel {
     transform: translate(0);
   }
 }
 
-.right-panel-btn {
+.handle-button {
+  width: 48px;
+  height: 48px;
   position: absolute;
-  left: -36px;
-  width: 36px;
-  height: 36px;
-  color: var(--el-color-white);
+  left: -48px;
   text-align: center;
+  font-size: 24px;
+  border-radius: 6px 0 0 6px !important;
+  z-index: 0;
+  pointer-events: auto;
   cursor: pointer;
-  background-color: var(--el-color-primary);
-  border-radius: 6px 0 0 6px;
+  color: #fff;
+  line-height: 48px;
 
-  svg {
-    width: 20px;
-    height: 20px;
-    vertical-align: -10px;
+  i {
+    font-size: 24px;
+    line-height: 48px;
   }
 }
 </style>

@@ -1,16 +1,16 @@
 <template>
-  <el-breadcrumb class="h-[50px] flex items-center">
+  <el-breadcrumb class="app-breadcrumb" separator-class="el-icon-arrow-right">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
         <span
           v-if="
             item.redirect === 'noredirect' || index === breadcrumbs.length - 1
           "
-          class="text-[var(--el-disabled-text-color)]"
-          >{{ translateRouteTitleI18n(item.meta.title) }}</span
+          class="no-redirect"
+          >{{ generateTitle(item.meta.title) }}</span
         >
         <a v-else @click.prevent="handleLink(item)">
-          {{ translateRouteTitleI18n(item.meta.title) }}
+          {{ generateTitle(item.meta.title) }}
         </a>
       </el-breadcrumb-item>
     </transition-group>
@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, watch } from "vue";
-import { useRoute, RouteLocationMatched } from "vue-router";
-import { compile } from "path-to-regexp";
-import router from "@/router";
-import { translateRouteTitleI18n } from "@/utils/i18n";
+import { onBeforeMount, ref, watch } from 'vue';
+import { useRoute, RouteLocationMatched } from 'vue-router';
+import { compile } from 'path-to-regexp';
+import router from '@/router';
+import { generateTitle } from '@/utils/i18n';
 
 const currentRoute = useRoute();
 const pathCompile = (path: string) => {
@@ -40,7 +40,7 @@ function getBreadcrumb() {
   const first = matched[0];
   if (!isDashboard(first)) {
     matched = [
-      { path: "/dashboard", meta: { title: "dashboard" } } as any,
+      { path: '/dashboard', meta: { title: 'dashboard' } } as any,
     ].concat(matched);
   }
   breadcrumbs.value = matched.filter((item) => {
@@ -55,7 +55,7 @@ function isDashboard(route: RouteLocationMatched) {
   }
   return (
     name.toString().trim().toLocaleLowerCase() ===
-    "Dashboard".toLocaleLowerCase()
+    'Dashboard'.toLocaleLowerCase()
   );
 }
 
@@ -75,7 +75,7 @@ function handleLink(item: any) {
 watch(
   () => currentRoute.path,
   (path) => {
-    if (path.startsWith("/redirect/")) {
+    if (path.startsWith('/redirect/')) {
       return;
     }
     getBreadcrumb();
@@ -88,16 +88,20 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-.app-breadcrumb.el-breadcrumb {
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 14px;
-  line-height: 50px;
-}
-
-// 覆盖 element-plus 的样式
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;
+}
+
+.app-breadcrumb.el-breadcrumb {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 50px;
+  margin-left: 8px;
+
+  .no-redirect {
+    color: #97a8be;
+    cursor: text;
+  }
 }
 </style>

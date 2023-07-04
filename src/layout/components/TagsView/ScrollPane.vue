@@ -1,25 +1,44 @@
+<template>
+  <el-scrollbar
+    ref="scrollContainer"
+    :vertical="false"
+    class="scroll-container"
+    @wheel.prevent="handleScroll"
+  >
+    <slot />
+  </el-scrollbar>
+</template>
+
 <script setup lang="ts">
-import { useTagsViewStore, TagView } from "@/store/modules/tagsView";
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance,
+} from 'vue';
+import useStore from '@/store';
+import { TagView } from '@/store/modules/types';
 
 const tagAndTagSpacing = ref(4);
 const { proxy } = getCurrentInstance() as any;
 
-const emits = defineEmits(["scroll"]);
+const emits = defineEmits(['scroll']);
 const emitScroll = () => {
-  emits("scroll");
+  emits('scroll');
 };
 
-const tagsViewStore = useTagsViewStore();
+const { tagsView } = useStore();
 
-const scrollWrapper = computed(
-  () => proxy?.$refs.scrollContainer.$refs.wrapRef
-);
+const visitedViews = computed(() => tagsView.visitedViews);
+
+const scrollWrapper = computed(() => proxy?.$refs.scrollContainer.$refs.wrapRef);
 
 onMounted(() => {
-  scrollWrapper.value.addEventListener("scroll", emitScroll, true);
+  scrollWrapper.value.addEventListener('scroll', emitScroll, true);
 });
 onBeforeUnmount(() => {
-  scrollWrapper.value.removeEventListener("scroll", emitScroll);
+  scrollWrapper.value.removeEventListener('scroll', emitScroll);
 });
 
 function handleScroll(e: WheelEvent) {
@@ -37,9 +56,9 @@ function moveToTarget(currentTag: TagView) {
   let lastTag = null;
 
   // find first tag and last tag
-  if (tagsViewStore.visitedViews.length > 0) {
-    firstTag = tagsViewStore.visitedViews[0];
-    lastTag = tagsViewStore.visitedViews[tagsViewStore.visitedViews.length - 1];
+  if (visitedViews.value.length > 0) {
+    firstTag = visitedViews.value[0];
+    lastTag = visitedViews.value[visitedViews.value.length - 1];
   }
 
   if (firstTag === currentTag) {
@@ -47,23 +66,23 @@ function moveToTarget(currentTag: TagView) {
   } else if (lastTag === currentTag) {
     $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth;
   } else {
-    const tagListDom = document.getElementsByClassName("tags-item");
-    const currentIndex = tagsViewStore.visitedViews.findIndex(
+    const tagListDom = document.getElementsByClassName('tags-view__item');
+    const currentIndex = visitedViews.value.findIndex(
       (item) => item === currentTag
     );
     let prevTag = null;
     let nextTag = null;
     for (const k in tagListDom) {
-      if (k !== "length" && Object.hasOwnProperty.call(tagListDom, k)) {
+      if (k !== 'length' && Object.hasOwnProperty.call(tagListDom, k)) {
         if (
-          (tagListDom[k] as any).dataset.path ===
-          tagsViewStore.visitedViews[currentIndex - 1].path
+            (tagListDom[k] as any).dataset.path ===
+          visitedViews.value[currentIndex - 1].path
         ) {
           prevTag = tagListDom[k];
         }
         if (
           (tagListDom[k] as any).dataset.path ===
-          tagsViewStore.visitedViews[currentIndex + 1].path
+          visitedViews.value[currentIndex + 1].path
         ) {
           nextTag = tagListDom[k];
         }
@@ -92,30 +111,21 @@ defineExpose({
 });
 </script>
 
-<template>
-  <el-scrollbar
-    ref="scrollContainer"
-    class="scroll-container"
-    :vertical="false"
-    @wheel.prevent="handleScroll"
-  >
-    <slot />
-  </el-scrollbar>
-</template>
-
 <style lang="scss" scoped>
 .scroll-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-
   .el-scrollbar__bar {
-    bottom: 0;
+    bottom: 0px;
   }
 
   .el-scrollbar__wrap {
     height: 49px;
   }
+}
+
+.scroll-container {
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
 }
 </style>

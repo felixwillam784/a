@@ -1,32 +1,33 @@
-# 安装 pnpm
-npm install pnpm -g
+1. npm install
+2. npm run dev
+3. 浏览器访问 http://localhost:9527
 
-# 安装依赖
-pnpm install
+### 项目部署
 
-# 启动运行
-pnpm run dev
-```
+- 本地打包
 
-## 项目部署
+  ```
+  npm run build:prod
+  ```
 
-```bash
-# 项目打包
-pnpm run build:prod
+  生成的静态文件位于项目根目录 dist 文件夹下
 
-# 上传文件至远程服务器
-将打包生成在 `dist` 目录下的文件拷贝至 `/usr/share/nginx/html` 目录
+- nginx.cofig 配置
 
-# nginx.cofig 配置
-server {
-	listen     80;
-	server_name  localhost;
-	location / {
-			root /usr/share/nginx/html;
-			index index.html index.htm;
-	}
-	# 反向代理配置
-	location /prod-api/ {
-			proxy_pass http://vapi.youlai.tech/; # vapi.youlai.tech替换成你的后端API地址
-	}
-}
+  ```
+  server {
+      listen     80;
+      server_name  localhost;
+
+      location / {
+          root /usr/share/nginx/html/web;
+          index index.html index.htm;
+      }
+
+      # 代理转发请求至网关，prod-api标识解决跨域问题
+      location /prod-api/ {
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_pass https://api.youlai.tech/;
+      }
+  }

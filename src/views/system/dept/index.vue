@@ -1,8 +1,11 @@
+<script lang="ts">
+export default {
+  name: 'dept',
+};
+</script>
+
 <script setup lang="ts">
-defineOptions({
-  name: "Dept",
-  inheritAttrs: false,
-});
+import { onMounted, reactive, ref, toRefs } from 'vue';
 
 import {
   getDeptForm,
@@ -10,169 +13,174 @@ import {
   updateDept,
   addDept,
   listDeptOptions,
-  listDepts,
-} from "@/api/dept";
+  listDepartments,
+} from '@/api/system/dept';
 
-import { DeptVO, DeptForm, DeptQuery } from "@/api/dept/types";
+import { Search, Plus, Edit, Refresh, Delete } from '@element-plus/icons-vue';
+import { ElForm, ElMessage, ElMessageBox } from 'element-plus';
+import { Dept, DeptForm, DeptQuery } from '@/api/system/dept/types';
 
 const queryFormRef = ref(ElForm);
-const deptFormRef = ref(ElForm);
+const dataFormRef = ref(ElForm);
 
-const loading = ref(false);
-const ids = ref<number[]>([]);
-const dialog = reactive<DialogOption>({
-  visible: false,
+const state = reactive({
+  loading: false,
+  // 选中ID数组
+  ids: [] as number[],
+  // 表格树数据
+  dataList: [] as Dept[],
+  deptOptions: [] as OptionType[],
+  dialog: { visible: false } as DialogType,
+  queryParams: {} as DeptQuery,
+  formData: {
+    sort: 1,
+    status: 1,
+  } as DeptForm,
+  rules: {
+    parentId: [
+      { required: true, message: '上级部门不能为空', trigger: 'blur' },
+    ],
+    name: [{ required: true, message: '部门名称不能为空', trigger: 'blur' }],
+    sort: [{ required: true, message: '显示排序不能为空', trigger: 'blur' }],
+  },
 });
 
-const queryParams = reactive<DeptQuery>({});
-const deptList = ref<DeptVO[]>();
-
-const deptOptions = ref<OptionType[]>();
-
-const formData = reactive<DeptForm>({
-  status: 1,
-  parentId: 0,
-  sort: 1,
-});
-
-const rules = reactive({
-  parentId: [{ required: true, message: "上级部门不能为空", trigger: "blur" }],
-  name: [{ required: true, message: "部门名称不能为空", trigger: "blur" }],
-  sort: [{ required: true, message: "显示排序不能为空", trigger: "blur" }],
-});
+const {
+  ids,
+  loading,
+  dataList,
+  deptOptions,
+  queryParams,
+  formData,
+  rules,
+  dialog,
+} = toRefs(state);
 
 /**
  * 查询
  */
 function handleQuery() {
   loading.value = true;
-  listDepts(queryParams).then(({ data }) => {
-    deptList.value = data;
+  listDepartments(state.queryParams).then(({ data }) => {
+    dataList.value = data;
     loading.value = false;
   });
 }
 
 /**
- * 重置查询
+ * 重置
  */
 function resetQuery() {
   queryFormRef.value.resetFields();
   handleQuery();
 }
 
-/**
- * 行复选框选中记录选中ID集合
- */
 function handleSelectionChange(selection: any) {
-  ids.value = selection.map((item: any) => item.id);
+  state.ids = selection.map((item: any) => item.id);
 }
 
 /**
  * 获取部门下拉数据
  */
 async function getDeptOptions() {
+  const deptOptions: any[] = [];
   listDeptOptions().then((response) => {
-    deptOptions.value = [
-      {
-        value: 0,
-        label: "顶级部门",
-        children: response.data,
-      },
-    ];
+    const rootDeptOption = {
+      value: '0',
+      label: '顶级部门',
+      children: response.data,
+    };
+    deptOptions.push(rootDeptOption);
+    state.deptOptions = deptOptions;
   });
 }
 
 /**
- * 打开弹窗
- *
- * @param parentId 父部门ID
- * @param deptId 部门ID
+ * 添加
  */
-async function openDialog(parentId?: number, deptId?: number) {
-  await getDeptOptions();
-  dialog.visible = true;
-  if (deptId) {
-    dialog.title = "修改部门";
-    getDeptForm(deptId).then(({ data }) => {
-      Object.assign(formData, data);
-    });
-  } else {
-    dialog.title = "新增部门";
-    formData.parentId = parentId ?? 0;
-  }
+function handleAdd(row: any) {
+  getDeptOptions();
+  formData.value.id = undefined;
+  formData.value.parentId = row.id;
+  dialog.value = {
+    title: '添加部门',
+    visible: true,
+  };
 }
 
 /**
- * 表单提交
+ * 修改
  */
-function handleSubmit() {
-  deptFormRef.value.validate((valid: any) => {
+async function handleUpdate(row: any) {
+  await getDeptOptions();
+  const deptId = row.id || state.ids;
+  state.dialog = {
+    title: '修改部门',
+    visible: true,
+  };
+  getDeptForm(deptId).then((response: any) => {
+    state.formData = response.data;
+  });
+}
+
+/**
+ * 提交
+ */
+function submitForm() {
+  dataFormRef.value.validate((valid: any) => {
     if (valid) {
-      const deptId = formData.id;
-      loading.value = true;
-      if (deptId) {
-        updateDept(deptId, formData)
-          .then(() => {
-            ElMessage.success("修改成功");
-            closeDialog();
-            handleQuery();
-          })
-          .finally(() => (loading.value = false));
+      if (state.formData.id) {
+        updateDept(state.formData.id, state.formData).then(() => {
+          ElMessage.success('修改成功');
+          closeDialog();
+          handleQuery();
+        });
       } else {
-        addDept(formData)
-          .then(() => {
-            ElMessage.success("新增成功");
-            closeDialog();
-            handleQuery();
-          })
-          .finally(() => (loading.value = false));
+        addDept(state.formData).then(() => {
+          ElMessage.success('新增成功');
+          closeDialog();
+          handleQuery();
+        });
       }
     }
   });
 }
 
 /**
- * 删除部门
+ * 删除
  */
-function handleDelete(deptId?: number) {
-  const deptIds = [deptId || ids.value].join(",");
-
-  if (!deptIds) {
-    ElMessage.warning("请勾选删除项");
+function handleDelete(row: any) {
+  const ids = [row.id || state.ids].join(',');
+  if (!ids) {
+    ElMessage.warning('请勾选删除项');
     return;
   }
 
-  ElMessageBox.confirm(`确认删除已选中的数据项?`, "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(() => {
-    deleteDept(deptIds).then(() => {
-      ElMessage.success("删除成功");
-      resetQuery();
-    });
-  });
+  ElMessageBox.confirm(`确认删除已选中的数据项?`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      deleteDept(ids)
+        .then(() => {
+          handleQuery();
+          ElMessage.success('删除成功');
+        })
+        .catch(() => {
+          console.log(`删除失败`);
+        });
+    })
+    .catch(() => ElMessage.info('已取消删除'));
 }
 
 /**
  * 关闭弹窗
- */
+ **/
 function closeDialog() {
-  dialog.visible = false;
-  resetForm();
-}
-
-/**
- * 重置表单
- */
-function resetForm() {
-  deptFormRef.value.resetFields();
-  deptFormRef.value.clearValidate();
-
-  formData.id = undefined;
-  formData.parentId = 0;
-  formData.status = 1;
-  formData.sort = 1;
+  dialog.value.visible = false;
+  dataFormRef.value.resetFields();
+  dataFormRef.value.clearValidate();
 }
 
 onMounted(() => {
@@ -181,7 +189,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="app-container">
-    <div class="search-container">
+    <div class="search">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
           <el-input
@@ -202,91 +210,87 @@ onMounted(() => {
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button class="filter-item" type="primary" @click="handleQuery">
-            <i-ep-search />
+          <el-button
+            class="filter-item"
+            type="primary"
+            :icon="Search"
+            @click="handleQuery"
+          >
             搜索
           </el-button>
-          <el-button @click="resetQuery"> <i-ep-refresh />重置 </el-button>
+          <el-button :icon="Refresh" @click="resetQuery"> 重置 </el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <el-card>
+      <!--toolbar-->
       <template #header>
-        <el-button
-          v-hasPerm="['sys:dept:add']"
-          type="success"
-          @click="openDialog(0, undefined)"
-          ><i-ep-plus />新增</el-button
+        <el-button type="success" :icon="Plus" @click="handleAdd"
+          >新增</el-button
         >
         <el-button
-          v-hasPerm="['sys:dept:delete']"
           type="danger"
+          :icon="Delete"
+          @click="handleDelete"
           :disabled="ids.length === 0"
-          @click="handleDelete()"
-          ><i-ep-delete />删除
+          >删除
         </el-button>
       </template>
 
+      <!--table-->
       <el-table
         v-loading="loading"
-        :data="deptList"
+        :data="dataList"
         row-key="id"
         default-expand-all
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="name" label="部门名称" min-width="200" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="name" label="部门名称" min-width="300" />
+        <el-table-column prop="status" label="状态" width="200">
           <template #default="scope">
             <el-tag v-if="scope.row.status == 1" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" label="排序" width="200" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column prop="createTime" label="创建时间" width="250" />
+        <el-table-column prop="updateTime" label="修改时间" width="250" />
+
+        <el-table-column label="操作" align="center" width="150">
           <template #default="scope">
-            <el-button
-              v-hasPerm="['sys:dept:add']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="openDialog(scope.row.id, undefined)"
-              ><i-ep-plus />新增
+            <el-button type="primary" link @click.stop="handleAdd(scope.row)"
+              >新增
             </el-button>
             <el-button
-              v-hasPerm="['sys:dept:edit']"
-              type="primary"
+              type="success"
               link
-              size="small"
-              @click.stop="openDialog(scope.row.parentId, scope.row.id)"
-              ><i-ep-edit />编辑
-            </el-button>
-            <el-button
-              v-hasPerm="['sys:dept:delete']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="handleDelete(scope.row.id)"
+              @click.stop="handleUpdate(scope.row)"
             >
-              <i-ep-delete />删除
+              编辑
+            </el-button>
+
+            <el-button type="danger" link @click.stop="handleDelete(scope.row)">
+              删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
 
+    <!-- dialog -->
     <el-dialog
-      v-model="dialog.visible"
       :title="dialog.title"
+      v-model="dialog.visible"
       width="600px"
       @closed="closeDialog"
     >
       <el-form
-        ref="deptFormRef"
+        ref="dataFormRef"
         :model="formData"
         :rules="rules"
         label-width="80px"
@@ -322,7 +326,7 @@ onMounted(() => {
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit"> 确 定 </el-button>
+          <el-button type="primary" @click="submitForm"> 确 定 </el-button>
           <el-button @click="closeDialog"> 取 消 </el-button>
         </div>
       </template>
