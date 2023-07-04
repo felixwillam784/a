@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Search, Refresh, } from '@element-plus/icons-vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const formData = ref<any>({
     customer_account: "",
@@ -41,16 +44,16 @@ const customerList = ref<Array<any>>([
     }
 ])
 
-const handleSelectionChange = () => {
-
-}
-
 const handleQuery = () => {
 
 }
 
 const resetQuery = () => {
 
+}
+
+const goCustomerDetailPage = () => {
+    router.push({ name: "User Detail" });
 }
 </script>
 
@@ -102,12 +105,11 @@ const resetQuery = () => {
                 </div>
 
                 <el-card>
-                    <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange"
-                        style="width: 100%;">
+                    <el-table v-loading="loading" :data="customerList" style="width: 100%;">
 
-                        <el-table-column type="selection" width="50" align="center" />
                         <el-table-column key="customer_id" label="用户ID" align="center" prop="customer_id" width="200" />
-                        <el-table-column key="customer_account" label="用户账号" align="center" prop="customer_account" width="160"/>
+                        <el-table-column key="customer_account" label="用户账号" align="center" prop="customer_account"
+                            width="160" />
                         <el-table-column label="用户名" width="160" align="center" prop="customer_name" />
                         <el-table-column label="用户类型" width="100" align="center" prop="customer_type" />
                         <el-table-column label="VIP等级" width="120" align="center" prop="vip_level" />
@@ -121,15 +123,15 @@ const resetQuery = () => {
 
                         <el-table-column label="禁止提现" align="center" prop="withdrawal_prohibited">
                             <template #default="scope">
-                                <el-button type="success" plain v-if="scope.row.withdrawal_prohibited == 0">正常</el-button>
-                                <el-button type="success" plain v-else>异常</el-button>
+                                <el-button type="success" plain v-if="scope.row.withdrawal_prohibited == 0">否</el-button>
+                                <el-button type="success" plain v-else>是</el-button>
                             </template>
                         </el-table-column>
 
                         <el-table-column label="冻结状态" align="center" prop="account_status">
                             <template #default="scope">
-                                <el-button type="success" plain v-if="scope.row.frozen_state == 0">正常</el-button>
-                                <el-button type="success" plain v-else>异常</el-button>
+                                <el-button type="success" plain v-if="scope.row.frozen_state == 0">否</el-button>
+                                <el-button type="success" plain v-else>是</el-button>
                             </template>
                         </el-table-column>
 
@@ -137,7 +139,7 @@ const resetQuery = () => {
 
                         <el-table-column label="操作" align="center" width="400" fixed="right">
                             <template #default="scope">
-                                <el-button type="primary">详情</el-button>
+                                <el-button type="primary" @click="goCustomerDetailPage">详情</el-button>
                                 <el-button type="primary">充值</el-button>
                                 <el-button type="primary">流水</el-button>
                                 <el-button type="primary">黑名单</el-button>

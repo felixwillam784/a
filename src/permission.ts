@@ -12,12 +12,12 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start();
 
   const { user, permission } = useStore();
-  // const hasToken = user.token;
+  const hasToken = user.token;
 
-  const networkData = NetworkData.getInstance()
-  const hasToken = networkData.getToken();
+  // const networkData = NetworkData.getInstance()
+  // const hasToken = networkData.getToken();
   
-  if (hasToken != undefined && hasToken != "undefined") {
+  if (hasToken) {
 
     // 登录成功，跳转到首页
     if (to.path === '/login') {

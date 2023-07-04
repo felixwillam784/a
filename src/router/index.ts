@@ -3,6 +3,8 @@ import useStore from '@/store';
 
 export const Layout = () => import('@/layout/index.vue');
 
+const ChildrenLayout = () => import('@/views/layout/index.vue');
+
 // 参数说明: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
 // 静态路由
 export const constantRoutes: Array<RouteRecordRaw> = [
@@ -46,7 +48,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       title: "data_analysis",
       icon: "system",
       hidden: false,
-      alwaysShow: true,
       roles: ["ADMIN"],
       keepAlive: true
     },
@@ -58,7 +59,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "new_user",
           hidden: false,
-          alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -70,7 +70,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "active_user",
           hidden: false,
-          alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -82,7 +81,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "pay_rate",
           hidden: false,
-          alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -94,7 +92,6 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "user_retention",
           hidden: false,
-          alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -106,7 +103,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "customer_habbit",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -118,7 +115,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "game_report",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -130,7 +127,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "platform_report",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -142,7 +139,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "activity_statement",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -154,7 +151,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "withdrawal_report",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -166,7 +163,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "data_summary",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -178,7 +175,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "pool_report",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -193,22 +190,42 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       title: "player_management",
       icon: "system",
       hidden: false,
-      alwaysShow: true,
       roles: ["ADMIN"],
       keepAlive: true
     },
     children: [
       {
         path: "user/list",
-        component: () => import('@/views/player-management/user-list/index.vue'),
-        name: "User List",
+        component: ChildrenLayout,
         meta: {
           title: "user_list",
           hidden: false,
-          alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
-        }
+        },
+        children: [
+          {
+            path: "",
+            component: () => import('@/views/player-management/user-list/index.vue'),
+            name: "User List",
+            meta: {
+              hidden: true,
+              roles: ["ADMIN"],
+              keepAlive: true
+            },
+          },
+          {
+            path: "detail",
+            component: () => import('@/views/player-management/user-list/UserDetail.vue'),
+            name: "User Detail",
+            meta: {
+              title: "用户详情",
+              hidden: true,
+              roles: ["ADMIN"],
+              keepAlive: true
+            },
+          },
+        ]
       },
       {
         path: "user/flow",
@@ -217,7 +234,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "user_flow",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -229,7 +246,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "VIP管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -241,7 +258,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "代理管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -253,7 +270,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "赠送管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -265,7 +282,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "预警管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -277,7 +294,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "信息推送",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -304,7 +321,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "顶部管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -316,7 +333,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "侧边栏管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -328,7 +345,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "弹窗管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -340,7 +357,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "标签管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -352,7 +369,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "客服管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -379,7 +396,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "提现审核",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -391,7 +408,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "提现封禁",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -403,7 +420,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "黑名单",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -415,7 +432,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "提现渠道",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -427,7 +444,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "充值配置",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -439,7 +456,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "支付配置",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -466,7 +483,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "签到活动配置",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -478,7 +495,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "理财活动配置",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -505,7 +522,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "游戏管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -517,7 +534,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "下注管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -529,7 +546,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "奖池管理",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -541,7 +558,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "机器人配置",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }
@@ -567,7 +584,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
           title: "第三方管理",
           icon: "system",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN", "EDITOR"],
           keepAlive: true
         }
@@ -593,7 +610,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
           title: "权限管理",
           icon: "system",
           hidden: false,
-          alwaysShow: false,
+          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
         }

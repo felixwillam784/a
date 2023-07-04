@@ -105,13 +105,13 @@ function handleLogin() {
 
       // await dispatchSignIn(state.loginForm);
 
-      if (success.value) {
-        router.push({ path: state.redirect || '/', query: state.otherQuery });
-        state.loading = false;
-      } else {
-        state.loading = false;
-        handleCaptchaGenerate();
-      }
+      // if (success.value) {
+      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
+      //   state.loading = false;
+      // } else {
+      //   state.loading = false;
+      //   handleCaptchaGenerate();
+      // }
 
     } else {
       return false;

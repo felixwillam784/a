@@ -20,16 +20,16 @@ service.interceptors.request.use(
       );
     }
 
-    const networkData = NetworkData.getInstance()
+    // const networkData = NetworkData.getInstance()
 
-    if (networkData.getToken() != undefined) {
-      config.headers.Authorization = 'Bearer ' + networkData.getToken();
-    }
-
-    // const { user } = useStore();
-    // if (user.token) {
-    //   config.headers.Authorization = `${localStorage.get('token')}`;
+    // if (networkData.getToken() != undefined) {
+    //   config.headers.Authorization = 'Bearer ' + networkData.getToken();
     // }
+
+    const { user } = useStore();
+    if (user.token) {
+      config.headers.Authorization = `${localStorage.get('token')}`;
+    }
 
     return config;
   },

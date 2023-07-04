@@ -8,8 +8,8 @@ interface DefaultSettings {
 }
 
 const defaultSettings: DefaultSettings = {
-  title: 'youlai-mall',
-  showSettings: true,
+  title: 'blue-game-admin',
+  showSettings: false,
   tagsView: false,
   fixedHeader: true,
   // 是否显示Logo
