@@ -7,17 +7,6 @@ export const Layout = () => import('@/layout/index.vue');
 // 静态路由
 export const constantRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/redirect',
-    component: Layout,
-    meta: { hidden: true },
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index.vue'),
-      },
-    ],
-  },
-  {
     path: '/login',
     component: () => import('@/views/login/index.vue'),
     meta: { hidden: true },
@@ -67,7 +56,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/user/index.vue'),
         name: "New User",
         meta: {
-          title: "新增用户",
+          title: "new_user",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -79,7 +68,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Active User",
         meta: {
-          title: "活跃用户",
+          title: "active_user",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -91,7 +80,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Pay Rate",
         meta: {
-          title: "付费率",
+          title: "pay_rate",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -103,7 +92,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "User Retention",
         meta: {
-          title: "用户留存",
+          title: "user_retention",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -115,7 +104,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Customer Habbit",
         meta: {
-          title: "用户习惯",
+          title: "customer_habbit",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -127,7 +116,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Game Report",
         meta: {
-          title: "游戏报表",
+          title: "game_report",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -139,7 +128,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Platform Report",
         meta: {
-          title: "平台报表",
+          title: "platform_report",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -151,7 +140,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Activity Statement",
         meta: {
-          title: "活动报表",
+          title: "activity_statement",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -163,7 +152,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Withdrawal Report",
         meta: {
-          title: "提充报表",
+          title: "withdrawal_report",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -175,7 +164,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Data Summary",
         meta: {
-          title: "数据总表",
+          title: "data_summary",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -187,7 +176,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "Prize Pool Report",
         meta: {
-          title: "奖池报表",
+          title: "pool_report",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -201,7 +190,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
     component: Layout,
     redirect: "/user/list",
     meta: {
-      title: "玩家管理",
+      title: "player_management",
       icon: "system",
       hidden: false,
       alwaysShow: true,
@@ -211,10 +200,10 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
     children: [
       {
         path: "user/list",
-        component: () => import('@/views/system/user/index.vue'),
+        component: () => import('@/views/player-management/user-list/index.vue'),
         name: "User List",
         meta: {
-          title: "用户列表",
+          title: "user_list",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -226,7 +215,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/role/index.vue'),
         name: "User Flow",
         meta: {
-          title: "用户流水",
+          title: "user_flow",
           hidden: false,
           alwaysShow: false,
           roles: ["ADMIN"],
@@ -566,7 +555,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       title: "第三方管理",
       icon: "system",
       hidden: false,
-      roles: ["ADMIN"],
+      roles: ["ADMIN", "EDITOR"],
       keepAlive: true
     },
     children: [
@@ -579,7 +568,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
           icon: "system",
           hidden: false,
           alwaysShow: false,
-          roles: ["ADMIN"],
+          roles: ["ADMIN", "EDITOR"],
           keepAlive: true
         }
       },

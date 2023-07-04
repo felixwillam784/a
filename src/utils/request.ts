@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { EXITTYPE, NetworkData, SENDTYPE } from '@/net/NetworkData'
 import { localStorage } from '@/utils/storage';
 import useStore from '@/store';
 
@@ -12,16 +13,24 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: any) => {
     if (!config.headers) {
       throw new Error(
         `Expected 'config' and 'config.headers' not to be undefined`
       );
     }
-    const { user } = useStore();
-    if (user.token) {
-      config.headers.Authorization = `${localStorage.get('token')}`;
+
+    const networkData = NetworkData.getInstance()
+
+    if (networkData.getToken() != undefined) {
+      config.headers.Authorization = 'Bearer ' + networkData.getToken();
     }
+
+    // const { user } = useStore();
+    // if (user.token) {
+    //   config.headers.Authorization = `${localStorage.get('token')}`;
+    // }
+
     return config;
   },
   (error: any) => {
@@ -33,7 +42,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { code, msg } = response.data;
-    if (code === '00000') {
+    if (code === "00000") {
       return response.data;
     } else {
       // 响应数据为二进制流处理(Excel导出)
@@ -45,6 +54,7 @@ service.interceptors.response.use(
         message: msg || '系统出错',
         type: 'error',
       });
+
       return Promise.reject(new Error(msg || 'Error'));
     }
   },
@@ -58,6 +68,8 @@ service.interceptors.response.use(
           type: 'warning',
         }).then(() => {
           localStorage.clear();
+          const networkData = NetworkData.getInstance()
+          networkData.resetData();
           window.location.href = '/';
         });
       } else {

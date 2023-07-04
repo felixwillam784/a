@@ -1,111 +1,6 @@
-<template>
-  <div class="login-container">
-    <el-form
-      ref="loginFormRef"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">{{ $t('login.title') }}</h3>
-        <lang-select class="set-language" />
-      </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip
-        :disabled="capslockTooltipDisabled"
-        content="Caps lock is On"
-        placement="right"
-      >
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            ref="passwordRef"
-            :key="passwordType"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="Password"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup="checkCapslock"
-            @blur="capslockTooltipDisabled = true"
-            @keyup.enter="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-            />
-          </span>
-        </el-form-item>
-      </el-tooltip>
-
-      <!-- 验证码 -->
-      <el-form-item prop="code">
-        <span class="svg-container">
-          <svg-icon icon-class="valid_code" />
-        </span>
-        <el-input
-          v-model="loginForm.verifyCode"
-          auto-complete="off"
-          :placeholder="$t('login.code')"
-          style="width: 65%"
-          @keyup.enter="handleLogin"
-        />
-
-        <div class="captcha">
-          <img
-            :src="verifyCodeImgUrl"
-            @click="handleCaptchaGenerate"
-            height="38px"
-          />
-        </div>
-      </el-form-item>
-
-      <el-button
-        size="default"
-        :loading="loading"
-        type="primary"
-        style="width: 100%; margin-bottom: 30px"
-        @click.prevent="handleLogin"
-        >{{ $t('login.login') }}
-      </el-button>
-
-      <div class="tips">
-        <span style="margin-right: 20px"
-          >{{ $t('login.username') }}: admin</span
-        >
-        <span> {{ $t('login.password') }}: 123456</span>
-      </div>
-    </el-form>
-
-    <div v-if="showCopyright == true" class="copyright">
-      <p>{{ $t('login.copyright') }}</p>
-      <p>{{ $t('login.icp') }}</p>
-    </div>
-  </div>
-</template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
+import { onMounted, reactive, ref, toRefs, watch, nextTick, computed } from 'vue';
 
 // 组件依赖
 import { ElForm, ElInput } from 'element-plus';
@@ -120,9 +15,12 @@ import useStore from '@/store';
 import { getCaptcha } from '@/api/auth';
 import { useRoute } from 'vue-router';
 import { LoginForm } from '@/api/auth/types';
+import { authStore } from '@/store/modules/auth';
+import { storeToRefs } from 'pinia';
 
 const { user } = useStore();
 const route = useRoute();
+const { dispatchSignIn } = authStore();
 
 const loginFormRef = ref(ElForm);
 const passwordRef = ref(ElInput);
@@ -184,10 +82,16 @@ function showPwd() {
   });
 }
 
+const success = computed(() => {
+  const { getSuccess } = storeToRefs(authStore());
+  return getSuccess.value
+})
+
 function handleLogin() {
-  loginFormRef.value.validate((valid: boolean) => {
+  loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       state.loading = true;
+
       user
         .login(state.loginForm)
         .then(() => {
@@ -198,6 +102,17 @@ function handleLogin() {
           state.loading = false;
           handleCaptchaGenerate();
         });
+
+      // await dispatchSignIn(state.loginForm);
+
+      if (success.value) {
+        router.push({ path: state.redirect || '/', query: state.otherQuery });
+        state.loading = false;
+      } else {
+        state.loading = false;
+        handleCaptchaGenerate();
+      }
+
     } else {
       return false;
     }
@@ -210,22 +125,17 @@ function handleCaptchaGenerate() {
     const { verifyCodeImg, verifyCodeKey } = data;
     verifyCodeImgUrl.value = verifyCodeImg;
     loginForm.value.verifyCodeKey = verifyCodeKey;
+    loginForm.value.grant_type = "captcha";
   });
 }
 
-watch(
-  route,
-  () => {
-    const query = route.query;
-    if (query) {
-      state.redirect = query.redirect as string;
-      state.otherQuery = getOtherQuery(query);
-    }
-  },
-  {
-    immediate: true,
+watch(route, () => {
+  const query = route.query;
+  if (query) {
+    state.redirect = query.redirect as string;
+    state.otherQuery = getOtherQuery(query);
   }
-);
+}, { immediate: true, });
 
 function getOtherQuery(query: any) {
   return Object.keys(query).reduce((acc: any, cur: any) => {
@@ -247,6 +157,69 @@ onMounted(() => {
   };
 });
 </script>
+
+<template>
+  <div class="login-container">
+    <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
+      label-position="left">
+      <div class="title-container">
+        <h3 class="title">{{ $t('login.title') }}</h3>
+        <lang-select class="set-language" />
+      </div>
+
+      <el-form-item prop="username">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input ref="username" v-model="loginForm.username" :placeholder="$t('login.username')" name="username"
+          type="text" tabindex="1" auto-complete="on" />
+      </el-form-item>
+
+      <el-tooltip :disabled="capslockTooltipDisabled" content="Caps lock is On" placement="right">
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input ref="passwordRef" :key="passwordType" v-model="loginForm.password" :type="passwordType"
+            placeholder="Password" name="password" tabindex="2" auto-complete="on" @keyup="checkCapslock"
+            @blur="capslockTooltipDisabled = true" @keyup.enter="handleLogin" />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
+
+      <!-- 验证码 -->
+
+      <el-form-item prop="code">
+        <span class="svg-container">
+          <svg-icon icon-class="valid_code" />
+        </span>
+        <el-input v-model="loginForm.verifyCode" auto-complete="off" :placeholder="$t('login.code')" style="width: 65%"
+          @keyup.enter="handleLogin" />
+
+        <div class="captcha">
+          <img :src="verifyCodeImgUrl" @click="handleCaptchaGenerate" height="38px" />
+        </div>
+      </el-form-item>
+
+      <el-button size="default" :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
+        @click.prevent="handleLogin">{{ $t('login.login') }}
+      </el-button>
+
+      <div class="tips">
+        <span style="margin-right: 20px">{{ $t('login.username') }}: admin</span>
+        <span> {{ $t('login.password') }}: 123456</span>
+      </div>
+
+    </el-form>
+
+    <div v-if="showCopyright == true" class="copyright">
+      <p>{{ $t('login.copyright') }}</p>
+      <p>{{ $t('login.icp') }}</p>
+    </div>
+  </div>
+</template>
 
 <style lang="scss">
 $bg: #283443;
@@ -280,10 +253,12 @@ $cursor: #fff;
     display: inline-block;
     height: 36px;
     width: 85%;
+
     .el-input__wrapper {
       padding: 0;
       background: transparent;
       box-shadow: none;
+
       .el-input__inner {
         background: transparent;
         border: 0px;

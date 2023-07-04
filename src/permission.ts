@@ -1,4 +1,5 @@
 import router from '@/router';
+import { EXITTYPE, NetworkData, SENDTYPE } from '@/net/NetworkData'
 import useStore from '@/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -9,9 +10,15 @@ const whiteList = ['/login', '/auth-redirect'];
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
+
   const { user, permission } = useStore();
-  const hasToken = user.token;
-  if (hasToken) {
+  // const hasToken = user.token;
+
+  const networkData = NetworkData.getInstance()
+  const hasToken = networkData.getToken();
+  
+  if (hasToken != undefined && hasToken != "undefined") {
+
     // 登录成功，跳转到首页
     if (to.path === '/login') {
       next({ path: '/' });

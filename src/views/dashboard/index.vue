@@ -1,7 +1,3 @@
-<script lang="ts">
-export default { name: 'Dashboard' };
-</script>
-
 <script setup lang="ts">
 // 组件引用
 import GithubCorner from '@/components/GithubCorner/index.vue';

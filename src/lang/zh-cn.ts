@@ -2,7 +2,21 @@ export default {
   // 路由国际化
   route: {
     dashboard: '主页',
-    data_analysis: "数据分析"
+    data_analysis: "数据分析",
+    new_user: "新增用户",
+    active_user: "活跃用户",
+    pay_rate: "付费率",
+    user_retention: "用户留存",
+    customer_habbit: "用户习惯",
+    game_report: "游戏报表",
+    platform_report: "平台报表",
+    activity_statement: "活动报表",
+    withdrawal_report: "提充报表",
+    data_summary: "数据总表",
+    pool_report: "奖池报表",
+    player_management: "玩家管理",
+    user_list: "用户列表",
+    user_flow: "用户留存",
   },
   // 登录页面国际化
   login: {

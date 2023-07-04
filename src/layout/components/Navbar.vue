@@ -17,7 +17,8 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
-          <CaretBottom style="width: 0.6em; height: 0.6em; margin-left: 5px" />
+          <p class="user-name-text">{{ nickname }}</p>
+          <!-- <CaretBottom style="width: 0.6em; height: 0.6em; margin-left: 5px" /> -->
         </div>
 
         <template #dropdown>
@@ -62,6 +63,7 @@ const router = useRouter();
 const sidebar = computed(() => app.sidebar);
 const device = computed(() => app.device);
 const avatar = computed(() => user.avatar);
+const nickname = computed(() => user.nickname);
 
 function toggleSideBar() {
   app.toggleSidebar();
@@ -147,14 +149,20 @@ ul {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        display: flex;
+        align-items: center;
         position: relative;
 
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 40px;
+        }
+
+        .user-name-text {
+          margin-left: 4px;
+          font-weight: bold;
         }
 
         .el-icon-caret-bottom {

@@ -2,7 +2,21 @@ export default {
   // 路由国际化
   route: {
     dashboard: 'Dashboard',
-    data_analysis: "Data Analysis"
+    data_analysis: "Data Analysis",
+    new_user: "New User",
+    active_user: "Active User",
+    pay_rate: "Pay Rate",
+    user_retention: "User Retention",
+    customer_habbit: "Customer Habbit",
+    game_report: "Game Report",
+    platform_report: "Platform Report",
+    activity_statement: "Activity Statement",
+    withdrawal_report: "Withdrawal Report",
+    data_summary: "Data Summary",
+    pool_report: "Pool Report",
+    player_management: "Players",
+    user_list: "User List",
+    user_flow: "User Flow",
   },
   // 登录页面国际化
   login: {
@@ -11,7 +25,7 @@ export default {
     password: 'Password',
     login: 'Login',
     code: 'Verification Code',
-    copyright: 'Copyright © 2021 - 2022 youlai.tech All Rights Reserved. ',
+    copyright: 'Copyright © 2022 ~ 2023 Blue.game All rights reserved.',
     icp: '',
   },
   // 导航栏国际化

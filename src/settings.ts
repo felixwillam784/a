@@ -10,8 +10,8 @@ interface DefaultSettings {
 const defaultSettings: DefaultSettings = {
   title: 'youlai-mall',
   showSettings: true,
-  tagsView: true,
-  fixedHeader: false,
+  tagsView: false,
+  fixedHeader: true,
   // 是否显示Logo
   sidebarLogo: true,
   errorLog: 'production',

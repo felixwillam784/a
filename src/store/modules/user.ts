@@ -6,6 +6,7 @@ import { loginApi, logoutApi } from '@/api/auth';
 import { getUserInfo } from '@/api/system/user';
 import { resetRouter } from '@/router';
 import { LoginForm } from '@/api/auth/types';
+import { NetworkData } from '@/net/NetworkData';
 
 const useUserStore = defineStore({
   id: 'user',
@@ -37,6 +38,8 @@ const useUserStore = defineStore({
             const { access_token, token_type } = response.data;
             const accessToken = token_type + ' ' + access_token;
             localStorage.set('token', accessToken);
+            const networkData: NetworkData = NetworkData.getInstance();
+            networkData.setToken(access_token);
             this.token = accessToken;
             resolve(access_token);
           })
