@@ -35,6 +35,7 @@ router.beforeEach(async (to, from, next) => {
         try {
           await user.getUserInfo();
           const roles = user.roles;
+          // const roles = ["ADMIN"];
           const accessRoutes: any = await permission.generateRoutes(roles);
           accessRoutes.forEach((route: any) => {
             router.addRoute(route);

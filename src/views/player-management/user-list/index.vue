@@ -27,7 +27,7 @@ const customerList = ref<Array<any>>([
         customer_type: "一般用户",
         vip_level: "LV0",
         account_status: 0,
-        withdrawal_prohibited: 0,
+        prohibited_withdrawal: 0,
         frozen_state: 0,
         label: "用户备注",
     },
@@ -38,7 +38,7 @@ const customerList = ref<Array<any>>([
         customer_type: "一般用户",
         vip_level: "LV1",
         account_status: 1,
-        withdrawal_prohibited: 1,
+        prohibited_withdrawal: 1,
         frozen_state: 1,
         label: "用户备注",
     }
@@ -117,21 +117,21 @@ const goCustomerDetailPage = () => {
                         <el-table-column label="账号状态" align="center" prop="account_status">
                             <template #default="scope">
                                 <el-button type="success" plain v-if="scope.row.account_status == 0">正常</el-button>
-                                <el-button type="success" plain v-else>异常</el-button>
+                                <el-button type="danger" plain v-else>异常</el-button>
                             </template>
                         </el-table-column>
 
-                        <el-table-column label="禁止提现" align="center" prop="withdrawal_prohibited">
+                        <el-table-column label="禁止提现" align="center" prop="prohibited_withdrawal">
                             <template #default="scope">
-                                <el-button type="success" plain v-if="scope.row.withdrawal_prohibited == 0">否</el-button>
-                                <el-button type="success" plain v-else>是</el-button>
+                                <el-button type="success" plain v-if="scope.row.prohibited_withdrawal == 0">否</el-button>
+                                <el-button type="danger" plain v-else>是</el-button>
                             </template>
                         </el-table-column>
 
-                        <el-table-column label="冻结状态" align="center" prop="account_status">
+                        <el-table-column label="冻结状态" align="center" prop="frozen_state">
                             <template #default="scope">
                                 <el-button type="success" plain v-if="scope.row.frozen_state == 0">否</el-button>
-                                <el-button type="success" plain v-else>是</el-button>
+                                <el-button type="danger" plain v-else>是</el-button>
                             </template>
                         </el-table-column>
 
@@ -139,10 +139,10 @@ const goCustomerDetailPage = () => {
 
                         <el-table-column label="操作" align="center" width="400" fixed="right">
                             <template #default="scope">
-                                <el-button type="primary" @click="goCustomerDetailPage">详情</el-button>
-                                <el-button type="primary">充值</el-button>
-                                <el-button type="primary">流水</el-button>
-                                <el-button type="primary">黑名单</el-button>
+                                <el-button type="primary" @click="goCustomerDetailPage" plain>详情</el-button>
+                                <el-button type="primary" plain>充值</el-button>
+                                <el-button type="primary" plain>流水</el-button>
+                                <el-button type="primary" plain>黑名单</el-button>
                             </template>
                         </el-table-column>
                     </el-table>

@@ -67,12 +67,12 @@ import Team from './components/Team/index.vue';
     <el-row :gutter="40">
       <!-- 项目介绍 -->
       <el-col :md="12" :lg="12" class="card-panel__col">
-        <Project />
+        <!-- <Project /> -->
       </el-col>
 
       <!-- 团队介绍 -->
       <el-col :md="12" :lg="12" class="card-panel__col">
-        <Team />
+        <!-- <Team /> -->
       </el-col>
     </el-row>
 

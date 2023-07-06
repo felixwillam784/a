@@ -6,14 +6,14 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const customerItem = ref<any>({
-    customer_id: "8e8fd8fsdfd8fe8f8df8ef",
+    id: "8e8fd8fsdfd8fe8f8df8ef",
     customer_account: "test77@gmail.com",
     customer_name: "UserName10001",
     customer_type: "一般用户",
-    kol_users: 0,
+    kol_user: 0,
     vip_level: "LV0",
     account_status: 0,
-    withdrawal_prohibited: 0,
+    prohibited_withdrawal: 0,
     frozen_state: 0,
     label: "用户备注",
     register_ip: "168.191.1.1",
@@ -89,6 +89,37 @@ const goBack = () => {
 const closeDialog = () => {
     customerDialogVisible.value = false
 }
+
+const goBettingRecordPage = () => {
+    router.push({ name: "Betting Record" });
+}
+
+const goWinningRecordPage = () => {
+    router.push({ name: "Winning Record" });
+}
+
+const goRechargeRecordPage = () => {
+    router.push({ name: "Recharge Record" });
+}
+
+const goWithdrawalRecordPage = () => {
+    router.push({ name: "Withdrawal Record" });
+}
+
+const goActivityRecord = () => {
+    router.push({ name: "Activity Record" });
+}
+
+const goFundingDetails = () => {
+    router.push({ name: "Funding Details" });
+}
+
+const goAgentDetails = () => {
+    router.push({name: "Agent Details"});
+}
+const submitForm = () => {
+
+}
 </script>
 
 <template>
@@ -107,7 +138,7 @@ const closeDialog = () => {
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">客户ID：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
-                        <p>{{ customerItem.customer_id }}</p>
+                        <p>{{ customerItem.id }}</p>
                         <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                     </el-col>
                 </el-row>
@@ -205,7 +236,7 @@ const closeDialog = () => {
                     <el-col :span="6" class="detail-item-left-bg">账户余额：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>$ {{ accountInformation.accountBalance }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;" @click="goFundingDetails">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -230,14 +261,16 @@ const closeDialog = () => {
                     <el-col :span="6" class="detail-item-left-bg">总充值：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>{{ accountInformation.totalRecharge }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;"
+                            @click="goRechargeRecordPage">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">总提现：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>{{ accountInformation.totalWithdrawals }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;"
+                            @click="goWithdrawalRecordPage">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -250,14 +283,14 @@ const closeDialog = () => {
                     <el-col :span="6" class="detail-item-left-bg">总下注金额：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>{{ accountInformation.totalBetAmount }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;" @click="goBettingRecordPage">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">总中奖金额：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>{{ accountInformation.totalWiningAmount }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;" @click="goWinningRecordPage">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -300,7 +333,7 @@ const closeDialog = () => {
                     <el-col :span="6" class="detail-item-left-bg">活动奖金：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>{{ accountInformation.activityBonus }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;" @click="goActivityRecord">详情</el-button>
                     </el-col>
                 </el-row>
             </el-form>
@@ -312,7 +345,7 @@ const closeDialog = () => {
                     <el-col :span="6" class="detail-item-left-bg">上级代理：</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p>$ {{ agentInformation.superiorAgent }}</p>
-                        <el-button type="danger" link style="margin-left: auto;">详情</el-button>
+                        <el-button type="danger" link style="margin-left: auto;" @click="goAgentDetails">详情</el-button>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -375,7 +408,7 @@ const closeDialog = () => {
         <el-dialog title="用户信息修改" v-model="customerDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-form ref="dataFormRef" label-width="140px">
                 <el-form-item label="客户ID:">
-                    <el-input v-model="customerItem.customer_id" />
+                    <el-input v-model="customerItem.id" />
                 </el-form-item>
                 <el-form-item label="用户账号:">
                     <el-input v-model="customerItem.customer_account" />
@@ -389,7 +422,7 @@ const closeDialog = () => {
                     </el-select>
                 </el-form-item>
                 <el-form-item label="KOL用户:">
-                    <el-select v-model="customerItem.kol_users">
+                    <el-select v-model="customerItem.kol_user">
                         <el-option v-for="(item, index) in typeOptions" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -400,7 +433,7 @@ const closeDialog = () => {
                 </el-form-item>
                 <el-form-item label="账户状态:">
                     <el-select v-model="customerItem.account_status">
-                        <el-option v-for="(item, index) in accountTypeOptions" :label="item.label"
+                        <el-option v-for="(item, index) in accountTypeOptions" :key="index" :label="item.label"
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -410,7 +443,7 @@ const closeDialog = () => {
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否禁止提现:">
-                    <el-select v-model="customerItem.withdrawal_prohibited">
+                    <el-select v-model="customerItem.prohibited_withdrawal">
                         <el-option v-for="(item, index) in typeOptions" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
