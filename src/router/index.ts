@@ -5,8 +5,6 @@ export const Layout = () => import('@/layout/index.vue');
 
 const ChildrenLayout = () => import('@/views/layout/index.vue');
 
-// 参数说明: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
-// 静态路由
 export const constantRoutes: Array<RouteRecordRaw> = [
   {
     path: '/login',
@@ -339,15 +337,36 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: "user/flow",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "User Flow",
+        component: ChildrenLayout,
         meta: {
           title: "user_flow",
           hidden: false,
-          // alwaysShow: false,
           roles: ["ADMIN"],
           keepAlive: true
-        }
+        },
+        children: [
+          {
+            path: "",
+            component: () => import('@/views/player-management/user-flow/index.vue'),
+            name: "User Flow",
+            meta: {
+              hidden: true,
+              roles: ["ADMIN"],
+              keepAlive: true
+            },
+          },
+          {
+            path: "detail",
+            component: () => import('@/views/player-management/user-flow/Detail.vue'),
+            name: "Flow Detail",
+            meta: {
+              title: "用户流水详情",
+              hidden: true,
+              roles: ["ADMIN"],
+              keepAlive: true
+            },
+          },
+        ]
       },
       {
         path: "vip/management",
