@@ -16,7 +16,7 @@ export default {
     pool_report: "奖池报表",
     player_management: "玩家管理",
     user_list: "用户列表",
-    user_flow: "用户流水",
+    user_flow: "用户留存",
   },
   // 登录页面国际化
   login: {
