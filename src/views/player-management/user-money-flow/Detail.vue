@@ -22,7 +22,7 @@ const userFlowInformation = ref<any>({
     betting_odds: 0.99,
     game_result: -999,
     event_name: "",
-    water_channel: "Self",
+    flow_channel: "Self",
     handling_fee: 999,
     flow_time: "2023-07-12 09-10-11",
 })
@@ -117,7 +117,7 @@ const userFlowInformation = ref<any>({
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">流水渠道:</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
-                        <p>{{ userFlowInformation.water_channel }}</p>
+                        <p>{{ userFlowInformation.flow_channel }}</p>
                     </el-col>
                 </el-row>
                 <el-row>

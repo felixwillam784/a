@@ -110,7 +110,7 @@ const resetQuery = () => {
                         <p>$ {{ scope.row.withdrawalAmount.toFixed(2) }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="手续费" align="center" prop="handlingFee" width="100">                    
+                <el-table-column label="手续费" align="center" prop="handlingFee" width="100">
                     <template #default="scope">
                         <p>$ {{ scope.row.handlingFee.toFixed(2) }}</p>
                     </template>

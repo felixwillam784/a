@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Search, Refresh, } from '@element-plus/icons-vue';
+import { Search, Refresh, Download } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 
@@ -10,16 +10,16 @@ const formData = ref<any>({
     customer_account: "",
     customer_name: "",
     customer_label: "",
-    flow_date: moment.tz("Asia/HongKong").format("YYYY-MM-DD HH:mm:ss"),
+    flow_date: moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD HH:mm:ss"),
     pageNum: 1,
     pageSize: 20,
 })
 
 const loading = ref<boolean>(false);
 
-const total = ref<number>(2);
+const total = ref<number>(4);
 
-const userFlowList = ref<Array<any>>([
+const userMoneyFlowList = ref<Array<any>>([
     {
         customer_id: "8e8fd8fsdfd8fe8f8df8ef",
         customer_account: "test77@gmail.com",
@@ -67,7 +67,21 @@ const resetQuery = () => {
 }
 
 const exportTable = () => {
-
+    // exportUser(queryParams.value).then((response: any) => {
+    //     const blob = new Blob([response.data], {
+    //         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
+    //     });
+    //     const a = document.createElement('a');
+    //     const href = window.URL.createObjectURL(blob); // 下载的链接
+    //     a.href = href;
+    //     a.download = decodeURI(
+    //         response.headers['content-disposition'].split(';')[1].split('=')[1]
+    //     ); // 获取后台设置的文件名称
+    //     document.body.appendChild(a);
+    //     a.click(); // 点击导出
+    //     document.body.removeChild(a); // 下载完成移除元素
+    //     window.URL.revokeObjectURL(href); // 释放掉blob对象
+    // });
 }
 
 const goUserFlowDetailPage = () => {
@@ -106,15 +120,15 @@ const goUserFlowDetailPage = () => {
                         </el-form-item>
 
                         <el-form-item style="float: right;">
-                            <el-button @click="handleQuery">搜索</el-button>
-                            <el-button @click="resetQuery">重置</el-button>
-                            <el-button @click="exportTable">导出</el-button>
+                            <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+                            <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
+                            <el-button :icon="Download" @click="exportTable">导出</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
 
                 <el-card>
-                    <el-table v-loading="loading" :data="userFlowList" style="width: 100%;">
+                    <el-table v-loading="loading" :data="userMoneyFlowList" style="width: 100%;">
 
                         <el-table-column key="customer_id" label="用户ID" align="center" prop="customer_id" width="200" />
                         <el-table-column key="customer_account" label="用户账号" align="center" prop="customer_account"
