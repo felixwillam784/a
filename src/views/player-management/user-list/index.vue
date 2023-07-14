@@ -156,3 +156,13 @@ const goCustomerDetailPage = () => {
         </el-row>
     </div>
 </template>
+
+<style lang="scss">
+.el-table thead th.el-table__cell {
+    background: #f5f7fa !important;
+    height: 100px;
+}
+.el-table--enable-row-transition .el-table__body td.el-table__cell {
+    height: 80px;
+}
+</style>

@@ -130,12 +130,11 @@ const goUserFlowDetailPage = () => {
                 <el-card>
                     <el-table v-loading="loading" :data="userMoneyFlowList" style="width: 100%;">
 
-                        <el-table-column key="customer_id" label="用户ID" align="center" prop="customer_id" width="200" />
-                        <el-table-column key="customer_account" label="用户账号" align="center" prop="customer_account"
-                            width="160" />
-                        <el-table-column label="用户名" width="160" align="center" prop="customer_name" />
-                        <el-table-column label="用户标签" width="120" align="center" prop="customer_label" />
-                        <el-table-column label="流水金额" width="120" align="center" prop="flow_amount">
+                        <el-table-column label="用户ID" align="center" prop="customer_id" width="200" />
+                        <el-table-column label="用户账号" align="center" prop="customer_account" width="200" />
+                        <el-table-column label="用户名" width="200" align="center" prop="customer_name" />
+                        <el-table-column label="用户标签" width="200" align="center" prop="customer_label" />
+                        <el-table-column label="流水金额" width="200" align="center" prop="flow_amount">
                             <template #default="scope">
                                 <Font color="green" v-if="scope.row.flow_amount > 0">
                                     ${{ scope.row.flow_amount.toFixed(2) }}
@@ -166,7 +165,10 @@ const goUserFlowDetailPage = () => {
 
 <style lang="scss">
 .el-table thead th.el-table__cell {
-    background: #f5f7fa;
+    background: #f5f7fa !important;
+    height: 100px;
+}
+.el-table--enable-row-transition .el-table__body td.el-table__cell {
     height: 80px;
 }
 </style>

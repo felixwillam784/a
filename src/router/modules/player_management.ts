@@ -228,16 +228,38 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "warning/management",
-                component: () => import('@/views/system/role/index.vue'),
-                name: "Early Warning Managment",
+                path: "warning",
+                component: ChildrenLayout,
                 meta: {
                     title: "预警管理",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
                     keepAlive: true
-                }
+                },
+                children: [
+                    {
+                        path: "",
+                        component: () => import('@/views/player-management/warning/index.vue'),
+                        name: "Early Warning Managment",
+                        meta: {
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "setting",
+                        component: () => import('@/views/player-management/warning/Setting.vue'),
+                        name: "Risk Control Settings",
+                        meta: {
+                            title: "风控设置",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
             },
             {
                 path: "information/push",
@@ -250,6 +272,40 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                     roles: ["ADMIN"],
                     keepAlive: true
                 }
+            },
+            {
+                path: "kol",
+                component: ChildrenLayout,
+                meta: {
+                    title: "KOL管理",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "",
+                        component: () => import('@/views/player-management/kol/index.vue'),
+                        name: "KOL Managment",
+                        meta: {
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "setting",
+                        component: () => import('@/views/player-management/kol/Setting.vue'),
+                        name: "KOL General Settings",
+                        meta: {
+                            title: "KOL通用设置",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
             },
         ]
     },

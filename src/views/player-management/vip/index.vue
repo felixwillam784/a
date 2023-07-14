@@ -135,6 +135,21 @@ const closeDialog = () => {
     vipDialogVisible.value = false;
 }
 
+const formatPercentage = (value: string) => {
+    if (value === null || value === '') {
+        return '';
+    }
+    return `${value}%`;
+}
+const parsePercentage = (value: string) => {
+    const strippedValue = value.replace('%', '');
+    const parsedValue = parseFloat(strippedValue);
+    if (isNaN(parsedValue)) {
+        return null;
+    }
+    return parsedValue;
+}
+
 const submitForm = () => {
 
 }
@@ -164,11 +179,11 @@ const submitForm = () => {
 
                 <el-card>
                     <el-table v-loading="loading" :data="vipList" style="width: 100%;">
-                        <el-table-column label="VIP等级" align="center" prop="vip_level" width="200" />
-                        <el-table-column label="所需充值（$）" align="center" prop="required_recharge" width="160" />
-                        <el-table-column label="所需下注（$）" width="160" align="center" prop="required_bet" />
-                        <el-table-column label="所需要求人数" width="120" align="center" prop="required_people_number" />
-                        <el-table-column label="赠送彩金（$）" align="center" prop="bonus" width="120"></el-table-column>
+                        <el-table-column label="VIP等级" align="center" prop="vip_level" width="160" />
+                        <el-table-column label="所需充值（$）" align="center" prop="required_recharge" width="140" />
+                        <el-table-column label="所需下注（$）" width="140" align="center" prop="required_bet" />
+                        <el-table-column label="所需要求人数" width="140" align="center" prop="required_people_number" />
+                        <el-table-column label="赠送彩金（$）" align="center" prop="bonus" width="140"></el-table-column>
                         <el-table-column label="投注返利（%）" align="center" prop="betting_rebate">
                             <template #default="scope">
                                 <p>{{ scope.row.betting_rebate }}%</p>
@@ -180,7 +195,7 @@ const submitForm = () => {
                             </template>
                         </el-table-column>
                         <el-table-column label="免手续费额度（$/月）" align="center" prop="free_fee_quota"></el-table-column>
-                        <el-table-column align="center">
+                        <el-table-column align="center" fixed="right" width="120">
                             <template #default="scope">
                                 <el-button type="success" link @click="editVIPDialog(scope.row)">修改</el-button>
                             </template>
@@ -214,12 +229,10 @@ const submitForm = () => {
                     <el-input v-model="vipItem.bonus" />
                 </el-form-item>
                 <el-form-item label="投注返利（%）:">
-                    <el-input v-model="vipItem.betting_rebate" 
-                        :formatter="(value: number) => `${value}%`" />
+                    <el-input v-model="vipItem.betting_rebate" :formatter="formatPercentage" :parser="parsePercentage" />
                 </el-form-item>
                 <el-form-item label="提现手续费（%）:">
-                    <el-input v-model="vipItem.withdrawal_fee"
-                        :formatter="(value: number) => `${value}%`" />
+                    <el-input v-model="vipItem.withdrawal_fee" :formatter="formatPercentage" :parser="parsePercentage" />
                 </el-form-item>
                 <el-form-item label="免手续费提现额度:">
                     <el-input v-model="vipItem.free_fee_quota" />
@@ -244,7 +257,11 @@ const submitForm = () => {
 
 <style lang="scss">
 .el-table thead th.el-table__cell {
-    background: #f5f7fa;
+    background: #f5f7fa !important;
+    height: 100px;
+}
+
+.el-table--enable-row-transition .el-table__body td.el-table__cell {
     height: 80px;
 }
 </style>
