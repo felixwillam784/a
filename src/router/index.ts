@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import useStore from '@/store';
 import playerManagementRoutes from "@/router/modules/player_management";
+import eventManagementRoutes from "@/router/modules/event_management";
+import withdrawalManagementRoutes from "@/router/modules/withdrawal_management";
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -15,7 +17,6 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/error-page/404.vue'),
     meta: { hidden: true },
   },
-
   {
     path: '/',
     component: Layout,
@@ -255,132 +256,8 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
       },
     ]
   },
-  {
-    path: "/withdrawal/management",
-    component: Layout,
-    redirect: "/cash/review",
-    meta: {
-      title: "提充管理",
-      icon: "system",
-      hidden: false,
-      alwaysShow: true,
-      roles: ["ADMIN"],
-      keepAlive: true
-    },
-    children: [
-      {
-        path: "cash/review",
-        component: () => import('@/views/system/user/index.vue'),
-        name: "Cash Withdrawal Review",
-        meta: {
-          title: "提现审核",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "withdrawal/ban",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "Withdrawal Ban",
-        meta: {
-          title: "提现封禁",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "blacklist",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "Black List",
-        meta: {
-          title: "黑名单",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "cash/channel",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "Cash Withdrawal Channel",
-        meta: {
-          title: "提现渠道",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "recharge/configuration",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "Recharge Configuration",
-        meta: {
-          title: "充值配置",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "payment/configuration",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "payment Configuration",
-        meta: {
-          title: "支付配置",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-    ]
-  },
-  {
-    path: "/event/management",
-    component: Layout,
-    redirect: "/top/management",
-    meta: {
-      title: "活动管理",
-      icon: "system",
-      hidden: false,
-      alwaysShow: true,
-      roles: ["ADMIN"],
-      keepAlive: true
-    },
-    children: [
-      {
-        path: "activity/configuration",
-        component: () => import('@/views/system/user/index.vue'),
-        name: "Check-in Activity Configuration",
-        meta: {
-          title: "签到活动配置",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "financial/configuration",
-        component: () => import('@/views/system/role/index.vue'),
-        name: "Financial Management Activity Configuration",
-        meta: {
-          title: "理财活动配置",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-    ]
-  },
+  ...withdrawalManagementRoutes,
+  ...eventManagementRoutes,
   {
     path: "/game/management",
     component: Layout,

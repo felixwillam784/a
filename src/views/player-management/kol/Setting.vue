@@ -228,4 +228,5 @@ const parsePercentage = (value: string) => {
     align-items: center;
     padding: 0px 20px;
     height: 36px;
-}</style>
+}
+</style>
