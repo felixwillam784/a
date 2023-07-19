@@ -3,7 +3,7 @@ export default {
   route: {
     dashboard: '主页',
     data_analysis: "数据分析",
-    new_user: "新增用户",
+    user_data: "用户数据",
     active_user: "活跃用户",
     pay_rate: "付费率",
     user_retention: "用户留存",

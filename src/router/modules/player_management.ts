@@ -215,18 +215,18 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 }
             },
-            {
-                path: "gift/management",
-                component: () => import('@/views/system/role/index.vue'),
-                name: "Gift Management",
-                meta: {
-                    title: "赠送管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
+            // {
+            //     path: "gift/management",
+            //     component: () => import('@/views/system/role/index.vue'),
+            //     name: "Gift Management",
+            //     meta: {
+            //         title: "赠送管理",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     }
+            // },
             {
                 path: "warning",
                 component: ChildrenLayout,

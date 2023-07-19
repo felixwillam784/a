@@ -18,9 +18,9 @@ const eventManagementRoutes: RouteRecordRaw[] = [
       {
         path: "sign",
         component: () => import('@/views/event-management/sign/index.vue'),
-        name: "Sign Activity",
+        name: "Sign Activity Configuration",
         meta: {
-          title: "签到活动",
+          title: "签到活动配置",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],
@@ -30,9 +30,21 @@ const eventManagementRoutes: RouteRecordRaw[] = [
       {
         path: "financial",
         component: () => import('@/views/system/role/index.vue'),
-        name: "Financial Activity",
+        name: "Financial Activity Configuration",
         meta: {
-          title: "理财活动",
+          title: "理财活动配置",
+          hidden: false,
+          // alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
+        }
+      },
+      {
+        path: "agent/invitation",
+        component: () => import('@/views/event-management/agent-achievement/index.vue'),
+        name: "Agent Invitation",
+        meta: {
+          title: "代理直邀活动",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],
@@ -45,6 +57,18 @@ const eventManagementRoutes: RouteRecordRaw[] = [
         name: "Agent Achievement",
         meta: {
           title: "代理成就活动",
+          hidden: false,
+          // alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
+        }
+      },
+      {
+        path: "agent/task",
+        component: () => import('@/views/event-management/agent-achievement/index.vue'),
+        name: "Agent Task",
+        meta: {
+          title: "代理任务活动",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],

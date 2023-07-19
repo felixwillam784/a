@@ -6,7 +6,6 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
     {
         path: "/withdrawal/management",
         component: Layout,
-        redirect: "/review",
         meta: {
             title: "提充管理",
             icon: "system",
@@ -17,16 +16,61 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
         },
         children: [
             {
+                path: "manual/payment",
+                component: () => import('@/views/withdrawal-management/manual-payment/index.vue'),
+                name: "Manual Payment",
+                meta: {
+                    title: "人工打款",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
                 path: "review",
-                component: () => import('@/views/system/user/index.vue'),
-                name: "Withdrawal Review",
+                component: ChildrenLayout,
                 meta: {
                     title: "提现审核",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
                     keepAlive: true
-                }
+                },                
+                children: [
+                    {
+                        path: "",
+                        component: () => import('@/views/withdrawal-management/review/index.vue'),
+                        name: "Withdrawal Review",
+                        meta: {
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "bulk-pass",
+                        component: () => import('@/views/withdrawal-management/review/BulkPass.vue'),
+                        name: "Bulk Pass",
+                        meta: {
+                            title: "批量同意",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "bulk-reject",
+                        component: () => import('@/views/withdrawal-management/review/BulkReject.vue'),
+                        name: "Bulk Reject",
+                        meta: {
+                            title: "批量拒绝",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
             },
             {
                 path: "ban",
@@ -53,11 +97,11 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "channel",
+                path: "deposit-order/detail",
                 component: () => import('@/views/system/role/index.vue'),
-                name: "Cash Withdrawal Channel",
+                name: "Deposit Order Details",
                 meta: {
-                    title: "提现渠道",
+                    title: "存款订单详情",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -77,11 +121,11 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "payment/configuration",
+                path: "deposit/channel",
                 component: () => import('@/views/system/role/index.vue'),
-                name: "payment Configuration",
+                name: "Deposit Channel",
                 meta: {
-                    title: "支付配置",
+                    title: "存款渠道",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],

@@ -3,7 +3,7 @@ export default {
   route: {
     dashboard: 'Dashboard',
     data_analysis: "Data Analysis",
-    new_user: "New User",
+    user_data: "User Data",
     active_user: "Active User",
     pay_rate: "Pay Rate",
     user_retention: "User Retention",
