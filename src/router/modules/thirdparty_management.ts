@@ -17,7 +17,8 @@ const thirdpartyManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "management",
-                component: () => import('@/views/system/user/index.vue'),
+                // component: () => import('@/views/system/user/index.vue'),
+                component: ChildrenLayout,
                 name: "ThirdParty Management",
                 meta: {
                     hidden: true,

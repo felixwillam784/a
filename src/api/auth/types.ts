@@ -19,14 +19,15 @@ export interface LoginForm {
  * 登录响应类型声明
  */
 export interface LoginResult {
-  access_token: string;
-  token_type: string;
+  accessToken: string;
+  tokenType: string;
 }
 
 /**
  * 验证码类型声明
  */
 export interface VerifyCode {
+  verifyCodeBase64: string
   verifyCodeImg: string;
   verifyCodeKey: string;
 }

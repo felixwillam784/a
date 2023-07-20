@@ -7,7 +7,7 @@ import { UserForm, UserInfo, UserPageResult, UserQuery } from './types';
  */
 export function getUserInfo(): AxiosPromise<UserInfo> {
   return request({
-    url: '/youlai-system/api/v1/users/me',
+    url: '/users/me',
     method: 'get',
   });
 }

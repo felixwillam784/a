@@ -86,7 +86,8 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "blacklist",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Black List",
                 meta: {
                     title: "黑名单",
@@ -97,11 +98,11 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "deposit-order/detail",
-                component: () => import('@/views/system/role/index.vue'),
-                name: "Deposit Order Details",
+                path: "deposit-order/list",
+                component: () => import('@/views/withdrawal-management/deposit-order/index.vue'),
+                name: "Deposit Order List",
                 meta: {
-                    title: "存款订单详情",
+                    title: "存款订单列表",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -109,11 +110,12 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "recharge/configuration",
-                component: () => import('@/views/system/role/index.vue'),
-                name: "Recharge Configuration",
+                path: "payment/configuration",
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
+                name: "Payment Configuration",
                 meta: {
-                    title: "充值配置",
+                    title: "支付配置",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -122,10 +124,10 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "deposit/channel",
-                component: () => import('@/views/system/role/index.vue'),
+                component: () => import('@/views/withdrawal-management/deposit-channel/index.vue'),
                 name: "Deposit Channel",
                 meta: {
-                    title: "存款渠道",
+                    title: "存款渠道配置",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],

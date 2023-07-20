@@ -35,12 +35,12 @@ const useUserStore = defineStore({
           verifyCodeKey: verifyCodeKey,
         })
           .then((response) => {
-            const { access_token, token_type } = response.data;
-            const accessToken = token_type + ' ' + access_token;
-            localStorage.set('token', accessToken);
+            const { accessToken, tokenType } = response.data;
+            const access_token = tokenType + ' ' + accessToken;
+            localStorage.set('token', access_token);
             const networkData: NetworkData = NetworkData.getInstance();
             networkData.setToken(access_token);
-            this.token = accessToken;
+            this.token = access_token;
             resolve(access_token);
           })
           .catch((error) => {

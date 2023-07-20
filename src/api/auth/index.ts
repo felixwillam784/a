@@ -9,7 +9,7 @@ import { LoginForm, LoginResult, VerifyCode } from './types';
  */
 export function loginApi(data: LoginForm): AxiosPromise<LoginResult> {
   return request({
-    url: '/youlai-auth/oauth/token',
+    url: '/auth/login',
     method: 'post',
     params: data,
     headers: {
@@ -23,7 +23,7 @@ export function loginApi(data: LoginForm): AxiosPromise<LoginResult> {
  */
 export function logoutApi() {
   return request({
-    url: '/youlai-auth/oauth/logout',
+    url: '/auth/logout',
     method: 'delete',
   });
 }
@@ -33,7 +33,7 @@ export function logoutApi() {
  */
 export function getCaptcha(): AxiosPromise<VerifyCode> {
   return request({
-    url: '/captcha?t=' + new Date().getTime().toString(),
+    url: '/auth/captcha?t=' + new Date().getTime().toString(),
     method: 'get',
   });
 }

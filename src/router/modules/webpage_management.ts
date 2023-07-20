@@ -18,7 +18,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "top/management",
-                component: () => import('@/views/system/user/index.vue'),
+                // component: () => import('@/views/system/user/index.vue'),
+                component: ChildrenLayout,
                 name: "Top Management",
                 meta: {
                     title: "顶部管理",
@@ -30,7 +31,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "sidebar/management",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Sidebar Management",
                 meta: {
                     title: "侧边栏管理",
@@ -42,7 +44,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "pop-up/management",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Popup Management",
                 meta: {
                     title: "弹窗管理",
@@ -54,7 +57,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "tag/mangement",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Tag Management",
                 meta: {
                     title: "标签管理",
@@ -66,7 +70,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "service/management",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Customer Service Management",
                 meta: {
                     title: "客服管理",

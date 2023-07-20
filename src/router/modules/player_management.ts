@@ -205,7 +205,8 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "agent/mangement",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Agent Management",
                 meta: {
                     title: "代理管理",
@@ -263,7 +264,8 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "information/push",
-                component: () => import('@/views/system/role/index.vue'),
+                // component: () => import('@/views/system/role/index.vue'),
+                component: ChildrenLayout,
                 name: "Information Push",
                 meta: {
                     title: "信息推送",
@@ -277,7 +279,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 path: "kol",
                 component: ChildrenLayout,
                 meta: {
-                    title: "KOL管理",
+                    title: "KOL用户管理",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],

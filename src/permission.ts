@@ -16,18 +16,18 @@ router.beforeEach(async (to, from, next) => {
 
   // const networkData = NetworkData.getInstance()
   // const hasToken = networkData.getToken();
-  
-  if (hasToken) {
 
+
+  if (hasToken) {
     // 登录成功，跳转到首页
     if (to.path === '/login') {
       next({ path: '/' });
       NProgress.done();
     } else {
       const hasGetUserInfo = user.roles.length > 0;
-      console.log(hasGetUserInfo);
+      // console.log(hasGetUserInfo);
       if (hasGetUserInfo) {
-        console.log(to.matched);
+        // console.log(to.matched);
         if (to.matched.length === 0) {
           from.name ? next({ name: from.name as any }) : next('/401');
         } else {
@@ -60,6 +60,8 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done();
     }
   }
+
+
 });
 
 router.afterEach(() => {

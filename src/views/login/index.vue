@@ -90,6 +90,7 @@ const success = computed(() => {
 function handleLogin() {
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
+
       state.loading = true;
 
       user
@@ -102,6 +103,7 @@ function handleLogin() {
           state.loading = false;
           handleCaptchaGenerate();
         });
+
 
       // await dispatchSignIn(state.loginForm);
 
@@ -122,8 +124,8 @@ function handleLogin() {
 // 获取验证码
 function handleCaptchaGenerate() {
   getCaptcha().then(({ data }) => {
-    const { verifyCodeImg, verifyCodeKey } = data;
-    verifyCodeImgUrl.value = verifyCodeImg;
+    const { verifyCodeBase64, verifyCodeKey } = data;
+    verifyCodeImgUrl.value = verifyCodeBase64;
     loginForm.value.verifyCodeKey = verifyCodeKey;
     loginForm.value.grant_type = "captcha";
   });
