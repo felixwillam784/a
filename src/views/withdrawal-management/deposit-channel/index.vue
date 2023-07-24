@@ -14,6 +14,7 @@ interface GetDepositChannel {
     minium_recharge_amount: number | string
     maxium_recharge_amount: number | string
     handling_fee: number | string
+    channel_status: number | boolean,
     channel_remark: string
 }
 
@@ -49,6 +50,7 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
         minium_recharge_amount: 0.01,
         maxium_recharge_amount: 200000,
         handling_fee: 2,
+        channel_status: true,
         channel_remark: "",
     },
     {
@@ -60,6 +62,7 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
         minium_recharge_amount: 0.01,
         maxium_recharge_amount: 200000,
         handling_fee: 2,
+        channel_status: true,
         channel_remark: "",
     },
     {
@@ -71,6 +74,7 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
         minium_recharge_amount: 0.01,
         maxium_recharge_amount: 200000,
         handling_fee: 0,
+        channel_status: true,
         channel_remark: "",
     },
 ])
@@ -84,6 +88,7 @@ const depositChannelItem = ref<GetDepositChannel>({
     minium_recharge_amount: 0.01,
     maxium_recharge_amount: 200000,
     handling_fee: 2,
+    channel_status: true,
     channel_remark: "",
 })
 
@@ -106,7 +111,18 @@ const currencyTypeOptions = ref<Array<any>>([
     {
         label: "USD",
         value: "USD"
-    }
+    },
+])
+
+const channelStatusOptions = ref<Array<any>>([
+    {
+        label: "开启",
+        value: 1
+    },
+    {
+        label: "关闭",
+        value: 0
+    },
 ])
 
 const handleQuery = () => {
@@ -115,22 +131,24 @@ const handleQuery = () => {
 const addDepositChannelDialog = () => {
     depositChannelItem.value = {
         id: "",
-        channel_name: "PIX",
-        product_id: "XXXXXYYYYZZZZ",
-        payment_method: "XX Bank",
-        currency_type: "USD",
-        minium_recharge_amount: 0.01,
-        maxium_recharge_amount: 200000,
-        handling_fee: 2,
+        channel_name: "",
+        product_id: "",
+        payment_method: "",
+        currency_type: "",
+        minium_recharge_amount: "",
+        maxium_recharge_amount: "",
+        handling_fee: "",
+        channel_status: 1,
         channel_remark: "",
     }
     depositChannelDialogVisible.value = true;
     depositChannelDialogTitle.value = "新增存款渠道";
-    submitBtnText.value = "确认添加";
-    closeBtnText.value = "取消添加";
+    submitBtnText.value = "确认新增";
+    closeBtnText.value = "取消新增";
 }
 
 const editDepositChannelDialog = (item: GetDepositChannel) => {
+    item.channel_status = item.channel_status ? 1 : 0;
     depositChannelItem.value = item
     depositChannelDialogVisible.value = true;
     depositChannelDialogTitle.value = "存款渠道修改";
@@ -169,7 +187,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                             <el-input v-model="formData.deposit_channel" placeholder="请输入存款渠道" />
                         </el-form-item>
                         <el-form-item style="float: right;">
-                            <el-button type="primary" :icon="Plus" @click="addDepositChannelDialog">添加订单</el-button>
+                            <el-button type="primary" :icon="Plus" @click="addDepositChannelDialog">新增渠道</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -212,6 +230,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
                                 <p>{{ scope.row.channel_remark }}</p>
                             </template>
                         </el-table-column>
+                        <el-table-column align="center" prop="channel_status">
+                            <template #default="scope">
+                                <el-switch v-model="scope.row.channel_status" size="large" />
+                            </template>
+                        </el-table-column>
                         <el-table-column align="center" fixed="right" width="160">
                             <template #default="scope">
                                 <el-button type="success" link @click="editDepositChannelDialog(scope.row)">修改</el-button>
@@ -231,10 +254,10 @@ const resetForm = (formEl: FormInstance | undefined) => {
             @close="closeDialog">
             <el-form label-width="160px" ref="ruleFormRef" :rules="rules" :model="depositChannelItem">
                 <el-form-item label="渠道名字:" prop="channel_name">
-                    <el-input v-model="depositChannelItem.channel_name" placeholder="请选择新增渠道"/>
+                    <el-select v-model="depositChannelItem.channel_name" placeholder="请选择新增渠道"></el-select>
                 </el-form-item>
                 <el-form-item label="产品ID:" prop="product_id">
-                    <el-input v-model="depositChannelItem.product_id" placeholder="请选择产品ID"/>
+                    <el-select v-model="depositChannelItem.product_id" placeholder="请选择产品ID"></el-select>
                 </el-form-item>
                 <el-form-item label="付款方式:" prop="payment_method">
                     <el-select v-model="depositChannelItem.payment_method" placeholder="请选择付款方式">
@@ -249,13 +272,20 @@ const resetForm = (formEl: FormInstance | undefined) => {
                     </el-select>
                 </el-form-item>
                 <el-form-item label="最小充值金额:" prop="minium_recharge_amount">
-                    <el-input v-model="depositChannelItem.minium_recharge_amount"  placeholder="请输入最小充值金额"/>
+                    <el-input v-model="depositChannelItem.minium_recharge_amount" placeholder="请输入最小充值金额" />
                 </el-form-item>
                 <el-form-item label="最大充值金额:" prop="maxium_recharge_amount">
-                    <el-input v-model="depositChannelItem.maxium_recharge_amount"  placeholder="请输入最大充值金额"/>
+                    <el-input v-model="depositChannelItem.maxium_recharge_amount" placeholder="请输入最大充值金额" />
                 </el-form-item>
                 <el-form-item label="手续费(%):" prop="handling_fee">
-                    <el-input v-model="depositChannelItem.handling_fee"  placeholder="请输入手续费"/>
+                    <el-input v-model="depositChannelItem.handling_fee" placeholder="请输入手续费" />
+                </el-form-item>
+                <el-form-item label="渠道状态:" prop="channel_status">
+                    <el-select v-model="depositChannelItem.channel_status" placeholder="请选择渠道状态">
+                        <el-option v-for="(item, index) in channelStatusOptions" :label="item.label" :value="item.value"
+                            :key="index">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-row style="align-items: center;">
                     <Font color="red" style="font-size: 20px;">*</Font>

@@ -17,6 +17,8 @@ export default {
     player_management: "玩家管理",
     user_list: "用户列表",
     user_money_flow: "用户流水",
+    withdrawal_management: "充提管理",
+    manual_payment: "人工打款",
   },
   // 登录页面国际化
   login: {

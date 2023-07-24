@@ -200,7 +200,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-col :span="24" :xs="24">
 
                 <div class="search">
-                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="160">
+                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
                         <el-form-item label="用户账户" prop="user_account">
                             <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
                         </el-form-item>
@@ -211,17 +211,22 @@ const resetForm = (formEl: FormInstance | undefined) => {
                             <el-input v-model="formData.invitation_code" placeholder="请输入邀请码" />
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" :icon="Plus" @click="addManualPaymentDialog">添加订单</el-button>
+                            <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+                            <el-button :icon="Plus" @click="addManualPaymentDialog">添加订单</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
 
                 <el-card>
                     <el-table v-loading="loading" :data="manualPaymentList" style="width: 100%;">
-                        <el-table-column label="用户昵称" align="center" prop="nick_name" />
+                        <el-table-column label="用户昵称" align="center" prop="nick_name">
+                            <template #default="scope">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.nick_name }}</el-link>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="用户账号" align="center" prop="user_account">
                             <template #default="scope">
-                                <p>{{ scope.row.user_account }}</p>
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.user_account }}</el-link>
                             </template>
                         </el-table-column>
                         <el-table-column label="订单金额" align="center" prop="order_amount">
@@ -301,13 +306,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
         <el-dialog title="人工打款详情" v-model="manualPaymentDetailDialogVisible" width="600px" append-to-body
             @close="closeDialog">
-            <el-row>
-                <el-col :span="6" class="detail-item-left-bg">客户ID:</el-col>
-                <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.id }}</p>
-                    <el-button type="primary" link style="margin-left: auto;">复制</el-button>
-                </el-col>
-            </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">

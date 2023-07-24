@@ -16,7 +16,8 @@ export default {
     pool_report: "Pool Report",
     player_management: "Players",
     user_list: "User List",
-    user_money_flow: "User Money Flow",
+    withdrawal_management: "Withdrawal Management",
+    manual_payment: "Manual Payment",
   },
   // 登录页面国际化
   login: {

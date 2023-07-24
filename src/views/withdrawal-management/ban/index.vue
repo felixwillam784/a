@@ -7,7 +7,9 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 interface GetBan {
     id: string,
-    user_cpf: string
+    user_account: string
+    nick_name: string
+    withdrawal_account: string
     creation_time: string
     ban_reason: string
     operator: string
@@ -18,7 +20,9 @@ interface GetBan {
 const router = useRouter();
 
 const formData = ref<any>({
-    user_cpf: "",
+    user_account: "",
+    nick_name: "",
+    withdrawal_account: "",
     pageNum: 1,
     pageSize: 20,
 })
@@ -41,7 +45,9 @@ const rules = ref<FormRules<GetBan>>({
 const banList = ref<Array<GetBan>>([
     {
         id: "8e8fd8fsdfd8fe8f8df8ef",
-        user_cpf: "XXXXXXXXXXXXXXXXXX",
+        user_account: "test777@gmail.com",
+        nick_name: "UserName10001",
+        withdrawal_account: "XXXXXXXXXXXXXXXXXX",
         creation_time: "2023-07-10 19:00:00",
         ban_reason: "违规行为XXX",
         operator: "UserName",
@@ -52,7 +58,9 @@ const banList = ref<Array<GetBan>>([
 
 const banItem = ref<GetBan>({
     id: "8e8fd8fsdfd8fe8f8df8ef",
-    user_cpf: "XXXXXXXXXXXXXXXXXXXXX",
+    user_account: "test777@gmail.com",
+    nick_name: "UserName10001",
+    withdrawal_account: "XXXXXXXXXXXXXXXXXX",
     creation_time: "2023-07-10 19:00:00",
     ban_reason: "违规行为XXX",
     operator: "UserName",
@@ -66,7 +74,9 @@ const handleQuery = () => {
 const addBanDialog = () => {
     banItem.value = {
         id: "",
-        user_cpf: "XXXXXXXXXXXXXXXXXXXXX",
+        user_account: "test777@gmail.com",
+        nick_name: "UserName10001",
+        withdrawal_account: "XXXXXXXXXXXXXXXXXX",
         creation_time: "2023-07-10 19:00:00",
         ban_reason: "违规行为XXX",
         operator: "UserName",
@@ -119,9 +129,15 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-col :span="24" :xs="24">
 
                 <div class="search">
-                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="160">
-                        <el-form-item label="用户CPF" prop="user_cpf">
-                            <el-input v-model="formData.user_cpf" placeholder="请输入用户CPF" />
+                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
+                        <el-form-item label="用户账号" prop="user_account">
+                            <el-input v-model="formData.user_cpf" placeholder="请输入用户账号" />
+                        </el-form-item>
+                        <el-form-item label="客户昵称" prop="nick_name">
+                            <el-input v-model="formData.user_cpf" placeholder="请输入客户昵称" />
+                        </el-form-item>
+                        <el-form-item label="提款账号" prop="withdrawal_account">
+                            <el-input v-model="formData.user_cpf" placeholder="请输入提款账号" />
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
@@ -132,7 +148,21 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
                 <el-card>
                     <el-table v-loading="loading" :data="banList" style="width: 100%;">
-                        <el-table-column label="用户CPF" align="center" prop="user_cpf" width="240" />
+                        <el-table-column label="用户昵称" align="center" prop="nick_name">
+                            <template #default="scope">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.nick_name }}</el-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="用户账号" align="center" prop="user_account">
+                            <template #default="scope">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.user_account }}</el-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提款账号" align="center" prop="withdrawal_account">
+                            <template #default="scope">
+                                <p>{{ scope.row.withdrawal_account }}</p>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="创建时间" align="center" prop="creation_time">
                             <template #default="scope">
                                 <p>{{ scope.row.creation_time }}</p>
@@ -165,8 +195,17 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
         <el-dialog :title="banDialogTitle" v-model="banDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-form label-width="160px">
-                <el-form-item label="客户CPF:">
-                    <el-input v-model="banItem.user_cpf" />
+                <el-form-item label="客户账号:">
+                    <el-input v-model="banItem.user_account" />
+                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
+                </el-form-item>
+                <el-form-item label="客户昵称:">
+                    <el-input v-model="banItem.nick_name" />
+                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
+                </el-form-item>
+                <el-form-item label="客户提款账号:">
+                    <el-input v-model="banItem.withdrawal_account" />
+                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
                 </el-form-item>
                 <el-form-item label="封禁原因:">
                     <el-input v-model="banItem.ban_reason" />
@@ -188,7 +227,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-form>
             <el-form ref="ruleFormRef" :rules="rules" :model="banItem">
                 <el-row style="align-items: center;">
-                    <Font color="red" style="font-size: 20px;">*</Font>
+                    <p style="font-size: 20px; color: red;">*</p>
                     <h3>解封备注</h3>
                 </el-row>
                 <el-form-item prop="unblock_remark">
@@ -205,9 +244,24 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
         <el-dialog title="封禁详情" v-model="banDetailDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">客户CPF:</el-col>
+                <el-col :span="6" class="detail-item-left-bg">客户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.user_cpf }}</p>
+                    <p>{{ banItem.user_account }}</p>
+                    <el-button type="primary" link style="margin-left: auto;">复制</el-button>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6" class="detail-item-left-bg">客户昵称:</el-col>
+                <el-col :span="18" class="detail-item-right-bg">
+                    <p>{{ banItem.nick_name }}</p>
+                    <el-button type="primary" link style="margin-left: auto;">复制</el-button>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6" class="detail-item-left-bg">客户提款账号:</el-col>
+                <el-col :span="18" class="detail-item-right-bg">
+                    <p>{{ banItem.withdrawal_account }}</p>
+                    <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
             <el-row>

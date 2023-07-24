@@ -10,6 +10,7 @@ interface GetDepositOrder {
     user_account: string
     nick_name: string
     user_name: string
+    order_number: string
     platform_order_number: string
     channel_order_number: string
     upstream_order_number: string
@@ -30,7 +31,7 @@ const router = useRouter();
 const formData = ref<any>({
     user_account: "",
     nick_name: "",
-    product_id: "",
+    user_id: "",
     submission_time: "",
     order_update_time: "",
     order_status: "",
@@ -55,6 +56,7 @@ const depositOrderList = ref<Array<GetDepositOrder>>([
         user_account: "test777@gmail.com",
         nick_name: "UserName10001",
         user_name: "Faker",
+        order_number: "123456789",
         platform_order_number: "XXXXXXXXXXXXX",
         channel_order_number: "YYYYYYYYYYYYY",
         upstream_order_number: "ZZZZZZZZZZZZZ",
@@ -74,6 +76,7 @@ const depositOrderList = ref<Array<GetDepositOrder>>([
         user_account: "test777@gmail.com",
         nick_name: "UserName10001",
         user_name: "Faker",
+        order_number: "123456789",
         platform_order_number: "XXXXXXXXXXXXX",
         channel_order_number: "YYYYYYYYYYYYY",
         upstream_order_number: "ZZZZZZZZZZZZZ",
@@ -93,6 +96,7 @@ const depositOrderList = ref<Array<GetDepositOrder>>([
         user_account: "test777@gmail.com",
         nick_name: "UserName10001",
         user_name: "Faker",
+        order_number: "123456789",
         platform_order_number: "XXXXXXXXXXXXX",
         channel_order_number: "YYYYYYYYYYYYY",
         upstream_order_number: "ZZZZZZZZZZZZZ",
@@ -112,6 +116,7 @@ const depositOrderList = ref<Array<GetDepositOrder>>([
         user_account: "test777@gmail.com",
         nick_name: "UserName10001",
         user_name: "Faker",
+        order_number: "123456789",
         platform_order_number: "XXXXXXXXXXXXX",
         channel_order_number: "YYYYYYYYYYYYY",
         upstream_order_number: "ZZZZZZZZZZZZZ",
@@ -133,6 +138,7 @@ const depositOrderItem = ref<GetDepositOrder>({
     user_account: "test777@gmail.com",
     nick_name: "UserName10001",
     user_name: "Faker",
+    order_number: "123456789",
     platform_order_number: "XXXXXXXXXXXXX",
     channel_order_number: "YYYYYYYYYYYYY",
     upstream_order_number: "ZZZZZZZZZZZZZ",
@@ -193,8 +199,8 @@ const makeOrder = (item: GetDepositOrder) => {
                                 <el-form-item label="用户账户" prop="user_account">
                                     <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
                                 </el-form-item>
-                                <el-form-item label="用户ID" prop="product_id">
-                                    <el-input v-model="formData.product_id" placeholder="请输入用户ID" />
+                                <el-form-item label="用户ID" prop="user_id">
+                                    <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
                                 </el-form-item>
                             </el-form>
                             <el-form :model="formData" :inline="true" label-width="100">
@@ -247,7 +253,8 @@ const makeOrder = (item: GetDepositOrder) => {
                         <el-table-column label="订单状态" align="center" prop="order_status">
                             <template #default="scope">
                                 <Font v-if="scope.row.order_status == '支付中'">{{ scope.row.order_status }}</Font>
-                                <Font color="green" v-else-if="scope.row.order_status == '支付成功'">{{ scope.row.order_status }}</Font>
+                                <Font color="green" v-else-if="scope.row.order_status == '支付成功'">{{ scope.row.order_status
+                                }}</Font>
                                 <Font color="red" v-else>{{ scope.row.order_status }}</Font>
                             </template>
                         </el-table-column>
@@ -280,7 +287,8 @@ const makeOrder = (item: GetDepositOrder) => {
                             <template #default="scope">
                                 <el-button type="danger" link @click="detailManualPaymentDialog(scope.row)">详情</el-button>
                                 <el-button type="success" link @click="makeOrder(scope.row)">补单</el-button>
-                                <el-button type="primary" plain :class="scope.row.order_status != '支付中' ? 'hidden' : ''">同步订单</el-button>
+                                <el-button type="primary" plain
+                                    :class="scope.row.order_status != '支付中' ? 'hidden' : ''">同步订单</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -350,7 +358,8 @@ const makeOrder = (item: GetDepositOrder) => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">订单状态:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <Font color="green" v-if="depositOrderItem.order_status == '支付成功'">{{ depositOrderItem.order_status }}</Font>
+                    <Font color="green" v-if="depositOrderItem.order_status == '支付成功'">{{ depositOrderItem.order_status }}
+                    </Font>
                     <p v-else>{{ depositOrderItem.order_status }}</p>
                 </el-col>
             </el-row>
@@ -449,7 +458,7 @@ const makeOrder = (item: GetDepositOrder) => {
         margin-left: 0px !important;
     }
 }
+
 .hidden {
     visibility: hidden;
-}
-</style>
+}</style>

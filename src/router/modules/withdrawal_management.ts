@@ -7,7 +7,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
         path: "/withdrawal/management",
         component: Layout,
         meta: {
-            title: "提充管理",
+            title: "withdrawal_management",
             icon: "system",
             hidden: false,
             alwaysShow: true,
@@ -20,7 +20,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/withdrawal-management/manual-payment/index.vue'),
                 name: "Manual Payment",
                 meta: {
-                    title: "人工打款",
+                    title: "manual_payment",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
