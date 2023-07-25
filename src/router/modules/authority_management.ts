@@ -17,8 +17,7 @@ const authorityManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "management",
-                // component: () => import('@/views/system/user/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Authority Management",
                 meta: {
                     hidden: true,

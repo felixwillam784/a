@@ -29,8 +29,7 @@ const eventManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "financial",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Financial Activity Configuration",
         meta: {
           title: "理财活动配置",

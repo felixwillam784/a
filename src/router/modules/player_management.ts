@@ -205,8 +205,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "agent/mangement",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Agent Management",
                 meta: {
                     title: "代理管理",
@@ -216,18 +215,6 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 }
             },
-            // {
-            //     path: "gift/management",
-            //     component: () => import('@/views/system/role/index.vue'),
-            //     name: "Gift Management",
-            //     meta: {
-            //         title: "赠送管理",
-            //         hidden: false,
-            //         // alwaysShow: false,
-            //         roles: ["ADMIN"],
-            //         keepAlive: true
-            //     }
-            // },
             {
                 path: "warning",
                 component: ChildrenLayout,
@@ -264,8 +251,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "information/push",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Information Push",
                 meta: {
                     title: "信息推送",

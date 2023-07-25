@@ -17,8 +17,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "user/list",
-        // component: () => import('@/views/system/user/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "User Data",
         meta: {
           title: "user_data",
@@ -27,43 +26,9 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
-      // {
-      //   path: "user/active",
-      //   component: () => import('@/views/system/role/index.vue'),
-      //   name: "Active User",
-      //   meta: {
-      //     title: "active_user",
-      //     hidden: false,
-      //     roles: ["ADMIN"],
-      //     keepAlive: true
-      //   }
-      // },
-      // {
-      //   path: "pay/rate",
-      //   component: () => import('@/views/system/role/index.vue'),
-      //   name: "Pay Rate",
-      //   meta: {
-      //     title: "pay_rate",
-      //     hidden: false,
-      //     roles: ["ADMIN"],
-      //     keepAlive: true
-      //   }
-      // },
-      // {
-      //   path: "user/retention",
-      //   component: () => import('@/views/system/role/index.vue'),
-      //   name: "User Retention",
-      //   meta: {
-      //     title: "user_retention",
-      //     hidden: false,
-      //     roles: ["ADMIN"],
-      //     keepAlive: true
-      //   }
-      // },
       {
         path: "customer/habbit",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Customer Habbit",
         meta: {
           title: "customer_habbit",
@@ -75,8 +40,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "game/report",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Game Report",
         meta: {
           title: "game_report",
@@ -88,8 +52,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "platform/report",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Platform Report",
         meta: {
           title: "platform_report",
@@ -101,8 +64,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "activity/statement",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Activity Statement",
         meta: {
           title: "activity_statement",
@@ -114,8 +76,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "withdrawal/report",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Withdrawal Report",
         meta: {
           title: "withdrawal_report",
@@ -127,8 +88,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "data/summary",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Data Summary",
         meta: {
           title: "data_summary",
@@ -140,8 +100,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "pool/report",
-        // component: () => import('@/views/system/role/index.vue'),
-        component: ChildrenLayout,
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
         name: "Prize Pool Report",
         meta: {
           title: "pool_report",

@@ -86,8 +86,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "blacklist",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/ban/index.vue'),
                 name: "Black List",
                 meta: {
                     title: "黑名单",
@@ -111,8 +110,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "payment/configuration",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/deposit-order/index.vue'),
                 name: "Payment Configuration",
                 meta: {
                     title: "支付配置",

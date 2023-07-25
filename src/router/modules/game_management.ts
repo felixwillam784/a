@@ -18,8 +18,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "",
-                // component: () => import('@/views/system/user/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Game Management",
                 meta: {
                     title: "游戏管理",
@@ -31,8 +30,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "bet/management",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Bet Management",
                 meta: {
                     title: "下注管理",
@@ -44,8 +42,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "pool/management",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Pool Management",
                 meta: {
                     title: "奖池管理",
@@ -57,8 +54,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "robot/configuration",
-                // component: () => import('@/views/system/role/index.vue'),
-                component: ChildrenLayout,
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Robot Configuration",
                 meta: {
                     title: "机器人配置",

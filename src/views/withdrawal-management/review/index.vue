@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
+import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
@@ -14,14 +14,20 @@ interface GetWithdrawalReview {
     order_status: string
     risk_control_hint: string
     order_number: string
+    gaia_order_number: string,
+    successful_recharge_times: number | string
+    withdrawal_status: number | string
+    withdrawal_times: number | string
+    kol_user: string
     platform_order_number: string
     upstream_order_number: string
     handling_fee: number | string
-    operation_time: string
+    order_update_time: string
     total_recharge: number | string
     total_withdrawal: number | string
     withdrawal_channel: string
     withdrawal_method: string
+    review_status: number
     operator: string
     submission_time: string
 }
@@ -72,16 +78,22 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         actual_amount: 999,
         order_status: "待处理",
         risk_control_hint: "未风控",
-        order_number: "123456789",
+        order_number: "566756756756768568",
+        gaia_order_number: "65rttfer5qweqwedsfsdf",
+        successful_recharge_times: 99,
+        withdrawal_status: "否",
+        withdrawal_times: 11,
+        kol_user: "KOL用户",
         platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
         upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
         handling_fee: 1,
-        operation_time: "2023-07-12 19:00:00",
+        order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
         withdrawal_channel: "XXXXXXXXXXX",
         withdrawal_method: "GCASH.MAYA.BANK",
         operator: "UserName",
+        review_status: 0,
         submission_time: "2023-07-10 19:00:00",
     },
     {
@@ -92,16 +104,22 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         actual_amount: 999,
         order_status: "启动代付",
         risk_control_hint: "未风控",
-        order_number: "123456789",
+        order_number: "566756756756768568",
+        gaia_order_number: "65rttfer5qweqwedsfsdf",
+        successful_recharge_times: 99,
+        withdrawal_status: "是",
+        withdrawal_times: 0,
+        kol_user: "KOL用户",
         platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
         upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
         handling_fee: 1,
-        operation_time: "2023-07-12 19:00:00",
+        order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
         withdrawal_channel: "XXXXXXXXXXX",
         withdrawal_method: "GCASH.MAYA.BANK",
         operator: "UserName",
+        review_status: 0,
         submission_time: "2023-07-10 19:00:00",
     },
     {
@@ -112,15 +130,21 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         actual_amount: 999,
         order_status: "已拒绝",
         risk_control_hint: "IP风控",
-        order_number: "123456789",
+        order_number: "566756756756768568",
+        gaia_order_number: "65rttfer5qweqwedsfsdf",
+        successful_recharge_times: 99,
+        withdrawal_status: "否",
+        withdrawal_times: 11,
+        kol_user: "KOL用户",
         platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
         upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
         handling_fee: 1,
-        operation_time: "2023-07-12 19:00:00",
+        order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
         withdrawal_channel: "XXXXXXXXXXX",
         withdrawal_method: "GCASH.MAYA.BANK",
+        review_status: 1,
         operator: "UserName",
         submission_time: "2023-07-10 19:00:00",
     },
@@ -132,15 +156,21 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         actual_amount: 999,
         order_status: "已退款",
         risk_control_hint: "一级风控",
-        order_number: "123456789",
+        order_number: "566756756756768568",
+        gaia_order_number: "65rttfer5qweqwedsfsdf",
+        successful_recharge_times: 99,
+        withdrawal_status: "否",
+        withdrawal_times: 11,
+        kol_user: "KOL用户",
         platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
         upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
         handling_fee: 1,
-        operation_time: "2023-07-12 19:00:00",
+        order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
         withdrawal_channel: "XXXXXXXXXXX",
         withdrawal_method: "GCASH.MAYA.BANK",
+        review_status: 0,
         operator: "UserName",
         submission_time: "2023-07-10 19:00:00",
     },
@@ -152,15 +182,21 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         actual_amount: 999,
         order_status: "已打款",
         risk_control_hint: "未风控",
-        order_number: "123456789",
+        order_number: "566756756756768568",
+        gaia_order_number: "65rttfer5qweqwedsfsdf",
+        successful_recharge_times: 99,
+        withdrawal_status: "否",
+        withdrawal_times: 11,
+        kol_user: "KOL用户",
         platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
         upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
         handling_fee: 1,
-        operation_time: "2023-07-12 19:00:00",
+        order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
         withdrawal_channel: "XXXXXXXXXXX",
         withdrawal_method: "GCASH.MAYA.BANK",
+        review_status: 1,
         operator: "UserName",
         submission_time: "2023-07-10 19:00:00",
     },
@@ -174,15 +210,21 @@ const withdrawalReviewItem = ref<GetWithdrawalReview>({
     actual_amount: 999,
     order_status: "待处理",
     risk_control_hint: "未风控",
-    order_number: "123456789",
+    order_number: "566756756756768568",
+    gaia_order_number: "65rttfer5qweqwedsfsdf",
+    successful_recharge_times: 99,
+    withdrawal_status: "否",
+    withdrawal_times: 11,
+    kol_user: "KOL用户",
     platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
     upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
     handling_fee: 1,
-    operation_time: "2023-07-12 19:00:00",
+    order_update_time: "2023-07-12 19:00:00",
     total_recharge: 1000,
     total_withdrawal: 999,
     withdrawal_channel: "XXXXXXXXXXX",
     withdrawal_method: "GCASH.MAYA.BANK",
+    review_status: 0,
     operator: "UserName",
     submission_time: "2023-07-10 19:00:00",
 })
@@ -249,11 +291,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const goBulkPassPage = () => {
-    router.push({name: "Bulk Pass"});
+    // router.push({name: "Bulk Pass"});
 }
 
 const goBulkRejectPage = () => {
-    router.push({name: "Bulk Reject"});
+    // router.push({name: "Bulk Reject"});
 }
 </script>
 
@@ -284,6 +326,12 @@ const goBulkRejectPage = () => {
                                     <el-date-picker v-model="formData.wick_time" type="date" placeholder="选择更新时间"
                                         format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                                 </el-form-item>
+                                <el-form-item label="订单状态" prop="order_status">
+                                    <el-select v-model="formData.order_status" placeholder="选择订单状态">
+                                        <el-option v-for="(item, index) in orderStatusOptions" :label="item.label"
+                                            :value="item.value" :key="index"></el-option>
+                                    </el-select>
+                                </el-form-item>
                             </el-form>
                             <el-form :model="formData" :inline="true" label-width="100">
                                 <el-form-item label="平台订单号" prop="platform_order_number">
@@ -291,12 +339,6 @@ const goBulkRejectPage = () => {
                                 </el-form-item>
                                 <el-form-item label="上游订单号" prop="upstream_order_number">
                                     <el-input v-model="formData.upstream_order_number" placeholder="请输入上游订单号" />
-                                </el-form-item>
-                                <el-form-item label="订单状态" prop="order_status">
-                                    <el-select v-model="formData.order_status" placeholder="选择订单状态">
-                                        <el-option v-for="(item, index) in orderStatusOptions" :label="item.label"
-                                            :value="item.value" :key="index"></el-option>
-                                    </el-select>
                                 </el-form-item>
                             </el-form>
                         </el-col>
@@ -310,23 +352,31 @@ const goBulkRejectPage = () => {
                 </el-card>
                 <el-card style="margin-top: 20px;">
                     <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%;">
-                        <el-table-column label="用户昵称" align="center" prop="nick_name" />
-                        <el-table-column label="用户账号" align="center" prop="user_account">
+                        <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
                             <template #default="scope">
-                                <p>{{ scope.row.user_account }}</p>
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">
+                                    {{ scope.row.nick_name }}
+                                </el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column label="提现金额" align="center" prop="withdrawal_amount">
+                        <el-table-column label="用户账号" align="center" prop="user_account" width="160">
+                            <template #default="scope">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">
+                                    {{ scope.row.user_account }}
+                                </el-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提现金额" align="center" prop="withdrawal_amount" width="120">
                             <template #default="scope">
                                 <p>${{ scope.row.withdrawal_amount.toFixed(2) }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="实到金额" align="center" prop="actual_amount">
+                        <el-table-column label="实到金额" align="center" prop="actual_amount" width="120">
                             <template #default="scope">
                                 <p>${{ scope.row.actual_amount.toFixed(2) }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单状态" align="center" prop="order_status">
+                        <el-table-column label="订单状态" align="center" prop="order_status" width="120">
                             <template #default="scope">
                                 <Font color="green" v-if="scope.row.order_status == '已打款'">{{ scope.row.order_status }}
                                 </Font>
@@ -335,7 +385,7 @@ const goBulkRejectPage = () => {
                                 <Font v-else>{{ scope.row.order_status }}</Font>
                             </template>
                         </el-table-column>
-                        <el-table-column label="风控提示" align="center" prop="risk_control_hint">
+                        <el-table-column label="风控提示" align="center" prop="risk_control_hint" width="160">
                             <template #default="scope">
                                 <Font color="red"
                                     v-if="scope.row.risk_control_hint == 'IP风控' || scope.row.risk_control_hint == '一级风控'">{{
@@ -343,22 +393,64 @@ const goBulkRejectPage = () => {
                                 <Font v-else>{{ scope.row.risk_control_hint }}</Font>
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单号" align="center" prop="order_number">
+                        <el-table-column label="订单号" align="center" prop="order_number" width="220">
                             <template #default="scope">
-                                <p>{{ scope.row.order_number }}</p>
+                                <div style="display: flex; align-items: center;">
+                                    <p>{{ scope.row.order_number }}</p>
+                                    <el-button link>
+                                        <el-icon>
+                                            <CopyDocument />
+                                        </el-icon>
+                                    </el-button>
+                                </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单提交时间" align="center" prop="submission_time">
+                        <el-table-column label="Gaia订单号" align="center" prop="gaia_order_number" width="220">
+                            <template #default="scope">
+                                <div style="display: flex; align-items: center;">
+                                    <p>{{ scope.row.gaia_order_number }}</p>
+                                    <el-button link>
+                                        <el-icon>
+                                            <CopyDocument />
+                                        </el-icon>
+                                    </el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="成功充值次数" align="center" prop="successful_recharge_times" width="120">
+                            <template #default="scope">
+                                <p>{{ scope.row.successful_recharge_times }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="是否首次提现" align="center" prop="withdrawal_status" width="120">
+                            <template #default="scope">
+                                <p :class="scope.row.withdrawal_status == '是' ? 'red' : ''">{{ scope.row.withdrawal_status }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提现次数" align="center" prop="withdrawal_times" width="120">
+                            <template #default="scope">
+                                <p>{{ scope.row.withdrawal_times }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="KOL用户" align="center" prop="kol_user" width="120">
+                            <template #default="scope">
+                                <p>{{ scope.row.kol_user }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单提交时间" align="center" prop="submission_time" width="220">
                             <template #default="scope">
                                 <p>{{ scope.row.submission_time }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" fixed="right" width="240">
+                        <el-table-column align="center" label="操作" fixed="right" width="200">
                             <template #default="scope">
-                                <el-button type="primary" plain
+                                <el-button type="danger" link
                                     @click="detailWithdrawalReviewDialog(scope.row)">详情</el-button>
-                                <el-button type="primary" plain>同意</el-button>
-                                <el-button type="danger" plain>拒绝</el-button>
+                                <el-button type="primary" link v-if="scope.row.order_status == '待处理'">锁定</el-button>
+                                <el-button type="danger" link v-else-if="scope.row.order_status == '已拒绝'">已锁定</el-button>
+                                <el-button type="success" link v-else>同意</el-button>
+                                <el-button type="danger" link
+                                    :class="scope.row.order_status != '已打款' ? 'hidden' : ''">拒绝</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -410,12 +502,6 @@ const goBulkRejectPage = () => {
                 </template>
             </el-dialog>
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">客户ID:</el-col>
-                <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.id }}</p>
-                </el-col>
-            </el-row>
-            <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ withdrawalReviewItem.user_account }}</p>
@@ -434,15 +520,9 @@ const goBulkRejectPage = () => {
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">通道订单号:</el-col>
+                <el-col :span="6" class="detail-item-left-bg">Gaia订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.platform_order_number }}</p>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="6" class="detail-item-left-bg">上游订单号:</el-col>
-                <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.upstream_order_number }}</p>
+                    <p>{{ withdrawalReviewItem.gaia_order_number }}</p>
                 </el-col>
             </el-row>
             <el-row>
@@ -469,10 +549,10 @@ const goBulkRejectPage = () => {
                     <p>{{ withdrawalReviewItem.submission_time }}</p>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col :span="6" class="detail-item-left-bg">订单操作时间:</el-col>
+            <el-row v-if="withdrawalReviewItem.review_status == 1">
+                <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.operation_time }}</p>
+                    <p>{{ withdrawalReviewItem.order_update_time }}</p>
                 </el-col>
             </el-row>
             <el-row>
@@ -509,21 +589,21 @@ const goBulkRejectPage = () => {
                     <Font v-else>{{ withdrawalReviewItem.risk_control_hint }}</Font>
                 </el-col>
             </el-row>
-            <el-row>
+            <el-row v-if="withdrawalReviewItem.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ withdrawalReviewItem.operator }}</p>
                 </el-col>
             </el-row>
             <template #footer>
-                <div class="dialog-footer">
+                <div class="dialog-footer" v-if="withdrawalReviewItem.review_status == 0">
                     <el-button type="primary" @click="passDialogShow">通过</el-button>
                     <el-button type="warning" @click="rejectDialogShow">拒绝</el-button>
                     <el-button @click="closeDialog">取消</el-button>
                 </div>
-                <!-- <div class="dialog-footer">
+                <div class="dialog-footer" v-else>
                     <el-button @click="closeDialog">确认</el-button>
-                </div> -->
+                </div>
             </template>
         </el-dialog>
     </div>
@@ -560,5 +640,12 @@ const goBulkRejectPage = () => {
     .el-form-item__content {
         margin-left: 0px !important;
     }
+}
+
+.hidden {
+    visibility: hidden;
+}
+.red {
+    color: red;
 }
 </style>

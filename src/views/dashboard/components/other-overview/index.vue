@@ -26,11 +26,55 @@ const userData = ref({
     payment_conversion_rate: "",
     recharge_user_number: "",
     recharge_actived_user_number: "",
-    proxy_number: "",
+    agent_number: "",
     withdrawal_applied_player_number: "",
     successful_withdrawal_number: "",
     attract_new_player: "",
     new_increased_payment_level: "",
+})
+const userRetention = ref({
+    first_charge_user: "",
+    charge_user_3: "",
+    charge_user_7: "",
+    charge_user_15: "",
+    charge_user_30: "",
+})
+const agentData = ref({
+    actived_agent_number: "",
+    new_agent_number: "",
+    new_level_agent_registration_number: "",
+    new_agent_first_charge_number: "",
+    new_level_payment: "",
+    agent_level_total_recharge: "",
+    agent_level_total_withdrawal: "",
+    first_level_agent_deposit_withdrawal_difference: "",
+    first_level_agent_per_recharge: "",
+    agent_total_commission: "",
+    subordinate_recharge_bonus_commission: "",
+    affiliate_reward_total_commission: "",
+    subordinate_betting_total_commission: "",
+    artificial_gold_amount: "",
+    successfully_withdraw_amount: "",
+})
+const agentRetention = ref({
+    actived_agent_number_in_7_days: "",
+    lost_agent_number_in_30_days: "",
+    lost_agency_rate_in_30_days: "",
+})
+const gameData = ref({
+    betting_players: "",
+    total_bet_amount: "",
+    total_bonus_amount: "",
+    total_profit_and_loss: "",
+    total_bet_number: "",
+    original_game_advantage: "",
+    original_game_profit_loss: "",
+    slot_game_advantage: "",
+    slot_profit_loss: "",
+    live_game_advantage: "",
+    live_profit_loss: "",
+    sport_game_advantage: "",
+    sport_profit_loss: "",
 })
 
 const handleChange = () => {
