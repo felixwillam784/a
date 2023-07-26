@@ -47,7 +47,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         children: [
                             {
                                 path: "",
-                                component: () => import('@/views/player-management/user-list/UserDetail.vue'),
+                                component: () => import('@/views/player-management/user-list/detail/index.vue'),
                                 name: "User Detail",
                                 meta: {
                                     hidden: true,

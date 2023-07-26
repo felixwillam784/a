@@ -150,12 +150,12 @@ const resetForm = (formEl: FormInstance | undefined) => {
                     <el-table v-loading="loading" :data="banList" style="width: 100%;">
                         <el-table-column label="用户昵称" align="center" prop="nick_name">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.nick_name }}</el-link>
+                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">{{ scope.row.nick_name }}</el-link>
                             </template>
                         </el-table-column>
                         <el-table-column label="用户账号" align="center" prop="user_account">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;">{{ scope.row.user_account }}</el-link>
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">{{ scope.row.user_account }}</el-link>
                             </template>
                         </el-table-column>
                         <el-table-column label="提款账号" align="center" prop="withdrawal_account">

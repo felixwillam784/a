@@ -115,7 +115,7 @@ const goFundingDetails = () => {
 }
 
 const goAgentDetails = () => {
-    router.push({name: "Agent Details"});
+    router.push({ name: "Agent Details" });
 }
 const submitForm = () => {
 
@@ -124,12 +124,10 @@ const submitForm = () => {
 
 <template>
     <div class="app-container">
-
         <div class="user-detail-header">
             <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
             <el-button type="primary" style="margin-left: auto;" @click="showCustomerDialog">修改信息</el-button>
         </div>
-
         <el-card>
             <el-form>
                 <el-row>
