@@ -112,11 +112,16 @@ const mexList = ref([
 const loading = ref<boolean>(false);
 
 const goBack = () => {
-    router.go(-1);
+    router.push({name: "User List"});
 }
 
 const handleChange = () => {
 
+}
+
+const handleButtonActive = (index: number, name: string) => {
+    activeButton.value = index;
+    router.push({name: name});
 }
 </script>
 
@@ -125,16 +130,26 @@ const handleChange = () => {
         <div class="user-detail-header">
             <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
             <div style="margin-left: auto;">
-                <el-button :type="activeButton == 0 ? 'warning' : ''">用户详情</el-button>
-                <el-button :type="activeButton == 1 ? 'warning' : ''">资金明细</el-button>
-                <el-button :type="activeButton == 2 ? 'warning' : ''">代理返利</el-button>
-                <el-button :type="activeButton == 3 ? 'warning' : ''">推广记录</el-button>
-                <el-button :type="activeButton == 4 ? 'warning' : ''">充值记录</el-button>
-                <el-button :type="activeButton == 5 ? 'warning' : ''">提现记录</el-button>
-                <el-button :type="activeButton == 6 ? 'warning' : ''">人工扣款</el-button>
-                <el-button :type="activeButton == 7 ? 'warning' : ''">人工充值</el-button>
-                <el-button :type="activeButton == 8 ? 'warning' : ''">投注记录</el-button>
-                <el-button :type="activeButton == 9 ? 'warning' : ''">登录记录</el-button>
+                <el-button :type="activeButton == 0 ? 'warning' : ''"
+                    @click="handleButtonActive(0, 'UserDetail')">用户详情</el-button>
+                <el-button :type="activeButton == 1 ? 'warning' : ''"
+                    @click="handleButtonActive(1, 'FundingDetails')">资金明细</el-button>
+                <el-button :type="activeButton == 2 ? 'warning' : ''"
+                    @click="handleButtonActive(2, 'AgentRebate')">代理返利</el-button>
+                <el-button :type="activeButton == 3 ? 'warning' : ''"
+                    @click="handleButtonActive(3, 'PromotionRecord')">推广记录</el-button>
+                <el-button :type="activeButton == 4 ? 'warning' : ''"
+                    @click="handleButtonActive(4, 'RechargeRecord')">充值记录</el-button>
+                <el-button :type="activeButton == 5 ? 'warning' : ''"
+                    @click="handleButtonActive(5, 'WithdrawalRecord')">提现记录</el-button>
+                <el-button :type="activeButton == 6 ? 'warning' : ''"
+                    @click="handleButtonActive(6, 'ManualDeduction')">人工扣款</el-button>
+                <el-button :type="activeButton == 7 ? 'warning' : ''"
+                    @click="handleButtonActive(7, 'ManualRecharge')">人工充值</el-button>
+                <el-button :type="activeButton == 8 ? 'warning' : ''"
+                    @click="handleButtonActive(8, 'BettingRecord')">投注记录</el-button>
+                <el-button :type="activeButton == 9 ? 'warning' : ''"
+                    @click="handleButtonActive(9, 'RegistrationRecord')">登录记录</el-button>
             </div>
         </div>
         <el-card>
@@ -699,7 +714,7 @@ const handleChange = () => {
                                 </template>
                                 <el-table v-loading="loading" :data="pixList" style="width: 100%;">
                                     <el-table-column label="名称" align="center" prop="name" />
-                                    <el-table-column label="邮箱" align="center" prop="main" />
+                                    <el-table-column label="邮箱" align="center" prop="mail" />
                                     <el-table-column label="手机号" align="center" prop="phone_number">
                                     </el-table-column>
                                     <el-table-column label="Pix" align="center" prop="pix" />

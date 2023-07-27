@@ -48,7 +48,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                             {
                                 path: "",
                                 component: () => import('@/views/player-management/user-list/detail/index.vue'),
-                                name: "User Detail",
+                                name: "UserDetail",
                                 meta: {
                                     hidden: true,
                                     roles: ["ADMIN"],
@@ -56,64 +56,9 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                                 },
                             },
                             {
-                                path: "betting/record",
-                                component: () => import('@/views/player-management/user-list/BettingRecord.vue'),
-                                name: "Betting Record",
-                                meta: {
-                                    title: "下注记录",
-                                    hidden: true,
-                                    roles: ["ADMIN"],
-                                    keepAlive: true
-                                },
-                            },
-                            {
-                                path: "winning/record",
-                                component: () => import('@/views/player-management/user-list/WinningRecord.vue'),
-                                name: "Winning Record",
-                                meta: {
-                                    title: "中奖记录",
-                                    hidden: true,
-                                    roles: ["ADMIN"],
-                                    keepAlive: true
-                                },
-                            },
-                            {
-                                path: "recharge/record",
-                                component: () => import('@/views/player-management/user-list/RechargeRecord.vue'),
-                                name: "Recharge Record",
-                                meta: {
-                                    title: "充值记录",
-                                    hidden: true,
-                                    roles: ["ADMIN"],
-                                    keepAlive: true
-                                },
-                            },
-                            {
-                                path: "withdrawal/record",
-                                component: () => import('@/views/player-management/user-list/WithdrawalRecord.vue'),
-                                name: "Withdrawal Record",
-                                meta: {
-                                    title: "提现记录",
-                                    hidden: true,
-                                    roles: ["ADMIN"],
-                                    keepAlive: true
-                                },
-                            },
-                            {
-                                path: "activity/record",
-                                component: () => import('@/views/player-management/user-list/ActivityRecord.vue'),
-                                name: "Activity Record",
-                                meta: {
-                                    title: "活动记录",
-                                    hidden: true,
-                                    roles: ["ADMIN"],
-                                    keepAlive: true
-                                },
-                            },
-                            {
-                                path: "funding/details",
-                                component: () => import('@/views/player-management/user-list/FundingDetails.vue'),
-                                name: "Funding Details",
+                                path: "funding",
+                                component: () => import('@/views/player-management/user-list/detail/funding.vue'),
+                                name: "FundingDetails",
                                 meta: {
                                     title: "资金明细",
                                     hidden: true,
@@ -122,38 +67,104 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                                 },
                             },
                             {
-                                path: "agent/details",
-                                component: ChildrenLayout,
+                                path: "agent/rebate",
+                                component: () => import('@/views/player-management/user-list/detail/AgentRebate.vue'),
+                                name: "AgentRebate",
                                 meta: {
-                                    title: "代理详情",
+                                    title: "代理返利",
                                     hidden: true,
                                     roles: ["ADMIN"],
                                     keepAlive: true
                                 },
-                                children: [
-                                    {
-                                        path: "",
-                                        component: () => import('@/views/player-management/user-list/AgentDetails.vue'),
-                                        name: "Agent Details",
-                                        meta: {
-                                            hidden: true,
-                                            roles: ["ADMIN"],
-                                            keepAlive: true
-                                        },
-                                    },
-                                    {
-                                        path: "primary",
-                                        component: () => import('@/views/player-management/user-list/PrimaryAgentDetails.vue'),
-                                        name: "Primary Agent Details",
-                                        meta: {
-                                            title: "一级代理详情",
-                                            hidden: true,
-                                            roles: ["ADMIN"],
-                                            keepAlive: true
-                                        },
-                                    },
-                                ]
                             },
+                            // {
+                            //     path: "betting/record",
+                            //     component: () => import('@/views/player-management/user-list/BettingRecord.vue'),
+                            //     name: "Betting Record",
+                            //     meta: {
+                            //         title: "下注记录",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            // },
+                            // {
+                            //     path: "winning/record",
+                            //     component: () => import('@/views/player-management/user-list/WinningRecord.vue'),
+                            //     name: "Winning Record",
+                            //     meta: {
+                            //         title: "中奖记录",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            // },
+                            // {
+                            //     path: "recharge/record",
+                            //     component: () => import('@/views/player-management/user-list/RechargeRecord.vue'),
+                            //     name: "Recharge Record",
+                            //     meta: {
+                            //         title: "充值记录",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            // },
+                            // {
+                            //     path: "withdrawal/record",
+                            //     component: () => import('@/views/player-management/user-list/WithdrawalRecord.vue'),
+                            //     name: "Withdrawal Record",
+                            //     meta: {
+                            //         title: "提现记录",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            // },
+                            // {
+                            //     path: "activity/record",
+                            //     component: () => import('@/views/player-management/user-list/ActivityRecord.vue'),
+                            //     name: "Activity Record",
+                            //     meta: {
+                            //         title: "活动记录",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            // },
+                            // {
+                            //     path: "agent/details",
+                            //     component: ChildrenLayout,
+                            //     meta: {
+                            //         title: "代理详情",
+                            //         hidden: true,
+                            //         roles: ["ADMIN"],
+                            //         keepAlive: true
+                            //     },
+                            //     children: [
+                            //         {
+                            //             path: "",
+                            //             component: () => import('@/views/player-management/user-list/AgentDetails.vue'),
+                            //             name: "Agent Details",
+                            //             meta: {
+                            //                 hidden: true,
+                            //                 roles: ["ADMIN"],
+                            //                 keepAlive: true
+                            //             },
+                            //         },
+                            //         {
+                            //             path: "primary",
+                            //             component: () => import('@/views/player-management/user-list/PrimaryAgentDetails.vue'),
+                            //             name: "Primary Agent Details",
+                            //             meta: {
+                            //                 title: "一级代理详情",
+                            //                 hidden: true,
+                            //                 roles: ["ADMIN"],
+                            //                 keepAlive: true
+                            //             },
+                            //         },
+                            //     ]
+                            // },
                         ]
                     },
                 ]

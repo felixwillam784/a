@@ -72,7 +72,7 @@ const resetQuery = () => {
 }
 
 const goCustomerDetailPage = () => {
-    router.push({ name: "User Detail" });
+    router.push({ name: "UserDetail" });
 }
 </script>
 
