@@ -21,7 +21,9 @@ interface GetWithdrawalReview {
     kol_user: string
     platform_order_number: string
     upstream_order_number: string
+    upstream_channel: string
     handling_fee: number | string
+    free_charge: number | string
     order_update_time: string
     total_recharge: number | string
     total_withdrawal: number | string
@@ -84,9 +86,11 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         withdrawal_status: "否",
         withdrawal_times: 11,
         kol_user: "KOL用户",
-        platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-        upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+        platform_order_number: "P2Champspay_daishou",
+        upstream_order_number: "TP212334234234234234",
+        upstream_channel: "P2Champspay_daishou",
         handling_fee: 1,
+        free_charge: 1,
         order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
@@ -110,9 +114,11 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         withdrawal_status: "是",
         withdrawal_times: 0,
         kol_user: "KOL用户",
-        platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-        upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+        platform_order_number: "P2Champspay_daishou",
+        upstream_order_number: "TP212334234234234234",
+        upstream_channel: "P2Champspay_daishou",
         handling_fee: 1,
+        free_charge: 1,
         order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
@@ -136,9 +142,11 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         withdrawal_status: "否",
         withdrawal_times: 11,
         kol_user: "KOL用户",
-        platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-        upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+        platform_order_number: "P2Champspay_daishou",
+        upstream_order_number: "TP212334234234234234",
+        upstream_channel: "P2Champspay_daishou",
         handling_fee: 1,
+        free_charge: 1,
         order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
@@ -162,9 +170,11 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         withdrawal_status: "否",
         withdrawal_times: 11,
         kol_user: "KOL用户",
-        platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-        upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+        platform_order_number: "P2Champspay_daishou",
+        upstream_order_number: "TP212334234234234234",
+        upstream_channel: "P2Champspay_daishou",
         handling_fee: 1,
+        free_charge: 1,
         order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
@@ -188,9 +198,11 @@ const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
         withdrawal_status: "否",
         withdrawal_times: 11,
         kol_user: "KOL用户",
-        platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-        upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+        platform_order_number: "P2Champspay_daishou",
+        upstream_order_number: "TP212334234234234234",
+        upstream_channel: "P2Champspay_daishou",
         handling_fee: 1,
+        free_charge: 1,
         order_update_time: "2023-07-12 19:00:00",
         total_recharge: 1000,
         total_withdrawal: 999,
@@ -216,9 +228,11 @@ const withdrawalReviewItem = ref<GetWithdrawalReview>({
     withdrawal_status: "否",
     withdrawal_times: 11,
     kol_user: "KOL用户",
-    platform_order_number: "XXXXXXXXXXXXXXXXXXXXXXX",
-    upstream_order_number: "YYYYYYYYYYYYYYYYYYYYYYY",
+    platform_order_number: "P2Champspay_daishou",
+    upstream_order_number: "TP212334234234234234",
+    upstream_channel: "P2Champspay_daishou",
     handling_fee: 1,
+    free_charge: 1,
     order_update_time: "2023-07-12 19:00:00",
     total_recharge: 1000,
     total_withdrawal: 999,
@@ -354,14 +368,16 @@ const goBulkRejectPage = () => {
                     <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%;">
                         <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;"
+                                    @click="router.push({ name: 'User Detail' })">
                                     {{ scope.row.nick_name }}
                                 </el-link>
                             </template>
                         </el-table-column>
                         <el-table-column label="用户账号" align="center" prop="user_account" width="160">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
+                                    @click="router.push({ name: 'User Detail' })">
                                     {{ scope.row.user_account }}
                                 </el-link>
                             </template>
@@ -374,6 +390,11 @@ const goBulkRejectPage = () => {
                         <el-table-column label="实到金额" align="center" prop="actual_amount" width="120">
                             <template #default="scope">
                                 <p>${{ scope.row.actual_amount.toFixed(2) }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="免手续费" align="center" prop="free_charge" width="120">
+                            <template #default="scope">
+                                <p>${{ scope.row.free_charge.toFixed(2) }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="订单状态" align="center" prop="order_status" width="120">
@@ -417,6 +438,30 @@ const goBulkRejectPage = () => {
                                 </div>
                             </template>
                         </el-table-column>
+                        <el-table-column label="上游订单号" align="center" prop="upstream_order_number" width="220">
+                            <template #default="scope">
+                                <div style="display: flex; align-items: center;">
+                                    <p>{{ scope.row.upstream_order_number }}</p>
+                                    <el-button link>
+                                        <el-icon>
+                                            <CopyDocument />
+                                        </el-icon>
+                                    </el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="上游渠道" align="center" prop="upstream_channel" width="220">
+                            <template #default="scope">
+                                <div style="display: flex; align-items: center;">
+                                    <p>{{ scope.row.upstream_channel }}</p>
+                                    <el-button link>
+                                        <el-icon>
+                                            <CopyDocument />
+                                        </el-icon>
+                                    </el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="成功充值次数" align="center" prop="successful_recharge_times" width="120">
                             <template #default="scope">
                                 <p>{{ scope.row.successful_recharge_times }}</p>
@@ -424,7 +469,8 @@ const goBulkRejectPage = () => {
                         </el-table-column>
                         <el-table-column label="是否首次提现" align="center" prop="withdrawal_status" width="120">
                             <template #default="scope">
-                                <p :class="scope.row.withdrawal_status == '是' ? 'red' : ''">{{ scope.row.withdrawal_status }}</p>
+                                <p :class="scope.row.withdrawal_status == '是' ? 'red' : ''">{{ scope.row.withdrawal_status
+                                }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="提现次数" align="center" prop="withdrawal_times" width="120">
@@ -544,6 +590,12 @@ const goBulkRejectPage = () => {
                 </el-col>
             </el-row>
             <el-row>
+                <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
+                <el-col :span="18" class="detail-item-right-bg">
+                    <p>${{ Number(withdrawalReviewItem.free_charge).toFixed(2) }}</p>
+                </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ withdrawalReviewItem.submission_time }}</p>
@@ -645,6 +697,7 @@ const goBulkRejectPage = () => {
 .hidden {
     visibility: hidden;
 }
+
 .red {
     color: red;
 }

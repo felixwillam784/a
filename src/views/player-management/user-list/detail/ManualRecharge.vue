@@ -8,7 +8,7 @@ import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 
 const router = useRouter();
 
-const activeButton = ref<number>(1);
+const activeButton = ref<number>(7);
 
 const formData = ref<any>({
     dateRange: [
@@ -17,8 +17,6 @@ const formData = ref<any>({
     ],
     min_amount: "",
     max_amount: "",
-    event_type: "",
-    record_id: "",
     pageNum: 1,
     pageSize: 20,
 })
@@ -26,107 +24,46 @@ const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
 const totalPage = ref<number>(5);
-const fundingDetailList = ref([
+const manualRechargeList = ref([
     {
         time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        change_type: "人工充值",
+        operator: "UserName",
+        order_amount: 999.99,
+        required_code_amount: 999.99,
+        remark: "人工充值是因为",
     },
     {
         time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        change_type: "主播加金",
+        operator: "UserName",
+        order_amount: 999.99,
+        required_code_amount: 999.99,
+        remark: "人工充值是因为",
     },
     {
         time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        change_type: "异常补金",
+        operator: "UserName",
+        order_amount: 999.99,
+        required_code_amount: 999.99,
+        remark: "人工充值是因为",
     },
     {
         time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        change_type: "手动赠金",
+        operator: "UserName",
+        order_amount: 999.99,
+        required_code_amount: 999.99,
+        remark: "人工充值是因为",
     },
     {
         time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    // temp list
-    {
-        time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        change_type: "虚拟账号加金",
+        operator: "UserName",
+        order_amount: 999.99,
+        required_code_amount: 999.99,
+        remark: "人工充值是因为",
     },
 ])
 
@@ -204,49 +141,31 @@ const handleScrollLoad = () => {
                     <el-input v-model="formData.max_amount" placeholder="最大金额"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+                    <el-button type="primary" :icon="Search" @click="handleQuery">查询</el-button>
                     <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-                </el-form-item>
-            </el-form>
-            <el-form :model="formData" :inline="true" label-width="120">
-                <el-form-item label="事件类型:">
-                    <el-select v-model="formData.event_type" placeholder="请选择事件类型"></el-select>
-                </el-form-item>
-                <el-form-item label="记录ID:">
-                    <el-input v-model="formData.min_amount" placeholder="请输入记录ID"></el-input>
                 </el-form-item>
             </el-form>
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="fundingDetailList"
+            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="manualRechargeList"
                 :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="时间" align="center" prop="time" width="200" />
-                <el-table-column label="事件" align="center" prop="event" />
-                <el-table-column label="详情" align="center" prop="details">
+                <el-table-column label="变动类型" align="center" prop="change_type" />
+                <el-table-column label="操作人员" align="center" prop="operator">
                     <template #default="scope">
-                        <p>{{ scope.row.details }}</p>
+                        <p>{{ scope.row.operator }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="变动金额" align="center" prop="change_amount">
+                <el-table-column label="订单金额" align="center" prop="order_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.order_amount.toFixed(2) }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="变动前" align="center" prop="before_change_amount">
+                <el-table-column label="需求打码量" align="center" prop="required_code_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.before_change_amount.toFixed(2) }}</p>
-                    </template>
-                </el-table-column>
-                <el-table-column label="变动后" align="center" prop="after_change_amount">
-                    <template #default="scope">
-                        <p>{{ scope.row.after_change_amount.toFixed(2) }}</p>
-                    </template>
-                </el-table-column>
-                <el-table-column label="记录ID" align="center" prop="record_id">
-                    <template #default="scope">
-                        <p>{{ scope.row.record_id }}</p>
+                        <p>{{ scope.row.required_code_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" align="center" prop="remark">
@@ -255,11 +174,6 @@ const handleScrollLoad = () => {
                     </template>
                 </el-table-column>
             </el-table>
-
-            <!-- <div style="float: right;">
-                <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                    v-model:limit="formData.pageSize" @pagination="handleQuery" />
-            </div> -->
         </el-card>
     </div>
 </template>

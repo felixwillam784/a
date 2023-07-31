@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ArrowLeft, CopyDocument } from '@element-plus/icons-vue';
+import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -8,6 +8,8 @@ const router = useRouter();
 const activeButton = ref<number>(0);
 const activeNames = ref(['1', '2', '3', '4']);
 const subActiveNames = ref(['1', '2', '3', '4']);
+const vipBonusHeight = ref(0);
+const vipBonusShow = ref<boolean>(false);
 
 const basicInformation = ref<any>({
     id: "8e8fd8fsdfd8fe8f8df8ef",
@@ -42,6 +44,7 @@ const depositAndWithdrawalData = ref({
     activity_bonus: 10000,
     vip_level: "vip999",
     vip_rebate: 10000,
+    vip_no_handling_fee: "9999.99 / 10000.00",
     vip_upgrade_rewards: 10000,
     vip_deposit_progress: "2344.00 / 10000.00",
     vip_betting_progress: "2344.00 / 10000.00",
@@ -112,7 +115,7 @@ const mexList = ref([
 const loading = ref<boolean>(false);
 
 const goBack = () => {
-    router.push({name: "User List"});
+    router.push({ name: "User List" });
 }
 
 const handleChange = () => {
@@ -121,7 +124,12 @@ const handleChange = () => {
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({name: name});
+    router.push({ name: name });
+}
+
+const moreVipBonusShow = () => {
+    vipBonusShow.value = !vipBonusShow.value;
+    vipBonusHeight.value = vipBonusShow.value ? 150 : 0;
 }
 </script>
 
@@ -196,7 +204,8 @@ const handleButtonActive = (index: number, name: string) => {
                         <el-col :span="8">
                             <el-form label-width="200">
                                 <el-form-item label="归属上级:">
-                                    <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                    <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
+                                        @click="router.push({ name: 'User Detail' })">
                                         {{ basicInformation.belong_to_superior }}
                                     </el-link>
                                 </el-form-item>
@@ -405,65 +414,86 @@ const handleButtonActive = (index: number, name: string) => {
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="VIP总赠金总计:">
-                                {{ depositAndWithdrawalData.total_vip_bonus }}
+                            <el-form-item label="VIP提现免手续费额度:">
+                                {{ depositAndWithdrawalData.vip_no_handling_fee }}
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20" style="justify-content: center;">
                         <el-col :span="8">
                             <el-form label-width="200">
-                                <el-form-item label="VIP周奖励总计:">
-                                    {{ depositAndWithdrawalData.vip_weekly_rewards }}
+                                <el-form-item label="VIP总赠金总计:">
+                                    {{ depositAndWithdrawalData.total_vip_bonus }}
+                                    <el-button link @click="moreVipBonusShow">
+                                        <el-icon>
+                                            <ArrowRight v-if="!vipBonusShow"/>
+                                            <ArrowDown v-else/>
+                                        </el-icon>
+                                    </el-button>
                                 </el-form-item>
                             </el-form>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="VIP月奖励总计:">
-                                {{ depositAndWithdrawalData.vip_monthly_rewards }}
-                            </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="VIP日奖励总计:">
-                                {{ depositAndWithdrawalData.vip_day_rewards }}
-                            </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="20" style="justify-content: center;">
-                        <el-col :span="8">
-                            <el-form label-width="200">
-                                <el-form-item label="VIP签到奖励总计:">
-                                    {{ depositAndWithdrawalData.vip_sign_rewards }}
+                    <div :class="vipBonusShow ? 'vip-bonus-show' : 'vip-bonus-collapse'">
+                        <el-row :gutter="20" style="justify-content: center;">
+                            <el-col :span="8">
+                                <el-form label-width="200">
+                                    <el-form-item label="VIP周奖励总计:">
+                                        {{ depositAndWithdrawalData.vip_weekly_rewards }}
+                                    </el-form-item>
+                                </el-form>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="VIP月奖励总计:">
+                                    {{ depositAndWithdrawalData.vip_monthly_rewards }}
                                 </el-form-item>
-                            </el-form>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-form-item label="VIP转盘奖励总计:">
-                                {{ depositAndWithdrawalData.vip_spinner_rewards }}
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-form-item label="VIP任务奖励总计:">
-                                {{ depositAndWithdrawalData.vip_task_rewards }}
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="20" style="justify-content: center;">
-                        <el-col :span="8">
-                            <el-form label-width="200">
-                                <el-form-item label="充值返利:">
-                                    {{ depositAndWithdrawalData.recharge_rebate }}
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="VIP日奖励总计:">
+                                    {{ depositAndWithdrawalData.vip_day_rewards }}
                                 </el-form-item>
-                            </el-form>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-form-item label="VIP活动赠金:">
-                                {{ depositAndWithdrawalData.vip_event_bonus }}
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="8">
-                        </el-col>
-                    </el-row>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="20" style="justify-content: center;">
+                            <el-col :span="8">
+                                <el-form label-width="200">
+                                    <el-form-item label="VIP签到奖励总计:">
+                                        {{ depositAndWithdrawalData.vip_sign_rewards }}
+                                    </el-form-item>
+                                </el-form>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="VIP转盘奖励总计:">
+                                    {{ depositAndWithdrawalData.vip_spinner_rewards }}
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="VIP任务奖励总计:">
+                                    {{ depositAndWithdrawalData.vip_task_rewards }}
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="20" style="justify-content: center;">
+                            <el-col :span="8">
+                                <el-form label-width="200">
+                                    <el-form-item label="充值返利:">
+                                        {{ depositAndWithdrawalData.recharge_rebate }}
+                                    </el-form-item>
+                                </el-form>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="VIP活动赠金:">
+                                    {{ depositAndWithdrawalData.vip_event_bonus }}
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                            </el-col>
+                        </el-row>
+                    </div>
                 </el-collapse-item>
                 <el-collapse-item title="代理信息" name="3">
                     <template #title>
@@ -479,7 +509,8 @@ const handleButtonActive = (index: number, name: string) => {
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="归属上级:">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
+                                    @click="router.push({ name: 'User Detail' })">
                                     {{ agentInformation.belong_to_superior }}
                                 </el-link>
                             </el-form-item>
@@ -786,5 +817,15 @@ const handleButtonActive = (index: number, name: string) => {
 :deep(.el-table thead th.el-table__cell) {
     background: #f5f7fa;
     height: 60px;
+}
+
+.vip-bonus-collapse {
+    // transition: height 0.3s ease-out;
+    display: none;
+}
+
+.vip-bonus-show {
+    // transition: height 0.3s ease-out;
+    display: block;
 }
 </style>

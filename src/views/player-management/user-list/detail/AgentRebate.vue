@@ -242,10 +242,10 @@ const showRechargeRebateDialog = () => {
                 </el-table-column>
             </el-table>
 
-            <div style="float: right;">
+            <!-- <div style="float: right;">
                 <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
                     v-model:limit="formData.pageSize" @pagination="handleQuery" />
-            </div>
+            </div> -->
         </el-card>
 
         <el-dialog v-model="bettingRebateDialogVisible" title="投注返利奖励" style="width: 90%;">
@@ -292,31 +292,15 @@ const showRechargeRebateDialog = () => {
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .user-detail-header {
     padding: 20px;
     display: flex;
     align-items: center;
 }
+</style>
 
-
-.betting-record-left-bg {
-    background-color: #f5f7fa;
-    border: 1px solid gray;
-    display: flex;
-    align-items: center;
-    padding: 0px 20px;
-    height: 32px;
-}
-
-.betting-record-right-bg {
-    border: 1px solid gray;
-    display: flex;
-    align-items: center;
-    padding: 0px 20px;
-    height: 32px;
-}
-
+<style lang="scss">
 .el-table thead th.el-table__cell {
     background: #f5f7fa;
     height: 80px;

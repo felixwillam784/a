@@ -8,7 +8,7 @@ import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 
 const router = useRouter();
 
-const activeButton = ref<number>(1);
+const activeButton = ref<number>(4);
 
 const formData = ref<any>({
     dateRange: [
@@ -17,8 +17,6 @@ const formData = ref<any>({
     ],
     min_amount: "",
     max_amount: "",
-    event_type: "",
-    record_id: "",
     pageNum: 1,
     pageSize: 20,
 })
@@ -26,107 +24,46 @@ const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
 const totalPage = ref<number>(5);
-const fundingDetailList = ref([
+const rechargeRecordList = ref([
     {
-        time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        submission_time: "2023-07-01 15:23:00",
+        payment_time: "_____",
+        platform_tracking_number: "6423565465f4645wed6567",
+        channel_order_number: "70985656456456",
+        gaia_order_number: "PPH20233445345345",
+        recharge_amount: 999.99,
+        bonus_amount: 999.99,
+        order_status: "未支付",
     },
     {
-        time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        submission_time: "2023-07-01 15:23:00",
+        payment_time: "2023-07-01 15:23:00",
+        platform_tracking_number: "6423565465f4645wed6567",
+        channel_order_number: "70985656456456",
+        gaia_order_number: "PPH20233445345345",
+        recharge_amount: 999.99,
+        bonus_amount: 999.99,
+        order_status: "已完成",
     },
     {
-        time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        submission_time: "2023-07-01 15:23:00",
+        payment_time: "_____",
+        platform_tracking_number: "6423565465f4645wed6567",
+        channel_order_number: "70985656456456",
+        gaia_order_number: "PPH20233445345345",
+        recharge_amount: 999.99,
+        bonus_amount: 999.99,
+        order_status: "等待支付",
     },
     {
-        time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    // temp list
-    {
-        time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
+        submission_time: "2023-07-01 15:23:00",
+        payment_time: "_____",
+        platform_tracking_number: "6423565465f4645wed6567",
+        channel_order_number: "70985656456456",
+        gaia_order_number: "PPH20233445345345",
+        recharge_amount: 999.99,
+        bonus_amount: 999.99,
+        order_status: "已取消",
     },
 ])
 
@@ -148,7 +85,6 @@ const handleButtonActive = (index: number, name: string) => {
 }
 
 const handleScrollLoad = () => {
-    console.log("ok");
 
     if (disabled.value) return;
 
@@ -204,62 +140,51 @@ const handleScrollLoad = () => {
                     <el-input v-model="formData.max_amount" placeholder="最大金额"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+                    <el-button type="primary" :icon="Search" @click="handleQuery">查询</el-button>
                     <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-                </el-form-item>
-            </el-form>
-            <el-form :model="formData" :inline="true" label-width="120">
-                <el-form-item label="事件类型:">
-                    <el-select v-model="formData.event_type" placeholder="请选择事件类型"></el-select>
-                </el-form-item>
-                <el-form-item label="记录ID:">
-                    <el-input v-model="formData.min_amount" placeholder="请输入记录ID"></el-input>
                 </el-form-item>
             </el-form>
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="fundingDetailList"
+            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="rechargeRecordList"
                 :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
-                <el-table-column label="时间" align="center" prop="time" width="200" />
-                <el-table-column label="事件" align="center" prop="event" />
-                <el-table-column label="详情" align="center" prop="details">
+                <el-table-column label="提交时间" align="center" prop="submission_time" width="200" />
+                <el-table-column label="打款时间" align="center" prop="payment_time" />
+                <el-table-column label="平台单号" align="center" prop="platform_tracking_number">
                     <template #default="scope">
-                        <p>{{ scope.row.details }}</p>
+                        <p>{{ scope.row.platform_tracking_number }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="变动金额" align="center" prop="change_amount">
+                <el-table-column label="渠道订单号" align="center" prop="channel_order_number">
                     <template #default="scope">
-                        <p>{{ scope.row.change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.channel_order_number }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="变动前" align="center" prop="before_change_amount">
+                <el-table-column label="Gaia订单号" align="center" prop="gaia_order_number">
                     <template #default="scope">
-                        <p>{{ scope.row.before_change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.gaia_order_number }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="变动后" align="center" prop="after_change_amount">
+                <el-table-column label="充值金额" align="center" prop="recharge_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.after_change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.recharge_amount }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="记录ID" align="center" prop="record_id">
+                <el-table-column label="赠金" align="center" prop="bonus_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.record_id }}</p>
+                        <p>{{ scope.row.bonus_amount }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" align="center" prop="remark">
+                <el-table-column label="订单状态" align="center" prop="order_status">
                     <template #default="scope">
-                        <p>{{ scope.row.remark }}</p>
+                        <font color="green" v-if="scope.row.order_status == '已完成'">{{ scope.row.order_status }}</font>
+                        <font color="red" v-else-if="scope.row.order_status == '已取消'">{{ scope.row.order_status }}</font>
+                        <font v-else>{{ scope.row.order_status }}</font>
                     </template>
                 </el-table-column>
             </el-table>
-
-            <!-- <div style="float: right;">
-                <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                    v-model:limit="formData.pageSize" @pagination="handleQuery" />
-            </div> -->
         </el-card>
     </div>
 </template>

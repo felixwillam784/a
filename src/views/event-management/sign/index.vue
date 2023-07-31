@@ -19,7 +19,8 @@ interface GetSign {
     day_5: number
     day_6: number
     day_7: number
-    betting_odds: string
+    day_8: number
+    required_rewards_amount: number
 }
 
 const router = useRouter();
@@ -60,7 +61,8 @@ const signList = ref<Array<GetSign>>([
         day_5: 0,
         day_6: 0,
         day_7: 0,
-        betting_odds: "1倍"
+        day_8: 0,
+        required_rewards_amount: 0,
     },
     {
         id: "8e8fd8fsdfd8fe8f8df8ef",
@@ -72,7 +74,8 @@ const signList = ref<Array<GetSign>>([
         day_5: 1,
         day_6: 1,
         day_7: 1,
-        betting_odds: "1倍"
+        day_8: 0,
+        required_rewards_amount: 0,
     },
 ])
 
@@ -86,7 +89,8 @@ const signItem = ref<GetSign>({
     day_5: 0,
     day_6: 0,
     day_7: 0,
-    betting_odds: "1倍"
+    day_8: 0,
+    required_rewards_amount: 0,
 })
 
 const handleQuery = () => {
@@ -109,7 +113,8 @@ const addSignDialog = () => {
         day_5: 10,
         day_6: 10,
         day_7: 10,
-        betting_odds: "1倍"
+        day_8: 0,
+        required_rewards_amount: 0,
     }
     signDialogVisible.value = true;
     signDialogTitle.value = "添加签到配置";
@@ -226,7 +231,12 @@ const resetForm = (formEl: FormInstance | undefined) => {
                                 <p>${{ scope.row.day_7.toFixed(2) }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="打码赔率" align="center" prop="betting_odds" />
+                        <el-table-column label="DAY8" align="center" prop="day_8">
+                            <template #default="scope">
+                                <p>${{ scope.row.day_8.toFixed(2) }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="领取奖励所需打码量" align="center" prop="required_rewards_amount" />
                         <el-table-column align="center" fixed="right" width="120">
                             <template #default="scope">
                                 <el-button type="success" link @click="editSignDialog(scope.row)">修改</el-button>
@@ -240,9 +250,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 </el-card>
             </el-col>
         </el-row>
-        
-        <el-dialog :title="signDialogTitle" v-model="signDialogVisible" width="600px" append-to-body
-            @close="closeDialog">
+
+        <el-dialog :title="signDialogTitle" v-model="signDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-form label-width="160px">
                 <el-form-item label="VIP等级:">
                     <el-input v-model="signItem.vip_level" />
@@ -268,9 +277,14 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 <el-form-item label="DAY7 ($):">
                     <el-input v-model="signItem.day_7" />
                 </el-form-item>
+                <el-form-item label="DAY8 ($):">
+                    <el-input v-model="signItem.day_8" />
+                </el-form-item>
+                <el-form-item label="领取奖励所需打码量:">
+                    <el-input v-model="signItem.required_rewards_amount" />
+                </el-form-item>
             </el-form>
-            <el-form v-if="signItem.id != '' && signItem.id != null" ref="ruleFormRef"
-                :rules="rules" :model="ruleForm">
+            <el-form v-if="signItem.id != '' && signItem.id != null" ref="ruleFormRef" :rules="rules" :model="ruleForm">
                 <el-row style="align-items: center;">
                     <Font color="red" style="font-size: 20px;">*</Font>
                     <h3>修改原因:</h3>
