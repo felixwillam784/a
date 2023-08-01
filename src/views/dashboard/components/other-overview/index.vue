@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const activeNames = ref(['1']);
+const activeNames = ref(['1', '2', '3']);
 const depositWithdrawalData = ref({
     recharge_amount: "",
     first_charge_amount: "",
@@ -528,7 +528,7 @@ const handleChange = () => {
 .deposit-withdrawal-card {
     .el-card {
         border: none !important;
-        background-color: #b3ffff !important;
+        background-color: #E4E4E4 !important;
 
         .el-card__body {
             .deposit-withdrawal-text {
@@ -543,7 +543,7 @@ const handleChange = () => {
 .user-data-card {
     .el-card {
         border: none !important;
-        background-color: #ccfadc !important;
+        background-color: #66FF99 !important;
 
         .el-card__body {
             .user-data-text {
@@ -558,7 +558,7 @@ const handleChange = () => {
 .user-retention-card {
     .el-card {
         border: none !important;
-        background-color: #b3ffff !important;
+        background-color: #E4E4E4 !important;
 
         .el-card__body {
             .user-retention-text {
@@ -573,7 +573,7 @@ const handleChange = () => {
 .proxy-data-card {
     .el-card {
         border: none !important;
-        background-color: #ccfadc !important;
+        background-color: #66FF99 !important;
 
         .el-card__body {
             .proxy-data-text {
@@ -588,7 +588,7 @@ const handleChange = () => {
 .agent-retention-card {
     .el-card {
         border: none !important;
-        background-color: #b3ffff !important;
+        background-color: #E4E4E4 !important;
 
         .el-card__body {
             .agent-retention-text {
@@ -603,7 +603,7 @@ const handleChange = () => {
 .game-data-card {
     .el-card {
         border: none !important;
-        background-color: #ccfadc !important;
+        background-color: #66FF99 !important;
 
         .el-card__body {
             .game-data-text {

@@ -117,7 +117,7 @@ const platformOverview = ref({
 .platform-card {
     .el-card {
         border: none !important;
-        background-color: #b3ffff !important;
+        background-color: #E4E4E4 !important;
 
         .el-card__body {
             .platform-text {

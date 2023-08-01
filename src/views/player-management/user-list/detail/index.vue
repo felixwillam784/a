@@ -205,7 +205,7 @@ const moreVipBonusShow = () => {
                             <el-form label-width="200">
                                 <el-form-item label="归属上级:">
                                     <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
-                                        @click="router.push({ name: 'User Detail' })">
+                                        @click="router.push({ name: 'UserDetail' })">
                                         {{ basicInformation.belong_to_superior }}
                                     </el-link>
                                 </el-form-item>
@@ -510,7 +510,7 @@ const moreVipBonusShow = () => {
                         <el-col :span="8">
                             <el-form-item label="归属上级:">
                                 <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
-                                    @click="router.push({ name: 'User Detail' })">
+                                    @click="router.push({ name: 'UserDetail' })">
                                     {{ agentInformation.belong_to_superior }}
                                 </el-link>
                             </el-form-item>

@@ -86,7 +86,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "blacklist",
-                component: () => import('@/views/withdrawal-management/ban/index.vue'),
+                component: () => import('@/views/withdrawal-management/blacklist/index.vue'),
                 name: "Black List",
                 meta: {
                     title: "黑名单",
