@@ -38,17 +38,60 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
+      // {
+      //   path: "game/report",
+      //   component: () => import('@/views/data-analysis/game-report/index.vue'),
+      //   name: "Game Report",
+      //   meta: {
+      //     title: "game_report",
+      //     hidden: false,
+      //     // alwaysShow: false,
+      //     roles: ["ADMIN"],
+      //     keepAlive: true
+      //   },
+      // },
+      {
+        path: "proxy/report",
+        component: import('@/views/data-analysis/proxy-report/index.vue'),
+        meta: {
+            title: "proxy_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
       {
         path: "game/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
-        name: "Game Report",
+        component: ChildrenLayout,
         meta: {
-          title: "game_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
+            title: "game_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        },
+        children: [
+            {
+                path: "",
+                component: () => import('@/views/data-analysis/game-report/index.vue'),
+                name: "Game Report",
+                meta: {
+                    hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "detail",
+                component: () => import('@/views/data-analysis/game-report/detail.vue'),
+                name: "GameReportDetail",
+                meta: {
+                    title: "Dice",
+                    hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+        ]
       },
       {
         path: "platform/report",

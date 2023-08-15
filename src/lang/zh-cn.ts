@@ -19,6 +19,7 @@ export default {
     user_money_flow: "用户流水",
     withdrawal_management: "充提管理",
     manual_payment: "人工打款",
+    proxy_report: "代理报表"
   },
   // 登录页面国际化
   login: {
