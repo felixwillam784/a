@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
-import { title } from 'process';
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -270,27 +269,27 @@ const handleSearch = () => {
                 </el-link>
               </template>
             </el-table-column>
-            <el-table-column label="平台" align="center" prop="game_platform" width="120">
+            <el-table-column label="平台" align="center" prop="game_platform" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_platform }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="研发公司" align="center" prop="game_company" width="120">
+            <el-table-column label="研发公司" align="center" prop="game_company" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_company}}</p>
               </template>
             </el-table-column>
-            <el-table-column label="投注金额" align="center" prop="game_bet_amount" width="120">
+            <el-table-column label="投注金额" align="center" prop="game_bet_amount" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_bet_amount.toFixed(2) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="派奖金额" align="center" prop="game_bonus_amount" width="120">
+            <el-table-column label="派奖金额" align="center" prop="game_bonus_amount" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_bonus_amount.toFixed(2) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="平台盈亏" align="center" prop="game_platform_revenue" width="120">
+            <el-table-column label="平台盈亏" align="center" prop="game_platform_revenue" width="130">
               <template #default="scope">
                 <Font color="red"
                   v-if="scope.row.game_platform_revenue < 0">{{
@@ -298,27 +297,27 @@ const handleSearch = () => {
                 <Font v-else>{{ scope.row.game_platform_revenue }}</Font>
               </template>
             </el-table-column>
-            <el-table-column label="投注人数" align="center" prop="game_better_count" width="120">
+            <el-table-column label="投注人数" align="center" prop="game_better_count" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_better_count.toFixed(0) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="投注局数" align="center" prop="game_count" width="120">
+            <el-table-column label="投注局数" align="center" prop="game_count" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_count.toFixed(0) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="庄家优势" align="center" prop="game_advantage" width="120">
+            <el-table-column label="庄家优势" align="center" prop="game_advantage" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_advantage.toFixed(1) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="游戏留存率" align="center" prop="game_play_rate" width="120">
+            <el-table-column label="游戏留存率" align="center" prop="game_play_rate" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_play_rate.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="营收占比" align="center" prop="game_revenue_rate" width="120">
+            <el-table-column label="营收占比" align="center" prop="game_revenue_rate" width="130">
               <template #default="scope">
                 <p>{{ scope.row.game_revenue_rate.toFixed(2) }}%</p>
               </template>

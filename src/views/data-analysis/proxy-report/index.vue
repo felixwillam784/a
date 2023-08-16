@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
-import { title } from 'process';
 import { number } from 'echarts';
 
 const dateRange = ref([
