@@ -73,6 +73,16 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "retention/report",
+        component: import('@/views/data-analysis/retention-report/index.vue'),
+        meta: {
+            title: "retention_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
         path: "agent/report",
         component: import('@/views/data-analysis/agent-report/index.vue'),
         meta: {

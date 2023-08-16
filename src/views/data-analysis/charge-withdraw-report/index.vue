@@ -360,7 +360,7 @@ const handleSearch = () => {
                 <p>{{ scope.row.charge_withdraw_platform_difference.toFixed(2) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="充提差占今日充值今天百分比" :formatter="formatter" align="left" prop="charge_withdraw_recharge_today_rate" width="120">
+            <el-table-column label="充提差占今日充值今天百分比" align="left" prop="charge_withdraw_recharge_today_rate" width="120">
               <template #default="scope">
                 <p>{{ scope.row.charge_withdraw_recharge_today_rate.toFixed(2) }}%</p>
               </template>
@@ -483,7 +483,7 @@ const handleSearch = () => {
             
           </el-table>
           <div style="float: right;">
-            <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
+            <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
               v-model:limit="formData.pageSize" @pagination="handleQuery" />
           </div>
         </el-card>

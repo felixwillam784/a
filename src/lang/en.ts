@@ -19,7 +19,8 @@ export default {
     withdrawal_management: "Withdrawal",
     manual_payment: "Manual Payment",
     agent_report: "Agent Report",
-    charge_withdraw_report: "Charge and Withdraw Report"
+    charge_withdraw_report: "Charge and Withdraw Report",
+    retention_report: "Retention Report"
   },
   // 登录页面国际化
   login: {
