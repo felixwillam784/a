@@ -34,11 +34,6 @@ interface RejectInterface {
 
 const router = useRouter();
 
-console.log(router)
-
-const currentMeta = router.meta;
-console.log(currentMeta)
-
 const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
