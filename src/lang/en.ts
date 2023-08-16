@@ -18,7 +18,7 @@ export default {
     user_list: "User List",
     withdrawal_management: "Withdrawal",
     manual_payment: "Manual Payment",
-    proxy_report: "Porxy Report"
+    agent_report: "Agent Report"
   },
   // 登录页面国际化
   login: {

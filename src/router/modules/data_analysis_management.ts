@@ -51,10 +51,10 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       //   },
       // },
       {
-        path: "proxy/report",
-        component: import('@/views/data-analysis/proxy-report/index.vue'),
+        path: "agent/report",
+        component: import('@/views/data-analysis/agent-report/index.vue'),
         meta: {
-            title: "proxy_report",
+            title: "agent_report",
             hidden: false,
             roles: ["ADMIN"],
             keepAlive: true
