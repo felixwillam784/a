@@ -315,82 +315,82 @@ const handleSearch = () => {
         </div>
         <el-card style="margin-top: 20px;" v-if="activeButton == 0">
           <el-table v-loading="loading" :data="agentReportList" style="width: 100%;">
-            <el-table-column label = "时间" align="center" prop="agent_date_time" width="160">
+            <el-table-column label = "时间" align="left" prop="agent_date_time" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_date_time }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "总代理数" align="center" prop="agent_agents_count" width="160">
+            <el-table-column label = "总代理数" align="left" prop="agent_agents_count" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "总活跃代理数" align="center" prop="agent_active_agents_count" width="160">
+            <el-table-column label = "总活跃代理数" align="left" prop="agent_active_agents_count" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_active_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增活跃代理数" align="center" prop="agent_new_active_agents_count" width="160">
+            <el-table-column label = "新增活跃代理数" align="left" prop="agent_new_active_agents_count" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_active_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增代理数" align="center" prop="agent_new_agents_count" width="160">
+            <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费金额" align="center" prop="agent_new_level_payment_amount" width="160">
+            <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_level_payment_amount.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增记忆提现金额" align="center" prop="agent_withdrawal_amount" width="160">
+            <el-table-column label = "新增记忆提现金额" align="left" prop="agent_withdrawal_amount" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_withdrawal_amount.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级充提差" align="center" prop="agent_new_level_charge_withdraw_dif" width="160">
+            <el-table-column label = "新增一级充提差" align="left" prop="agent_new_level_charge_withdraw_dif" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_level_charge_withdraw_dif.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增充值奖励" align="center" prop="agent_new_charge_bonus" width="160">
+            <el-table-column label = "新增充值奖励" align="left" prop="agent_new_charge_bonus" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_charge_bonus.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增成就奖励" align="center" prop="agent_achievement_rewards" width="160">
+            <el-table-column label = "新增成就奖励" align="left" prop="agent_achievement_rewards" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_achievement_rewards.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增任务奖励" align="center" prop="agent_new_task_rewards" width="160">
+            <el-table-column label = "新增任务奖励" align="left" prop="agent_new_task_rewards" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_task_rewards.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增投注返佣金额" align="center" prop="agent_betting_rebate_amount" width="160">
+            <el-table-column label = "新增投注返佣金额" align="left" prop="agent_betting_rebate_amount" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_betting_rebate_amount.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "3日活跃率" align="center" prop="agent_3_day_active_rate" width="160">
+            <el-table-column label = "3日活跃率" align="left" prop="agent_3_day_active_rate" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_3_day_active_rate.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label = "7日活跃率" align="center" prop="agent_7_day_active_rate" width="160">
+            <el-table-column label = "7日活跃率" align="left" prop="agent_7_day_active_rate" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_7_day_active_rate.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label = "15日活跃率" align="center" prop="agent_15_day_active_rate" width="160">
+            <el-table-column label = "15日活跃率" align="left" prop="agent_15_day_active_rate" width="160">
               <template #default="scope">
                 <p>{{ scope.row.agent_15_day_active_rate.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label = "30日活跃率" align="center" prop="agent_30_day_active_rate" width="160">
+            <el-table-column label = "30日活跃率" align="left" prop="agent_30_day_active_rate" width="160">
               <template #default="scope">
                 <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate.toFixed(2) }}%</p>
                 <p v-else>{{ scope.row.agent_30_day_active_rate }}</p>
@@ -405,37 +405,37 @@ const handleSearch = () => {
         </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 1">
           <el-table v-loading="loading" :data="newAgentReportList" style="width: 100%;">
-            <el-table-column label = "时间" align="center" prop="agent_date_time" width="160">
+            <el-table-column label = "时间" align="left" prop="agent_date_time" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_date_time }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增代理数" align="center" prop="agent_new_agents_count" width="160">
+            <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级注册人数" align="center" prop="agent_new_first_register" width="160">
+            <el-table-column label = "新增一级注册人数" align="left" prop="agent_new_first_register" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_first_register }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费人数" align="center" prop="agent_new_level_payment" width="160">
+            <el-table-column label = "新增一级付费人数" align="left" prop="agent_new_level_payment" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_level_payment }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费金额" align="center" prop="agent_new_level_payment_amount" width="160">
+            <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_new_level_payment_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "人均邀请注册数" align="center" prop="agent_capita_invited_register_count" width="160">
+            <el-table-column label = "人均邀请注册数" align="left" prop="agent_capita_invited_register_count" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_capita_invited_register_count.toFixed(1) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "人均邀请注册金额" align="center" prop="agent_capita_invitation_register_amount" width="160">
+            <el-table-column label = "人均邀请注册金额" align="left" prop="agent_capita_invitation_register_amount" width="240">
               <template #default="scope">
                 <p>{{ scope.row.agent_capita_invitation_register_amount.toFixed(2) }}</p>
               </template>
@@ -448,32 +448,32 @@ const handleSearch = () => {
         </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 2">
           <el-table v-loading="loading" :data="agentRiskList" style="width: 100%;">
-            <el-table-column label = "时间" align="center" prop="agent_date_time" width="160">
+            <el-table-column label = "时间" align="left" prop="agent_date_time" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_date_time }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "活跃代理数" align="center" prop="agent_active_count" width="160">
+            <el-table-column label = "活跃代理数" align="left" prop="agent_active_count" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_active_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "风控代理数" align="center" prop="agent_risk_control_agents_count" width="160">
+            <el-table-column label = "风控代理数" align="left" prop="agent_risk_control_agents_count" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_risk_control_agents_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "风控代理用户数" align="center" prop="agent_risk_control_agent_users_count" width="160">
+            <el-table-column label = "风控代理用户数" align="left" prop="agent_risk_control_agent_users_count" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_risk_control_agent_users_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "代理风控占比" align="center" prop="agent_risk_control_proportion" width="160">
+            <el-table-column label = "代理风控占比" align="left" prop="agent_risk_control_proportion" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_risk_control_proportion.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label = "自身风控代理数" align="center" prop="agent_own_risk_control_agents_count" width="160">
+            <el-table-column label = "自身风控代理数" align="left" prop="agent_own_risk_control_agents_count" width="270">
               <template #default="scope">
                 <p>{{ scope.row.agent_own_risk_control_agents_count }}</p>
               </template>
