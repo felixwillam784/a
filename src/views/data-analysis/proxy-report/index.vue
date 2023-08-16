@@ -65,7 +65,11 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total = ref<number>(5);
+const total1 = ref<number>(2);
+
+const total2 = ref<number>(1);
+
+const total3 = ref<number>(4);
 
 const agentReportList = ref<Array<GetAgentReport>>([
   {
@@ -399,7 +403,7 @@ const handleSearch = () => {
             
           </el-table>
           <div style="float: right;">
-            <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
+            <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
               v-model:limit="formData.pageSize" @pagination="handleQuery" />
           </div>
         </el-card>
@@ -442,7 +446,7 @@ const handleSearch = () => {
             </el-table-column>            
           </el-table>
           <div style="float: right;">
-            <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
+            <pagination v-if="total2 > 0" :total="total2" v-model:page="formData.pageNum"
               v-model:limit="formData.pageSize" @pagination="handleQuery" />
           </div>
         </el-card>
@@ -480,7 +484,7 @@ const handleSearch = () => {
             </el-table-column>      
           </el-table>
           <div style="float: right;">
-            <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
+            <pagination v-if="total3 > 0" :total="total3" v-model:page="formData.pageNum"
               v-model:limit="formData.pageSize" @pagination="handleQuery" />
           </div>
         </el-card>

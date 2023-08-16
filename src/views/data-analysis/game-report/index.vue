@@ -48,7 +48,6 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total = ref<number>(5);
 
 const gameReportList = ref<Array<GetGameReport>>([
   {
@@ -97,6 +96,8 @@ const gameReportList = ref<Array<GetGameReport>>([
     game_revenue_rate: 99.99
   }
 ])
+
+const total = ref<number>(3);
 
 const gameTypes = ref<Array<any>>([
   {
