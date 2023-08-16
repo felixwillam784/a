@@ -51,6 +51,28 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       //   },
       // },
       {
+        path: "platform/report",
+        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        name: "Platform Report",
+        meta: {
+          title: "platform_report",
+          hidden: false,
+          // alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
+        }
+      },
+      {
+        path: "charge-withdraw/report",
+        component: import('@/views/data-analysis/charge-withdraw-report/index.vue'),
+        meta: {
+            title: "charge_withdraw_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
         path: "agent/report",
         component: import('@/views/data-analysis/agent-report/index.vue'),
         meta: {
@@ -92,18 +114,6 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
                 },
             },
         ]
-      },
-      {
-        path: "platform/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
-        name: "Platform Report",
-        meta: {
-          title: "platform_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
       },
       {
         path: "activity/statement",

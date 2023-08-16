@@ -18,7 +18,8 @@ export default {
     user_list: "User List",
     withdrawal_management: "Withdrawal",
     manual_payment: "Manual Payment",
-    agent_report: "Agent Report"
+    agent_report: "Agent Report",
+    charge_withdraw_report: "Charge and Withdraw Report"
   },
   // 登录页面国际化
   login: {

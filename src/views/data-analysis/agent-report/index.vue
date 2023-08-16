@@ -163,17 +163,6 @@ const agentRiskList = ref<Array<GetAgentRiskReport>>([
   },
 ])
 
-const gameTypes = ref<Array<any>>([
-  {
-    label: "Dice",
-    value: "1"
-  },
-  {
-    label: "Crash",
-    value: "2"
-  }
-])
-
 const handleDateRange = (date: string) => {
   switch (date) {
     case "before yesterday":
