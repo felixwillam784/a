@@ -121,9 +121,9 @@ const handleButtonActive = (index: number) => {
     <div class="user-detail-header">
       <div >
         <el-button :type="activeButton == 0 ? 'warning' : ''"
-          @click="handleButtonActive(0)">用户详情</el-button>
+          @click="handleButtonActive(0)">倍率排名</el-button>
         <el-button :type="activeButton == 1 ? 'warning' : ''"
-          @click="handleButtonActive(1)">资金明细</el-button>
+          @click="handleButtonActive(1)">盈利排名</el-button>
         
       </div>
     </div>

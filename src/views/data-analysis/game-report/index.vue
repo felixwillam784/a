@@ -35,9 +35,15 @@ interface RejectInterface {
 
 const router = useRouter();
 
+console.log(router)
+
+const currentMeta = router.meta;
+console.log(currentMeta)
+
 const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
+  gameType: ""
 })
 
 const loading = ref<boolean>(false);
@@ -225,7 +231,7 @@ const handleSearch = () => {
                   <el-button  @click="handleDateRange('next day')">后一天</el-button>
               </el-form-item>
               <el-form-item label="选择游戏">
-                <el-select>
+                <el-select v-model = "formData.gameType" placeholder="请选择游戏">
                   <el-option v-for="(item, index) in gameTypes" :label="item.label"
                     :value="item.value" :key="index"></el-option>
                 </el-select>
