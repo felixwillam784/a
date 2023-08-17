@@ -38,18 +38,18 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
-      {
-        path: "game/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
-        name: "Game Report",
-        meta: {
-          title: "game_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
+      // {
+      //   path: "game/report",
+      //   component: () => import('@/views/data-analysis/game-report/index.vue'),
+      //   name: "Game Report",
+      //   meta: {
+      //     title: "game_report",
+      //     hidden: false,
+      //     // alwaysShow: false,
+      //     roles: ["ADMIN"],
+      //     keepAlive: true
+      //   },
+      // },
       {
         path: "platform/report",
         component: () => import('@/views/withdrawal-management/review/index.vue'),
@@ -61,6 +61,69 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           roles: ["ADMIN"],
           keepAlive: true
         }
+      },
+      {
+        path: "charge-withdraw/report",
+        component: import('@/views/data-analysis/charge-withdraw-report/index.vue'),
+        meta: {
+            title: "charge_withdraw_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
+        path: "retention/report",
+        component: import('@/views/data-analysis/retention-report/index.vue'),
+        meta: {
+            title: "retention_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
+        path: "agent/report",
+        component: import('@/views/data-analysis/agent-report/index.vue'),
+        meta: {
+            title: "agent_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
+        path: "game/report",
+        component: ChildrenLayout,
+        meta: {
+            title: "game_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        },
+        children: [
+            {
+                path: "",
+                component: () => import('@/views/data-analysis/game-report/index.vue'),
+                name: "Game Report",
+                meta: {
+                    hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "detail",
+                component: () => import('@/views/data-analysis/game-report/detail.vue'),
+                name: "GameReportDetail",
+                meta: {
+                    title: "Dice",
+                    hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+        ]
       },
       {
         path: "activity/statement",
