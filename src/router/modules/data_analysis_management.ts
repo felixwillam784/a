@@ -93,6 +93,16 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "user-quality/report",
+        component: import('@/views/data-analysis/user-quality-report/index.vue'),
+        meta: {
+            title: "user_quality_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
         path: "game/report",
         component: ChildrenLayout,
         meta: {
