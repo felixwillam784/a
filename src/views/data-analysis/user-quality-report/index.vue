@@ -126,7 +126,7 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total = ref<number>(1);
+const total = ref<number>(4);
 
 const userQualityReportList = ref<Array<GetRetentionReport>>([
   {
@@ -516,22 +516,24 @@ const userQualityReportList = ref<Array<GetRetentionReport>>([
 ])
 
 const handleDateRange = (date: string) => {
-  switch (date) {
-    case "previous day":
-      var date1 = new Date(dateRange.value[0]);
-      var date2 = new Date(dateRange.value[1]);
+	if (dateRange?.value != null) {
+		switch (date) {
+			case "previous day":
+				var date1 = new Date(dateRange.value[0]);
+				var date2 = new Date(dateRange.value[1]);
 
-      dateRange.value[0] = moment(date1).subtract(1, 'day').format('YYYY-MM-DD');
-      dateRange.value[1] = moment(date2).subtract(1, 'day').format('YYYY-MM-DD');
-      break;
-    case "next day":
-      var date1 = new Date(dateRange.value[0]);
-      var date2 = new Date(dateRange.value[1]);
+				dateRange.value[0] = moment(date1).subtract(1, 'day').format('YYYY-MM-DD');
+				dateRange.value[1] = moment(date2).subtract(1, 'day').format('YYYY-MM-DD');
+				break;
+			case "next day":
+				var date1 = new Date(dateRange.value[0]);
+				var date2 = new Date(dateRange.value[1]);
 
-      dateRange.value[0] = moment(date1).subtract(-1, 'day').format('YYYY-MM-DD');
-      dateRange.value[1] = moment(date2).subtract(-1, 'day').format('YYYY-MM-DD');
-      break;
-  }
+				dateRange.value[0] = moment(date1).subtract(-1, 'day').format('YYYY-MM-DD');
+				dateRange.value[1] = moment(date2).subtract(-1, 'day').format('YYYY-MM-DD');
+				break;
+		}
+	}  
 }
 
 const handleQuery = () => {
@@ -569,8 +571,8 @@ const handleSearch = () => {
                   <el-button  @click="handleDateRange('next day')">后一天</el-button>
               </el-form-item>
               <el-form-item style="float: right;">
-								<el-button @click="handleExportLTV" :icon="Refresh">导出LTV</el-button>
-                <el-button @click="handleExportRetention" :icon="Search">导出留存</el-button>
+								<el-button @click="handleExportLTV">导出LTV</el-button>
+                <el-button @click="handleExportRetention">导出留存</el-button>
                 <el-button @click="handleReset" :icon="Refresh">重置</el-button>
                 <el-button @click="handleSearch" :icon="Search">查新</el-button>
               </el-form-item>
@@ -606,468 +608,471 @@ const handleSearch = () => {
                 <p>{{ scope.row.user_quality_ltv }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "1日留存率" align="left" prop="user_quality_retention_rate_1" width="120">
+						<el-table-column label = "1日留存率" align="center" prop="user_quality_retention_rate_1" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_1 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_1 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "1日留存人数" align="left" prop="user_quality_retention_user_count_1" width="120">
+						<el-table-column label = "1日留存人数" align="center" prop="user_quality_retention_user_count_1" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_1 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "1日首充人数" align="left" prop="user_quality_retention_first_depositor_count_1" width="120">
+						<el-table-column label = "1日首充人数" align="center" prop="user_quality_retention_first_depositor_count_1" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_1 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "2日留存率" align="left" prop="user_quality_retention_rate_2" width="120">
+						<el-table-column label = "2日留存率" align="center" prop="user_quality_retention_rate_2" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_2 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_2 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "2日留存人数" align="left" prop="user_quality_retention_user_count_2" width="120">
+						<el-table-column label = "2日留存人数" align="center" prop="user_quality_retention_user_count_2" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_2 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "2日首充人数" align="left" prop="user_quality_retention_first_depositor_count_2" width="120">
+						<el-table-column label = "2日首充人数" align="center" prop="user_quality_retention_first_depositor_count_2" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_2 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "3日留存率" align="left" prop="user_quality_retention_rate_3" width="120">
+						<el-table-column label = "3日留存率" align="center" prop="user_quality_retention_rate_3" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_3 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_3 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "3日留存人数" align="left" prop="user_quality_retention_user_count_3" width="120">
+						<el-table-column label = "3日留存人数" align="center" prop="user_quality_retention_user_count_3" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_3 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "3日首充人数" align="left" prop="user_quality_retention_first_depositor_count_3" width="120">
+						<el-table-column label = "3日首充人数" align="center" prop="user_quality_retention_first_depositor_count_3" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_3 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "4日留存率" align="left" prop="user_quality_retention_rate_4" width="120">
+						<el-table-column label = "4日留存率" align="center" prop="user_quality_retention_rate_4" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_4 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_4 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "4日留存人数" align="left" prop="user_quality_retention_user_count_4" width="120">
+						<el-table-column label = "4日留存人数" align="center" prop="user_quality_retention_user_count_4" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_4 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "4日首充人数" align="left" prop="user_quality_retention_first_depositor_count_4" width="120">
+						<el-table-column label = "4日首充人数" align="center" prop="user_quality_retention_first_depositor_count_4" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_4 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "5日留存率" align="left" prop="user_quality_retention_rate_5" width="120">
+						<el-table-column label = "5日留存率" align="center" prop="user_quality_retention_rate_5" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_5 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_5 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "5日留存人数" align="left" prop="user_quality_retention_user_count_5" width="120">
+						<el-table-column label = "5日留存人数" align="center" prop="user_quality_retention_user_count_5" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_5 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "5日首充人数" align="left" prop="user_quality_retention_first_depositor_count_5" width="120">
+						<el-table-column label = "5日首充人数" align="center" prop="user_quality_retention_first_depositor_count_5" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_5 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "6日留存率" align="left" prop="user_quality_retention_rate_6" width="120">
+						<el-table-column label = "6日留存率" align="center" prop="user_quality_retention_rate_6" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_6 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_6 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "6日留存人数" align="left" prop="user_quality_retention_user_count_6" width="120">
+						<el-table-column label = "6日留存人数" align="center" prop="user_quality_retention_user_count_6" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_6 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "6日首充人数" align="left" prop="user_quality_retention_first_depositor_count_6" width="120">
+						<el-table-column label = "6日首充人数" align="center" prop="user_quality_retention_first_depositor_count_6" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_6 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "7日留存率" align="left" prop="user_quality_retention_rate_7" width="120">
+						<el-table-column label = "7日留存率" align="center" prop="user_quality_retention_rate_7" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_7 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_7 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "7日留存人数" align="left" prop="user_quality_retention_user_count_7" width="120">
+						<el-table-column label = "7日留存人数" align="center" prop="user_quality_retention_user_count_7" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_7 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "7日首充人数" align="left" prop="user_quality_retention_first_depositor_count_7" width="120">
+						<el-table-column label = "7日首充人数" align="center" prop="user_quality_retention_first_depositor_count_7" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_7 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "8日留存率" align="left" prop="user_quality_retention_rate_8" width="120">
+						<el-table-column label = "8日留存率" align="center" prop="user_quality_retention_rate_8" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_8 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_8 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "8日留存人数" align="left" prop="user_quality_retention_user_count_8" width="120">
+						<el-table-column label = "8日留存人数" align="center" prop="user_quality_retention_user_count_8" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_8 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "8日首充人数" align="left" prop="user_quality_retention_first_depositor_count_8" width="120">
+						<el-table-column label = "8日首充人数" align="center" prop="user_quality_retention_first_depositor_count_8" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_8 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "9日留存率" align="left" prop="user_quality_retention_rate_9" width="120">
+						<el-table-column label = "9日留存率" align="center" prop="user_quality_retention_rate_9" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_9 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_9 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "9日留存人数" align="left" prop="user_quality_retention_user_count_9" width="120">
+						<el-table-column label = "9日留存人数" align="center" prop="user_quality_retention_user_count_9" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_9 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "9日首充人数" align="left" prop="user_quality_retention_first_depositor_count_9" width="120">
+						<el-table-column label = "9日首充人数" align="center" prop="user_quality_retention_first_depositor_count_9" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_9 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "10日留存率" align="left" prop="user_quality_retention_rate_10" width="120">
+						<el-table-column label = "10日留存率" align="center" prop="user_quality_retention_rate_10" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_10 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_10 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "10日留存人数" align="left" prop="user_quality_retention_user_count_10" width="120">
+						<el-table-column label = "10日留存人数" align="center" prop="user_quality_retention_user_count_10" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_10 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "10日首充人数" align="left" prop="user_quality_retention_first_depositor_count_10" width="120">
+						<el-table-column label = "10日首充人数" align="center" prop="user_quality_retention_first_depositor_count_10" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_10 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "11日留存率" align="left" prop="user_quality_retention_rate_11" width="120">
+						<el-table-column label = "11日留存率" align="center" prop="user_quality_retention_rate_11" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_11 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_11 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "11日留存人数" align="left" prop="user_quality_retention_user_count_11" width="120">
+						<el-table-column label = "11日留存人数" align="center" prop="user_quality_retention_user_count_11" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_11 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "11日首充人数" align="left" prop="user_quality_retention_first_depositor_count_11" width="120">
+						<el-table-column label = "11日首充人数" align="center" prop="user_quality_retention_first_depositor_count_11" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_11 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "12日留存率" align="left" prop="user_quality_retention_rate_12" width="120">
+						<el-table-column label = "12日留存率" align="center" prop="user_quality_retention_rate_12" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_12 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_12 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "12日留存人数" align="left" prop="user_quality_retention_user_count_12" width="120">
+						<el-table-column label = "12日留存人数" align="center" prop="user_quality_retention_user_count_12" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_12 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "12日首充人数" align="left" prop="user_quality_retention_first_depositor_count_12" width="120">
+						<el-table-column label = "12日首充人数" align="center" prop="user_quality_retention_first_depositor_count_12" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_12 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "13日留存率" align="left" prop="user_quality_retention_rate_13" width="120">
+						<el-table-column label = "13日留存率" align="center" prop="user_quality_retention_rate_13" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_13 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_13 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "13日留存人数" align="left" prop="user_quality_retention_user_count_13" width="120">
+						<el-table-column label = "13日留存人数" align="center" prop="user_quality_retention_user_count_13" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_13 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "13日首充人数" align="left" prop="user_quality_retention_first_depositor_count_13" width="120">
+						<el-table-column label = "13日首充人数" align="center" prop="user_quality_retention_first_depositor_count_13" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_13 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "14日留存率" align="left" prop="user_quality_retention_rate_14" width="120">
+						<el-table-column label = "14日留存率" align="center" prop="user_quality_retention_rate_14" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_14 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_14 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "14日留存人数" align="left" prop="user_quality_retention_user_count_14" width="120">
+						<el-table-column label = "14日留存人数" align="center" prop="user_quality_retention_user_count_14" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_14 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "14日首充人数" align="left" prop="user_quality_retention_first_depositor_count_14" width="120">
+						<el-table-column label = "14日首充人数" align="center" prop="user_quality_retention_first_depositor_count_14" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_14 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "15日留存率" align="left" prop="user_quality_retention_rate_15" width="120">
+						<el-table-column label = "15日留存率" align="center" prop="user_quality_retention_rate_15" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_15 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_15 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "15日留存人数" align="left" prop="user_quality_retention_user_count_15" width="120">
+						<el-table-column label = "15日留存人数" align="center" prop="user_quality_retention_user_count_15" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_15 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "15日首充人数" align="left" prop="user_quality_retention_first_depositor_count_15" width="120">
+						<el-table-column label = "15日首充人数" align="center" prop="user_quality_retention_first_depositor_count_15" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_15 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "16日留存率" align="left" prop="user_quality_retention_rate_16" width="120">
+						<el-table-column label = "16日留存率" align="center" prop="user_quality_retention_rate_16" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_16 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_16 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "16日留存人数" align="left" prop="user_quality_retention_user_count_16" width="120">
+						<el-table-column label = "16日留存人数" align="center" prop="user_quality_retention_user_count_16" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_16 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "16日首充人数" align="left" prop="user_quality_retention_first_depositor_count_16" width="120">
+						<el-table-column label = "16日首充人数" align="center" prop="user_quality_retention_first_depositor_count_16" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_16 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "17日留存率" align="left" prop="user_quality_retention_rate_17" width="120">
+						<el-table-column label = "17日留存率" align="center" prop="user_quality_retention_rate_17" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_17 }}%</p>
+                <p class="bg-color-rate"> {{ scope.row.user_quality_retention_rate_17 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "17日留存人数" align="left" prop="user_quality_retention_user_count_17" width="120">
+						<el-table-column label = "17日留存人数" align="center" prop="user_quality_retention_user_count_17" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_17 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "17日首充人数" align="left" prop="user_quality_retention_first_depositor_count_17" width="120">
+						<el-table-column label = "17日首充人数" align="center" prop="user_quality_retention_first_depositor_count_17" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_17 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "18日留存率" align="left" prop="user_quality_retention_rate_18" width="120">
+						<el-table-column label = "18日留存率" align="center" prop="user_quality_retention_rate_18" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_18 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_18 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "18日留存人数" align="left" prop="user_quality_retention_user_count_18" width="120">
+						<el-table-column label = "18日留存人数" align="center" prop="user_quality_retention_user_count_18" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_18 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "18日首充人数" align="left" prop="user_quality_retention_first_depositor_count_18" width="120">
+						<el-table-column label = "18日首充人数" align="center" prop="user_quality_retention_first_depositor_count_18" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_18 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "19日留存率" align="left" prop="user_quality_retention_rate_19" width="120">
+						<el-table-column label = "19日留存率" align="center" prop="user_quality_retention_rate_19" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_19 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_19 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "19日留存人数" align="left" prop="user_quality_retention_user_count_19" width="120">
+						<el-table-column label = "19日留存人数" align="center" prop="user_quality_retention_user_count_19" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_19 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "19日首充人数" align="left" prop="user_quality_retention_first_depositor_count_19" width="120">
+						<el-table-column label = "19日首充人数" align="center" prop="user_quality_retention_first_depositor_count_19" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_19 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "20日留存率" align="left" prop="user_quality_retention_rate_20" width="120">
+						<el-table-column label = "20日留存率" align="center" prop="user_quality_retention_rate_20" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_20 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_20 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "20日留存人数" align="left" prop="user_quality_retention_user_count_20" width="120">
+						<el-table-column label = "20日留存人数" align="center" prop="user_quality_retention_user_count_20" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_20 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "20日首充人数" align="left" prop="user_quality_retention_first_depositor_count_20" width="120">
+						<el-table-column label = "20日首充人数" align="center" prop="user_quality_retention_first_depositor_count_20" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_20 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "21日留存率" align="left" prop="user_quality_retention_rate_21" width="120">
+						<el-table-column label = "21日留存率" align="center" prop="user_quality_retention_rate_21" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_21 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_21 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "21日留存人数" align="left" prop="user_quality_retention_user_count_21" width="120">
+						<el-table-column label = "21日留存人数" align="center" prop="user_quality_retention_user_count_21" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_21 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "21日首充人数" align="left" prop="user_quality_retention_first_depositor_count_21" width="120">
+						<el-table-column label = "21日首充人数" align="center" prop="user_quality_retention_first_depositor_count_21" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_21 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "22日留存率" align="left" prop="user_quality_retention_rate_22" width="120">
+						<el-table-column label = "22日留存率" align="center" prop="user_quality_retention_rate_22" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_22 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_22 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "22日留存人数" align="left" prop="user_quality_retention_user_count_22" width="120">
+						<el-table-column label = "22日留存人数" align="center" prop="user_quality_retention_user_count_22" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_22 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "22日首充人数" align="left" prop="user_quality_retention_first_depositor_count_22" width="120">
+						<el-table-column label = "22日首充人数" align="center" prop="user_quality_retention_first_depositor_count_22" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_22 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "23日留存率" align="left" prop="user_quality_retention_rate_23" width="120">
+						<el-table-column label = "23日留存率" align="center" prop="user_quality_retention_rate_23" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_23 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_23 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "23日留存人数" align="left" prop="user_quality_retention_user_count_23" width="120">
+						<el-table-column label = "23日留存人数" align="center" prop="user_quality_retention_user_count_23" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_23 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "23日首充人数" align="left" prop="user_quality_retention_first_depositor_count_23" width="120">
+						<el-table-column label = "23日首充人数" align="center" prop="user_quality_retention_first_depositor_count_23" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_23 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "24日留存率" align="left" prop="user_quality_retention_rate_24" width="120">
+						<el-table-column label = "24日留存率" align="center" prop="user_quality_retention_rate_24" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_24 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_24 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "24日留存人数" align="left" prop="user_quality_retention_user_count_24" width="120">
+						<el-table-column label = "24日留存人数" align="center" prop="user_quality_retention_user_count_24" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_24 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "24日首充人数" align="left" prop="user_quality_retention_first_depositor_count_24" width="120">
+						<el-table-column label = "24日首充人数" align="center" prop="user_quality_retention_first_depositor_count_24" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_24 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "25日留存率" align="left" prop="user_quality_retention_rate_25" width="120">
+						<el-table-column label = "25日留存率" align="center" prop="user_quality_retention_rate_25" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_25 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_25 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "25日留存人数" align="left" prop="user_quality_retention_user_count_25" width="120">
+						<el-table-column label = "25日留存人数" align="center" prop="user_quality_retention_user_count_25" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_25 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "25日首充人数" align="left" prop="user_quality_retention_first_depositor_count_25" width="120">
+						<el-table-column label = "25日首充人数" align="center" prop="user_quality_retention_first_depositor_count_25" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_25 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "26日留存率" align="left" prop="user_quality_retention_rate_26" width="120">
+						<el-table-column label = "26日留存率" align="center" prop="user_quality_retention_rate_26" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_26 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_26 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "26日留存人数" align="left" prop="user_quality_retention_user_count_26" width="120">
+						<el-table-column label = "26日留存人数" align="center" prop="user_quality_retention_user_count_26" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_26 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "26日首充人数" align="left" prop="user_quality_retention_first_depositor_count_26" width="120">
+						<el-table-column label = "26日首充人数" align="center" prop="user_quality_retention_first_depositor_count_26" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_26 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "27日留存率" align="left" prop="user_quality_retention_rate_27" width="120">
+						<el-table-column label = "27日留存率" align="center" prop="user_quality_retention_rate_27" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_27 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_27 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "27日留存人数" align="left" prop="user_quality_retention_user_count_27" width="120">
+						<el-table-column label = "27日留存人数" align="center" prop="user_quality_retention_user_count_27" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_27 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "27日首充人数" align="left" prop="user_quality_retention_first_depositor_count_27" width="120">
+						<el-table-column label = "27日首充人数" align="center" prop="user_quality_retention_first_depositor_count_27" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_27 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "28日留存率" align="left" prop="user_quality_retention_rate_28" width="120">
+						<el-table-column label = "28日留存率" align="center" prop="user_quality_retention_rate_28" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_28 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_28 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "28日留存人数" align="left" prop="user_quality_retention_user_count_28" width="120">
+						<el-table-column label = "28日留存人数" align="center" prop="user_quality_retention_user_count_28" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_28 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "28日首充人数" align="left" prop="user_quality_retention_first_depositor_count_28" width="120">
+						<el-table-column label = "28日首充人数" align="center" prop="user_quality_retention_first_depositor_count_28" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_28 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "29日留存率" align="left" prop="user_quality_retention_rate_29" width="120">
+						<el-table-column label = "29日留存率" align="center" prop="user_quality_retention_rate_29" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_29 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_29 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "29日留存人数" align="left" prop="user_quality_retention_user_count_29" width="120">
+						<el-table-column label = "29日留存人数" align="center" prop="user_quality_retention_user_count_29" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_29 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "29日首充人数" align="left" prop="user_quality_retention_first_depositor_count_29" width="120">
+						<el-table-column label = "29日首充人数" align="center" prop="user_quality_retention_first_depositor_count_29" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_29 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "30日留存率" align="left" prop="user_quality_retention_rate_30" width="120">
+						<el-table-column label = "30日留存率" align="center" prop="user_quality_retention_rate_30" width="110">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_retention_rate_30 }}%</p>
+                <p class="bg-color-rate">{{ scope.row.user_quality_retention_rate_30 }}%</p>
               </template>
             </el-table-column>
-						<el-table-column label = "30日留存人数" align="left" prop="user_quality_retention_user_count_30" width="120">
+						<el-table-column label = "30日留存人数" align="center" prop="user_quality_retention_user_count_30" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_user_count_30 }}</p>
               </template>
             </el-table-column>
-						<el-table-column label = "30日首充人数" align="left" prop="user_quality_retention_first_depositor_count_30" width="120">
+						<el-table-column label = "30日首充人数" align="center" prop="user_quality_retention_first_depositor_count_30" width="110">
               <template #default="scope">
                 <p>{{ scope.row.user_quality_retention_first_depositor_count_30 }}</p>
               </template>
             </el-table-column>
           </el-table>
+					<div style="float: right;">
+            <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
+              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+          </div>
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
 
-.map(() => {
-	return (d)
-})
-
 <style lang="scss">
+.bg-color-rate {
+	background-color: #80ffcc;
+}
 .el-form-item {
 	margin-right: 20px!important;
 }

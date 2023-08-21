@@ -161,7 +161,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "data/summary",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: () => import('@/views/data-analysis/data-summary/index.vue'),
         name: "Data Summary",
         meta: {
           title: "data_summary",
