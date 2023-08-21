@@ -19,7 +19,7 @@ const platformOverview = ref({
 </script>
 
 <template>
-    <el-card>
+    <el-card style="margin-top: 10px;">
         <h2>平台总览</h2>
         <el-row :gutter="12" style="justify-content: center;" class="platform-card">
             <el-col :span="4">
@@ -89,6 +89,18 @@ const platformOverview = ref({
             <el-col :span="4">
                 <el-card shadow="always">
                     <div>平台总代理数</div>
+                    <div class="platform-text">999999</div>
+                </el-card>
+            </el-col>
+            <el-col :span="4">
+                <el-card shadow="always">
+                    <div>平台总复充人数</div>
+                    <div class="platform-text">999999</div>
+                </el-card>
+            </el-col>
+            <el-col :span="4">
+                <el-card shadow="always">
+                    <div>平台总活跃人数</div>
                     <div class="platform-text">999999</div>
                 </el-card>
             </el-col>
