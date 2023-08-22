@@ -86,16 +86,38 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "group/sort",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Group Sort",
+                path: "game/distribution",
+                component: ChildrenLayout,
                 meta: {
                     title: "游戏分组排序",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
                     keepAlive: true
-                }
+                },
+                children: [
+                    {
+                        path: "",
+                        component: () => import('@/views/game-management/game-distribution/index.vue'),
+                        name: "Game Distribution",
+                        meta: {
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "add/batch",
+                        component: () => import('@/views/game-management/game-distribution/details/add-batch.vue'),
+                        name: "Game Add Batch",
+                        meta: {
+                            title: "批量添加",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
             },
             {
                 path: "interface/management",
