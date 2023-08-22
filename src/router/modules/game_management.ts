@@ -29,6 +29,87 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
+                path: "game/configuration",
+                component: ChildrenLayout,
+                meta: {
+                    title: "自研游戏配置",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "",
+                        component: () => import('@/views/game-management/game-configuration/index.vue'),
+                        name: "Game Configuration",
+                        meta: {
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "game/info",
+                        component: () => import('@/views/game-management/game-configuration/details/game-info.vue'),
+                        name: "Game Information",
+                        meta: {
+                            title: "游戏信息",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "game/sort",
+                        component: () => import('@/views/game-management/game-configuration/details/game-sort.vue'),
+                        name: "Game Sort",
+                        meta: {
+                            title: "分组排序",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+            },
+            {
+                path: "channel/management",
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
+                name: "Channel Management",
+                meta: {
+                    title: "渠道游戏管理",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
+                path: "group/sort",
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
+                name: "Group Sort",
+                meta: {
+                    title: "游戏分组排序",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
+                path: "interface/management",
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
+                name: "Interface Management",
+                meta: {
+                    title: "平台界面管理",
+                    hidden: false,
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
                 path: "bet/management",
                 component: () => import('@/views/withdrawal-management/review/index.vue'),
                 name: "Bet Management",
