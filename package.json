@@ -1,5 +1,5 @@
 {
-  "name": "mall-admin",
+  "name": "blue-game-admin",
   "version": "2.1.0",
   "scripts": {
     "dev": "vite serve --mode development",
@@ -60,7 +60,7 @@
   "engines": {
     "node": ">= 14.0.0"
   },
-  "repository": "https://gitee.com/youlaiorg/mall-admin.git",
-  "author": "有来技术团队",
-  "license": "Apache-2.0"
+  "repository": "",
+  "author": "",
+  "license": ""
 }

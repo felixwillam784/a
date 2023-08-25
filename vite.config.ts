@@ -7,8 +7,10 @@ import path from 'path';
 export default ({ mode }: ConfigEnv): UserConfig => {
   // 获取 .env 环境配置文件
   const env = loadEnv(mode, process.cwd());
+  const { VITE_PUBLIC_PATH } = env
 
   return {
+    base: VITE_PUBLIC_PATH,
     plugins: [
       vue(),
       createSvgIconsPlugin({
