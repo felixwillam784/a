@@ -63,7 +63,7 @@ const loading = ref<boolean>(false);
 
 const total = ref<number>(1);
 
-const agentReportList = ref<Array<GetRetentionReport>>([
+const retentionReportList = ref<Array<GetRetentionReport>>([
   {
     id: "8e8fd8fsdfd8fe8f8df8ef",
     retention_date_time: "2020-06-30",
@@ -244,7 +244,7 @@ const handleSearch = () => {
           </div>
         </div>
         <el-card style="margin-top: 20px;" v-if="activeButton == 0">
-          <el-table v-loading="loading" :data="agentReportList" style="width: 100%;" >
+          <el-table v-loading="loading" :data="retentionReportList" style="width: 100%;" >
             <el-table-column label = "时间" align="left" prop="retention_date_time" width="100">
               <template #default="scope">
                 <p>{{ scope.row.retention_date_time }}</p>

@@ -21,7 +21,10 @@ export default {
     manual_payment: "人工打款",
     agent_report: "代理报表",
     charge_withdraw_report: "充提报表",
-    retention_report: "留存报表"
+    retention_report: "留存报表",
+    user_quality_report: "平台用户质量报表",
+    platform_setting: "平台设置",
+    operation_management: "运营管理",
   },
   // 登录页面国际化
   login: {

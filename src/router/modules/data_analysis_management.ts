@@ -93,6 +93,16 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "user-quality/report",
+        component: import('@/views/data-analysis/user-quality-report/index.vue'),
+        meta: {
+            title: "user_quality_report",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
         path: "game/report",
         component: ChildrenLayout,
         meta: {
@@ -151,7 +161,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "data/summary",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: () => import('@/views/data-analysis/data-summary/index.vue'),
         name: "Data Summary",
         meta: {
           title: "data_summary",
