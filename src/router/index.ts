@@ -8,6 +8,7 @@ import webpageManagementRoutes from "@/router/modules/webpage_management";
 import gameManagementRoutes from "@/router/modules/game_management";
 import thirdpartyManagementRoutes from "@/router/modules/thirdparty_management";
 import authorityManagementRoutes from "@/router/modules/authority_management";
+import platformSettingRoutes from "@/router/modules/platform_setting";
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -50,7 +51,8 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
   ...eventManagementRoutes,
   ...gameManagementRoutes,
   ...thirdpartyManagementRoutes,
-  ...authorityManagementRoutes
+  ...authorityManagementRoutes,
+  ...platformSettingRoutes
 ]
 
 // 创建路由

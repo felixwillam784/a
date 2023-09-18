@@ -14,17 +14,14 @@ const buttonIndex = ref<number>(0);
 interface GetGameReport {
   id: string;
   game_date_time: string;
-  game_type: string;
-  game_platform: string;
-  game_company: string;
-  game_bet_amount: number;
-  game_bonus_amount: number;
-  game_platform_revenue: number;
-  game_better_count: number;
-  game_count: number;
-  game_advantage: number;
-  game_play_rate: number;
-  game_revenue_rate: number;
+  game_activity_name: string;
+  game_bonus_type: string;
+  game_recharge_amount: number | string;
+  game_participant_count: number;
+  game_received_count: number;
+  game_capita_bonus: number;
+  game_bonus_ratio: number;
+  game_statistics: number;
 }
 
 interface RejectInterface {
@@ -47,51 +44,78 @@ const gameReportList = ref<Array<GetGameReport>>([
   {
     id: "8e8fd8fsdfd8fe8f8df8ef",
     game_date_time: "2020-06-30",
-    game_type: "Dice",
-    game_platform: "自研",
-    game_company: "自研",
-    game_bet_amount: 999999.99,
-    game_bonus_amount: 999999.99,
-    game_platform_revenue: -111.11,
-    game_better_count: 999,
-    game_count: 99999,
-    game_advantage: -0.5,
-    game_play_rate: 99.99,
-    game_revenue_rate: 99.99
+    game_activity_name: "首充送50%",
+    game_bonus_type: "充值活动",
+    game_recharge_amount: 99999.99,
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
   },
   {
-    id: "8e8fd8fsdfd8fe8f8df8eg",
+    id: "8e8fd8fsdfd8fe8f8df8ef",
     game_date_time: "2020-06-30",
-    game_type: "Crash",
-    game_platform: "自研",
-    game_company: "自研",
-    game_bet_amount: 999999.99,
-    game_bonus_amount: 999999.99,
-    game_platform_revenue: 111.11,
-    game_better_count: 999,
-    game_count: 99999,
-    game_advantage: 5.0,
-    game_play_rate: 99.99,
-    game_revenue_rate: 99.99
+    game_activity_name: "VIP赠金活动%",
+    game_bonus_type: "VIP赠金",
+    game_recharge_amount: "",
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
   },
   {
-    id: "8e8fd8fsdfd8fe8f8df8eh",
+    id: "8e8fd8fsdfd8fe8f8df8ef",
     game_date_time: "2020-06-30",
-    game_type: "Crash",
-    game_platform: "Fundist",
-    game_company: "PG",
-    game_bet_amount: 999999.99,
-    game_bonus_amount: 999999.99,
-    game_platform_revenue: 111.11,
-    game_better_count: 999,
-    game_count: 99999,
-    game_advantage: 5.0,
-    game_play_rate: 99.99,
-    game_revenue_rate: 99.99
-  }
+    game_activity_name: "兑换码直接赠送%",
+    game_bonus_type: "兑换码活动",
+    game_recharge_amount: "",
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
+  },
+  {
+    id: "8e8fd8fsdfd8fe8f8df8ef",
+    game_date_time: "2020-06-30",
+    game_activity_name: "理财方案1",
+    game_bonus_type: "理财计划",
+    game_recharge_amount: "",
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
+  },
+  {
+    id: "8e8fd8fsdfd8fe8f8df8ef",
+    game_date_time: "2020-06-30",
+    game_activity_name: "运维赠金",
+    game_bonus_type: "运维赠金",
+    game_recharge_amount: "",
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
+  },
+  {
+    id: "8e8fd8fsdfd8fe8f8df8ef",
+    game_date_time: "2020-06-30",
+    game_activity_name: "生日奖金",
+    game_bonus_type: "其他赠金",
+    game_recharge_amount: "",
+    game_participant_count: 99999,
+    game_received_count: 99999,
+    game_capita_bonus: 1.11,
+    game_bonus_ratio: 10.00,
+    game_statistics: 999999.99,
+  },
 ])
 
-const total = ref<number>(3);
+const total = ref<number>(6);
 
 const gameTypes = ref<Array<any>>([
   {
@@ -243,78 +267,53 @@ const handleSearch = () => {
             
           </el-col>
           <el-col :span="12" :xs="12" style="display: flex; justify-content: center;">
-            <span class = "game-report-overview game-report-bg1">游戏局数: 99999</span>
-            <span class = "game-report-overview game-report-bg1">打码量: 99999.99</span>
-            <span class = "game-report-overview game-report-bg2">派奖: 99999.99</span>
-            <span class = "game-report-overview game-report-bg2">庄家优势: -0.5277777</span>
+            <span class = "game-report-overview game-report-bg1">彩金总数: 99999</span>
+            <span class = "game-report-overview game-report-bg1">领取人数: 99999</span>
+            <span class = "game-report-overview game-report-bg2">领取次数: 99999</span>
+            <span class = "game-report-overview game-report-bg2">人数彩金: 9999.99</span>
           </el-col>
         </el-row>
         <el-card style="margin-top: 20px;">
           <el-table v-loading="loading" :data="gameReportList" style="width: 100%;">
-            <el-table-column label="时间" align="center" prop="game_date_time" width="160">
+            <el-table-column label="活动名字" align="center" prop="game_activity_name" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_date_time }}</p>
+                <p>{{ scope.row.game_activity_name }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="游戏名称" align="center" prop="game_type" width="160">
+            <el-table-column label="赠金类型" align="center" prop="game_bonus_type" width="200">
               <template #default="scope">
-                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;"
-                  @click="router.push({ name: 'GameReportDetail'})">
-                  {{ scope.row.game_type }}
-                </el-link>
+                <p>{{ scope.row.game_bonus_type }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="平台" align="center" prop="game_platform" width="130">
+            <el-table-column label="充值金额" align="center" prop="game_recharge_amount" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_platform }}</p>
+                <p v-if="scope.row.game_recharge_amount !=''">{{ scope.row.game_recharge_amount.toFixed(2) }}</p>
+                <p v-else> __</p>
               </template>
             </el-table-column>
-            <el-table-column label="研发公司" align="center" prop="game_company" width="130">
+            <el-table-column label="参与人数" align="center" prop="game_participant_count" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_company}}</p>
+                <p>{{ scope.row.game_participant_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="投注金额" align="center" prop="game_bet_amount" width="130">
+            <el-table-column label="领取次数" align="center" prop="game_received_count" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_bet_amount.toFixed(2) }}</p>
+                <p>{{ scope.row.game_received_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="派奖金额" align="center" prop="game_bonus_amount" width="130">
+            <el-table-column label="人均彩金" align="center" prop="game_capita_bonus" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_bonus_amount.toFixed(2) }}</p>
+                <p>{{ scope.row.game_capita_bonus.toFixed(2) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="平台盈亏" align="center" prop="game_platform_revenue" width="130">
+            <el-table-column label="彩金占比" align="center" prop="game_bonus_ratio" width="200">
               <template #default="scope">
-                <Font color="red"
-                  v-if="scope.row.game_platform_revenue < 0">{{
-                    scope.row.game_platform_revenue }}</Font>
-                <Font v-else>{{ scope.row.game_platform_revenue }}</Font>
+                <p>{{ scope.row.game_bonus_ratio.toFixed(2) }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="投注人数" align="center" prop="game_better_count" width="130">
+            <el-table-column label="增进统计" align="center" prop="game_statistics" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_better_count.toFixed(0) }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label="投注局数" align="center" prop="game_count" width="130">
-              <template #default="scope">
-                <p>{{ scope.row.game_count.toFixed(0) }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label="庄家优势" align="center" prop="game_advantage" width="130">
-              <template #default="scope">
-                <p>{{ scope.row.game_advantage.toFixed(1) }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label="游戏留存率" align="center" prop="game_play_rate" width="130">
-              <template #default="scope">
-                <p>{{ scope.row.game_play_rate.toFixed(2) }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label="营收占比" align="center" prop="game_revenue_rate" width="130">
-              <template #default="scope">
-                <p>{{ scope.row.game_revenue_rate.toFixed(2) }}%</p>
+                <p>{{ scope.row.game_statistics.toFixed(2) }}</p>
               </template>
             </el-table-column>
           </el-table>
