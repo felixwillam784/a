@@ -24,6 +24,12 @@ export default {
     user_quality_report: "User Quality Report",
     platform_setting: "Platform Setting",
     operation_management: "Operation Management",
+    basic_configuration: "Basic configuration",
+    maintenance_announcement: "Maintenance Announcement",
+    operational_configuration: "Operational Configuration",
+    register_configuration: "Register Configuration",
+    sms_configuration: "SMS Configuration",
+    agency_management: "Agency Management"
   },
   // 登录页面国际化
   login: {
