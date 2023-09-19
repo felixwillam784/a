@@ -8,14 +8,16 @@ import { resetRouter } from '@/router';
 import { LoginForm } from '@/api/auth/types';
 import { NetworkData } from '@/net/NetworkData';
 
+import axios from 'axios';
+
 const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     token: localStorage.get('token') || '',
     nickname: '',
-    avatar: '',
-    roles: [],
-    perms: [],
+    avatar: 'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif',
+    roles: ['ADMIN'],
+    perms: ["sys:menu:delete", "sys:dept:edit", "sys:dict_type:add", "sys:dict:edit", "sys:dict:delete", "sys:dict_type:edit", "sys:menu:add", "sys:user:add", "sys:role:edit", "sys:dept:delete", "sys:user:edit", "sys:user:delete", "sys:user:reset_pwd", "sys:dept:add", "sys:role:delete", "sys:dict_type:delete", "sys:menu:edit", "sys:dict:add", "sys:role:add"],
   }),
   actions: {
     async RESET_STATE() {
@@ -26,22 +28,31 @@ const useUserStore = defineStore({
      */
     login(data: LoginForm) {
       const { username, password, verifyCode, verifyCodeKey } = data;
+
+      // let res = axios.post('http://45.32.120.156:8020/api/admin/login', {name:username, password:password}).then((res) => {
+      //   console.log(res)
+      // }).catch((error) => {
+      //   console.log(error)
+      // })
+
+      // console.log(res);
+
       return new Promise((resolve, reject) => {
         loginApi({
-          username: username.trim(),
+          name: username.trim(),
           password: password,
-          grant_type: 'captcha',
-          verifyCode: verifyCode,
-          verifyCodeKey: verifyCodeKey,
+          // grant_type: 'captcha',
+          // verifyCode: verifyCode,
+          // verifyCodeKey: verifyCodeKey,
         })
           .then((response) => {
-            const { accessToken, tokenType } = response.data;
-            const access_token = tokenType + ' ' + accessToken;
-            localStorage.set('token', access_token);
-            const networkData: NetworkData = NetworkData.getInstance();
-            networkData.setToken(access_token);
-            this.token = access_token;
-            resolve(access_token);
+            // const { token } = response;
+            // // const access_token = tokenType + ' ' + accessToken;
+            localStorage.set('token', 'Bearer ' + response.token);
+            // // const networkData: NetworkData = NetworkData.getInstance();
+            // // networkData.setToken(access_token);
+            this.token = 'Bearer ' + response.token;
+            resolve(response);
           })
           .catch((error) => {
             reject(error);
@@ -79,8 +90,9 @@ const useUserStore = defineStore({
      */
     logout() {
       return new Promise((resolve, reject) => {
-        logoutApi()
-          .then(() => {
+        logoutApi({name: "test1w1", password: "password"}, this.token)
+          .then((res) => {
+            console.log(res)
             localStorage.remove('token');
             this.RESET_STATE();
             resetRouter();

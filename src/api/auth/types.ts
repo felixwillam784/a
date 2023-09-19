@@ -19,8 +19,9 @@ export interface LoginForm {
  * 登录响应类型声明
  */
 export interface LoginResult {
-  accessToken: string;
-  tokenType: string;
+  token: string;
+  code: string;
+  message: string;
 }
 
 /**

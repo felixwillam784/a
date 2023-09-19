@@ -25,6 +25,12 @@ export default {
     user_quality_report: "平台用户质量报表",
     platform_setting: "平台设置",
     operation_management: "运营管理",
+    basic_configuration: "基础配置",
+    maintenance_announcement: "维护公告",
+    operational_configuration: "运营配置",
+    register_configuration: "注册配置",
+    sms_configuration: "短信配置",
+    agency_management: "代理管理"
   },
   // 登录页面国际化
   login: {

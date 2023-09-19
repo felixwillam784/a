@@ -7,11 +7,11 @@ import { LoginForm, LoginResult, VerifyCode } from './types';
  * @param data {LoginForm}
  * @returns
  */
-export function loginApi(data: LoginForm): AxiosPromise<LoginResult> {
+export function loginApi(data: any): AxiosPromise<LoginResult> {
   return request({
-    url: '/auth/login',
+    url: 'http://45.32.120.156:8020/api/admin/login',
     method: 'post',
-    params: data,
+    data: data,
     headers: {
       Authorization: 'Basic bWFsbC1hZG1pbjoxMjM0NTY=', // 客户端信息Base64明文：mall-admin:123456
     },
@@ -21,10 +21,14 @@ export function loginApi(data: LoginForm): AxiosPromise<LoginResult> {
 /**
  * 注销
  */
-export function logoutApi() {
+export function logoutApi(data: any, token: string) {
   return request({
-    url: '/auth/logout',
-    method: 'delete',
+    url: 'http://45.32.120.156:8020/api/admin/logout',
+    method: 'POST',
+    data: data,
+    headers: {
+      Authorization: token, // 客户端信息Base64明文：mall-admin:123456
+    },
   });
 }
 
