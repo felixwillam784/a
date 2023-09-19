@@ -11,32 +11,6 @@ const service = axios.create({
   headers: { 'Content-Type': 'application/json;charset=utf-8' },
 });
 
-// 请求拦截器
-service.interceptors.request.use(
-  (config: any) => {
-    if (!config.headers) {
-      throw new Error(
-        `Expected 'config' and 'config.headers' not to be undefined`
-      );
-    }
-
-    // const networkData = NetworkData.getInstance()
-
-    // if (networkData.getToken() != undefined) {
-    //   config.headers.Authorization = 'Bearer ' + networkData.getToken();
-    // }
-
-    const { user } = useStore();
-    if (user.token) {
-      config.headers.Authorization = `${localStorage.get('token')}`;
-    }
-
-    return config;
-  },
-  (error: any) => {
-    return Promise.reject(error);
-  }
-);
 
 // 响应拦截器
 service.interceptors.response.use(
@@ -84,6 +58,34 @@ service.interceptors.response.use(
     return Promise.reject(error.message);
   }
 );
+
+// 请求拦截器
+service.interceptors.request.use(
+  (config: any) => {
+    if (!config.headers) {
+      throw new Error(
+        `Expected 'config' and 'config.headers' not to be undefined`
+      );
+    }
+
+    // const networkData = NetworkData.getInstance()
+
+    // if (networkData.getToken() != undefined) {
+    //   config.headers.Authorization = 'Bearer ' + networkData.getToken();
+    // }
+
+    const { user } = useStore();
+    if (user.token) {
+      config.headers.Authorization = `${localStorage.get('token')}`;
+    }
+
+    return config;
+  },
+  (error: any) => {
+    return Promise.reject(error);
+  }
+);
+
 
 // 导出 axios 实例
 export default service;
