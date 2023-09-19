@@ -28,9 +28,9 @@ const passwordRef = ref(ElInput);
 const state = reactive({
   redirect: '',
   loginForm: {
-    username: 'admin',
-    password: '123456',
-  } as LoginForm,
+    username: 'test123',
+    password: 'password',
+  } as any,
   loginRules: {
     username: [{ required: true, trigger: 'blur' }],
     password: [
@@ -95,7 +95,7 @@ function handleLogin() {
 
       user
         .login(state.loginForm)
-        .then(() => {
+        .then((res) => {
           router.push({ path: state.redirect || '/', query: state.otherQuery });
           state.loading = false;
         })

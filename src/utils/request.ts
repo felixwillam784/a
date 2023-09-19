@@ -44,6 +44,8 @@ service.interceptors.response.use(
     const { code, msg } = response.data;
     if (code === "00000") {
       return response.data;
+    } else if(code==="00") {
+      return response.data;
     } else {
       // 响应数据为二进制流处理(Excel导出)
       if (response.data instanceof ArrayBuffer) {
