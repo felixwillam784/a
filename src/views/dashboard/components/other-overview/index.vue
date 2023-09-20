@@ -248,7 +248,7 @@ const handleChange = () => {
                         </el-card>
                     </el-col>
                 </el-row>
-                
+
                 <el-row :gutter="12" style="justify-content: center; margin-top: 20px;" class="user-data-card">
                     <el-col :span="4">
                         <el-card shadow="always">
@@ -559,35 +559,6 @@ const handleChange = () => {
     }
 }
 
-.user-data-card {
-    .el-card {
-        border: none !important;
-        background-color: #66FF99 !important;
-
-        .el-card__body {
-            .user-data-text {
-                margin-top: 20px;
-                font-weight: bold;
-                font-size: 20px;
-            }
-        }
-    }
-}
-
-.user-retention-card {
-    .el-card {
-        border: none !important;
-        background-color: #E4E4E4 !important;
-
-        .el-card__body {
-            .user-retention-text {
-                margin-top: 20px;
-                font-weight: bold;
-                font-size: 20px;
-            }
-        }
-    }
-}
 
 .proxy-data-card {
     .el-card {
@@ -618,6 +589,37 @@ const handleChange = () => {
         }
     }
 }
+
+.user-data-card {
+    .el-card {
+        border: none !important;
+        background-color: #66FF99 !important;
+
+        .el-card__body {
+            .user-data-text {
+                margin-top: 20px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+.user-retention-card {
+    .el-card {
+        border: none !important;
+        background-color: #E4E4E4 !important;
+
+        .el-card__body {
+            .user-retention-text {
+                margin-top: 20px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        }
+    }
+}
+
 
 .game-data-card {
     .el-card {
