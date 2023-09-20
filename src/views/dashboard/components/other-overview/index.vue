@@ -2,36 +2,17 @@
 import { ref } from "vue";
 
 const activeNames = ref(['1', '2', '3']);
-const depositWithdrawalData = ref({
-    recharge_amount: "",
-    first_charge_amount: "",
-    first_charge_number: "",
-    charge_amount: "",
-    refill_number: "",
-    per_first_charge_amount: "",
-    per_recharge_amount: "",
-    total_withdrawal_amount: "",
-    agent_withdrawal_amount: "",
-    player_withdrawal_amount: "",
-    total_charge_difference: "",
-    deposit_withdrawal_difference: "",
-    withdrawal_per_player: "",
-    winning_amount: "",
-    new_user_of_total_deposit_amount: "",
-    new_user_of_average_deposit_amount: "",
-})
-const userData = ref({
-    new_registration: "",
-    first_charge_user_number: "",
-    payment_conversion_rate: "",
-    recharge_user_number: "",
-    recharge_actived_user_number: "",
-    agent_number: "",
-    withdrawal_applied_player_number: "",
-    successful_withdrawal_number: "",
-    attract_new_player: "",
-    new_increased_payment_level: "",
-})
+
+
+
+
+
+
+
+
+
+
+
 const userRetention = ref({
     first_charge_user: "",
     charge_user_3: "",
@@ -75,6 +56,42 @@ const gameData = ref({
     live_profit_loss: "",
     sport_game_advantage: "",
     sport_profit_loss: "",
+})
+
+
+
+const depositWithdrawalData = ref({
+    recharge_amount: "",
+    first_charge_amount: "",
+    first_charge_number: "",
+    charge_amount: "",
+    refill_number: "",
+    per_first_charge_amount: "",
+    per_recharge_amount: "",
+    total_withdrawal_amount: "",
+    agent_withdrawal_amount: "",
+    player_withdrawal_amount: "",
+    total_charge_difference: "",
+    deposit_withdrawal_difference: "",
+    withdrawal_per_player: "",
+    winning_amount: "",
+    new_user_of_total_deposit_amount: "",
+    new_user_of_average_deposit_amount: "",
+})
+
+
+
+const userData = ref({
+    new_registration: "",
+    first_charge_user_number: "",
+    payment_conversion_rate: "",
+    recharge_user_number: "",
+    recharge_actived_user_number: "",
+    agent_number: "",
+    withdrawal_applied_player_number: "",
+    successful_withdrawal_number: "",
+    attract_new_player: "",
+    new_increased_payment_level: "",
 })
 
 const handleChange = () => {
@@ -194,6 +211,7 @@ const handleChange = () => {
                     </el-col>
                 </el-row>
             </el-collapse-item>
+
             <el-collapse-item title="用户数据分析" name="2">
                 <template #title>
                     <h2>用户数据分析</h2>
@@ -230,6 +248,7 @@ const handleChange = () => {
                         </el-card>
                     </el-col>
                 </el-row>
+                
                 <el-row :gutter="12" style="justify-content: center; margin-top: 20px;" class="user-data-card">
                     <el-col :span="4">
                         <el-card shadow="always">

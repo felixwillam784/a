@@ -115,21 +115,32 @@ function handleLogin() {
       //   handleCaptchaGenerate();
       // }
 
+      // await dispatchRegister(state.loginForm);
+
+      // if (success.value) {
+      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
+      //   state.loading = false;
+      // } else {
+      //   state.loading = false;
+      //   handleCaptchaGenerate();
+      // }
+      // await dispatchLogout(state.loginForm);
+
+      // if (success.value) {
+      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
+      //   state.loading = false;
+      // } else {
+      //   state.loading = false;
+      //   handleCaptchaGenerate();
+      // }
+
     } else {
       return false;
     }
   });
 }
 
-// 获取验证码
-function handleCaptchaGenerate() {
-  getCaptcha().then(({ data }) => {
-    const { verifyCodeBase64, verifyCodeKey } = data;
-    verifyCodeImgUrl.value = verifyCodeBase64;
-    loginForm.value.verifyCodeKey = verifyCodeKey;
-    loginForm.value.grant_type = "captcha";
-  });
-}
+
 
 watch(route, () => {
   const query = route.query;
@@ -146,6 +157,16 @@ function getOtherQuery(query: any) {
     }
     return acc;
   }, {});
+}
+
+// 获取验证码
+function handleCaptchaGenerate() {
+  getCaptcha().then(({ data }) => {
+    const { verifyCodeBase64, verifyCodeKey } = data;
+    verifyCodeImgUrl.value = verifyCodeBase64;
+    loginForm.value.verifyCodeKey = verifyCodeKey;
+    loginForm.value.grant_type = "captcha";
+  });
 }
 
 onMounted(() => {
