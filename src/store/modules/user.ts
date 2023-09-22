@@ -46,19 +46,42 @@ const useUserStore = defineStore({
           // verifyCodeKey: verifyCodeKey,
         })
           .then((response) => {
+            console.log('>>>>>>>>>>>')
+            console.log(response.data)
             // const { token } = response;
             // // const access_token = tokenType + ' ' + accessToken;
-            localStorage.set('token', 'Bearer ' + response.token);
+            localStorage.set('token', 'Bearer ' + response.data.token);
             // // const networkData: NetworkData = NetworkData.getInstance();
             // // networkData.setToken(access_token);
-            this.token = 'Bearer ' + response.token;
-            resolve(response);
+            this.token = 'Bearer ' + response.data.token;
+            resolve(response.data);
           })
           .catch((error) => {
             reject(error);
           });
       });
     },
+    
+
+    /**
+     *  注销
+     */
+    logout() {
+      return new Promise((resolve, reject) => {
+        logoutApi({name: "test1w1", password: "password"}, this.token)
+          .then((res) => {
+            console.log(res)
+            localStorage.remove('token');
+            this.RESET_STATE();
+            resetRouter();
+            resolve(null);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
     /**
      *  获取用户信息（昵称、头像、角色集合、权限集合）
      */
@@ -78,25 +101,6 @@ const useUserStore = defineStore({
             this.roles = roles;
             this.perms = perms;
             resolve(data);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-
-    /**
-     *  注销
-     */
-    logout() {
-      return new Promise((resolve, reject) => {
-        logoutApi({name: "test1w1", password: "password"}, this.token)
-          .then((res) => {
-            console.log(res)
-            localStorage.remove('token');
-            this.RESET_STATE();
-            resetRouter();
-            resolve(null);
           })
           .catch((error) => {
             reject(error);

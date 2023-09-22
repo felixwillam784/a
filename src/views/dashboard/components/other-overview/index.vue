@@ -1,7 +1,67 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { depositWithdrawDataApi } from '@/api/dashboard';
+import { userDataAnalysisApi } from '@/api/dashboard';
+import { userRetentionDataApi } from '@/api/dashboard';
+import { agencyDataAnalysisApi } from '@/api/dashboard';
+import { agentRetentionApi } from '@/api/dashboard';
+import { gameDataApi } from '@/api/dashboard';
+
+
+import useStore from '@/store';
+
+const { user } = useStore();
 
 const activeNames = ref(['1', '2', '3']);
+
+const userRetention = ref({
+    first_charge_user: "",
+    charge_user_3: "",
+    charge_user_7: "",
+    charge_user_15: "",
+    charge_user_30: "",
+})
+
+const agentData = ref({
+    actived_agent_number: "",
+    new_agent_number: "",
+    new_level_agent_registration_number: "",
+    new_agent_first_charge_number: "",
+    new_level_payment: "",
+    agent_level_total_recharge: "",
+    agent_level_total_withdrawal: "",
+    first_level_agent_deposit_withdrawal_difference: "",
+    first_level_agent_per_recharge: "",
+    agent_total_commission: "",
+    subordinate_recharge_bonus_commission: "",
+    affiliate_reward_total_commission: "",
+    subordinate_betting_total_commission: "",
+    artificial_gold_amount: "",
+    successfully_withdraw_amount: "",
+})
+
+const agentRetention = ref({
+    actived_agent_number_in_7_days: "",
+    lost_agent_number_in_30_days: "",
+    lost_agency_rate_in_30_days: "",
+})
+
+const gameData = ref({
+    betting_players: "",
+    total_bet_amount: "",
+    total_bonus_amount: "",
+    total_profit_and_loss: "",
+    total_bet_number: "",
+    original_game_advantage: "",
+    original_game_profit_loss: "",
+    slot_game_advantage: "",
+    slot_profit_loss: "",
+    live_game_advantage: "",
+    live_profit_loss: "",
+    sport_game_advantage: "",
+    sport_profit_loss: "",
+})
+
 const depositWithdrawalData = ref({
     recharge_amount: "",
     first_charge_amount: "",
@@ -20,6 +80,9 @@ const depositWithdrawalData = ref({
     new_user_of_total_deposit_amount: "",
     new_user_of_average_deposit_amount: "",
 })
+
+
+
 const userData = ref({
     new_registration: "",
     first_charge_user_number: "",
@@ -32,54 +95,34 @@ const userData = ref({
     attract_new_player: "",
     new_increased_payment_level: "",
 })
-const userRetention = ref({
-    first_charge_user: "",
-    charge_user_3: "",
-    charge_user_7: "",
-    charge_user_15: "",
-    charge_user_30: "",
-})
-const agentData = ref({
-    actived_agent_number: "",
-    new_agent_number: "",
-    new_level_agent_registration_number: "",
-    new_agent_first_charge_number: "",
-    new_level_payment: "",
-    agent_level_total_recharge: "",
-    agent_level_total_withdrawal: "",
-    first_level_agent_deposit_withdrawal_difference: "",
-    first_level_agent_per_recharge: "",
-    agent_total_commission: "",
-    subordinate_recharge_bonus_commission: "",
-    affiliate_reward_total_commission: "",
-    subordinate_betting_total_commission: "",
-    artificial_gold_amount: "",
-    successfully_withdraw_amount: "",
-})
-const agentRetention = ref({
-    actived_agent_number_in_7_days: "",
-    lost_agent_number_in_30_days: "",
-    lost_agency_rate_in_30_days: "",
-})
-const gameData = ref({
-    betting_players: "",
-    total_bet_amount: "",
-    total_bonus_amount: "",
-    total_profit_and_loss: "",
-    total_bet_number: "",
-    original_game_advantage: "",
-    original_game_profit_loss: "",
-    slot_game_advantage: "",
-    slot_profit_loss: "",
-    live_game_advantage: "",
-    live_profit_loss: "",
-    sport_game_advantage: "",
-    sport_profit_loss: "",
-})
 
 const handleChange = () => {
 
 }
+
+onMounted(async () => {
+
+    let depositWithdrawDataRes =await depositWithdrawDataApi(user.token);
+    depositWithdrawalData.value  = depositWithdrawDataRes.data.data;
+
+    let userDataRes =await userDataAnalysisApi(user.token);
+    userData.value  = userDataRes.data.data;
+
+    let userRetensionRes =await userRetentionDataApi(user.token);
+    userRetention.value  = userRetensionRes.data.data;
+
+    let agentDataRes =await agencyDataAnalysisApi(user.token);
+    agentData.value  = agentDataRes.data.data;
+
+    let agentRetentionRes =await agentRetentionApi(user.token);
+    agentRetention.value  = agentRetentionRes.data.data;
+
+    let gameDataRes =await gameDataApi(user.token);
+    gameData.value  = gameDataRes.data.data;
+
+    
+});
+
 </script>
 
 <template>
@@ -93,31 +136,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>充值金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.recharge_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.first_charge_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充人数</div>
-                            <div class="deposit-withdrawal-text">999999</div>
+                            <div class="deposit-withdrawal-text">{{depositWithdrawalData.first_charge_number}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>复充金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.charge_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>复充人数</div>
-                            <div class="deposit-withdrawal-text">999999</div>
+                            <div class="deposit-withdrawal-text">{{depositWithdrawalData.refill_number}}</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -125,31 +168,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>人均首充金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.per_first_charge_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>人均复充金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.per_recharge_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>提现总金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.total_withdrawal_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理提现金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.agent_withdrawal_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>玩家提现金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.player_withdrawal_amount}}</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -157,31 +200,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>总充提差</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.total_charge_difference}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>玩家充提差</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.deposit_withdrawal_difference}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>玩家人均提现</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.withdrawal_per_player}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>领取的彩金金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.winning_amount}}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新用户首日存款总金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.new_user_of_total_deposit_amount}}</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -189,11 +232,12 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新用户首日人均存款金额</div>
-                            <div class="deposit-withdrawal-text">$9999999.99</div>
+                            <div class="deposit-withdrawal-text">${{depositWithdrawalData.new_user_of_average_deposit_amount}}</div>
                         </el-card>
                     </el-col>
                 </el-row>
             </el-collapse-item>
+
             <el-collapse-item title="用户数据分析" name="2">
                 <template #title>
                     <h2>用户数据分析</h2>
@@ -202,63 +246,64 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新增注册</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.new_registration }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新增首充用户数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.first_charge_user_number }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新用户付费转换率</div>
-                            <div class="user-data-text">99.99%</div>
+                            <div class="user-data-text">{{ userData.payment_conversion_rate }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>复充用户数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.recharge_user_number }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>充值活跃用户数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.recharge_actived_user_number }}</div>
                         </el-card>
                     </el-col>
                 </el-row>
+
                 <el-row :gutter="12" style="justify-content: center; margin-top: 20px;" class="user-data-card">
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>申请提现代理数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.agent_number }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>申请提现玩家数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.withdrawal_applied_player_number }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>提现成功用户数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.successful_withdrawal_number }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>主动拉新玩家数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.attract_new_player }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>拉新增长一级付费数</div>
-                            <div class="user-data-text">999999</div>
+                            <div class="user-data-text">{{ userData.new_increased_payment_level }}</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -271,31 +316,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充用户次留</div>
-                            <div class="user-retention-text">99.99%</div>
+                            <div class="user-retention-text">{{ userRetention.first_charge_user }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充用户3留</div>
-                            <div class="user-retention-text">99.99%</div>
+                            <div class="user-retention-text">{{ userRetention.charge_user_3 }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充用户7留</div>
-                            <div class="user-retention-text">99.99%</div>
+                            <div class="user-retention-text">{{ userRetention.charge_user_7 }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充用户15留</div>
-                            <div class="user-retention-text">99.99%</div>
+                            <div class="user-retention-text">{{ userRetention.charge_user_15 }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>首充用户30留</div>
-                            <div class="user-retention-text">99.99%</div>
+                            <div class="user-retention-text">{{ userRetention.charge_user_30 }}%</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -308,31 +353,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>活跃代理人数</div>
-                            <div class="proxy-data-text">999999</div>
+                            <div class="proxy-data-text">{{ agentData.actived_agent_number }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>新增代理人数</div>
-                            <div class="proxy-data-text">999999</div>
+                            <div class="proxy-data-text">{{ agentData.new_agent_number }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理新增一级注册数</div>
-                            <div class="proxy-data-text">999999</div>
+                            <div class="proxy-data-text">{{ agentData.new_level_agent_registration_number }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理新增一级首充数</div>
-                            <div class="proxy-data-text">999999</div>
+                            <div class="proxy-data-text">{{ agentData.new_agent_first_charge_number }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>人均新增一级付费数</div>
-                            <div class="proxy-data-text">999999</div>
+                            <div class="proxy-data-text">{{ agentData.new_level_payment }} </div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -340,31 +385,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理一级用户总充值</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.agent_level_total_recharge }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理一级用户总提款</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.agent_level_total_withdrawal }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理一级用户总充提差</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.first_level_agent_deposit_withdrawal_difference }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理一级用户人均充值</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.first_level_agent_per_recharge }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理总佣金</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.agent_total_commission }} </div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -372,31 +417,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>下级充值奖励总佣金</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.subordinate_recharge_bonus_commission }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理等级奖励总佣金</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.affiliate_reward_total_commission }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>下级投注总佣金</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.subordinate_betting_total_commission }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理人工加金金额</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.artificial_gold_amount }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>代理成功提现金额</div>
-                            <div class="proxy-data-text">$9999999.99</div>
+                            <div class="proxy-data-text">${{ agentData.successfully_withdraw_amount }} </div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -409,19 +454,19 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>近7日活跃代理数</div>
-                            <div class="agent-retention-text">999999</div>
+                            <div class="agent-retention-text">{{ agentRetention.actived_agent_number_in_7_days }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>近30日流失代理数</div>
-                            <div class="agent-retention-text">999999</div>
+                            <div class="agent-retention-text">{{ agentRetention.lost_agent_number_in_30_days }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>近30日流失代理率</div>
-                            <div class="agent-retention-text">99.99%</div>
+                            <div class="agent-retention-text">{{ agentRetention.lost_agency_rate_in_30_days }}%</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -434,31 +479,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>下注玩家数</div>
-                            <div class="game-data-text">999999</div>
+                            <div class="game-data-text">{{ gameData.betting_players }}</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>总下注金额</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.total_bet_amount }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>总派奖金额</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.total_bonus_amount }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>总盈亏</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.total_profit_and_loss }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>总下注局数</div>
-                            <div class="game-data-text">999999</div>
+                            <div class="game-data-text"> {{ gameData.total_bet_number }} </div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -466,31 +511,31 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>原创游戏优势</div>
-                            <div class="game-data-text">99.99%</div>
+                            <div class="game-data-text"> {{ gameData.original_game_advantage }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>原创游戏盈亏</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.original_game_profit_loss }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>SLOT优势</div>
-                            <div class="game-data-text">99.99%</div>
+                            <div class="game-data-text"> {{ gameData.slot_game_advantage }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>SLOT盈亏</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.slot_profit_loss }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>LIVE优势</div>
-                            <div class="game-data-text">99.99%</div>
+                            <div class="game-data-text">{{ gameData.live_game_advantage }}%</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -498,19 +543,19 @@ const handleChange = () => {
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>LIVE盈亏</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.live_profit_loss }} </div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>SPORTS优势</div>
-                            <div class="game-data-text">99.99%</div>
+                            <div class="game-data-text"> {{ gameData.sport_game_advantage }}%</div>
                         </el-card>
                     </el-col>
                     <el-col :span="4">
                         <el-card shadow="always">
                             <div>SPORTS盈亏</div>
-                            <div class="game-data-text">$9999999.99</div>
+                            <div class="game-data-text">${{ gameData.sport_profit_loss }}</div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -532,6 +577,37 @@ const handleChange = () => {
 
         .el-card__body {
             .deposit-withdrawal-text {
+                margin-top: 20px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+
+.proxy-data-card {
+    .el-card {
+        border: none !important;
+        background-color: #66FF99 !important;
+
+        .el-card__body {
+            .proxy-data-text {
+                margin-top: 20px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+.agent-retention-card {
+    .el-card {
+        border: none !important;
+        background-color: #E4E4E4 !important;
+
+        .el-card__body {
+            .agent-retention-text {
                 margin-top: 20px;
                 font-weight: bold;
                 font-size: 20px;
@@ -570,35 +646,6 @@ const handleChange = () => {
     }
 }
 
-.proxy-data-card {
-    .el-card {
-        border: none !important;
-        background-color: #66FF99 !important;
-
-        .el-card__body {
-            .proxy-data-text {
-                margin-top: 20px;
-                font-weight: bold;
-                font-size: 20px;
-            }
-        }
-    }
-}
-
-.agent-retention-card {
-    .el-card {
-        border: none !important;
-        background-color: #E4E4E4 !important;
-
-        .el-card__body {
-            .agent-retention-text {
-                margin-top: 20px;
-                font-weight: bold;
-                font-size: 20px;
-            }
-        }
-    }
-}
 
 .game-data-card {
     .el-card {

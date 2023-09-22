@@ -9,7 +9,7 @@ import { LoginForm, LoginResult, VerifyCode } from './types';
  */
 export function loginApi(data: any): AxiosPromise<LoginResult> {
   return request({
-    url: 'http://45.32.120.156:8020/api/admin/login',
+    url: '/admin/login',
     method: 'post',
     data: data,
     headers: {
@@ -23,7 +23,7 @@ export function loginApi(data: any): AxiosPromise<LoginResult> {
  */
 export function logoutApi(data: any, token: string) {
   return request({
-    url: 'http://45.32.120.156:8020/api/admin/logout',
+    url: '/admin/logout',
     method: 'POST',
     data: data,
     headers: {
@@ -37,7 +37,7 @@ export function logoutApi(data: any, token: string) {
  */
 export function getCaptcha(): AxiosPromise<VerifyCode> {
   return request({
-    url: '/auth/captcha?t=' + new Date().getTime().toString(),
+    url: 'http://vue3.youlai.tech/prod-api/api/v1/auth/captcha?t=' + new Date().getTime().toString(),
     method: 'get',
   });
 }
