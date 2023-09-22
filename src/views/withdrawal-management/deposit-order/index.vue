@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from "vue";
+import { depositOrderListApi } from '@/api/withdraw-management';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+
+import useStore from '@/store';
+
+const { user } = useStore();
+
 
 interface GetDepositOrder {
     id: string,
@@ -226,6 +232,17 @@ const resetForm = (formEl: FormInstance | undefined) => {
 const makeOrder = (item: GetDepositOrder) => {
     depositOrderDialogVisible.value = true;
 }
+
+onMounted(async () => {
+
+    let depositOrderRes =await depositOrderListApi(user.token);
+    console.log(depositOrderRes.data.data)
+
+    depositOrderList.value  = depositOrderRes.data.data;
+
+
+});
+
 </script>
 
 <template>
@@ -369,12 +386,12 @@ const makeOrder = (item: GetDepositOrder) => {
                         </el-table-column>
                         <el-table-column label="订单金额" align="center" prop="order_amount">
                             <template #default="scope">
-                                <p>${{ scope.row.order_amount.toFixed(2) }}</p>
+                                <p>${{ scope.row.order_amount}}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="实际到账" align="center" prop="actual_amount">
                             <template #default="scope">
-                                <p>${{ scope.row.actual_amount.toFixed(2) }}</p>
+                                <p>${{ scope.row.actual_amount }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="是否首充" align="center" prop="first_charge_status">

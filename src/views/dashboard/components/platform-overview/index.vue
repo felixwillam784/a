@@ -23,10 +23,11 @@ const platformOverview = ref({
     recharge_code_rate: "",
 })
 
-onMounted(() => {
-    // platformOverviewApi(user.token).then((res) => {
-    //     console.log(res)
-    // })
+
+onMounted(async () => {
+    let platformRes =await platformOverviewApi(user.token);
+    platformOverview.value  = platformRes.data.data;
+    
 });
 
 </script>
