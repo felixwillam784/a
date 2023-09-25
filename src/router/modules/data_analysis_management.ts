@@ -17,7 +17,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "user/list",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "User Data",
         meta: {
           title: "user_data",
@@ -28,7 +28,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "customer/habbit",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Customer Habbit",
         meta: {
           title: "customer_habbit",
@@ -38,21 +38,9 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
-      // {
-      //   path: "game/report",
-      //   component: () => import('@/views/data-analysis/game-report/index.vue'),
-      //   name: "Game Report",
-      //   meta: {
-      //     title: "game_report",
-      //     hidden: false,
-      //     // alwaysShow: false,
-      //     roles: ["ADMIN"],
-      //     keepAlive: true
-      //   },
-      // },
       {
         path: "platform/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Platform Report",
         meta: {
           title: "platform_report",
@@ -104,40 +92,73 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "game/report",
-        component: ChildrenLayout,
+        component: import('@/views/data-analysis/game-report/index.vue'),
         meta: {
             title: "game_report",
             hidden: false,
             roles: ["ADMIN"],
             keepAlive: true
         },
-        children: [
-            {
-                path: "",
-                component: () => import('@/views/data-analysis/game-report/index.vue'),
-                name: "Game Report",
-                meta: {
-                    hidden: true,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                },
-            },
-            {
-                path: "detail",
-                component: () => import('@/views/data-analysis/game-report/detail.vue'),
-                name: "GameReportDetail",
-                meta: {
-                    title: "Dice",
-                    hidden: true,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                },
-            },
-        ]
+        // children: [
+        //     {
+        //         path: "",
+        //         component: import('@/views/data-analysis/game-report/index.vue'),
+        //         name: "Game Report",
+        //         meta: {
+        //             hidden: true,
+        //             roles: ["ADMIN"],
+        //             keepAlive: true
+        //         },
+        //     },
+        //     {
+        //         path: "detail",
+        //         component: import('@/views/data-analysis/game-report/detail.vue'),
+        //         name: "GameReportDetail",
+        //         meta: {
+        //             title: "Dice",
+        //             hidden: true,
+        //             roles: ["ADMIN"],
+        //             keepAlive: true
+        //         },
+        //     },
+        // ]
       },
+      // {
+      //   path: "game/report",
+      //   component: ChildrenLayout,
+      //   meta: {
+      //       title: "game_report",
+      //       hidden: false,
+      //       roles: ["ADMIN"],
+      //       keepAlive: true
+      //   },
+      //   children: [
+      //       {
+      //           path: "",
+      //           component: import('@/views/data-analysis/game-report/index.vue'),
+      //           name: "Game Report",
+      //           meta: {
+      //               hidden: true,
+      //               roles: ["ADMIN"],
+      //               keepAlive: true
+      //           },
+      //       },
+      //       {
+      //           path: "detail",
+      //           component: import('@/views/data-analysis/game-report/detail.vue'),
+      //           name: "GameReportDetail",
+      //           meta: {
+      //               title: "Dice",
+      //               hidden: true,
+      //               roles: ["ADMIN"],
+      //               keepAlive: true
+      //           },
+      //       },
+      //   ]
+      // },
       {
         path: "activity/statement",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Activity Statement",
         meta: {
           title: "activity_statement",
@@ -149,7 +170,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "withdrawal/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Withdrawal Report",
         meta: {
           title: "withdrawal_report",
@@ -161,7 +182,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "data/summary",
-        component: () => import('@/views/data-analysis/data-summary/index.vue'),
+        component: import('@/views/data-analysis/data-summary/index.vue'),
         name: "Data Summary",
         meta: {
           title: "data_summary",
@@ -173,7 +194,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "pool/report",
-        component: () => import('@/views/withdrawal-management/review/index.vue'),
+        component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Prize Pool Report",
         meta: {
           title: "pool_report",

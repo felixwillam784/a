@@ -16,6 +16,7 @@ export default {
     pool_report: "Pool Report",
     player_management: "Players",
     user_list: "User List",
+    user_money_flow: "User Money Flow",
     withdrawal_management: "Withdrawal",
     manual_payment: "Manual Payment",
     agent_report: "Agent Report",

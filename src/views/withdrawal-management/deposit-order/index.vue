@@ -251,17 +251,23 @@ onMounted(async () => {
             <el-col :span="24" :xs="24">
                 <el-card>
                     <el-form :model="formData" :inline="true" label-width="100">
-                        <el-form-item label="用户昵称" prop="nick_name">
+                        <!-- <el-form-item label="用户昵称" prop="nick_name">
                             <el-input v-model="formData.nick_name" placeholder="请输入用户昵称" />
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="用户账户" prop="user_account">
                             <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
                         </el-form-item>
-                        <el-form-item label="用户ID" prop="user_id">
+                        <!-- <el-form-item label="用户ID" prop="user_id">
                             <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="是否首充" prop="first_charge_status">
                             <el-select v-model="formData.first_charge_status" placeholder="请选择是否首充">
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单状态" prop="order_status">
+                            <el-select v-model="formData.order_status" placeholder="选择订单状态">
+                                <el-option v-for="(item, index) in orderStatusOptions" :label="item.label"
+                                    :value="item.value" :key="index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -274,12 +280,7 @@ onMounted(async () => {
                             <el-date-picker v-model="formData.order_update_time" type="date" placeholder="选择更新时间"
                                 format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                         </el-form-item>
-                        <el-form-item label="订单状态" prop="order_status">
-                            <el-select v-model="formData.order_status" placeholder="选择订单状态">
-                                <el-option v-for="(item, index) in orderStatusOptions" :label="item.label"
-                                    :value="item.value" :key="index"></el-option>
-                            </el-select>
-                        </el-form-item>
+                        
                         <el-form-item label="上游通道" prop="upstream_channel">
                             <el-select v-model="formData.upstream_channel" placeholder="请选择上游通道">
                             </el-select>
@@ -293,9 +294,9 @@ onMounted(async () => {
                         <el-form-item label="订单号" prop="order_number">
                             <el-input v-model="formData.order_number" placeholder="请输入订单号" />
                         </el-form-item>
-                        <el-form-item label="通道订单号" prop="platform_order_number">
+                        <!-- <el-form-item label="通道订单号" prop="platform_order_number">
                             <el-input v-model="formData.platform_order_number" placeholder="请输入通道订单号" />
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="上游订单号" prop="upstream_order_number">
                             <el-input v-model="formData.upstream_order_number" placeholder="请输入上游订单号" />
                         </el-form-item>
@@ -307,16 +308,16 @@ onMounted(async () => {
 
                 <el-card style="margin-top: 10px;">
                     <el-table v-loading="loading" :data="depositOrderList" style="width: 100%;">
-                        <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
+                        <!-- <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({ name: 'UserDetail' })">
                                     {{ scope.row.nick_name }}
                                 </el-link>
                             </template>
-                        </el-table-column>
-                        <el-table-column label="用户账户" align="center" prop="user_account" width="160">
+                        </el-table-column> -->
+                        <el-table-column label="用户账号" align="center" prop="user_account" width="160">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">
+                                <el-link :underline="false" style="color: rgb(83, 147, 224); text-decoration-line: underline;" @click="router.push({ name: 'UserDetail' })">
                                     {{ scope.row.user_account }}
                                 </el-link>
                             </template>
@@ -438,30 +439,30 @@ onMounted(async () => {
 
         <el-dialog title="充值订单详情" v-model="depositOrderDetailDialogVisible" width="600px" append-to-body
             @close="closeDialog">
-            <el-row>
+            <!-- <el-row>
                 <el-col :span="6" class="detail-item-left-bg">客户ID:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ depositOrderItem.id }}</p>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ depositOrderItem.user_account }}</p>
                 </el-col>
             </el-row>
-            <el-row>
+            <!-- <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户昵称:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ depositOrderItem.nick_name }}</p>
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">用户名字:</el-col>
+                <el-col :span="6" class="detail-item-left-bg">Gaia订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ depositOrderItem.user_name }}</p>
+                    <p>{{ depositOrderItem.gaia_order_number }}</p>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">平台订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
@@ -469,11 +470,23 @@ onMounted(async () => {
                 </el-col>
             </el-row>
             <el-row>
+                <el-col :span="6" class="detail-item-left-bg">Gaia订单号:</el-col>
+                <el-col :span="18" class="detail-item-right-bg">
+                    <p>{{ depositOrderItem.gaia_order_number }}</p>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6" class="detail-item-left-bg">上游通道:</el-col>
+                <el-col :span="18" class="detail-item-right-bg">
+                    <p>{{ depositOrderItem.upstream_channel }}</p>
+                </el-col>
+            </el-row>
+            <!-- <el-row>
                 <el-col :span="6" class="detail-item-left-bg">通道订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ depositOrderItem.channel_order_number }}</p>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">上游订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
@@ -496,7 +509,7 @@ onMounted(async () => {
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">订单金额:</el-col>
+                <el-col :span="6" class="detail-item-left-bg">充值金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ depositOrderItem.order_amount }}</p>
                 </el-col>
