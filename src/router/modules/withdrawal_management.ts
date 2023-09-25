@@ -38,7 +38,6 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 },   
                 
-                
                 children: [
                     {
                         path: "",
