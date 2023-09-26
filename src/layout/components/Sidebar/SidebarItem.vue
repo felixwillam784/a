@@ -4,8 +4,8 @@
       (!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
       (!item.meta || !item.meta.alwaysShow)
       ">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
+      <app-link v-if="onlyOneChild.meta" :to="resolvePath('1', onlyOneChild.path)">
+        <el-menu-item :index="resolvePath('2',onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
           <svg-icon v-if="onlyOneChild.meta && onlyOneChild.meta.icon" :icon-class="onlyOneChild.meta.icon" />
           <template #title>
             {{ generateTitle(onlyOneChild.meta.title) }}
@@ -13,7 +13,7 @@
         </el-menu-item>
       </app-link>
     </template>
-    <el-sub-menu v-else :index="resolvePath(item.path)" popper-append-to-body>
+    <el-sub-menu v-else :index="resolvePath('3',item.path)" popper-append-to-body>
       <!-- popper-append-to-body -->
       <template #title>
         <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
@@ -23,7 +23,7 @@
       </template>
 
       <sidebar-item v-for="child in item.children" :key="child.path" :item="child" :is-nest="true"
-        :base-path="resolvePath(child.path)" class="nest-menu" />
+        :base-path="resolvePath('4',child.path)" class="nest-menu" />
     </el-sub-menu>
   </div>
 </template>
@@ -36,7 +36,6 @@ import AppLink from './Link.vue';
 
 import { generateTitle } from '@/utils/i18n';
 import SvgIcon from '@/components/SvgIcon/index.vue';
-
 const props = defineProps({
   item: {
     type: Object,
@@ -83,13 +82,18 @@ function hasOneShowingChild(children = [] as any, parent: any) {
   return false;
 }
 
-function resolvePath(routePath: string) {
+function resolvePath(a:string, routePath: string) {
+  //console.log(a)
+  //console.log(routePath);
   if (isExternal(routePath)) {
+    //console.log("routhpath:",routePath)
     return routePath;
   }
   if (isExternal(props.basePath)) {
+    //console.log("basepath:",routePath)
     return props.basePath;
   }
+  //console.log("final:",path.resolve(props.basePath, routePath))
   return path.resolve(props.basePath, routePath);
 }
 </script>

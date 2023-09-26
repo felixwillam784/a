@@ -10,14 +10,14 @@ interface GetGameData {
     game_skin: string;
     game_id: number;
     game_name: string;
-    game_group: array<any>;
+    game_group: Array<any>;
     game_type: string;
     game_provider: string;
     game_maker: string;
     game_state: string;
     maintenance_time: string;
     rtp_value: number;
-    game_tab: array;
+    game_tab: Array<any>;
     game_switch: boolean;
 }
 

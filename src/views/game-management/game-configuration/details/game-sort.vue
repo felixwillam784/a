@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown, UploadProps, UploadUserFile, Plus  } from '@element-plus/icons-vue';
+import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown, Plus  } from '@element-plus/icons-vue';
+import {UploadProps, UploadUserFile} from 'element-plus';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 
 import * as _ from "lodash";
 
-
+const handleQuery = ()=>{
+    
+}
 const router = useRouter();
 
 const activeButton = ref<number>(1);
@@ -20,7 +23,7 @@ const dynamicTags = ref([{label: "HOT", color: "#ffcc99"}, {label: "NEW", color:
 
 const dynamicTags1 = ref([{label: "HOT", color: "#ffcc99"}, {label: "NEW", color: "#80cccc"}, {label: "SLOT", color: "#f8f8f8"}, {label: "PG", color: "#b3e6ff"}, {label: "Dice", color: "#f8f8f8"}, {label: "Pop", color: "#f8f8f8"}, {label: "Poker", color: "#f8f8f8"}])
 
-const handleClose = (tag: string) => {
+const handleClose = (tag: any) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
 }
 
@@ -46,7 +49,7 @@ const isAAA = ref(false)
 const isBBB = ref(false)
 const isCCC = ref(false)
 
-const handleSelectTab = (tabName) => {
+const handleSelectTab = (tabName:any) => {
     switch (tabName) {
         case "Classic":
             isClassic.value  = !isClassic.value;
@@ -77,8 +80,8 @@ const handleAddTab = () => {
 
 interface GetGameData {
     id: string;
-    game_index: string;
-    game_id: number;
+    game_index: number;
+    game_id: string;
     game_name: string;
     game_state: string;
     game_type: string;
@@ -153,6 +156,7 @@ const setTop = () => {
 const setLow = () => {
 }
 
+const loading = ref<boolean>(false);
 
 </script>
 
@@ -245,7 +249,7 @@ const setLow = () => {
                 </el-table-column>
 
                 <el-table-column label="" align="left" width="200" fixed="right">
-                    <template #default="scope">
+                    <template #default>
                         <el-button type="primary" link @click="setTop">置顶</el-button>
                         <el-button  link @click="setLow">置低</el-button>
                     </template>

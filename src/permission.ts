@@ -39,7 +39,8 @@ router.beforeEach(async (to, from, next) => {
         }
       } else {
         try {
-          await user.getUserInfo();
+          //await user.getUserInfo();
+          user.roles = ["ADMIN"];
           const roles = user.roles;
           // const roles = ["ADMIN"];
           const accessRoutes: any = await permission.generateRoutes(roles);

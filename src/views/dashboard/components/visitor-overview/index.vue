@@ -61,7 +61,7 @@ const chart1axis = ref({
     },
   },
   secondary: {
-    format: (domain: string) => {
+    format: (domain: any) => {
       if (domain*1 > 4000) {
         return "";
       } else {
@@ -99,7 +99,7 @@ const visitorOverview = ref({
 							<div class="visitor-text">999999</div>
 							<div style="display:flex;">
 								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
-								<el-icon class="visitor-icon" :size="size" :color="color">
+								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>						
 							</div>
@@ -130,7 +130,7 @@ const visitorOverview = ref({
 							<div class="visitor-text">999999</div>
 							<div style="display:flex;">
 								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
-								<el-icon class="visitor-icon" :size="size" :color="color">
+								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>
 							</div>
@@ -160,7 +160,7 @@ const visitorOverview = ref({
 							<div class="visitor-text">999999</div>
 							<div style="display:flex;">
 								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
-								<el-icon class="visitor-icon" :size="size" :color="color">
+								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>
 							</div>
@@ -190,7 +190,7 @@ const visitorOverview = ref({
 							<div class="visitor-text">999999</div>
 							<div style="display:flex;">
 								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
-								<el-icon class="visitor-icon" :size="size" :color="color">
+								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>
 							</div>

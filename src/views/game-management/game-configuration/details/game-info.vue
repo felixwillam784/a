@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown, UploadProps, UploadUserFile, Plus  } from '@element-plus/icons-vue';
+import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown,  Plus  } from '@element-plus/icons-vue';
+import {UploadProps, UploadUserFile} from 'element-plus';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 
@@ -83,7 +84,7 @@ const isAAA = ref(false)
 const isBBB = ref(false)
 const isCCC = ref(false)
 
-const handleSelectTab = (tabName) => {
+const handleSelectTab = (tabName:string) => {
     switch (tabName) {
         case "Classic":
             isClassic.value  = !isClassic.value;

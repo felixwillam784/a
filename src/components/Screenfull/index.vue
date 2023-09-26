@@ -15,12 +15,12 @@ import SvgIcon from '@/components/SvgIcon/index.vue';
 
 const { isFullscreen, toggle } = useFullscreen();
 
-const utcYear = ref<number>('');
-const utcDate = ref<number>('');
-const utcMonth = ref<number>('');
-const utcHour = ref<number>('');
-const utcMinute = ref<number>('');
-const utcSecond = ref<number>('');
+const utcYear = ref<number>();
+const utcDate = ref<number>();
+const utcMonth = ref<number>();
+const utcHour = ref<number>();
+const utcMinute = ref<number>();
+const utcSecond = ref<number>();
 
 setInterval(function(){
   const d3 = new Date();

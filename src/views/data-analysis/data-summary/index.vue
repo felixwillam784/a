@@ -63,21 +63,21 @@ const chart1data = ref(chart1Array);
 const chart2data = ref(chart2Array);
 const chart3data = ref(chart3Array);
 const chart4data = ref(chart4Array);
-const chart1direction = ref('horizontal');
+const chart1direction = ref<any>('horizontal');
 const chart1margin = ref({
   left: 0,
   top: 20,
   right: 20,
   bottom: 0
 });
-const chart1axis = ref({
+const chart1axis = ref<any>({
   primary: {
     type: 'band',
   },
   secondary: {
     domain: ['0', 'dataMax + 100'],
     type: 'linear',
-    format: (domain: string) => {
+    format: (domain: any) => {
       if (domain*1 > 4000) {
         return "";
       } else {
