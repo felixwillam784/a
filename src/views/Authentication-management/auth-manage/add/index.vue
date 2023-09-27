@@ -326,37 +326,39 @@ const checktCheckboxStatus = (label : any) =>{
   label.indeterminate = true;
   return 2;
 }
+
+const formData = ref<any>({
+    group_id: "",
+    group_type: "",
+    group_name: "",
+})
 </script>
 
 <template>
     <div class="app-container">
         <div class="user-detail-header">
             <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
-            <div style="margin-left: auto;">
-                <el-button :type="activeButton == 0 ? 'warning' : ''"
-                    @click="handleButtonActive(0, 'AuthorityDetail')">权限管理</el-button>
-                <el-button :type="activeButton == 1 ? 'warning' : ''"
-                    @click="handleButtonActive(1, 'FundingDetails')">数据分析</el-button>
-                <el-button :type="activeButton == 2 ? 'warning' : ''"
-                    @click="handleButtonActive(2, 'AgentRebate')">玩家管理</el-button>
-                <el-button :type="activeButton == 3 ? 'warning' : ''"
-                    @click="handleButtonActive(3, 'PromotionRecord')">充提管理</el-button>
-                <el-button :type="activeButton == 4 ? 'warning' : ''"
-                    @click="handleButtonActive(4, 'RechargeRecord')">网页管理</el-button>
-                <el-button :type="activeButton == 5 ? 'warning' : ''"
-                    @click="handleButtonActive(5, 'WithdrawalRecord')">活动管理</el-button>
-                <el-button :type="activeButton == 6 ? 'warning' : ''"
-                    @click="handleButtonActive(6, 'ManualDeduction')">游戏管理</el-button>
-                <el-button :type="activeButton == 7 ? 'warning' : ''"
-                    @click="handleButtonActive(7, 'ManualRecharge')">平台设置</el-button>
-            </div>
+  
         </div>
         <el-card>
-          <div style="display: flex;justify-content: space-between;">
-            <div>用户级别:{{ $route.query.leve}}</div>
-            <div>用户类型:{{ $route.query.type}}</div>
-            <div>用户名称:{{ $route.query.name}}</div>
-          </div>
+          <el-form :model="formData" :inline="true" label-width="100">
+
+            <el-form-item prop="group_id">
+              <sup style="color:red; height:32px">*</sup>
+              用户账号
+              <el-input  style="margin-left:1rem" v-model="formData.group_id" minlength="1" placeholder="请输入分组标识" />
+            </el-form-item>
+            <el-form-item prop="group_type">
+              <sup style="color:red; height:32px">*</sup>
+              客户昵称
+                <el-input  style="margin-left:1rem" v-model="formData.group_type" placeholder="请输入分组类型" />
+            </el-form-item>
+            <el-form-item prop="group_name">
+              <sup style="color:red; height:32px">*</sup>
+              邀请码
+                <el-input style="margin-left:1rem" v-model="formData.group_name" placeholder="请输入分组名称" />
+            </el-form-item>
+          </el-form>
         </el-card>
         <el-card>
           <Custom v-for="(child, index) in labels" :labels="child" :key="index + 10000" @checkboxChanged="handleChange"/>

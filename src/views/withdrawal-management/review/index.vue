@@ -324,9 +324,6 @@ const goBulkRejectPage = () => {
                                 <el-form-item label="用户账号" prop="user_account">
                                     <el-input v-model="formData.user_account" placeholder="请输入用户账号" />
                                 </el-form-item>
-                                <el-form-item label="客户昵称" prop="nick_name">
-                                    <el-input v-model="formData.nick_name" placeholder="请输入客户昵称" />
-                                </el-form-item>
                                 <el-form-item label="邀请码" prop="invitation_code">
                                     <el-input v-model="formData.invitation_code" placeholder="请输入客户邀请码" />
                                 </el-form-item>
@@ -366,14 +363,7 @@ const goBulkRejectPage = () => {
                 </el-card>
                 <el-card style="margin-top: 20px;">
                     <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%;">
-                        <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
-                            <template #default="scope">
-                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;"
-                                    @click="router.push({ name: 'UserDetail' })">
-                                    {{ scope.row.nick_name }}
-                                </el-link>
-                            </template>
-                        </el-table-column>
+
                         <el-table-column label="用户账号" align="center" prop="user_account" width="160">
                             <template #default="scope">
                                 <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;"
@@ -493,8 +483,8 @@ const goBulkRejectPage = () => {
                                 <el-button type="danger" link
                                     @click="detailWithdrawalReviewDialog(scope.row)">详情</el-button>
                                 <el-button type="primary" link v-if="scope.row.order_status == '待处理'">锁定</el-button>
-                                <el-button type="danger" link v-else-if="scope.row.order_status == '已拒绝'">已锁定</el-button>
-                                <el-button type="success" link v-else>同意</el-button>
+                                <el-button type="success" link v-else-if="scope.row.order_status == '已打款'">同意</el-button>
+                                <el-button type="danger" link v-else>已锁定</el-button>
                                 <el-button type="danger" link
                                     :class="scope.row.order_status != '已打款' ? 'hidden' : ''">拒绝</el-button>
                             </template>
@@ -553,7 +543,7 @@ const goBulkRejectPage = () => {
                     <p>{{ withdrawalReviewItem.user_account }}</p>
                 </el-col>
             </el-row>
-            <el-row>
+            <el-row v-if="withdrawalReviewItem.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">用户名:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ withdrawalReviewItem.nick_name }}</p>

@@ -99,7 +99,7 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-
+  handleDateRange('today');
 }
 </script>
 
@@ -141,7 +141,7 @@ const handleReset = () => {
         </el-form>
       </el-row>
     </el-card>
-    <OtherOverview/>
+    <OtherOverview :dateRange="dateRange"/>
   </div>
 </template>
 

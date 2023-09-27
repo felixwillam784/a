@@ -100,24 +100,26 @@ const handleChange = () => {
 
 }
 
+const props = defineProps({
+    dateRange: Array<String>
+})
 onMounted(async () => {
-
-    let depositWithdrawDataRes =await depositWithdrawDataApi(user.token);
+    let depositWithdrawDataRes =await depositWithdrawDataApi(user.token, props.dateRange);
     depositWithdrawalData.value  = depositWithdrawDataRes.data.data;
 
-    let userDataRes =await userDataAnalysisApi(user.token);
+    let userDataRes =await userDataAnalysisApi(user.token, props.dateRange);
     userData.value  = userDataRes.data.data;
 
-    let userRetensionRes =await userRetentionDataApi(user.token);
+    let userRetensionRes =await userRetentionDataApi(user.token, props.dateRange);
     userRetention.value  = userRetensionRes.data.data;
 
-    let agentDataRes =await agencyDataAnalysisApi(user.token);
+    let agentDataRes =await agencyDataAnalysisApi(user.token, props.dateRange);
     agentData.value  = agentDataRes.data.data;
 
-    let agentRetentionRes =await agentRetentionApi(user.token);
+    let agentRetentionRes =await agentRetentionApi(user.token, props.dateRange);
     agentRetention.value  = agentRetentionRes.data.data;
 
-    let gameDataRes =await gameDataApi(user.token);
+    let gameDataRes =await gameDataApi(user.token, props.dateRange);
     gameData.value  = gameDataRes.data.data;
 
     

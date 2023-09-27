@@ -60,8 +60,11 @@ const resetQuery = () => {
 
 }
 
-const goCustomerDetailPage = () => {
-    router.push({ name: "AuthorityDetail" });
+const goDetailPage = (level:string, type:string, name:string) => {
+    router.push({ name: "AuthorityDetail", query:{leve:level, type:type, name:name} });
+}
+const goAddPage = () => {
+    router.push({ name: "AuthAdd"});
 }
 </script>
 
@@ -71,6 +74,9 @@ const goCustomerDetailPage = () => {
             <el-col :span="24" :xs="24">
 
                 <el-card>
+                    <div style="float:right; margin: 1rem 0rem;">
+                        <el-button type = "primary" @click="goAddPage">新增角色</el-button>
+                    </div>
                     <el-table v-loading="loading" :data="customerList" style="width: 100%;">
                         <el-table-column label="角色级别" align="center" prop="nick_name">
                             <template #default="scope">
@@ -88,8 +94,8 @@ const goCustomerDetailPage = () => {
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" align="center">
-                            <template #default>
-                                <el-button type="primary" link @click="goCustomerDetailPage">编辑</el-button>
+                            <template #default="scope">
+                                <el-button type="primary" link @click="goDetailPage(scope.row.role_level,scope.row.role_type,scope.row.role_name)">编辑</el-button>
                                 <el-button type="danger" link>删除</el-button>
                             </template>
                         </el-table-column>

@@ -41,7 +41,17 @@ const authorityManagementRoutes: RouteRecordRaw[] = [
                         component: () => import('@/views/Authentication-management/auth-manage/detail/index.vue'),
                         name: "AuthorityDetail",
                         meta: {
-                            title: "用户详情",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "add",
+                        component: () => import('@/views/Authentication-management/auth-manage/add/index.vue'),
+                        name: "AuthAdd",
+                        meta: {
+                            title: "新增分组",
                             hidden: true,
                             roles: ["ADMIN"],
                             keepAlive: true
@@ -154,7 +164,7 @@ const authorityManagementRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/Authentication-management/role-manage/index.vue'),
                 name: "RoleManagement",
                 meta: {
-                    title:"角色管理",
+                    title:"用户管理",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true

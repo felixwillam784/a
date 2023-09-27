@@ -7,8 +7,11 @@ import { getUserInfo } from '@/api/system/user';
 import { resetRouter } from '@/router';
 import { LoginForm } from '@/api/auth/types';
 import { NetworkData } from '@/net/NetworkData';
-
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+
+const router = useRouter();
+const route = useRoute();
 
 const useUserStore = defineStore({
   id: 'user',
@@ -68,15 +71,21 @@ const useUserStore = defineStore({
      */
     logout() {
       return new Promise((resolve, reject) => {
-        logoutApi({name: "test1w1", password: "password"}, this.token)
+        logoutApi({}, this.token)
           .then((res) => {
-            console.log(res)
             localStorage.remove('token');
             this.RESET_STATE();
             resetRouter();
             resolve(null);
           })
           .catch((error) => {
+            if(error == 'Request failed with status code 401')
+            {
+              localStorage.remove('token');
+              this.RESET_STATE();
+              resetRouter();
+              router.push(`/login?redirect=${route.fullPath}`);
+            }
             reject(error);
           });
       });

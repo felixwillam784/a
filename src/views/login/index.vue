@@ -212,20 +212,6 @@ onMounted(() => {
         </el-form-item>
       </el-tooltip>
 
-      <!-- 验证码 -->
-
-      <el-form-item prop="code">
-        <span class="svg-container">
-          <svg-icon icon-class="valid_code" />
-        </span>
-        <el-input v-model="loginForm.verifyCode" auto-complete="off" :placeholder="$t('login.code')" style="width: 65%"
-          @keyup.enter="handleLogin" />
-
-        <div class="captcha">
-          <img :src="verifyCodeImgUrl" @click="handleCaptchaGenerate" height="38px" />
-        </div>
-      </el-form-item>
-
       <el-button size="default" :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
         @click.prevent="handleLogin">{{ $t('login.login') }}
       </el-button>
