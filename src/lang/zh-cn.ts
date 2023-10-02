@@ -12,6 +12,8 @@ export default {
     platform_report: "平台报表",
     activity_statement: "活动报表",
     withdrawal_report: "提充报表",
+    winnings_report: "彩金报表",
+    game_chanel_report: "游戏渠道报表",
     data_summary: "数据总表",
     pool_report: "奖池报表",
     player_management: "玩家管理",

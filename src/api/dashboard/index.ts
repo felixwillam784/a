@@ -17,6 +17,12 @@ export function platformOverviewApi(token: string): any {
 export function depositWithdrawDataApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
 
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/deposit-withdrawal', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/deposit-withdrawal', {headers : {
       Authorization: token,
   }, params:{
@@ -27,7 +33,12 @@ export function depositWithdrawDataApi(token: string, daterange:any): any {
 
 export function userDataAnalysisApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
-
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/user-data', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/user-data', {headers : {
       Authorization: token,
   }, params:{
@@ -38,7 +49,12 @@ export function userDataAnalysisApi(token: string, daterange:any): any {
 
 export function userRetentionDataApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
-
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/user-retention', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/user-retention', {headers : {
       Authorization: token,
   }, params:{
@@ -49,7 +65,12 @@ export function userRetentionDataApi(token: string, daterange:any): any {
 
 export function agencyDataAnalysisApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
-
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/agent-data', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/agent-data', {headers : {
       Authorization: token,
   }, params:{
@@ -60,7 +81,12 @@ export function agencyDataAnalysisApi(token: string, daterange:any): any {
 
 export function agentRetentionApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
-
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/agent-retention', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/agent-retention', {headers : {
       Authorization: token,
   }, params:{
@@ -71,7 +97,12 @@ export function agentRetentionApi(token: string, daterange:any): any {
 
 export function gameDataApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
-
+  if(daterange[0] == "" && daterange[1] == "")
+  {    
+    return axios.get(baseURL+'/dashboard/game-data', {headers : {
+        Authorization: token,
+    }});
+  }
   return axios.get(baseURL+'/dashboard/game-data', {headers : {
       Authorization: token,
   }, params:{

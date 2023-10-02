@@ -3,6 +3,11 @@ import { ref } from 'vue';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 
+import useStore from '@/store';
+
+import { onMounted } from "vue";
+import { getUserListApi } from '@/api/Players';
+
 const router = useRouter();
 
 interface GetCustomerData {
@@ -63,12 +68,23 @@ const customerList = ref<Array<GetCustomerData>>([
     }
 ])
 
-const handleQuery = () => {
+const { user } = useStore();
 
+onMounted(async ()=>{
+    handleQuery();
+})
+const handleQuery = async () => {
+    let userListRes = await getUserListApi(user.token, formData.value);
+    customerList.value = userListRes.data.data;
+    total.value = customerList.value.length;
 }
 
 const resetQuery = () => {
-
+    for (let property in formData.value) {
+        if (formData.value.hasOwnProperty(property)) {
+           formData.value[property] = "";
+        }
+    }
 }
 
 const goCustomerDetailPage = () => {

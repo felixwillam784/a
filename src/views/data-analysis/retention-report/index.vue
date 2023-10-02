@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { number } from 'echarts';
+import useStore from '@/store';
+import {getRetentionReport} from '@/api/DataAnalysis'
+const { user } = useStore();
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -192,11 +195,20 @@ const handleQuery = () => {
 }
 
 const handleReset = () => {
+  handleDateRange('today');
 }
 
 const handleSearch = () => {
+  getData();
 }
-
+onMounted(()=>{
+  getData();
+})
+const getData = async () =>{
+  
+  let retentionReportListDataRes = await getRetentionReport(user.token, dateRange.value, formData.value);
+  retentionReportList.value  = retentionReportListDataRes.data.data;
+}
 </script>
 
 <template>
@@ -262,47 +274,47 @@ const handleSearch = () => {
             </el-table-column> 
             <el-table-column label = "活跃转换比" align="left" prop="retention_active_conversion_rate" width="100">
               <template #default="scope">
-                <p>{{ scope.row.retention_active_conversion_rate.toFixed(2) }}%</p>
+                <p>{{ scope.row.retention_active_conversion_rate }}%</p>
               </template>
             </el-table-column> 
             <el-table-column label = "次日充值" align="left" prop="retention_recharge_nextday" width="100">
               <template #default="scope">
-                <p>{{ scope.row.retention_recharge_nextday.toFixed(2) }}%</p>
+                <p>{{ scope.row.retention_recharge_nextday }}%</p>
               </template>
             </el-table-column> 
             <el-table-column label = "三日充值" align="left" prop="retention_recharge_3day" width="100">
               <template #default="scope">
-                <p>{{ scope.row.retention_recharge_3day.toFixed(2) }}%</p>
+                <p>{{ scope.row.retention_recharge_3day }}%</p>
               </template>
             </el-table-column>
             <el-table-column label = "活跃留存率" align="center" >
               <el-table-column label = "次日" align="left" prop="retention_active_retention_rate_1" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_active_retention_rate_1.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_active_retention_rate_1 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_active_retention_value_1 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "3日" align="left" prop="retention_active_retention_rate_3" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_active_retention_rate_3.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_active_retention_rate_3 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_active_retention_value_3 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "7日" align="left" prop="retention_active_retention_rate_7" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_active_retention_rate_7.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_active_retention_rate_7 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_active_retention_value_7 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "15日" align="left" prop="retention_active_retention_rate_15" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_active_retention_rate_15.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_active_retention_rate_15 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_active_retention_value_15 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "30日" align="left" prop="retention_active_retention_rate_30" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_active_retention_rate_30.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_active_retention_rate_30 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_active_retention_value_30 }}</p>
                 </template>
               </el-table-column>
@@ -310,31 +322,31 @@ const handleSearch = () => {
             <el-table-column label = "代理留存率" align="center"  >
               <el-table-column label = "次日" align="left" prop="retention_agent_retention_rate_1" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_agent_retention_rate_1.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_agent_retention_rate_1 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_agent_retention_value_1 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "3日" align="left" prop="retention_agent_retention_rate_3" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_agent_retention_rate_3.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_agent_retention_rate_3 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_agent_retention_value_3 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "7日" align="left" prop="retention_agent_retention_rate_7" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_agent_retention_rate_7.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_agent_retention_rate_7 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_agent_retention_value_7 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "15日" align="left" prop="retention_agent_retention_rate_15" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_agent_retention_rate_15.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_agent_retention_rate_15 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_agent_retention_value_15 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "30日" align="left" prop="retention_agent_retention_rate_30" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_agent_retention_rate_30.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_agent_retention_rate_30 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_agent_retention_value_30 }}</p>
                 </template>
               </el-table-column>  
@@ -342,31 +354,31 @@ const handleSearch = () => {
             <el-table-column label = "首充留存率" align="center"  >
               <el-table-column label = "次日" align="left" prop="retention_first_charge_retention_rate_1" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_first_charge_retention_rate_1.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_first_charge_retention_rate_1 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_first_charge_retention_value_1 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "3日" align="left" prop="retention_first_charge_retention_rate_3" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_first_charge_retention_rate_3.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_first_charge_retention_rate_3 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_first_charge_retention_value_3 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "7日" align="left" prop="retention_first_charge_retention_rate_7" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_first_charge_retention_rate_7.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_first_charge_retention_rate_7 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_first_charge_retention_value_7 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "15日" align="left" prop="retention_first_charge_retention_rate_15" width="90">
                 <template #default="scope">
-                  <p>{{ scope.row.retention_first_charge_retention_rate_15.toFixed(2) }}%</p>
+                  <p>{{ scope.row.retention_first_charge_retention_rate_15 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_first_charge_retention_value_15 }}</p>
                 </template>
               </el-table-column>
               <el-table-column label = "30日" align="left" prop="retention_first_charge_retention_rate_30" width="90">
                 <template #default="scope">
-                  <p >{{ scope.row.retention_first_charge_retention_rate_30.toFixed(2) }}%</p>
+                  <p >{{ scope.row.retention_first_charge_retention_rate_30 }}%</p>
                   <p style="text-align: right; font-size: 12px;">{{ scope.row.retention_first_charge_retention_value_30 }}</p>
                 </template>
               </el-table-column>  

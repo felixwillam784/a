@@ -12,6 +12,8 @@ export default {
     platform_report: "Platform Report",
     activity_statement: "Activity Statement",
     withdrawal_report: "Withdrawal Report",
+    winnings_report: "Winnings Report",
+    game_chanel_report:"Game Channel Report",
     data_summary: "Data Summary",
     pool_report: "Pool Report",
     player_management: "Players",

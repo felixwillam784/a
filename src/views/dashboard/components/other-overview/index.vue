@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUpdated, watch } from "vue";
 import { depositWithdrawDataApi } from '@/api/dashboard';
 import { userDataAnalysisApi } from '@/api/dashboard';
 import { userRetentionDataApi } from '@/api/dashboard';
@@ -9,6 +9,7 @@ import { gameDataApi } from '@/api/dashboard';
 
 
 import useStore from '@/store';
+//import { watch } from "fs";
 
 const { user } = useStore();
 
@@ -97,13 +98,10 @@ const userData = ref({
 })
 
 const handleChange = () => {
-
 }
 
-const props = defineProps({
-    dateRange: Array<String>
-})
-onMounted(async () => {
+const getSearchdata = async ()=>{
+    
     let depositWithdrawDataRes =await depositWithdrawDataApi(user.token, props.dateRange);
     depositWithdrawalData.value  = depositWithdrawDataRes.data.data;
 
@@ -121,9 +119,17 @@ onMounted(async () => {
 
     let gameDataRes =await gameDataApi(user.token, props.dateRange);
     gameData.value  = gameDataRes.data.data;
+}
+defineExpose({
+    getSearchdata,
+})
+const props = defineProps({
+    dateRange: Array<String>
+})
 
-    
-});
+onMounted(()=>{
+    getSearchdata();
+})
 
 </script>
 

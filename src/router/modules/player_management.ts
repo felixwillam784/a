@@ -6,7 +6,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
     {
         path: "/player/management",
         component: Layout,
-        redirect: "/user/list",
+        redirect: "user/list",
         meta: {
             title: "player_management",
             icon: "system",
@@ -17,6 +17,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "user/list",
+                redirect: "a",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_list",
@@ -26,11 +27,12 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "",
+                        path: "a",
                         component: () => import('@/views/player-management/user-list/index.vue'),
                         name: "User List",
                         meta: {
-                            hidden: true,
+                            title: "",
+                            hidden: false,
                             roles: ["ADMIN"],
                             keepAlive: true
                         },

@@ -16,41 +16,6 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: "user/list",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "User Data",
-        meta: {
-          title: "user_data",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "customer/habbit",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Customer Habbit",
-        meta: {
-          title: "customer_habbit",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "platform/report",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Platform Report",
-        meta: {
-          title: "platform_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
         path: "charge-withdraw/report",
         component: import('@/views/data-analysis/charge-withdraw-report/index.vue'),
         meta: {
@@ -71,20 +36,20 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "agent/report",
-        component: import('@/views/data-analysis/agent-report/index.vue'),
+        path: "user-quality/report",
+        component: import('@/views/data-analysis/user-quality-report/index.vue'),
         meta: {
-            title: "agent_report",
+            title: "user_quality_report",
             hidden: false,
             roles: ["ADMIN"],
             keepAlive: true
         }
       },
       {
-        path: "user-quality/report",
-        component: import('@/views/data-analysis/user-quality-report/index.vue'),
+        path: "agent/report",
+        component: import('@/views/data-analysis/agent-report/index.vue'),
         meta: {
-            title: "user_quality_report",
+            title: "agent_report",
             hidden: false,
             roles: ["ADMIN"],
             keepAlive: true
@@ -123,45 +88,12 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         //     },
         // ]
       },
-      // {
-      //   path: "game/report",
-      //   component: ChildrenLayout,
-      //   meta: {
-      //       title: "game_report",
-      //       hidden: false,
-      //       roles: ["ADMIN"],
-      //       keepAlive: true
-      //   },
-      //   children: [
-      //       {
-      //           path: "",
-      //           component: import('@/views/data-analysis/game-report/index.vue'),
-      //           name: "Game Report",
-      //           meta: {
-      //               hidden: true,
-      //               roles: ["ADMIN"],
-      //               keepAlive: true
-      //           },
-      //       },
-      //       {
-      //           path: "detail",
-      //           component: import('@/views/data-analysis/game-report/detail.vue'),
-      //           name: "GameReportDetail",
-      //           meta: {
-      //               title: "Dice",
-      //               hidden: true,
-      //               roles: ["ADMIN"],
-      //               keepAlive: true
-      //           },
-      //       },
-      //   ]
-      // },
       {
-        path: "activity/statement",
+        path: "withdrawal/report",
         component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Activity Statement",
+        name: "Withdrawal Report",
         meta: {
-          title: "activity_statement",
+          title: "winnings_report",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],
@@ -169,11 +101,11 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "withdrawal/report",
+        path: "activity/statement",
         component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Withdrawal Report",
+        name: "Activity Statement",
         meta: {
-          title: "withdrawal_report",
+          title: "activity_statement",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],
@@ -197,7 +129,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
         component: import('@/views/withdrawal-management/review/index.vue'),
         name: "Prize Pool Report",
         meta: {
-          title: "pool_report",
+          title: "game_chanel_report",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],

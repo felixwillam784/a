@@ -79,13 +79,13 @@ const useUserStore = defineStore({
             resolve(null);
           })
           .catch((error) => {
-            if(error == 'Request failed with status code 401')
+            /*if(error == 'Request failed with status code 401')
             {
               localStorage.remove('token');
               this.RESET_STATE();
               resetRouter();
               router.push(`/login?redirect=${route.fullPath}`);
-            }
+            }*/
             reject(error);
           });
       });

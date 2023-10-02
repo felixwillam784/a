@@ -94,13 +94,15 @@ const handleDateRange = (date: string) => {
   }
 }
 
+const OtherOverviewRef = ref();
 const handleSearch = () => {
-
+  OtherOverviewRef.value.getSearchdata();
 }
 
 const handleReset = () => {
   handleDateRange('today');
 }
+
 </script>
 
 <template>
@@ -141,7 +143,7 @@ const handleReset = () => {
         </el-form>
       </el-row>
     </el-card>
-    <OtherOverview :dateRange="dateRange"/>
+    <OtherOverview :dateRange="dateRange" ref="OtherOverviewRef"/>
   </div>
 </template>
 

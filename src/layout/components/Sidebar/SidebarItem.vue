@@ -4,16 +4,17 @@
       (!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
       (!item.meta || !item.meta.alwaysShow)
       ">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath('1', onlyOneChild.path)">
-        <el-menu-item :index="resolvePath('2',onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
+      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
+        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
           <svg-icon v-if="onlyOneChild.meta && onlyOneChild.meta.icon" :icon-class="onlyOneChild.meta.icon" />
           <template #title>
-            {{ generateTitle(onlyOneChild.meta.title) }}
+            <div v-if="onlyOneChild.meta.title != ''">{{ generateTitle(onlyOneChild.meta.title) }}</div>
+            <div v-else>{{ generateTitle(item.meta.title) }}</div>
           </template>
         </el-menu-item>
       </app-link>
     </template>
-    <el-sub-menu v-else :index="resolvePath('3',item.path)" popper-append-to-body>
+    <el-sub-menu v-else :index="resolvePath(item.path)" popper-append-to-body>
       <!-- popper-append-to-body -->
       <template #title>
         <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
@@ -23,7 +24,7 @@
       </template>
 
       <sidebar-item v-for="child in item.children" :key="child.path" :item="child" :is-nest="true"
-        :base-path="resolvePath('4',child.path)" class="nest-menu" />
+        :base-path="resolvePath(child.path)" class="nest-menu" />
     </el-sub-menu>
   </div>
 </template>
@@ -51,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const onlyOneChild = ref();
+let onlyOneChild:any;
 
 function hasOneShowingChild(children = [] as any, parent: any) {
   if (!children) {
@@ -62,8 +63,8 @@ function hasOneShowingChild(children = [] as any, parent: any) {
       return false;
     } else {
       // Temp set(will be used if only has one showing child)
-      console.log(item)
-      onlyOneChild.value = item;
+      //console.log(item)
+      onlyOneChild = item;
       return true;
     }
   });
@@ -75,25 +76,21 @@ function hasOneShowingChild(children = [] as any, parent: any) {
 
   // Show parent if there are no child router to display
   if (showingChildren.length === 0) {
-    onlyOneChild.value = { ...parent, path: '', noShowingChildren: true };
+    onlyOneChild = { ...parent, path: '', noShowingChildren: true };
     return true;
   }
 
   return false;
 }
 
-function resolvePath(a:string, routePath: string) {
-  //console.log(a)
-  //console.log(routePath);
+function resolvePath(routePath: string) {
+
   if (isExternal(routePath)) {
-    //console.log("routhpath:",routePath)
     return routePath;
   }
   if (isExternal(props.basePath)) {
-    //console.log("basepath:",routePath)
     return props.basePath;
   }
-  //console.log("final:",path.resolve(props.basePath, routePath))
   return path.resolve(props.basePath, routePath);
 }
 </script>
