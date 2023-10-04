@@ -208,6 +208,7 @@ const getData = async () =>{
   
   let retentionReportListDataRes = await getRetentionReport(user.token, dateRange.value, formData.value);
   retentionReportList.value  = retentionReportListDataRes.data.data;
+  total.value = retentionReportListDataRes.data.data.length;
 }
 </script>
 

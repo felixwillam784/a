@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
-
+import useStore from '@/store';
+import {getGameReport} from '@/api/DataAnalysis'
+const { user } = useStore();
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -19,9 +21,9 @@ interface GetGameReport {
   game_recharge_amount: number | string;
   game_participant_count: number;
   game_received_count: number;
-  game_capita_bonus: number;
-  game_bonus_ratio: number;
-  game_statistics: number;
+  game_capita_bonus: string;
+  game_bonus_ratio: string;
+  game_statistics: string;
 }
 
 interface RejectInterface {
@@ -40,79 +42,11 @@ const formData = ref<any>({
 const loading = ref<boolean>(false);
 
 
+const totablBonous = ref<number>(9999);
+const recip_count = ref<number>(9999);
+const collection_count = ref<number>(9999);
+const bonous_count = ref<string>("9999.99");
 const gameReportList = ref<Array<GetGameReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "首充送50%",
-    game_bonus_type: "充值活动",
-    game_recharge_amount: 99999.99,
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "VIP赠金活动%",
-    game_bonus_type: "VIP赠金",
-    game_recharge_amount: "",
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "兑换码直接赠送%",
-    game_bonus_type: "兑换码活动",
-    game_recharge_amount: "",
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "理财方案1",
-    game_bonus_type: "理财计划",
-    game_recharge_amount: "",
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "运维赠金",
-    game_bonus_type: "运维赠金",
-    game_recharge_amount: "",
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    game_date_time: "2020-06-30",
-    game_activity_name: "生日奖金",
-    game_bonus_type: "其他赠金",
-    game_recharge_amount: "",
-    game_participant_count: 99999,
-    game_received_count: 99999,
-    game_capita_bonus: 1.11,
-    game_bonus_ratio: 10.00,
-    game_statistics: 999999.99,
-  },
 ])
 
 const total = ref<number>(6);
@@ -211,10 +145,27 @@ const handleQuery = () => {
 }
 
 const handleReset = () => {
+  handleDateRange('today');
 }
 
 const handleSearch = () => {
+  getData();
 }
+onMounted(()=>{
+  getData();
+})
+const getData = async () =>{
+  
+  let getGameReportListDataRes = await getGameReport(user.token, dateRange.value, formData.value);
+  gameReportList.value  = getGameReportListDataRes.data.data.dataList;
+  total.value = getGameReportListDataRes.data.data.dataList.length;
+
+  totablBonous.value = getGameReportListDataRes.data.data.total_win_count;
+  recip_count.value = getGameReportListDataRes.data.data.recipient_count;
+  collection_count.value = getGameReportListDataRes.data.data.received_count;
+  bonous_count.value = getGameReportListDataRes.data.data.people_bonus_amount;
+}
+
 
 </script>
 
@@ -267,10 +218,10 @@ const handleSearch = () => {
             
           </el-col>
           <el-col :span="12" :xs="12" style="display: flex; justify-content: center;">
-            <span class = "game-report-overview game-report-bg1">彩金总数: 99999</span>
-            <span class = "game-report-overview game-report-bg1">领取人数: 99999</span>
-            <span class = "game-report-overview game-report-bg2">领取次数: 99999</span>
-            <span class = "game-report-overview game-report-bg2">人数彩金: 9999.99</span>
+            <span class = "game-report-overview game-report-bg1">彩金总数: {{totablBonous}}</span>
+            <span class = "game-report-overview game-report-bg1">领取人数: {{recip_count}}</span>
+            <span class = "game-report-overview game-report-bg2">领取次数: {{collection_count}}</span>
+            <span class = "game-report-overview game-report-bg2">人数彩金: {{bonous_count}}</span>
           </el-col>
         </el-row>
         <el-card style="margin-top: 20px;">
@@ -287,7 +238,7 @@ const handleSearch = () => {
             </el-table-column>
             <el-table-column label="充值金额" align="center" prop="game_recharge_amount" width="200">
               <template #default="scope">
-                <p v-if="scope.row.game_recharge_amount !=''">{{ scope.row.game_recharge_amount.toFixed(2) }}</p>
+                <p v-if="scope.row.game_recharge_amount !=''">{{ scope.row.game_recharge_amount }}</p>
                 <p v-else> __</p>
               </template>
             </el-table-column>
@@ -303,17 +254,17 @@ const handleSearch = () => {
             </el-table-column>
             <el-table-column label="人均彩金" align="center" prop="game_capita_bonus" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_capita_bonus.toFixed(2) }}</p>
+                <p>{{ scope.row.game_capita_bonus }}</p>
               </template>
             </el-table-column>
             <el-table-column label="彩金占比" align="center" prop="game_bonus_ratio" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_bonus_ratio.toFixed(2) }}%</p>
+                <p>{{ scope.row.game_bonus_ratio }}%</p>
               </template>
             </el-table-column>
             <el-table-column label="增进统计" align="center" prop="game_statistics" width="200">
               <template #default="scope">
-                <p>{{ scope.row.game_statistics.toFixed(2) }}</p>
+                <p>{{ scope.row.game_statistics }}</p>
               </template>
             </el-table-column>
           </el-table>

@@ -53,7 +53,7 @@ const formData = ref<any>({
   pageSize: 20,
 })
 
-const loading = ref<boolean>(false);
+const loading = ref<boolean>(true);
 
 const total = ref<number>(5);
 
@@ -292,16 +292,22 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 }
 
 const getData = async () =>{
   
   let depositWithdrawDataRes = await getChargeWidrawReport(user.token, dateRange.value, formData.value);
   chargeWithdrawReportList.value  = depositWithdrawDataRes.data.data;
+  total.value = depositWithdrawDataRes.data.data.length;
 }
 onMounted(()=>{
-  getData();
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 </script>
 

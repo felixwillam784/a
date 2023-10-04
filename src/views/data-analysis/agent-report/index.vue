@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { number } from 'echarts';
+import useStore from '@/store';
+import {getAgentActivityReport, getAgentNewReport, getAgentWarningReport} from '@/api/DataAnalysis'
+const { user } = useStore();
+
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -21,16 +25,16 @@ interface GetAgentReport {
   agent_active_agents_count: number;
   agent_new_active_agents_count: number;
   agent_new_agents_count: number;
-  agent_new_level_payment_amount: number;
-  agent_withdrawal_amount: number;
-  agent_new_level_charge_withdraw_dif: number;
-  agent_new_charge_bonus: number;
-  agent_achievement_rewards: number;
-  agent_new_task_rewards: number;
-  agent_betting_rebate_amount: number;
-  agent_3_day_active_rate: number;
-  agent_7_day_active_rate: number;
-  agent_15_day_active_rate: number;
+  agent_new_level_payment_amount: string;
+  agent_withdrawal_amount: string;
+  agent_new_level_charge_withdraw_dif: string;
+  agent_new_charge_bonus: string;
+  agent_achievement_rewards: string;
+  agent_new_task_rewards: string;
+  agent_betting_rebate_amount: string;
+  agent_3_day_active_rate: string;
+  agent_7_day_active_rate: string;
+  agent_15_day_active_rate: string;
   agent_30_day_active_rate: number | string;
 }
 
@@ -39,10 +43,10 @@ interface GetNewAgentReport {
   agent_date_time: string;
   agent_new_agents_count: number;
   agent_new_first_register: number;
-  agent_new_level_payment: number;
-  agent_new_level_payment_amount: number;
+  agent_new_level_payment: string;
+  agent_new_level_payment_amount: string;
   agent_capita_invited_register_count: number;
-  agent_capita_invitation_register_amount: number;
+  agent_capita_invitation_register_amount: string;
 }
 
 interface GetAgentRiskReport {
@@ -51,7 +55,7 @@ interface GetAgentRiskReport {
   agent_active_count: number;
   agent_risk_control_agents_count: number;
   agent_risk_control_agent_users_count: number;
-  agent_risk_control_proportion: number;
+  agent_risk_control_proportion: string;
   agent_own_risk_control_agents_count: number;
 }
 
@@ -71,96 +75,12 @@ const total2 = ref<number>(1);
 const total3 = ref<number>(4);
 
 const agentReportList = ref<Array<GetAgentReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-30",
-    agent_agents_count: 999999,
-    agent_active_agents_count: 999999,
-    agent_new_active_agents_count: 999999,
-    agent_new_agents_count: 999999,
-    agent_new_level_payment_amount: 999999.9,
-    agent_withdrawal_amount: 999999.9,
-    agent_new_level_charge_withdraw_dif: 999999.9,
-    agent_new_charge_bonus: 999999.9,
-    agent_achievement_rewards: 999999.9,
-    agent_new_task_rewards: 999999.9,
-    agent_betting_rebate_amount: 999999.9,
-    agent_3_day_active_rate: 99.99,
-    agent_7_day_active_rate: 99.99,
-    agent_15_day_active_rate: 99.99,
-    agent_30_day_active_rate: 99.99
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8eg",
-    agent_date_time: "2020-06-29",
-    agent_agents_count: 999999,
-    agent_active_agents_count: 999999,
-    agent_new_active_agents_count: 999999,
-    agent_new_agents_count: 999999,
-    agent_new_level_payment_amount: 999999.9,
-    agent_withdrawal_amount: 999999.9,
-    agent_new_level_charge_withdraw_dif: 999999.9,
-    agent_new_charge_bonus: 999999.9,
-    agent_achievement_rewards: 999999.9,
-    agent_new_task_rewards: 999999.9,
-    agent_betting_rebate_amount: 999999.9,
-    agent_3_day_active_rate: 99.99,
-    agent_7_day_active_rate: 99.99,
-    agent_15_day_active_rate: 99.99,
-    agent_30_day_active_rate: "-"
-  },
 ])
 
 const newAgentReportList = ref<Array<GetNewAgentReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-30",
-    agent_new_agents_count: 999999,
-    agent_new_first_register: 999999,
-    agent_new_level_payment: 999999,
-    agent_new_level_payment_amount: 999999,
-    agent_capita_invited_register_count: 1.0,
-    agent_capita_invitation_register_amount: 9.99
-  },
 ])
 
 const agentRiskList = ref<Array<GetAgentRiskReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-30",
-    agent_active_count: 999999,
-    agent_risk_control_agents_count: 999999,
-    agent_risk_control_agent_users_count: 999999,
-    agent_risk_control_proportion: 99.99,
-    agent_own_risk_control_agents_count: 999999,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-29",
-    agent_active_count: 999999,
-    agent_risk_control_agents_count: 999999,
-    agent_risk_control_agent_users_count: 999999,
-    agent_risk_control_proportion: 99.99,
-    agent_own_risk_control_agents_count: 999999,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-28",
-    agent_active_count: 999999,
-    agent_risk_control_agents_count: 999999,
-    agent_risk_control_agent_users_count: 999999,
-    agent_risk_control_proportion: 99.99,
-    agent_own_risk_control_agents_count: 999999,
-  },
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    agent_date_time: "2020-06-27",
-    agent_active_count: 999999,
-    agent_risk_control_agents_count: 999999,
-    agent_risk_control_agent_users_count: 999999,
-    agent_risk_control_proportion: 99.99,
-    agent_own_risk_control_agents_count: 999999,
-  },
 ])
 
 const handleDateRange = (date: string) => {
@@ -250,9 +170,28 @@ const handleQuery = () => {
 }
 
 const handleReset = () => {
+  handleDateRange('today');
 }
 
 const handleSearch = () => {
+  getData();
+}
+onMounted(()=>{
+  getData();
+})
+const getData = async () =>{
+  
+  let agentReportListDataRes = await getAgentActivityReport(user.token, dateRange.value, formData.value);
+  agentReportList.value  = agentReportListDataRes.data.data;
+  total1.value = agentReportListDataRes.data.data.length;
+
+  let  newAgentReportListDataRes= await getAgentNewReport(user.token, dateRange.value, formData.value);
+  newAgentReportList.value  = newAgentReportListDataRes.data.data;
+  total2.value = newAgentReportListDataRes.data.data.length;
+
+  let agentRiskListDataRes = await getAgentWarningReport(user.token, dateRange.value, formData.value);
+  agentRiskList.value  = agentRiskListDataRes.data.data;
+  total3.value = agentRiskListDataRes.data.data.length;
 }
 
 </script>
@@ -334,57 +273,57 @@ const handleSearch = () => {
             </el-table-column>
             <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_payment_amount.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_new_level_payment_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增记忆提现金额" align="left" prop="agent_withdrawal_amount" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_withdrawal_amount.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_withdrawal_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增一级充提差" align="left" prop="agent_new_level_charge_withdraw_dif" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_charge_withdraw_dif.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_new_level_charge_withdraw_dif }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增充值奖励" align="left" prop="agent_new_charge_bonus" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_charge_bonus.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_new_charge_bonus }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增成就奖励" align="left" prop="agent_achievement_rewards" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_achievement_rewards }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增任务奖励" align="left" prop="agent_new_task_rewards" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_task_rewards.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_new_task_rewards }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增投注返佣金额" align="left" prop="agent_betting_rebate_amount" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "3日活跃率" align="left" prop="agent_3_day_active_rate" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_3_day_active_rate.toFixed(2) }}%</p>
+                <p>{{ scope.row.agent_3_day_active_rate }}%</p>
               </template>
             </el-table-column>
             <el-table-column label = "7日活跃率" align="left" prop="agent_7_day_active_rate" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_7_day_active_rate.toFixed(2) }}%</p>
+                <p>{{ scope.row.agent_7_day_active_rate }}%</p>
               </template>
             </el-table-column>
             <el-table-column label = "15日活跃率" align="left" prop="agent_15_day_active_rate" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_15_day_active_rate.toFixed(2) }}%</p>
+                <p>{{ scope.row.agent_15_day_active_rate }}%</p>
               </template>
             </el-table-column>
             <el-table-column label = "30日活跃率" align="left" prop="agent_30_day_active_rate" width="160">
               <template #default="scope">
-                <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate.toFixed(2) }}%</p>
+                <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate }}%</p>
                 <p v-else>{{ scope.row.agent_30_day_active_rate }}</p>
               </template>
             </el-table-column>
@@ -424,12 +363,12 @@ const handleSearch = () => {
             </el-table-column>
             <el-table-column label = "人均邀请注册数" align="left" prop="agent_capita_invited_register_count" width="240">
               <template #default="scope">
-                <p>{{ scope.row.agent_capita_invited_register_count.toFixed(1) }}</p>
+                <p>{{ scope.row.agent_capita_invited_register_count }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "人均邀请注册金额" align="left" prop="agent_capita_invitation_register_amount" width="240">
               <template #default="scope">
-                <p>{{ scope.row.agent_capita_invitation_register_amount.toFixed(2) }}</p>
+                <p>{{ scope.row.agent_capita_invitation_register_amount }}</p>
               </template>
             </el-table-column>            
           </el-table>
@@ -462,7 +401,7 @@ const handleSearch = () => {
             </el-table-column>
             <el-table-column label = "代理风控占比" align="left" prop="agent_risk_control_proportion" width="270">
               <template #default="scope">
-                <p>{{ scope.row.agent_risk_control_proportion.toFixed(2) }}%</p>
+                <p>{{ scope.row.agent_risk_control_proportion }}%</p>
               </template>
             </el-table-column>
             <el-table-column label = "自身风控代理数" align="left" prop="agent_own_risk_control_agents_count" width="270">
