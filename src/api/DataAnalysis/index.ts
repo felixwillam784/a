@@ -150,3 +150,234 @@ export function getGameReport(token: string, daterange:any, formData:any): any {
     game_id:formData.gameType,
   }});
 }
+
+export function getDataSummaryReport(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartDepositeWithdrawalData(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/deposit-withdrawal-data', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/deposit-withdrawal-data', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartfirstChargeCountData(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/first-charge-count', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/first-charge-count', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartfirstChargeAmountData(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/first-charge-amount', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/first-charge-amount', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartfirstActivityRetention(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/activity-retention', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/activity-retention', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartAgentRetention(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/agent-retention', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/agent-retention', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartfirstDepositeRetention(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/first-deposit-retention', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/first-deposit-retention', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartSelfGame(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/self-game', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/self-game', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartThirdGame(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/third-game', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/third-game', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChartDepositeWithdrawalTotalData(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/deposit-withdrawal-total', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/deposit-withdrawal-total', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}
+
+export function getDataSummaryChatGameTotal(token: string, daterange:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  if(daterange[0] == "" && daterange[1] == "")
+  {
+    return axios.get(baseURL+'/analyze/data-summary-report/chart/game-total', {headers : {
+      Authorization: token,
+    }, params:{
+      page_num:formData.pageNum,
+      page_size:formData.pageSize,
+    }});
+  }
+  return axios.get(baseURL+'/analyze/data-summary-report/chart/game-total', {headers : {
+    Authorization: token,
+  }, params:{
+    start_date:new Date(daterange[0]).toISOString(),
+    end_date:new Date(daterange[1]).toISOString(),
+    page_num:formData.pageNum,
+    page_size:formData.pageSize,
+  }});
+}

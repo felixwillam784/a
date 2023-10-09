@@ -33,8 +33,8 @@ const formData = ref<any>({
     phone_number: "",
     user_cpf: "",
     card_number: "",
-    pageNum: 1,
-    pageSize: 20,
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -199,8 +199,8 @@ const goCustomerDetailPage = () => {
                     </el-table>
 
                     <div style="float: right;">
-                        <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                        <pagination v-if="total > 0" :total="total" v-model:page="formData.page_num"
+                            v-model:limit="formData.page_size" @pagination="handleQuery" />
                     </div>
                 </el-card>
             </el-col>
