@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
+import {getUserDetailTable, getUserDetailApi, getUserDetailDepositWithdrawl, getUserDetailAgent} from '@/api/Players'
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+//import { watch } from "fs";
 
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(0);
@@ -104,18 +110,37 @@ const bankList = ref([
 ])
 
 const pixList = ref([
+    {
+        mail: "Salvation A",
+        name: "GCASH",
+        phone_number: "09266467987",
+        pix:"09266467987",
+    }
 ]);
 
 const walletList = ref([
+    {
+        account: "Salvation A",
+        beneficiary_bank: "GCASH",
+        payee: "09266467987",
+    }
 ]);
 
 const mexList = ref([
+    {
+        bank_card_number: "Salvation A",
+        bank_code: "GCASH",
+        curp_type: "09266467987",
+        payee:"09266467987",
+        rfc_curp: "09266467987",
+        withdrawal_method:"09266467987",
+    }
 ]);
 
 const loading = ref<boolean>(false);
 
 const goBack = () => {
-    router.push({ name: "User List" });
+    router.push({ name: "User List",params:{id:route.params.id}});
 }
 
 const handleChange = () => {
@@ -131,6 +156,30 @@ const moreVipBonusShow = () => {
     vipBonusShow.value = !vipBonusShow.value;
     vipBonusHeight.value = vipBonusShow.value ? 150 : 0;
 }
+
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+    let temp = await getUserDetailApi(user.token, route.params.id);
+    basicInformation.value = temp.data.data;
+
+    temp = await getUserDetailDepositWithdrawl(user.token, route.params.id);
+    depositAndWithdrawalData.value = temp.data.data;
+
+    temp = await getUserDetailAgent(user.token, route.params.id);
+    agentInformation.value = temp.data.data;
+
+    temp = await getUserDetailTable(user.token, route.params.id);
+    bankList.value = temp.data.data.bank_list;
+    pixList.value = temp.data.data.pix_list;
+    walletList.value = temp.data.data.wallet_list;
+    mexList.value = temp.data.data.mex_list;
+
+    console.log(pixList.value);
+}
+
 </script>
 
 <template>
@@ -744,11 +793,26 @@ const moreVipBonusShow = () => {
                                     <h3>PIX</h3>
                                 </template>
                                 <el-table v-loading="loading" :data="pixList" style="width: 100%;">
-                                    <el-table-column label="名称" align="center" prop="name" />
-                                    <el-table-column label="邮箱" align="center" prop="mail" />
-                                    <el-table-column label="手机号" align="center" prop="phone_number">
+                                    <el-table-column label="名称" align="center" prop="name">
+                                        <template #default="scope">
+                                            <p>{{ scope.row.mail }}</p>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column label="Pix" align="center" prop="pix" />
+                                    <el-table-column label="邮箱" align="center" prop="mail">
+                                        <template #default="scope">
+                                            <p>{{ scope.row.name }}</p>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="手机号" align="center" prop="phone_number">
+                                        <template #default="scope">
+                                            <p>{{ scope.row.phone_number }}</p>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Pix" align="center" prop="pix">
+                                        <template #default="scope">
+                                            <p>{{ scope.row.pix }}</p>
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column label="操作" align="center" width="160" fixed="right">
                                         <template #default="scope">
                                             <el-button type="primary" link>修改</el-button>

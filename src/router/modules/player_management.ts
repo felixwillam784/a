@@ -38,7 +38,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "detail",
+                        path: "detail/:id",
                         component: () => import('@/views/player-management/user-list/detail/index.vue'),
                         name: "UserDetail",
                         meta: {
@@ -49,7 +49,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "funding",
+                        path: "funding/:id",
                         component: () => import('@/views/player-management/user-list/detail/funding.vue'),
                         name: "FundingDetails",
                         meta: {
@@ -60,7 +60,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "agent/rebate",
+                        path: "agent/rebate/:id",
                         component: () => import('@/views/player-management/user-list/detail/AgentRebate.vue'),
                         name: "AgentRebate",
                         meta: {
@@ -71,7 +71,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "manual/recharge",
+                        path: "manual/recharge/",
                         component: () => import('@/views/player-management/user-list/detail/ManualRecharge.vue'),
                         name: "ManualRecharge",
                         meta: {
@@ -93,7 +93,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "recharge/record",
+                        path: "recharge/record/:id",
                         component: () => import('@/views/player-management/user-list/detail/RechargeRecord.vue'),
                         name: "RechargeRecord",
                         meta: {
@@ -115,7 +115,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "promotion/record",
+                        path: "promotion/record/:id",
                         component: () => import('@/views/player-management/user-list/detail/PromotionRecord.vue'),
                         name: "PromotionRecord",
                         meta: {
@@ -126,7 +126,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "withdrawal/record",
+                        path: "withdrawal/record/:id",
                         component: () => import('@/views/player-management/user-list/detail/WithdrawalRecord.vue'),
                         name: "WithdrawalRecord",
                         meta: {

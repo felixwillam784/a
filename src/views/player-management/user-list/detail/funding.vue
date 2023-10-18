@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserDetailFunding} from '@/api/Players'
+//import { watch } from "fs";
 
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(1);
@@ -15,12 +21,12 @@ const formData = ref<any>({
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
     ],
-    min_amount: "",
-    max_amount: "",
+    min_amount: 0,
+    max_amount: 0,
     event_type: "",
     record_id: "",
-    pageNum: 1,
-    pageSize: 20,
+    page_num: 1,
+    page_size: 20,
 })
 const total = ref<number>(5);
 const loading = ref<boolean>(false);
@@ -131,7 +137,7 @@ const fundingDetailList = ref([
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
@@ -144,7 +150,7 @@ const goBack = () => {
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({ name: name });
+    router.push({ name: name, params:{id:route.params.id}});
 }
 
 const handleScrollLoad = () => {
@@ -152,13 +158,23 @@ const handleScrollLoad = () => {
 
     if (disabled.value) return;
 
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
+    formData.value.page_num++;
+    if (formData.value.page_num <= totalPage.value) {
     }
 
-    if (formData.value.pageNum === totalPage.value) {
+    if (formData.value.page_num === totalPage.value) {
         disabled.value = true;
     }
+}
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+    const {dateRange, ...rest} = formData.value;
+    let temp = await getUserDetailFunding(user.token, route.params.id, dateRange, rest);
+    fundingDetailList.value = temp.data.data;
+
 }
 </script>
 
@@ -213,7 +229,7 @@ const handleScrollLoad = () => {
                     <el-select v-model="formData.event_type" placeholder="请选择事件类型"></el-select>
                 </el-form-item>
                 <el-form-item label="记录ID:">
-                    <el-input v-model="formData.min_amount" placeholder="请输入记录ID"></el-input>
+                    <el-input v-model="formData.record_id" placeholder="请输入记录ID"></el-input>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -231,17 +247,17 @@ const handleScrollLoad = () => {
                 </el-table-column>
                 <el-table-column label="变动金额" align="center" prop="change_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.change_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="变动前" align="center" prop="before_change_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.before_change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.before_change_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="变动后" align="center" prop="after_change_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.after_change_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.after_change_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="记录ID" align="center" prop="record_id">
@@ -257,8 +273,8 @@ const handleScrollLoad = () => {
             </el-table>
 
             <!-- <div style="float: right;">
-                <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                    v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                <pagination v-if="total > 0" :total="total" v-model:page="formData.page_num"
+                    v-model:limit="formData.page_size" @pagination="handleQuery" />
             </div> -->
         </el-card>
     </div>

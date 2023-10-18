@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserWithDrawlRecordDetail} from '@/api/Players'
+//import { watch } from "fs";
+
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(5);
@@ -15,8 +22,8 @@ const formData = ref<any>({
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
     ],
-    min_amount: "",
-    max_amount: "",
+    min_amount: 0,
+    max_amount: 0,
     pageNum: 1,
     pageSize: 20,
 })
@@ -100,20 +107,27 @@ const withdrawalRecordList = ref([
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
 
 }
+onMounted(()=>{
+    getData();
+})
 
+const getData = async () =>{
+    let temp = await getUserWithDrawlRecordDetail(user.token, route.params.id, formData.value);
+    withdrawalRecordList.value = temp.data.data;
+}
 const goBack = () => {
     router.push({ name: "User List" });
 }
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({ name: name });
+    router.push({ name: name, params:{id:route.params.id}});
 }
 
 const handleScrollLoad = () => {

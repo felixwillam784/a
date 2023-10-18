@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserPromotionDetail} from '@/api/Players'
+//import { watch } from "fs";
 
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(3);
@@ -62,7 +68,7 @@ const promotionRecordList = ref([
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
@@ -75,7 +81,7 @@ const goBack = () => {
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({ name: name });
+    router.push({ name: name, params:{id:route.params.id}});
 }
 
 const handleScrollLoad = () => {
@@ -89,6 +95,14 @@ const handleScrollLoad = () => {
     if (formData.value.pageNum === totalPage.value) {
         disabled.value = true;
     }
+}
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+    let temp = await getUserPromotionDetail(user.token, route.params.id, formData.value);
+    promotionRecordList.value = temp.data.data;
 }
 </script>
 

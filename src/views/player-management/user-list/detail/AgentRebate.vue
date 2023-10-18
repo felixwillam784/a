@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserAgentDetail, getUserAgentDetailBetHistory, getUserAgentDetailDepositHistory} from '@/api/Players'
+//import { watch } from "fs";
 
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(2);
@@ -14,8 +20,8 @@ const formData = ref<any>({
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
     ],
-    min_amount: "",
-    max_amount: "",
+    min_amount: 0,
+    max_amount: 0,
     pageNum: 1,
     pageSize: 20,
 })
@@ -76,63 +82,33 @@ const bettingRebateList = ref([
         time: "2023-07-01 16:00:00",
         bet_amount: 200,
         betting_rebate: 2,
-        account: "fangda_0625@qq.com"
+        betting_user_email: "fangda_0625@qq.com"
     },
     {
         time: "2023-07-01 16:00:00",
         bet_amount: 200,
         betting_rebate: 2,
-        account: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        account: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        account: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        account: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        account: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        account: "fangda_0625@qq.com"
+        betting_user_email: "fangda_0625@qq.com"
     },
 ])
 
 const rechargeRebateList = ref([
     {
         time: "2023-07-01 16:00:00",
-        amount: 200,
-        rebate: 2,
-        account: "fangda_0625@qq.com"
+        deposit_amount: 200,
+        deposit_rebate: 2,
+        deposit_user_email: "fangda_0625@qq.com"
     },
     {
         time: "2023-07-01 16:00:00",
-        amount: 200,
-        rebate: 2,
-        account: "fangda_0625@qq.com"
+        deposit_amount: 200,
+        deposit_rebate: 2,
+        deposit_user_email: "fangda_0625@qq.com"
     },
 ]);
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
@@ -145,7 +121,7 @@ const goBack = () => {
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({ name: name });
+    router.push({ name: name, params:{id:route.params.id}});
 }
 
 const showBettingRebateDialog = () => {
@@ -154,6 +130,23 @@ const showBettingRebateDialog = () => {
 
 const showRechargeRebateDialog = () => {
     rechargeRebateDialogVisible.value = true;
+}
+
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+    let temp = await getUserAgentDetail(user.token, route.params.id, formData.value);
+    agentRebateList.value = temp.data.data;
+
+    
+    temp = await getUserAgentDetailBetHistory(user.token, route.params.id, formData.value);
+    bettingRebateList.value = temp.data.data;
+
+    temp = await getUserAgentDetailDepositHistory(user.token, route.params.id, formData.value);
+    rechargeRebateList.value = temp.data.data;
+
 }
 </script>
 
@@ -253,17 +246,17 @@ const showRechargeRebateDialog = () => {
                 <el-table-column label="时间" align="center" prop="time" width="200" />
                 <el-table-column label="投注金额" align="center" prop="bet_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.bet_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.bet_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="投注返利" align="center" prop="betting_rebate">
                     <template #default="scope">
-                        <p>{{ scope.row.betting_rebate.toFixed(2) }}</p>
+                        <p>{{ scope.row.betting_rebate }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="投注用户邮箱" align="center" prop="account">
                     <template #default="scope">
-                        <el-button type="primary" link>{{ scope.row.account }}</el-button>
+                        <el-button type="primary" link>{{ scope.row.betting_user_email }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -274,17 +267,17 @@ const showRechargeRebateDialog = () => {
                 <el-table-column label="时间" align="center" prop="time" width="200" />
                 <el-table-column label="充值金额" align="center" prop="amount">
                     <template #default="scope">
-                        <p>{{ scope.row.amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.deposit_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="充值返利" align="center" prop="rebate">
                     <template #default="scope">
-                        <p>{{ scope.row.rebate.toFixed(2) }}</p>
+                        <p>{{ scope.row.deposit_rebate }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="充值账号" align="center" prop="account">
                     <template #default="scope">
-                        <el-button type="primary" link>{{ scope.row.account }}</el-button>
+                        <el-button type="primary" link>{{ scope.row.deposit_user_email	 }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>

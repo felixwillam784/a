@@ -87,8 +87,8 @@ const resetQuery = () => {
     }
 }
 
-const goCustomerDetailPage = () => {
-    router.push({ name: "UserDetail" });
+const goCustomerDetailPage = (id:string) => {
+    router.push({ name: "UserDetail", params:{id:id}});
 }
 </script>
 
@@ -191,7 +191,7 @@ const goCustomerDetailPage = () => {
                         <el-table-column label="注册时间" align="center" prop="registration_time" width="180"></el-table-column>
                         <el-table-column label="操作" align="center" width="200" fixed="right">
                             <template #default="scope">
-                                <el-button type="danger" link @click="goCustomerDetailPage">详情</el-button>
+                                <el-button type="danger" link @click="goCustomerDetailPage(scope.row.id)">详情</el-button>
                                 <el-button type="danger" link>提现封禁</el-button>
                                 <el-button type="danger" link>拉黑</el-button>
                             </template>
