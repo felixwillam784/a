@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserManualRechargeDetail} from '@/api/Players'
+//import { watch } from "fs";
+
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(7);
@@ -15,8 +22,8 @@ const formData = ref<any>({
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
     ],
-    min_amount: "",
-    max_amount: "",
+    min_amount: 0,
+    max_amount: 0,
     pageNum: 1,
     pageSize: 20,
 })
@@ -68,13 +75,20 @@ const manualRechargeList = ref([
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
 
 }
+onMounted(()=>{
+    getData();
+})
 
+const getData = async () =>{
+    let temp = await getUserManualRechargeDetail(user.token, route.params.id, formData.value);
+    manualRechargeList.value = temp.data.data;
+}
 const goBack = () => {
     router.push({ name: "User List" });
 }
@@ -160,7 +174,7 @@ const handleScrollLoad = () => {
                 </el-table-column>
                 <el-table-column label="订单金额" align="center" prop="order_amount">
                     <template #default="scope">
-                        <p>{{ scope.row.order_amount.toFixed(2) }}</p>
+                        <p>{{ scope.row.order_amount }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="需求打码量" align="center" prop="required_code_amount">

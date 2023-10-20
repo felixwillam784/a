@@ -71,7 +71,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "manual/recharge/",
+                        path: "manual/recharge/:id",
                         component: () => import('@/views/player-management/user-list/detail/ManualRecharge.vue'),
                         name: "ManualRecharge",
                         meta: {
@@ -82,7 +82,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "manual/deduction",
+                        path: "manual/deduction/:id",
                         component: () => import('@/views/player-management/user-list/detail/ManualDeduction.vue'),
                         name: "ManualDeduction",
                         meta: {
@@ -104,7 +104,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "betting/record",
+                        path: "betting/record/:id",
                         component: () => import('@/views/player-management/user-list/detail/BettingRecord.vue'),
                         name: "BettingRecord",
                         meta: {
@@ -137,7 +137,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "registration/record",
+                        path: "registration/record/:id",
                         component: () => import('@/views/player-management/user-list/detail/RegistrationRecord.vue'),
                         name: "RegistrationRecord",
                         meta: {
@@ -184,6 +184,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "user/money-flow",
+                redirect: "a",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_money_flow",
@@ -193,17 +194,18 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "",
+                        path: "a",
                         component: () => import('@/views/player-management/user-money-flow/index.vue'),
                         name: "User Flow",
                         meta: {
-                            hidden: true,
+                            title: "user_money_flow",
+                            hidden: false,
                             roles: ["ADMIN"],
                             keepAlive: true
                         },
                     },
                     {
-                        path: "detail",
+                        path: "detail/:id",
                         component: () => import('@/views/player-management/user-money-flow/Detail.vue'),
                         name: "Flow Detail",
                         meta: {

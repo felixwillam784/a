@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getUserBettingRecordDetail} from '@/api/Players'
+//import { watch } from "fs";
+
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(8);
@@ -15,15 +22,22 @@ const formData = ref<any>({
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
         moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
     ],
-    game: "全部",
+    game: "",
     winning_odds: "",
-    min_amount: "",
-    max_amount: "",
-    winning_min_amount: "",
-    winning_max_amount: "",
+    min_amount: 0,
+    max_amount: 0,
+    winning_min_amount:0,
+    winning_max_amount: 0,
     pageNum: 1,
     pageSize: 20,
 })
+
+const gameOptions = [
+  {
+    value: '1',
+    label: '全部',
+  },
+]
 const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
@@ -44,22 +58,35 @@ const bettingRecordList = ref([
         settlement_time: "2023-07-02 23:00:00",
     },
 ])
-
+const totalData = ref<any>({
+    bonus: "99999.99",
+    code_amount: "99999.99",
+    game_round: "99999.99",
+    revenue_rate: "-0.52777"
+})
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
 
 }
+onMounted(()=>{
+    getData();
+})
 
+const getData = async () =>{
+    let temp = await getUserBettingRecordDetail(user.token, route.params.id, formData.value);
+    bettingRecordList.value = temp.data.data.table_data;
+    totalData.value = temp.data.data.total_data;
+}
 const goBack = () => {
     router.push({ name: "User List" });
 }
 
 const handleButtonActive = (index: number, name: string) => {
     activeButton.value = index;
-    router.push({ name: name });
+    router.push({ name: name, params:{id:route.params.id}});
 }
 
 const handleScrollLoad = () => {
@@ -114,8 +141,7 @@ const handleScrollLoad = () => {
                 </el-form-item>
                 <el-form-item label="游戏:">
                     <el-select v-model="formData.game">
-                        <el-option>全部</el-option>
-                    </el-select>
+                        <el-option v-for="item in gameOptions" :key="item.value" :label="item.label" :value="item.value"/>                    </el-select>
                 </el-form-item>
                 <el-form-item label="中奖赔率:大于">
                     <el-input v-model="formData.winning_odds" placeholder="请输入中奖赔率"/>
@@ -143,19 +169,19 @@ const handleScrollLoad = () => {
             <div style="display: flex;">
                 <div style="border: 1px solid red; margin-left: auto; padding: 10px 20px; background: #ffccff;">
                     <span style="color: red">游戏局数:</span>
-                    <span style="color: red; margin-left: 10px;">99999.99</span>
+                    <span style="color: red; margin-left: 10px;">{{totalData.bonus}}</span>
                 </div>
                 <div style="border: 1px solid red; margin-left: 10px; padding: 10px 20px; background: #ffccff;">
                     <span style="color: red">打码量:</span>
-                    <span style="color: red; margin-left: 10px;">99999.99</span>
+                    <span style="color: red; margin-left: 10px;">{{totalData.code_amount}}</span>
                 </div>
                 <div style="border: 1px solid red; margin-left: 10px; padding: 10px 20px; background: #fff7e6;">
                     <span style="color: red">派奖:</span>
-                    <span style="color: red; margin-left: 10px;">99999.99</span>
+                    <span style="color: red; margin-left: 10px;">{{totalData.game_round}}</span>
                 </div>
                 <div style="border: 1px solid red; margin-left: 10px; padding: 10px 20px; background: #fff7e6;">
                     <span style="color: red">庄家优势:</span>
-                    <span style="color: red; margin-left: 10px;">-0.5277777</span>
+                    <span style="color: red; margin-left: 10px;">{{totalData.revenue_rate}}</span>
                 </div>
             </div>
 

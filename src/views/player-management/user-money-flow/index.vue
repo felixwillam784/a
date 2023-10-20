@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Download } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
+import useStore from '@/store';
+import {getUserMoneyFlow} from '@/api/Players'
 
+const { user } = useStore();
 const router = useRouter();
 
 const formData = ref<any>({
@@ -21,7 +24,7 @@ const total = ref<number>(4);
 
 const userMoneyFlowList = ref<Array<any>>([
     {
-        customer_id: "8e8fd8fsdfd8fe8f8df8ef",
+        id: "8e8fd8fsdfd8fe8f8df8ef",
         customer_account: "test77@gmail.com",
         customer_name: "UserName10001",
         customer_label: "用户备注",
@@ -29,43 +32,23 @@ const userMoneyFlowList = ref<Array<any>>([
         flow_type: "下注",
         flow_time: "2023-07-12 10:23:24",
     },
-    {
-        customer_id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: 50,
-        flow_type: "活动",
-        flow_time: "2023-07-12 10:23:24",
-    },
-    {
-        customer_id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: -999,
-        flow_type: "体现",
-        flow_time: "2023-07-12 10:23:24",
-    },
-    {
-        customer_id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: 50,
-        flow_type: "充值",
-        flow_time: "2023-07-12 10:23:24",
-    },
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
 
 }
 
+onMounted(()=>{
+    getData();
+})
+const getData = async () =>{
+    let temp = await getUserMoneyFlow(user.token, formData.value);
+    userMoneyFlowList.value = temp.data.data;
+}
 const exportTable = () => {
     // exportUser(queryParams.value).then((response: any) => {
     //     const blob = new Blob([response.data], {
@@ -84,8 +67,8 @@ const exportTable = () => {
     // });
 }
 
-const goUserFlowDetailPage = () => {
-    router.push({ name: "Flow Detail" });
+const goUserFlowDetailPage = (id : any) => {
+    router.push({ name: "Flow Detail", params:{id:id} });
 }
 </script>
 
@@ -130,17 +113,17 @@ const goUserFlowDetailPage = () => {
                 <el-card>
                     <el-table v-loading="loading" :data="userMoneyFlowList" style="width: 100%;">
 
-                        <el-table-column label="用户ID" align="center" prop="customer_id" width="200" />
+                        <el-table-column label="用户ID" align="center" prop="id" width="200" />
                         <el-table-column label="用户账号" align="center" prop="customer_account" width="200" />
                         <el-table-column label="用户名" width="200" align="center" prop="customer_name" />
                         <el-table-column label="用户标签" width="200" align="center" prop="customer_label" />
                         <el-table-column label="流水金额" width="200" align="center" prop="flow_amount">
                             <template #default="scope">
                                 <Font color="green" v-if="scope.row.flow_amount > 0">
-                                    ${{ scope.row.flow_amount.toFixed(2) }}
+                                    ${{ scope.row.flow_amount }}
                                 </Font>
                                 <Font color="red" v-else>
-                                    -${{ scope.row.flow_amount.toFixed(2).substring(1) }}
+                                    -${{ scope.row.flow_amount.substring(1) }}
                                 </Font>
                             </template>
                         </el-table-column>
@@ -148,7 +131,7 @@ const goUserFlowDetailPage = () => {
                         <el-table-column label="时间" align="center" prop="flow_time"></el-table-column>
                         <el-table-column align="center">
                             <template #default="scope">
-                                <el-button type="danger" link @click="goUserFlowDetailPage">详情</el-button>
+                                <el-button type="danger" link @click="goUserFlowDetailPage(scope.row.id)">详情</el-button>
                             </template>
                         </el-table-column>
                     </el-table>

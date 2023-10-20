@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Chart, Grid, Line, Tooltip, Bar, Marker } from 'vue3-charts'
 import { Top, Bottom } from '@element-plus/icons-vue';
+import { getStatisticChartData } from '@/api/dashboard';
+import useStore from '@/store';
 
+const { user } = useStore();
 const chart1Array = [
   { date: '6-20', visitor_rate: 100},
   { date: '6-21', visitor_rate: 120},
@@ -86,6 +89,18 @@ const visitorOverview = ref({
 	new_player_number: "",
 	recharge_code_rate: "",
 })
+
+onMounted(async () => {
+    let res =await getStatisticChartData(user.token);
+	chart1data.value = res.data.data.total_visit_count;
+	chart2data.value = res.data.data.total_active_user_count;
+	chart3data.value = res.data.data.total_realtime_online_count;
+	chart4data.value = res.data.data.total_recharge_count;
+	console.log(res);
+    //platformOverview.value  = platformRes.data.data;
+    
+});
+
 </script>
 
 <template>
@@ -96,9 +111,9 @@ const visitorOverview = ref({
 					<el-row>
 						<el-col :span="12">
 							<div>今日访问总人数</div>
-							<div class="visitor-text">999999</div>
+							<div class="visitor-text">{{chart1data[6].visitor_rate}}</div>
 							<div style="display:flex;">
-								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
+								<div class="visitor-title">较昨日<span class="visitor-rate">{{(chart1data[6].visitor_rate-chart1data[5].visitor_rate)/chart1data[5].visitor_rate}}% </span></div>
 								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>						
@@ -127,9 +142,9 @@ const visitorOverview = ref({
 					<el-row>
 						<el-col :span="12">
 							<div>今日活跃用户数</div>
-							<div class="visitor-text">999999</div>
+							<div class="visitor-text">{{chart2data[6].visitor_rate}}</div>
 							<div style="display:flex;">
-								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
+								<div class="visitor-title">较昨日<span class="visitor-rate">{{(chart2data[6].visitor_rate-chart2data[5].visitor_rate)/chart2data[5].visitor_rate}}% </span></div>
 								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>
@@ -157,9 +172,9 @@ const visitorOverview = ref({
 					<el-row>
 						<el-col :span="12">
 							<div>实时在线人数</div>
-							<div class="visitor-text">999999</div>
+							<div class="visitor-text">{{chart3data[6].visitor_rate}}</div>
 							<div style="display:flex;">
-								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
+								<div class="visitor-title">较昨日<span class="visitor-rate">{{(chart3data[6].visitor_rate-chart3data[5].visitor_rate)/chart3data[5].visitor_rate}}% </span></div>
 								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>
@@ -187,9 +202,9 @@ const visitorOverview = ref({
 					<el-row>
 						<el-col :span="12">
 							<div>今日充值成功数</div>
-							<div class="visitor-text">999999</div>
+							<div class="visitor-text">{{chart4data[6].visitor_rate}}</div>
 							<div style="display:flex;">
-								<div class="visitor-title">较昨日<span class="visitor-rate">100% </span></div>
+								<div class="visitor-title">较昨日<span class="visitor-rate">{{(chart4data[6].visitor_rate-chart4data[5].visitor_rate)/chart4data[5].visitor_rate}}% </span></div>
 								<el-icon class="visitor-icon" :size="20" color="red">
 									<Top />
 								</el-icon>

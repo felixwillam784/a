@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+import {getManualPaymentList} from '@/api/withdraw-management'
+import useStore from '@/store';
+import axios, { AxiosPromise } from 'axios';
+
+const { user } = useStore();
 
 interface GetManualPayment {
     id: string,
@@ -146,7 +151,19 @@ const typeOptions = ref<Array<any>>([
 ])
 
 const handleQuery = () => {
+    getData();
 }
+
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+
+    let res = await getManualPaymentList(user.token, formData.value);
+    manualPaymentList.value = res.data.data;
+}
+
 
 const addManualPaymentDialog = () => {
     manualPaymentItem.value = {
@@ -231,7 +248,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                         </el-table-column>
                         <el-table-column label="订单金额" align="center" prop="order_amount">
                             <template #default="scope">
-                                <p>${{ scope.row.order_amount.toFixed(2) }}</p>
+                                <p>${{ scope.row.order_amount }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="变动类型" align="center" prop="change_type">
@@ -335,7 +352,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-row style="margin-top: 20px;">
                 <el-col :span="6" class="detail-item-left-bg">打款金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(manualPaymentItem.order_amount).toFixed(2) }}</p>
+                    <p>${{ Number(manualPaymentItem.order_amount) }}</p>
                 </el-col>
             </el-row>
             <el-row>

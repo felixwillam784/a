@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import axios, { AxiosPromise } from 'axios';
+import { start } from 'nprogress';
 
 
 export function getUserListApi(token: string, data:any): any {
@@ -176,5 +177,119 @@ export function getUserWithDrawlRecordDetail(token: string, id:any, formData:any
     max_amount1: formData.max_amount,
     page_num: formData.pageNum,
     page_size: formData.pageSize
+  }});
+}
+
+export function getUserManualDeductionDetail(token: string, id:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/user/manual-deduction', {headers : {
+    Authorization: token,
+  }, params:{
+    user_id: id,
+    time_interval_key1: "submission_time",
+    start_time1: new Date(formData.dateRange[0]).toISOString(),
+    end_time1: new Date(formData.dateRange[1]).toISOString(),
+    amount_interval_key1: "change_amount",
+    min_amount1: formData.min_amount,
+    max_amount1: formData.max_amount,
+    page_num: formData.pageNum,
+    page_size: formData.pageSize
+  }});
+}
+
+export function getUserManualRechargeDetail(token: string, id:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/user/manual-recharge', {headers : {
+    Authorization: token,
+  }, params:{
+    user_id: id,
+    time_interval_key1: "submission_time",
+    start_time1: new Date(formData.dateRange[0]).toISOString(),
+    end_time1: new Date(formData.dateRange[1]).toISOString(),
+    amount_interval_key1: "recharge_amount",
+    min_amount1: formData.min_amount,
+    max_amount1: formData.max_amount,
+    page_num: formData.pageNum,
+    page_size: formData.pageSize
+  }});
+}
+
+export function getUserBettingRecordDetail(token: string, id:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/user/betting-record', {headers : {
+    Authorization: token,
+  }, params:{
+    user_id: id,
+    same_key1: "game",
+    same_val1: formData.game,
+    same_key2: "winning_odds",
+    same_val2: formData.winning_odds,
+    time_interval_key1: "submission_time",
+    start_time1: new Date(formData.dateRange[0]).toISOString(),
+    end_time1: new Date(formData.dateRange[1]).toISOString(),
+    amount_interval_key1: "settlement_amount",
+    min_amount1: formData.min_amount,
+    max_amount1: formData.max_amount,
+    amount_interval_key2: "winning_amount",
+    min_amount2: formData.winning_min_amount,
+    max_amount2: formData.winning_max_amount,
+    sort_field: "betting_time",
+    sort_mode: "desc",
+    page_num: formData.pageNum,
+    page_size: formData.pageSize
+  }});
+}
+
+export function getUserLoginRecordDetail(token: string, id:any, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/user/login-record', {headers : {
+    Authorization: token,
+  }, params:{
+    user_id: id,
+    time_interval_key1: "login_time",
+    start_time1: new Date(formData.dateRange[0]).toISOString(),
+    end_time1: new Date(formData.dateRange[1]).toISOString(),
+    page_num: 1,
+    page_size: 10
+  }});
+}
+
+export function getUserMoneyFlow(token: string, formData:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  let start_date = new Date(formData.flow_date);
+  start_date.setHours(0);
+  start_date.setMinutes(0);
+  start_date.setSeconds(0);
+  start_date.setMilliseconds(0);
+
+  let end_date = new Date(formData.flow_date);
+  end_date.setHours(23);
+  end_date.setMinutes(59);
+  end_date.setSeconds(59);
+  end_date.setMilliseconds(999);
+
+  return axios.get(baseURL+'/user/money-flow', {headers : {
+    Authorization: token,
+  }, params:{
+    same_key1: "customer_label",
+    same_val1: formData.customer_label,
+    like_key1: "customer_name",
+    ike_val1: formData.customer_name,
+    like_key2: "customer_account",
+    like_val2: formData.customer_account,
+    time_interval_key1: "flow_date",
+    start_time1: start_date.toISOString(),
+    end_time1: end_date.toISOString(),
+    page_num: formData.pageNum,
+    page_size: formData.pageSize,
+  }});
+}
+
+export function getUserMoneyFlowDetail(token: string, id:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/user/money-flow/detail', {headers : {
+    Authorization: token,
+  }, params:{
+    user_id: id,
   }});
 }

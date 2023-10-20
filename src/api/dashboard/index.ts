@@ -111,3 +111,9 @@ export function gameDataApi(token: string, daterange:any): any {
   }});
 }
 
+export function getStatisticChartData(token: string): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;   
+  return axios.get(baseURL+'/dashboard/statistic-chart-data', {headers : {
+      Authorization: token,
+  }});
+}

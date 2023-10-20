@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
+import useStore from '@/store';
 
+import {getUserMoneyFlowDetail} from '@/api/Players'
+
+import {useRoute} from 'vue-router';
+
+const route = useRoute();
+const { user } = useStore();
 const router = useRouter();
 
 const goBack = () => {
@@ -13,7 +20,7 @@ const goBack = () => {
 const userFlowInformation = ref<any>({
     customer_account: "test77@gmail.com",
     customer_name: "UserName10001",
-    customer_id: "8e8fd8fsdfd8fe8f8df8ef",
+    id: "8e8fd8fsdfd8fe8f8df8ef",
     flow_amount: 999,
     flow_type: "下注",
     game_name: "test",
@@ -27,6 +34,11 @@ const userFlowInformation = ref<any>({
     flow_time: "2023-07-12 09-10-11",
 })
 
+onMounted(async ()=>{
+    let res = await getUserMoneyFlowDetail(user.token, route.params.id);
+    userFlowInformation.value = res.data.data;
+    console.log(res.data.data);
+})
 </script>
 
 <template>
@@ -53,17 +65,17 @@ const userFlowInformation = ref<any>({
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
-                        <p>{{ userFlowInformation.customer_id }}</p>
+                        <p>{{ userFlowInformation.id }}</p>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6" class="detail-item-left-bg">流水金额:</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p v-if="userFlowInformation.flow_amount > 0">
-                            ${{ userFlowInformation.flow_amount.toFixed(2) }}
+                            ${{ userFlowInformation.flow_amount }}
                         </p>
                         <p v-else>
-                            -${{ userFlowInformation.flow_amount.toFixed(2).substring(1) }}
+                            -${{ userFlowInformation.flow_amount }}
                         </p>
                     </el-col>
                 </el-row>
@@ -101,10 +113,10 @@ const userFlowInformation = ref<any>({
                     <el-col :span="6" class="detail-item-left-bg">游戏结果:</el-col>
                     <el-col :span="18" class="detail-item-right-bg">
                         <p v-if="userFlowInformation.game_result > 0">
-                            ${{ userFlowInformation.game_result.toFixed(2) }}
+                            ${{ userFlowInformation.game_result }}
                         </p>
                         <p v-else>
-                            -${{ userFlowInformation.game_result.toFixed(2).substring(1) }}
+                            -${{ Math.abs(userFlowInformation.game_result) }}
                         </p>
                     </el-col>
                 </el-row>
