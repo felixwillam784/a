@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+
+import useStore from '@/store';
+import {getWithDrawalBanList, addBanList, updateBan} from '@/api/withdraw-management'
+//import { watch } from "fs";
+
+const { user } = useStore();
 
 interface GetBan {
     id: string,
@@ -69,8 +75,17 @@ const banItem = ref<GetBan>({
 })
 
 const handleQuery = () => {
+    getData();
 }
+onMounted (()=>{
+    getData();
+})
 
+const getData = async () => {
+    let res = await getWithDrawalBanList(user.token, formData.value);
+    console.log(res.data.data);
+    banList.value = res.data.data;
+}
 const addBanDialog = () => {
     banItem.value = {
         id: "",
@@ -109,9 +124,21 @@ const closeDialog = () => {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    await formEl.validate((valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            let res;
+            if(banItem.value.id == '' || banItem.value.id == null)
+                res = await addBanList(user.token, banItem.value);
+            else
+                res = await updateBan(user.token, banItem.value);
+
+            if(res.data.code === "00")
+                console.log("success");
+            else
+                console.log("failed");
+            banDialogVisible.value = false;
+
+            
         } else {
             console.log('error submit!', fields)
         }
@@ -120,6 +147,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
+    banDialogVisible.value = false;
 }
 </script>
 

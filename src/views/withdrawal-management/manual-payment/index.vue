@@ -4,7 +4,7 @@ import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
-import {getManualPaymentList} from '@/api/withdraw-management'
+import {getManualPaymentList, addManualPayment} from '@/api/withdraw-management'
 import useStore from '@/store';
 import axios, { AxiosPromise } from 'axios';
 
@@ -197,9 +197,15 @@ const closeDialog = () => {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    await formEl.validate((valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            let res = await addManualPayment(user.token, manualPaymentItem);
+
+            if(res.data.code === "00")
+                console.log('success');
+            else
+                console.log('failed');
+            manualDialogVisible.value = false;
         } else {
             console.log('error submit!', fields)
         }
@@ -208,6 +214,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
+    manualDialogVisible.value = false;
 }
 </script>
 

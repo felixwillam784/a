@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, } from '@element-plus/icons-vue';
+import useStore from '@/store';
 import { useRouter } from 'vue-router';
 
+import {getGameConfigList} from '@/api/GameManagement'
+//import { watch } from "fs";
+
+const { user } = useStore();
 const router = useRouter();
 
 interface GetGameData {
@@ -87,11 +92,21 @@ const gameList = ref<Array<GetGameData>>([
 ])
 
 const handleQuery = () => {
-
+    getData();
 }
 
 const resetQuery = () => {
 
+}
+
+onMounted(()=>{
+    getData();
+})
+
+const getData = async () =>{
+    let res = await getGameConfigList(user.token, formData.value);
+    gameList.value = res.data.data;
+    console.log(res);
 }
 
 const goGameDetailPage = () => {
@@ -194,7 +209,8 @@ const goGameDetailPage = () => {
                         <el-table-column label="游戏分组" align="left" prop="game_group" width="200">
                             <template #default="scope">
                                 <div style = "display: flex">
-                                    <p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': item.color}">{{ item.label }}</p>
+                                    <!--<p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': item.color}">{{ item.label }}</p>--->
+                                    <p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': '#ff0000'}">{{ item }}</p>
                                 </div>
                             </template>
                         </el-table-column>

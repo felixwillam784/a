@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, onMounted } from 'vue';
 import { Search, Refresh, } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
+import useStore from '@/store';
 
+import {getGameDistributionList} from '@/api/GameManagement'
 import { ElInput } from 'element-plus'
 
 const router = useRouter();
+const { user } = useStore();
 
 interface GetGameData {
     id: string;
@@ -30,8 +33,8 @@ const formData = ref<any>({
     game_group: "",
     game_label: "",
     card_number: "",
-    pageNum: 1,
-    pageSize: 20,
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -78,13 +81,24 @@ const gameList = ref<Array<GetGameData>>([
 ])
 
 const handleQuery = () => {
+    getData();
 
 }
 
 const resetQuery = () => {
-
+    
 }
 
+
+const getData = async () =>{
+    let res = await getGameDistributionList(user.token, formData.value);
+    gameList.value = res.data.data;
+    console.log(res.data.data);
+}
+
+onMounted(()=>{
+    getData();
+})
 const goGameDetailPage = () => {
     router.push({ name: "Game Information" });
 }
@@ -273,8 +287,8 @@ const handleAddBatch = () => {
                     </el-table>
 
                     <div style="float: right;">
-                        <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                        <pagination v-if="total > 0" :total="total" v-model:page="formData.page_num"
+                            v-model:limit="formData.page_size" @pagination="handleQuery" />
                     </div>
                 </el-card>
             </el-col>
