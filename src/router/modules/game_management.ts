@@ -17,10 +17,22 @@ const gameManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "game/configuration",
+                component: () => import('@/views/withdrawal-management/review/index.vue'),
+                name: "Game Configuration",
+                meta: {
+                    hidden: false,
+                    title: "自研游戏配置",
+                    // alwaysShow: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
+                path: "channel/management",
                 redirect: "a",
                 component: ChildrenLayout,
                 meta: {
-                    title: "自研游戏配置",
+                    
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -30,10 +42,10 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                     {
                         path: "a",
                         component: () => import('@/views/game-management/game-configuration/index.vue'),
-                        name: "Game Configuration",
+                        name: "Channel Management",
                         meta: {
                             hidden: false,
-                            title: "自研游戏配置",
+                            title: "渠道游戏管理",
                             roles: ["ADMIN"],
                             keepAlive: true
                         },
@@ -61,18 +73,6 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                 ]
-            },
-            {
-                path: "channel/management",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Channel Management",
-                meta: {
-                    title: "渠道游戏管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
             },
             {
                 path: "game/distribution",

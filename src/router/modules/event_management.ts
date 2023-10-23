@@ -75,6 +75,18 @@ const eventManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
+      {
+        path: "rebate/configuration",
+        component: () => import('@/views/event-management/rebate-configuration/index.vue'),
+        name: "Rebate Configuration",
+        meta: {
+          title: "打码返利配置",
+          hidden: false,
+          // alwaysShow: false,
+          roles: ["ADMIN"],
+          keepAlive: true
+        }
+      },
     ]
   },
 ];
