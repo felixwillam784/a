@@ -30,7 +30,7 @@ const formData = ref<any>({
     game_trial: "",
     game_name: "",
     game_state: "",
-    game_group: "",
+    game_group: "Hot",
     game_label: "",
     card_number: "",
     page_num: 1,
@@ -104,14 +104,28 @@ const goGameDetailPage = () => {
 }
 
 const inputValue = ref('')
-const dynamicTags = ref(['Hot', 'New', 'Baccarat', 'Popular', 'BlackJack', 'Other'])
+const dynamicTags = ref([{label:'Hot', selected:true}, {label:'New', selected:false}, {label:'Baccart', selected:false}, {label:'Popular', selected:false}, {label:'BlackJack', selected:false}, {label:'Other', selected:false}])
 const inputVisible = ref(false)
 const InputRef = ref<InstanceType<typeof ElInput>>()
 
-const handleClose = (tag: string) => {
+const handleClose = (tag: any) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
 }
 
+const handleClick = (tag: any) => {
+    let searchIndex = dynamicTags.value.indexOf(tag);
+    for(let i = 0; i < dynamicTags.value.length; i ++)
+    {
+        if(i != searchIndex)   
+            dynamicTags.value[i].selected = false;
+    }
+
+    if(dynamicTags.value[searchIndex].selected == false)
+    {
+        dynamicTags.value[searchIndex].selected = !dynamicTags.value[searchIndex].selected;
+        formData.value.game_group = dynamicTags.value[searchIndex].label;
+    }
+}
 const showInput = () => {
   inputVisible.value = true
   nextTick(() => {
@@ -121,7 +135,7 @@ const showInput = () => {
 
 const handleInputConfirm = () => {
   if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
+    dynamicTags.value.push({label:inputValue.value, selected:false})
   }
   inputVisible.value = false
   inputValue.value = ''
@@ -138,6 +152,7 @@ const handleSetLow = () => {
 const handleAddBatch = () => {
     router.push({ name: "Game Add Batch" });
 }
+
 
 </script>
 
@@ -198,16 +213,18 @@ const handleAddBatch = () => {
                    
                 </div>
                 <el-card style="margin-bottom: 10px;">
-                    <el-tag
+                    <el-check-tag
                         v-for="tag in dynamicTags"
                         :key="tag"
                         class="mx-1 game-tag"
                         closable
                         :disable-transitions="false"
+                        :checked="tag.selected"
                         @close="handleClose(tag)"
+                        @click="handleClick(tag)"
                     >
-                        {{ tag }}
-                    </el-tag>
+                        {{ tag.label }}
+                    </el-check-tag>
                     <el-input
                         v-if="inputVisible"
                         ref="InputRef"
