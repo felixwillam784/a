@@ -1,29 +1,32 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown, Plus  } from '@element-plus/icons-vue';
 import {UploadProps, UploadUserFile} from 'element-plus';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
+import useStore from '@/store';
+import {useRoute} from 'vue-router';
+import {getGameDistributionList, addbatch} from '@/api/GameManagement'
 
 import * as _ from "lodash";
 
 
 const router = useRouter();
+const route = useRoute();
 
 const activeButton = ref<number>(0);
+const { user } = useStore();
 
 const formData = ref<any>({
     game_id: "",
     game_supplier: "",
     game_maker: "",
-    game_trial: "",
     game_name: "",
     game_state: "",
-    game_group: "",
+    game_group: "Hot",
     game_label: "",
-    card_number: "",
-    pageNum: 1,
-    pageSize: 20,
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -77,9 +80,29 @@ const goBack = () => {
 const handleButtonActive = ( name: string) => {
     router.push({ name: name });
 }
-const handleQuery = () =>{
-    
+const handleQuery = async () =>{
+    let game_ids : number[] = [];
+    for(let i = 0; i <multipleSelection.value.length; i ++)
+    {
+        game_ids.push(multipleSelection.value[i].game_id);
+    }
+    let res = await addbatch(user.token, route.params.game_group, game_ids);
 }
+
+const getData = async () =>{
+    let res = await getGameDistributionList(user.token, formData.value, 2);
+    gameList.value = res.data.data;
+}
+
+onMounted(()=>{
+    formData.value.game_group = route.params.game_group;
+    getData();
+})
+const multipleSelection = ref<GetGameData[]>([])
+const handleSelectionChange = (val: GetGameData[]) => {
+  multipleSelection.value = val;
+}
+
 </script>
 
 <template>
@@ -134,7 +157,7 @@ const handleQuery = () =>{
                     </el-row>
                 </el-col>
             </div>
-            <el-table v-loading="loading" :data="gameList" style="width: 100%;">
+            <el-table v-loading="loading" :data="gameList" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="30" />
                 <el-table-column label="游戏皮肤" align="left" prop="game_skin" width="140">
                     <template #default="scope">

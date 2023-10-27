@@ -98,7 +98,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "add/batch",
+                        path: "add/batch/:game_group",
                         component: () => import('@/views/game-management/game-distribution/details/add-batch.vue'),
                         name: "Game Add Batch",
                         meta: {

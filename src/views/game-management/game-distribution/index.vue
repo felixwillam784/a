@@ -11,7 +11,6 @@ const router = useRouter();
 const { user } = useStore();
 
 interface GetGameData {
-    id: string;
     game_index: number;
     game_skin: string;
     game_name: string;
@@ -27,12 +26,10 @@ const formData = ref<any>({
     game_id: "",
     game_supplier: "",
     game_maker: "",
-    game_trial: "",
     game_name: "",
     game_state: "",
     game_group: "Hot",
     game_label: "",
-    card_number: "",
     page_num: 1,
     page_size: 20,
 })
@@ -43,7 +40,6 @@ const total = ref<number>(3);
 
 const gameList = ref<Array<GetGameData>>([
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 1,
         game_skin: "picture",
         game_name: "DICE",
@@ -55,7 +51,6 @@ const gameList = ref<Array<GetGameData>>([
         rtp_value: 96.2,
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 2,
         game_skin: "picture",
         game_name: "Crash",
@@ -67,7 +62,6 @@ const gameList = ref<Array<GetGameData>>([
         rtp_value: 96.2,
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 3,
         game_skin: "picture",
         game_name: "Black Jack",
@@ -91,9 +85,8 @@ const resetQuery = () => {
 
 
 const getData = async () =>{
-    let res = await getGameDistributionList(user.token, formData.value);
+    let res = await getGameDistributionList(user.token, formData.value, 1);
     gameList.value = res.data.data;
-    console.log(res.data.data);
 }
 
 onMounted(()=>{
@@ -150,7 +143,7 @@ const handleSetLow = () => {
 }
 
 const handleAddBatch = () => {
-    router.push({ name: "Game Add Batch" });
+    router.push({ name: "Game Add Batch", params:{game_group:formData.value.game_group} });
 }
 
 
