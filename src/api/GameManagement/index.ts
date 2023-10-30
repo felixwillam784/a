@@ -30,6 +30,20 @@ export function getGameConfigList(token: string, formData: any): any {
     }});
 }
 
+export function doBatchAction(token: string, type:any, game_id_list: any): any {
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+    return axios.post(baseURL+'/game/config/batch-action',
+        {
+            action_type:type,
+            game_id_list:game_id_list,
+        },{
+        headers : {
+            Authorization: token,
+        }});
+        
+}
+
 export function getGameDistributionList(token: string, formData: any, api_type:number): any {
     const baseURL = import.meta.env.VITE_APP_BASE_API;
     /**/
@@ -59,11 +73,25 @@ export function addbatch(token: string, game_group: any, game_id_list: any): any
     
     const baseURL = import.meta.env.VITE_APP_BASE_API;
     /**/
-    return axios.post(baseURL+'/game/distribution/add-group', {
-        data:{
+    return axios.post(baseURL+'/game/distribution/add-group', 
+        {
             game_group:game_group,
             game_id_list:game_id_list,
-        }},{
+        },{
+        headers : {
+            Authorization: token,
+        }});
+}
+
+export function deleteBatch(token: string, game_group: any, game_id_list: any): any {
+    
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    /**/
+    return axios.post(baseURL+'/game/distribution/remove-group', {
+        
+            game_group:game_group,
+            game_id_list:game_id_list,
+        },{
         headers : {
             Authorization: token,
         }});

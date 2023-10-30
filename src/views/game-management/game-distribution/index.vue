@@ -4,7 +4,7 @@ import { Search, Refresh, } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import useStore from '@/store';
 
-import {getGameDistributionList} from '@/api/GameManagement'
+import {getGameDistributionList, deleteBatch} from '@/api/GameManagement'
 import { ElInput } from 'element-plus'
 
 const router = useRouter();
@@ -79,6 +79,8 @@ const handleQuery = () => {
 
 }
 
+
+
 const resetQuery = () => {
     
 }
@@ -146,6 +148,19 @@ const handleAddBatch = () => {
     router.push({ name: "Game Add Batch", params:{game_group:formData.value.game_group} });
 }
 
+const handleDeleteBatch = async () => {
+    let game_ids : number[] = [];
+    for(let i = 0; i <multipleSelection.value.length; i ++)
+    {
+        game_ids.push(multipleSelection.value[i].game_id);
+    }
+    let res = await deleteBatch(user.token, formData.value.game_group, game_ids);
+}
+
+const multipleSelection = ref<GetGameData[]>([])
+const handleSelectionChange = (val: GetGameData[]) => {
+  multipleSelection.value = val;
+}
 
 </script>
 
@@ -233,13 +248,13 @@ const handleAddBatch = () => {
                 </el-card>
                 <div style="float: right; width: 100%;">
                     <div style="display: flex; float: right; margin-bottom: 10px;">
-                        <el-button @click="handleQuery">批量删除</el-button>
+                        <el-button @click="handleDeleteBatch">批量删除</el-button>
                         <el-button @click="handleAddBatch">批量添加</el-button>
                     </div>
                 </div>
                 
                 <el-card>
-                    <el-table v-loading="loading" :data="gameList" style="width: 100%;">
+                    <el-table v-loading="loading" :data="gameList" style="width: 100%;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="30" />
                         <el-table-column label="排序" align="left" prop="game_index" width="70">
                             <template #default="scope">

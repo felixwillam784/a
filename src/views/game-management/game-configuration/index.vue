@@ -4,7 +4,9 @@ import { Search, Refresh, } from '@element-plus/icons-vue';
 import useStore from '@/store';
 import { useRouter } from 'vue-router';
 
-import {getGameConfigList} from '@/api/GameManagement'
+import axios, { AxiosPromise } from 'axios';
+
+import {getGameConfigList, doBatchAction} from '@/api/GameManagement'
 //import { watch } from "fs";
 
 const { user } = useStore();
@@ -109,8 +111,27 @@ const getData = async () =>{
     console.log(res);
 }
 
+const  handleBatchAction = async (type:number)=>{
+
+    let game_ids : number[] = [];
+    for(let i = 0; i <multipleSelection.value.length; i ++)
+    {
+        game_ids.push(multipleSelection.value[i].game_id);
+    }
+    let res = await doBatchAction(user.token, type, game_ids);
+    console.log(res);
+
+
+}
+
 const goGameDetailPage = () => {
     router.push({ name: "Game Information" });
+}
+
+const multipleSelection = ref<GetGameData[]>([])
+const handleSelectionChange = (val: GetGameData[]) => {
+  multipleSelection.value = val;
+
 }
 </script>
 
@@ -183,13 +204,13 @@ const goGameDetailPage = () => {
                    
                 </div>
                 <el-card style="margin-bottom: 10px;">
-                    <el-button @click="handleQuery">批量维护</el-button>
-                    <el-button @click="handleQuery">批量下架</el-button>
-                    <el-button @click="handleQuery">批量启用</el-button>
-                    <el-button @click="handleQuery">批量开启试玩</el-button>
+                    <el-button @click="handleBatchAction(1)">批量维护</el-button>
+                    <el-button @click="handleBatchAction(2)">批量下架</el-button>
+                    <el-button @click="handleBatchAction(3)">批量启用</el-button>
+                    <el-button @click="handleBatchAction(4)">批量开启试玩</el-button>
                 </el-card>
                 <el-card>
-                    <el-table v-loading="loading" :data="gameList" style="width: 100%;">
+                    <el-table v-loading="loading" :data="gameList" style="width: 100%;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="30" />
                         <el-table-column label="游戏皮肤" align="left" prop="game_skin" width="120">
                             <template #default="scope">
