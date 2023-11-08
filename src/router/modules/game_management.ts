@@ -51,7 +51,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "game/info",
+                        path: "game/info/:id",
                         component: () => import('@/views/game-management/game-configuration/details/game-info.vue'),
                         name: "Game Information",
                         meta: {

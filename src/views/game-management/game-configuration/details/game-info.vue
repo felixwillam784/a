@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown,  Plus  } from '@element-plus/icons-vue';
 import {UploadProps, UploadUserFile} from 'element-plus';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import moment from 'moment-timezone';
+
+import {getGameInfo} from '@/api/GameManagement'
+import useStore from '@/store';
 
 import * as _ from "lodash";
 
+//import { watch } from "fs";
 
+const { user } = useStore();
 const router = useRouter();
+const route = useRoute();
+const baseURL = import.meta.env.VITE_APP_BASE_API;
+const upLoadURL = baseURL + '/upload/image/game';
 
 const activeButton = ref<number>(0);
 const activeNames = ref(['1', '2', '3', '4']);
@@ -37,10 +45,6 @@ const gameStateOptions = [
 ]
 
 const coverFileList = ref<UploadUserFile[]>([
-  {
-    name: 'food.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
 ])
 
 const hdFileList = ref<UploadUserFile[]>([])
@@ -114,7 +118,6 @@ const handleAddTab = () => {
 }
 
 const gameInformation = ref<any>({
-    id: "8e8fd8fsdfd8fe8f8df8ef",
     game_id: "XXX111X2X3",
     game_name: "BlackJack",
     game_type: "Poker",
@@ -129,6 +132,9 @@ const gameInformation = ref<any>({
     game_trial_start: true,
     game_trial_count: 10,
     game_state: { value: 0, label: '启用' },
+    maintenance_date_range:[moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"), moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),],
+
+    
     game_cover: "",
     game_hd_img: "",
     game_tab: ["Classic", "EvoPlay", "Club"],
@@ -142,6 +148,28 @@ const handleButtonActive = ( name: string) => {
     router.push({ name: name });
 }
 
+onMounted(async ()=>{
+    let res = await getGameInfo(user.token, route.params.id);
+
+    gameInformation.value = res.data.data;
+    gameInformation.value.maintenance_date_range[0] = res.data.data.maintenance_date_range[0].split('T')[0];
+    gameInformation.value.maintenance_date_range[1] = res.data.data.maintenance_date_range[1].split('T')[0];
+
+    gameInformation.value.game_cover.forEach((item:string) => {
+        coverFileList.value.push(  {
+                name: 'item',
+                url: `http://45.32.120.156:8020/asset/image/game/${route.params.id}/cover/${item}`,
+            },)
+    });
+
+    gameInformation.value.game_hd.forEach((item:string) => {
+        hdFileList.value.push(  {
+                name: 'item',
+                url: `http://45.32.120.156:8020/asset/image/game/${route.params.id}/hd/${item}`,
+            },)
+    });
+    
+})
 </script>
 
 <template>
@@ -237,7 +265,7 @@ const handleButtonActive = ( name: string) => {
                     <el-form >
                         <el-form-item label="游戏分组:">
                             <div style = "display: flex">
-                                <el-text class="game-group" v-for="(item, index) in gameInformation.game_group" :key="index" :style = "{'background-color': item.color}">{{ item.label }}</el-text>
+                                <el-text class="game-group" v-for="(item, index) in gameInformation.game_group" :key="index" :style = "{'background-color': '#ff0000'}">{{ item }}</el-text>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -270,8 +298,7 @@ const handleButtonActive = ( name: string) => {
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="下次维护时间:">
-                        <el-date-picker type="daterange" v-model="maintenanceDateRange" range-separator="至"
-                  value-format="YYYY-MM-DD"></el-date-picker>
+                        <el-date-picker type="daterange" v-model="gameInformation.maintenance_date_range" range-separator="至" value-format="YYYY-MM-DD"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -281,10 +308,11 @@ const handleButtonActive = ( name: string) => {
                         <el-form-item label="游戏封面:">
                             <el-upload
                                 v-model:file-list="coverFileList"
-                                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                                :action="`${upLoadURL}?image_type=1&game_id=${route.params.id}`"
                                 list-type="picture-card"
                                 :on-preview="handlePictureCardPreview"
                                 :on-remove="handleRemove"
+                                :headers="{Authorization:user.token}"
                             >
                                 <div style="display: grid; justify-items: center;">
                                     <el-icon><Plus /></el-icon>
@@ -304,10 +332,11 @@ const handleButtonActive = ( name: string) => {
                     <el-form-item label="游戏高清图:">
                         <el-upload
                             v-model:file-list="hdFileList"
-                            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                            :action="`${upLoadURL}?image_type=2p&game_id=${route.params.id}`"
                             list-type="picture-card"
                             :on-preview="handleHdPictureCardPreview"
                             :on-remove="handleHdRemove"
+                            :headers="{Authorization:user.token}"
                         >
                             <div style="display: grid; justify-items: center;">
                                 <el-icon><Plus /></el-icon>
@@ -328,7 +357,7 @@ const handleButtonActive = ( name: string) => {
                     <el-form >
                         <el-form-item label="游戏标签:">
                             <div style = "display: flex">
-                                <el-text class="game-tab" v-for="(item, index) in tabList" :key="index" >{{ item }}</el-text>
+                                <el-text class="game-tab" v-for="(item, index) in gameInformation.game_tab" :key="index" >{{ item }}</el-text>
                                 <el-button :type="isTabPanelShow == true ? 'warning' : ''"
                                     @click="handleShowTab()" style="margin-left: 20px;">收起</el-button>
                             </div>

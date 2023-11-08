@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+import {getBlacklist, addBlackList, deleteblackList} from '@/api/withdraw-management'
+
+import useStore from '@/store';
+
+const { user } = useStore();
 
 interface GetBan {
     id: string,
@@ -13,7 +18,6 @@ interface GetBan {
     creation_reason: string
     operator: string
     ban_remark: string
-    unblock_remark: string
 }
 
 const router = useRouter();
@@ -40,7 +44,7 @@ const closeBtnText = ref<string>("");
 const ruleFormRef = ref<FormInstance>()
 
 const rules = ref<FormRules<GetBan>>({
-    unblock_remark: [
+    ban_remark: [
         { required: true, message: '请输入解封备注。', trigger: 'blur' },
     ],
 });
@@ -54,7 +58,6 @@ const blackList = ref<Array<GetBan>>([
         creation_reason: "违规行为XXX",
         operator: "UserName",
         ban_remark: "违规行为XXX",
-        unblock_remark: ""
     },
 ])
 
@@ -66,10 +69,10 @@ const blackItem = ref<GetBan>({
     creation_reason: "违规行为XXX",
     operator: "UserName",
     ban_remark: "违规行为XXX",
-    unblock_remark: ""
 })
 
 const handleQuery = () => {
+    getData();
 }
 
 const handleReset = () => {
@@ -84,7 +87,6 @@ const addBlackDialog = () => {
         creation_reason: "违规行为XXX",
         operator: "UserName",
         ban_remark: "",
-        unblock_remark: ""
     }
     blackDialogVisible.value = true;
     blackDialogTitle.value = "新增黑名单";
@@ -109,9 +111,10 @@ const closeDialog = () => {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    await formEl.validate((valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            let res = await addBlackList(user.token, blackItem.value);
+
         } else {
             console.log('error submit!', fields)
         }
@@ -121,6 +124,19 @@ const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
 }
+
+const getData = async () => {
+    let res = await getBlacklist(user.token, formData.value);
+    blackList.value = res.data.data;
+}
+
+const deleteBlackList = async () =>{
+    let res = await deleteblackList(user.token, blackItem.value.id);
+}
+
+onMounted(()=>{
+    getData();
+})
 </script>
 
 <template>
@@ -274,7 +290,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-row>
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button type="primary" @click="closeDialog">确认</el-button>
+                    <el-button type="primary" @click="deleteBlackList">确认</el-button>
                 </div>
             </template>
         </el-dialog>

@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown, Plus  } from '@element-plus/icons-vue';
 import {UploadProps, UploadUserFile} from 'element-plus';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 
 import * as _ from "lodash";
+import draggable from 'vuedraggable';
+import useStore from '@/store';
+import {getConfigSortInfo} from '@/api/GameManagement'
 
 const handleQuery = ()=>{
-    
 }
 const router = useRouter();
+const { user } = useStore();
 
 const activeButton = ref<number>(1);
 const activeNames = ref(['1', '2', '3', '4']);
@@ -23,63 +26,53 @@ const dynamicTags = ref([{label: "HOT", color: "#ffcc99"}, {label: "NEW", color:
 
 const dynamicTags1 = ref([{label: "HOT", color: "#ffcc99"}, {label: "NEW", color: "#80cccc"}, {label: "SLOT", color: "#f8f8f8"}, {label: "PG", color: "#b3e6ff"}, {label: "Dice", color: "#f8f8f8"}, {label: "Pop", color: "#f8f8f8"}, {label: "Poker", color: "#f8f8f8"}])
 
+const selectedTab = ref<string>('HOT');
 const handleClose = (tag: any) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
 }
 
+const hanldeTagClick = (tag: any)=>{
+    if(tag.color != "#f8f8f8")
+    {
+        tag.color = '#f8f8f8';
+        dynamicTags.value = dynamicTags.value.filter(item => item.label !== tag.label);
+    }
+    else
+    {
+        tag.color = '#ffcc99'
+        dynamicTags.value.push(tag)
+    }
+}
+const handleTabClick = (label : any) => {
+    selectedTab.value = label;
+    getData();
+}
 
-
+const getStyle = (label: any) =>{
+    
+    if(label.label !== selectedTab.value)
+        return {background:'#e3e3e3'};
+    else
+        return  {background:'#ffffff'};
+}
 const isTabPanelShow = ref(true)
 
 const handleShowTab = () => {
     isTabPanelShow.value = !isTabPanelShow.value
 }
 
-const tabList = ref<any>(["Classic", "EvoPlay", "Club"])
 const total = ref<number>(5);
 const formData = ref<any>({
     pageNum: 1,
     pageSize: 20,
 })
 
-const isClassic = ref(true)
-const isEvoPlay = ref(true)
-const isClub = ref(true)
-const isAAA = ref(false)
-const isBBB = ref(false)
-const isCCC = ref(false)
-
-const handleSelectTab = (tabName:any) => {
-    switch (tabName) {
-        case "Classic":
-            isClassic.value  = !isClassic.value;
-            break;
-        case "EvoPlay":
-            isEvoPlay.value  = !isEvoPlay.value;
-            break;
-        case "Club":
-            isClub.value  = !isClub.value;
-            break;
-        case "AAA":
-            isAAA.value  = !isAAA.value;
-            break;
-        case "BBB":
-            isBBB.value  = !isBBB.value;
-            break;
-        case "CCC":
-            isCCC.value  = !isCCC.value;
-            break;
-        default:
-            break;
-    }
-}
 
 const handleAddTab = () => {
 
 }
 
 interface GetGameData {
-    id: string;
     game_index: number;
     game_id: string;
     game_name: string;
@@ -91,7 +84,6 @@ interface GetGameData {
 
 const gameList = ref<Array<GetGameData>>([
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 1,
         game_id: "ABCD1234",
         game_name: "DICE",
@@ -101,7 +93,6 @@ const gameList = ref<Array<GetGameData>>([
         game_maker: "自研游戏",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 2,
         game_id: "ABCD1234",
         game_name: "DICE",
@@ -111,7 +102,6 @@ const gameList = ref<Array<GetGameData>>([
         game_maker: "XXXGame",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 3,
         game_id: "ABCD1234",
         game_name: "DICE",
@@ -121,7 +111,6 @@ const gameList = ref<Array<GetGameData>>([
         game_maker: "XXXGame",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 4,
         game_id: "ABCD1234",
         game_name: "DICE",
@@ -131,7 +120,6 @@ const gameList = ref<Array<GetGameData>>([
         game_maker: "XXXGame",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_index: 5,
         game_id: "ABCD1234",
         game_name: "DICE",
@@ -156,12 +144,24 @@ const setTop = () => {
 const setLow = () => {
 }
 
+
+onMounted(() => {
+    getData();
+});
+
+const getData = async () => {
+    let res = await getConfigSortInfo(user.token, selectedTab, formData.value);
+
+    gameList.value = res.data.data;
+}
 const loading = ref<boolean>(false);
 
 </script>
 
-<template>
+<template>.
     <div class="app-container">
+
+
         <div class="user-detail-header">
             <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
         </div>
@@ -197,16 +197,14 @@ const loading = ref<boolean>(false);
                 <el-col>
                     <div v-if = "isTabPanelShow == true" class="tab-container">
                         <div style = "display: flex; margin-left: 10px;">
-                            <p class="game-group1" v-for="(item, index) in dynamicTags1" :key="index" :style = "{'background-color': item.color}">{{ item.label }}</p>
+                            <p class="game-group1" v-for="(item, index) in dynamicTags1" :key="index" :style = "{'background-color': item.color}" @click="hanldeTagClick(item)">{{ item.label }}</p>
                         </div>                       
                     </div>
                 </el-col>
             </el-row>
             <el-divider style="margin-bottom: 0px;"/>
             <div style = "display: flex">
-                <el-text class="tag-table-sel" style="background-color: #e6e6e6">HOT</el-text>
-                <el-text class="tag-table-sel">NEW</el-text>
-                <el-text class="tag-table-sel" style="background-color: #e6e6e6">PG</el-text>
+                <el-text class = "tag-table-sel" v-for="(item, index) in dynamicTags" :key="index" @click="handleTabClick(item.label)" :style="getStyle(item)">{{item.label}}</el-text>
             </div>
             <el-table v-loading="loading" :data="gameList" style="width: 100%;">
                 <el-table-column label="排序" align="left" prop="game_index" width="200">
@@ -266,6 +264,7 @@ const loading = ref<boolean>(false);
 </template>
 
 <style lang="scss" scoped>
+
 .user-detail-header {
     padding: 20px;
     display: flex;

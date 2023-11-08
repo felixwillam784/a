@@ -96,3 +96,27 @@ export function deleteBatch(token: string, game_group: any, game_id_list: any): 
             Authorization: token,
         }});
 }
+
+export function getGameInfo(token: string,game_id:any): any {
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    /**/
+    return axios.get(baseURL+'/game/info', {headers : {
+        Authorization: token,
+    }, params:{
+        game_id:game_id,
+    }});
+}
+
+export function getConfigSortInfo(token: string,group_name:any,formData:any): any {
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    /**/
+    return axios.get(baseURL+'/game/config/sort', {headers : {
+        Authorization: token,
+    }, params:{
+        same_key1: "game_group",
+        same_val1: group_name,
+        page_num: formData.pageNum,
+        page_size: formData.pageSize
+    }});
+}
+

@@ -93,3 +93,43 @@ export function updateBan(token: string, formData: any): any {
             Authorization: token,
         }});
 }
+
+export function getBlacklist(token: string, formData:any): any {
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+    return axios.get(baseURL+'/withdrawal/black-list', {headers : {
+        Authorization: token,
+    }, params:{
+        same_key1: "user_account",
+        same_val1: formData.user_account,
+        same_key2: "nick_name",
+        same_val2: formData.nick_name,
+        time_interval_key1: "blackout_time",
+        start_time1: formData.ban_time[0],
+        end_time1: formData.ban_time[1],
+        page_num: formData.pageNum,
+        page_size: formData.pageSize
+    }});
+}
+
+export function addBlackList(token: string,black:any): any {
+
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+      return axios.post(baseURL+'/withdrawal/black-list/add', {
+            user_account: black.user_account,
+            ban_mark: black.creation_reason,
+            creation_reason: black.ban_remark
+      }, {
+          headers:{Authorization: token}
+      });
+  }
+  
+  export function deleteblackList(token: string,user_id:any): any {
+
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    console.log(user_id);
+      return axios.delete(baseURL+`/withdrawal/black-list/delete`,{
+          headers:{Authorization: token},
+          params:{id:user_id}
+      });
+  }

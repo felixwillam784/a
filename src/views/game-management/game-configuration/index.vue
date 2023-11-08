@@ -13,7 +13,6 @@ const { user } = useStore();
 const router = useRouter();
 
 interface GetGameData {
-    id: string;
     game_skin: string;
     game_id: number;
     game_name: string;
@@ -48,7 +47,6 @@ const total = ref<number>(3);
 
 const gameList = ref<Array<GetGameData>>([
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_skin: "picture",
         game_id: 2626832,
         game_name: "Black Jack",
@@ -63,7 +61,6 @@ const gameList = ref<Array<GetGameData>>([
         game_switch: true
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_skin: "picture",
         game_id: 2626832,
         game_name: "Black Jack",
@@ -77,7 +74,6 @@ const gameList = ref<Array<GetGameData>>([
         game_tab: ["Classic", "EvoPlay", "Club"],
         game_switch: true
     },{
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         game_skin: "picture",
         game_id: 2626832,
         game_name: "Black Jack",
@@ -124,8 +120,8 @@ const  handleBatchAction = async (type:number)=>{
 
 }
 
-const goGameDetailPage = () => {
-    router.push({ name: "Game Information" });
+const goGameDetailPage = (game_id : any) => {
+    router.push({ name: "Game Information", params:{id:game_id}});
 }
 
 const multipleSelection = ref<GetGameData[]>([])
@@ -277,7 +273,7 @@ const handleSelectionChange = (val: GetGameData[]) => {
                         <el-table-column label="操作" align="left" width="120" fixed="right">
                             <template #default="scope">
                                 <el-switch v-model="scope.row.game_switch" style="margin-right: 10px;" />
-                                <el-button type="danger" link @click="goGameDetailPage">修改</el-button>
+                                <el-button type="danger" link @click="goGameDetailPage(scope.row.game_id)">修改</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
