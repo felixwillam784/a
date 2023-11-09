@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+import {getDepositChannelList} from '@/api/withdraw-management'
+
+import useStore from '@/store';
+
+const { user } = useStore();
 
 interface GetDepositChannel {
-    id: string,
     channel_name: string
     product_id: string
     payment_method: string
@@ -42,7 +46,6 @@ const rules = ref<FormRules<GetDepositChannel>>({
 
 const depositChannelList = ref<Array<GetDepositChannel>>([
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         channel_name: "PIX",
         product_id: "XXXXXYYYYZZZZ",
         payment_method: "XX Bank",
@@ -54,7 +57,6 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
         channel_remark: "",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         channel_name: "PIX",
         product_id: "XXXXXYYYYZZZZ",
         payment_method: "YY Bank",
@@ -66,7 +68,6 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
         channel_remark: "",
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
         channel_name: "PIX2",
         product_id: "ABCDABCD",
         payment_method: "XX Bank",
@@ -80,7 +81,6 @@ const depositChannelList = ref<Array<GetDepositChannel>>([
 ])
 
 const depositChannelItem = ref<GetDepositChannel>({
-    id: "",
     channel_name: "PIX",
     product_id: "XXXXXYYYYZZZZ",
     payment_method: "XX Bank",
@@ -130,7 +130,6 @@ const handleQuery = () => {
 
 const addDepositChannelDialog = () => {
     depositChannelItem.value = {
-        id: "",
         channel_name: "",
         product_id: "",
         payment_method: "",
@@ -174,6 +173,16 @@ const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
 }
+
+const getData = async () =>{
+    let res = await getDepositChannelList(user.token, formData.value);
+    depositChannelList.value = res.data.data;
+    console.log(res.data.data);
+}
+
+onMounted(()=>{
+    getData();
+})
 </script>
 
 <template>
@@ -217,7 +226,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                         </el-table-column>
                         <el-table-column label="充值最大金额" align="center" prop="maxium_recharge_amount">
                             <template #default="scope">
-                                <p>{{ scope.row.maxium_recharge_amount.toFixed(2) }}</p>
+                                <p>{{ scope.row.maxium_recharge_amount }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="手续费" align="center" prop="handling_fee">

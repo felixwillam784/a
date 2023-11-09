@@ -127,9 +127,22 @@ export function addBlackList(token: string,black:any): any {
   export function deleteblackList(token: string,user_id:any): any {
 
     const baseURL = import.meta.env.VITE_APP_BASE_API;
-    console.log(user_id);
       return axios.delete(baseURL+`/withdrawal/black-list/delete`,{
           headers:{Authorization: token},
           params:{id:user_id}
       });
+  }
+
+  export function getDepositChannelList(token:string, formData:any){
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+    return axios.get(baseURL+'/deposit-channel/list', {headers : {
+        Authorization: token,
+    }, params:{
+        same_key1: "deposit_channel",
+        same_val1: formData.deposit_channel,
+        page_num: formData.pageNum,
+        page_size: formData.pageSize,
+    }});
+
   }
