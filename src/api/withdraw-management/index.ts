@@ -114,26 +114,26 @@ export function getBlacklist(token: string, formData:any): any {
 
 export function addBlackList(token: string,black:any): any {
 
-    const baseURL = import.meta.env.VITE_APP_BASE_API;
-      return axios.post(baseURL+'/withdrawal/black-list/add', {
-            user_account: black.user_account,
-            ban_mark: black.creation_reason,
-            creation_reason: black.ban_remark
-      }, {
-          headers:{Authorization: token}
-      });
-  }
+const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.post(baseURL+'/withdrawal/black-list/add', {
+        user_account: black.user_account,
+        ban_mark: black.creation_reason,
+        creation_reason: black.ban_remark
+    }, {
+        headers:{Authorization: token}
+    });
+}
   
-  export function deleteblackList(token: string,user_id:any): any {
+export function deleteblackList(token: string,user_id:any): any {
 
-    const baseURL = import.meta.env.VITE_APP_BASE_API;
-      return axios.delete(baseURL+`/withdrawal/black-list/delete`,{
-          headers:{Authorization: token},
-          params:{id:user_id}
-      });
-  }
+const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.delete(baseURL+`/withdrawal/black-list/delete`,{
+        headers:{Authorization: token},
+        params:{id:user_id}
+    });
+}
 
-  export function getDepositChannelList(token:string, formData:any){
+export function getDepositChannelList(token:string, formData:any){
     const baseURL = import.meta.env.VITE_APP_BASE_API;
 
     return axios.get(baseURL+'/deposit-channel/list', {headers : {
@@ -145,4 +145,60 @@ export function addBlackList(token: string,black:any): any {
         page_size: formData.pageSize,
     }});
 
-  }
+}
+
+export function addDepositeChannel(token: string, formData:any): any {
+
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.post(baseURL+'/deposit-channel/add', {
+        product_id: formData.product_id,
+        channel_name: formData.channel_name,
+        channel_remark: formData.channel_remark,
+        channel_status: formData.channel_status,
+        currency_type: formData.currency_type,
+        handling_fee: formData.handling_fee.trim()!=="" ? parseFloat(formData.handling_fee) : 0,
+        maxium_recharge_amount: formData.maxium_recharge_amount.trim() !== "" ? parseFloat(formData.maxium_recharge_amount) : 0,
+        minium_recharge_amount: formData.minium_recharge_amount.trim() !== "" ? parseFloat(formData.minium_recharge_amount) : 0,
+        payment_method: formData.payment_method,
+    }, {
+        headers:{Authorization: token}
+    });
+}
+
+export function updateDepositeChannel(token: string, formData:any): any {
+
+    console.log(formData);
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.post(baseURL+'/deposit-channel/update', {
+        product_id: formData.product_id,
+        channel_name: formData.channel_name,
+        channel_remark: formData.channel_remark,
+        channel_status: formData.channel_status,
+        currency_type: formData.currency_type,
+        handling_fee: formData.handling_fee,
+        maxium_recharge_amount: formData.maxium_recharge_amount.trim() !== "" ? parseFloat(formData.maxium_recharge_amount) : 0,
+        minium_recharge_amount: formData.minium_recharge_amount.trim() !== "" ? parseFloat(formData.minium_recharge_amount) : 0,
+        payment_method: formData.payment_method,
+    }, {
+        headers:{Authorization: token}
+    });
+}
+
+export function getChannelAllList(token:string){
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+    return axios.get(baseURL+'/deposit-channel/all-list', {headers : {
+        Authorization: token,
+    }});
+
+}
+
+export function getProductIDAllList(token:string){
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+    return axios.get(baseURL+'/deposit-channel/all-product-id-list', {headers : {
+        Authorization: token,
+    }});
+
+}
+    

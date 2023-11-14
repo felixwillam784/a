@@ -4,7 +4,7 @@ import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
-import {getDepositChannelList} from '@/api/withdraw-management'
+import {getDepositChannelList, addDepositeChannel, getChannelAllList, getProductIDAllList, updateDepositeChannel} from '@/api/withdraw-management'
 
 import useStore from '@/store';
 
@@ -128,6 +128,9 @@ const channelStatusOptions = ref<Array<any>>([
 const handleQuery = () => {
 }
 
+let channelNameOptions:Array<string>;
+let productIdOptions:Array<string>;
+
 const addDepositChannelDialog = () => {
     depositChannelItem.value = {
         channel_name: "",
@@ -144,6 +147,9 @@ const addDepositChannelDialog = () => {
     depositChannelDialogTitle.value = "新增存款渠道";
     submitBtnText.value = "确认新增";
     closeBtnText.value = "取消新增";
+
+    depositChannelItem.value.channel_name = channelNameOptions[0];
+    depositChannelItem.value.product_id = productIdOptions[0];
 }
 
 const editDepositChannelDialog = (item: GetDepositChannel) => {
@@ -163,13 +169,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            if( depositChannelDialogTitle.value === "新增存款渠道")
+                addDepositeChannel(user.token, depositChannelItem.value);
+            else   
+                updateDepositeChannel(user.token, depositChannelItem.value);
+            depositChannelDialogVisible.value = false;
         } else {
             console.log('error submit!', fields)
         }
     })
 }
 const resetForm = (formEl: FormInstance | undefined) => {
+    depositChannelDialogVisible.value = false;
     if (!formEl) return
     formEl.resetFields()
 }
@@ -177,7 +188,14 @@ const resetForm = (formEl: FormInstance | undefined) => {
 const getData = async () =>{
     let res = await getDepositChannelList(user.token, formData.value);
     depositChannelList.value = res.data.data;
-    console.log(res.data.data);
+
+    res = await getChannelAllList(user.token);
+    channelNameOptions = res.data.data;
+
+
+    res = await getProductIDAllList(user.token);
+    productIdOptions = res.data.data;
+    
 }
 
 onMounted(()=>{
@@ -263,10 +281,24 @@ onMounted(()=>{
             @close="closeDialog">
             <el-form label-width="160px" ref="ruleFormRef" :rules="rules" :model="depositChannelItem">
                 <el-form-item label="渠道名字:" prop="channel_name">
-                    <el-select v-model="depositChannelItem.channel_name" placeholder="请选择新增渠道"></el-select>
+                    <el-select v-model="depositChannelItem.channel_name" placeholder="请选择新增渠道">
+                            <el-option
+                                v-for="item in channelNameOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="产品ID:" prop="product_id">
-                    <el-select v-model="depositChannelItem.product_id" placeholder="请选择产品ID"></el-select>
+                    <el-select v-model="depositChannelItem.product_id" placeholder="请选择产品ID">
+                            <el-option
+                                v-for="item in productIdOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="付款方式:" prop="payment_method">
                     <el-select v-model="depositChannelItem.payment_method" placeholder="请选择付款方式">
