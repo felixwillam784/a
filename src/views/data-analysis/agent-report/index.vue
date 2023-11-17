@@ -68,11 +68,11 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total1 = ref<number>(2);
+const total1 = ref<number>(0);
 
-const total2 = ref<number>(1);
+const total2 = ref<number>(0);
 
-const total3 = ref<number>(4);
+const total3 = ref<number>(0);
 
 const agentReportList = ref<Array<GetAgentReport>>([
 ])
@@ -166,7 +166,8 @@ const handleButtonActive = (index: number) => {
     activeButton.value = index;
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleReset = () => {
@@ -174,10 +175,16 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 }
 onMounted(()=>{
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 const getData = async () =>{
   
@@ -331,7 +338,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 1">
@@ -374,7 +381,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total2 > 0" :total="total2" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 2">
@@ -412,7 +419,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total3 > 0" :total="total3" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
       </el-col>

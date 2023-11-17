@@ -18,7 +18,7 @@ interface GetDepositChannel {
     minium_recharge_amount: number | string
     maxium_recharge_amount: number | string
     handling_fee: number | string
-    channel_status: number | boolean,
+    channel_status: boolean,
     channel_remark: string
 }
 
@@ -117,11 +117,11 @@ const currencyTypeOptions = ref<Array<any>>([
 const channelStatusOptions = ref<Array<any>>([
     {
         label: "开启",
-        value: 1
+        value: true
     },
     {
         label: "关闭",
-        value: 0
+        value: false,
     },
 ])
 
@@ -140,7 +140,7 @@ const addDepositChannelDialog = () => {
         minium_recharge_amount: "",
         maxium_recharge_amount: "",
         handling_fee: "",
-        channel_status: 1,
+        channel_status: true,
         channel_remark: "",
     }
     depositChannelDialogVisible.value = true;
@@ -153,8 +153,7 @@ const addDepositChannelDialog = () => {
 }
 
 const editDepositChannelDialog = (item: GetDepositChannel) => {
-    item.channel_status = item.channel_status ? 1 : 0;
-    depositChannelItem.value = item
+    depositChannelItem.value = item;
     depositChannelDialogVisible.value = true;
     depositChannelDialogTitle.value = "存款渠道修改";
     submitBtnText.value = "确认修改";
@@ -189,6 +188,8 @@ const getData = async () =>{
     let res = await getDepositChannelList(user.token, formData.value);
     depositChannelList.value = res.data.data;
 
+    console.log(res.data.data);
+
     res = await getChannelAllList(user.token);
     channelNameOptions = res.data.data;
 
@@ -198,6 +199,12 @@ const getData = async () =>{
     
 }
 
+const handleSwtich = (item:GetDepositChannel) => {
+    depositChannelItem.value = item;
+    if(depositChannelItem.value.channel_remark == "")
+        depositChannelItem.value.channel_remark = ".";
+    updateDepositeChannel(user.token, depositChannelItem.value);
+}
 onMounted(()=>{
     getData();
 })
@@ -259,7 +266,7 @@ onMounted(()=>{
                         </el-table-column>
                         <el-table-column align="center" prop="channel_status">
                             <template #default="scope">
-                                <el-switch v-model="scope.row.channel_status" size="large" />
+                                <el-switch v-model="scope.row.channel_status" size="large" @change="handleSwtich(scope.row)"/>
                             </template>
                         </el-table-column>
                         <el-table-column align="center" fixed="right" width="160">

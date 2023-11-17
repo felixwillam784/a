@@ -7,6 +7,7 @@ import moment from 'moment-timezone';
 import { Chart, Grid, Line, Tooltip, Bar, Marker } from 'vue3-charts'
 import useStore from '@/store';
 import {getDataSummaryChatGameTotal, getDataSummaryChartDepositeWithdrawalTotalData, getDataSummaryChartThirdGame, getDataSummaryChartSelfGame, getDataSummaryChartfirstDepositeRetention, getDataSummaryReport, getDataSummaryChartDepositeWithdrawalData, getDataSummaryChartfirstChargeCountData, getDataSummaryChartfirstChargeAmountData, getDataSummaryChartfirstActivityRetention, getDataSummaryChartAgentRetention} from '@/api/DataAnalysis'
+import { fa } from 'element-plus/es/locale';
 const { user } = useStore();
 
 const dateRange = ref([
@@ -38,81 +39,33 @@ const gameTotal={
 
 const chart1Array = [
   { date: '6-20', chart_recharge_amount: 3700, chart_success_withdraw_amount: 2800, chart_agent_withdraw_amount: 1800, chart_charge_withdraw_difference: 800,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
-  { date: '6-21',  chart_recharge_amount: 4900, chart_success_withdraw_amount: 4100, chart_agent_withdraw_amount: 2900,chart_charge_withdraw_difference: 2000,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99},
-  { date: '6-22',  chart_recharge_amount: 4500, chart_success_withdraw_amount: 3700, chart_agent_withdraw_amount: 2400,chart_charge_withdraw_difference: 1700,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
-  { date: '6-23',  chart_recharge_amount: 4100, chart_success_withdraw_amount: 3300, chart_agent_withdraw_amount: 2000,chart_charge_withdraw_difference: 1200,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
-  { date: '6-24', chart_recharge_amount: 3700, chart_success_withdraw_amount: 3000, chart_agent_withdraw_amount: 1700, chart_charge_withdraw_difference: 900,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
-  { date: '6-25', chart_recharge_amount: 3600, chart_success_withdraw_amount: 2900, chart_agent_withdraw_amount: 1600, chart_charge_withdraw_difference: 800,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
-  { date: '6-26', chart_recharge_amount: 3500, chart_success_withdraw_amount: 2800, chart_agent_withdraw_amount: 1500, chart_charge_withdraw_difference: 700,  chart_recharge_success_rate: 99.99, chart_new_user_payment_rate: 99.99 },
 ];
 
 const chart2Array = [
   { date: '6-20', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-21', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-22', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-23', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-24', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-25', chart_first_charge_count: 2100, chart_recharge_count: 2978},
-  { date: '6-26', chart_first_charge_count: 2100, chart_recharge_count: 2978},
 ];
 
 const chart3Array = [
   { date: '6-20', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-21', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-22', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-23', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-24', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-25', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
-  { date: '6-26', chart_first_charge_amount: 2100, chart_recharge_amount: 2978},
 ];
 
 const chart4Array = [
   { date: '6-20', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999,},
-  { date: '6-21', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999,},
-  { date: '6-22', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999, },
-  { date: '6-23', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999, },
-  { date: '6-24', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999,},
-  { date: '6-25', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999,},
-  { date: '6-26', chart_new_register_count: 3700, chart_new_active_count: 3300, chart_active_2_stay_count: 2900, chart_active_3_stay_count: 2500, chart_active_7_stay_count: 2200, chart_active_15_stay_count: 1900, chart_active_30_stay_count: 1400, chart_active_2_retention_rate: 9999, chart_active_3_retention_rate: 9999, chart_active_7_retention_rate: 9999, chart_active_15_retention_rate: 9999, chart_active_30_retention_rate: 9999,},
 ];
 
 const chart5Array = [
   { date: '6-20', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999,},
-  { date: '6-21', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999,},
-  { date: '6-22', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999, },
-  { date: '6-23', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999, },
-  { date: '6-24', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999,},
-  { date: '6-25', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999,},
-  { date: '6-26', chart_new_register_count: 3700, chart_new_agent_count: 3300, chart_agent_2_stay_count: 2900, chart_agent_3_stay_count: 2500, chart_agent_7_stay_count: 2200, chart_agent_15_stay_count: 1900, chart_agent_30_stay_count: 1400, chart_agent_2_retention_rate: 9999, chart_agent_3_retention_rate: 9999, chart_agent_7_retention_rate: 9999, chart_agent_15_retention_rate: 9999, chart_agent_30_retention_rate: 9999,},
 ];
 
 const chart6Array = [
   { date: '6-20', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999,},
-  { date: '6-21', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999,},
-  { date: '6-22', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999, },
-  { date: '6-23', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999, },
-  { date: '6-24', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999,},
-  { date: '6-25', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999,},
-  { date: '6-26', chart_new_register_count: 3700, chart_first_deposite_count: 3300, chart_first_deposite_2_stay_count: 2900, chart_first_deposite_3_stay_count: 2500, chart_first_deposite_7_stay_count: 2200, chart_first_deposite_15_stay_count: 1900, chart_first_deposite_30_stay_count: 1400, chart_first_deposite_2_retention_rate: 9999, chart_first_deposite_3_retention_rate: 9999, chart_first_deposite_7_retention_rate: 9999, chart_first_deposite_15_retention_rate: 9999, chart_first_deposite_30_retention_rate: 9999,},
 ];
 
 const chart7Array = [
   { date: '6-20', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99,},
-  { date: '6-21', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99,},
-  { date: '6-22', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99, },
-  { date: '6-23', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99, },
-  { date: '6-24', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99,},
-  { date: '6-25', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99,},
-  { date: '6-26', chart_self_bet_amount: 3500, chart_self_bonus_amount: 2500, chart_self_profit_loss: 1800, chart_self_bettor_count: 9999, chart_self_game_count: 9999, chart_self_game_revenue_rate: 99.99,},
 ];
 const chart8Array = [
   { date: '6-20', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99,},
-  { date: '6-21', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99,},
-  { date: '6-22', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99, },
-  { date: '6-23', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99, },
-  { date: '6-24', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99,},
-  { date: '6-25', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99,},
-  { date: '6-26', chart_third_bet_amount: 3500, chart_third_bonus_amount: 2500, chart_third_profit_loss: 1800, chart_third_bettor_count: 9999, chart_third_game_count: 9999, chart_third_game_revenue_rate: 99.99,},
 ];
 
 const chart1data = ref(chart1Array);
@@ -330,7 +283,8 @@ const handleGameAPIType = (index: number) => {
   activeGameAPIButton.value = index;
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleReset = () => {
@@ -338,10 +292,16 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 }
 onMounted(()=>{
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 const getData = async () =>{
   
@@ -724,7 +684,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
         <template v-if="activeButton == 1">

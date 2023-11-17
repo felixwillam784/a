@@ -50,7 +50,7 @@ interface GetChargeWithdrawReport {
 
 const formData = ref<any>({
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 10,
 })
 
 const loading = ref<boolean>(true);
@@ -58,151 +58,6 @@ const loading = ref<boolean>(true);
 const total = ref<number>(5);
 
 const chargeWithdrawReportList = ref<Array<GetChargeWithdrawReport>>([
-  // {
-  //   id: "8e8fd8fsdfd8fe8f8df8ef",
-  //   charge_withdraw_date_time: "2020-06-30",
-  //   charge_withdraw_platform_difference: 99999.99,
-  //   charge_withdraw_recharge_today_rate: 99.99,
-  //   charge_withdraw_recharge_count: 99999,
-  //   charge_withdraw_recharge_number: 99999,
-  //   charge_withdraw_success_recharge_count: 99999,
-  //   charge_withdraw_success_recharge_rate: 99.99,
-  //   charge_withdraw_first_charge_number: 999,
-  //   charge_withdraw_new_user_recharge_count: 999,
-  //   charge_withdraw_first_charge_amount: 99999.99,
-  //   charge_withdraw_new_user_recharge_amount: 99999.99,  
-  //   charge_withdraw_refill_user_count: 999,
-  //   charge_withdraw_refill_count: 999,
-  //   charge_withdraw_recharge_amount: 9999.99,
-  //   charge_withdraw_recharge_amount_proportion: 99.99,
-  //   charge_withdraw_registrant_count: 99999,
-  //   charge_withdraw_new_user_payment_rate: 99.99,
-  //   charge_withdraw_cash_withdrawal_app_count: 99999,
-  //   charge_withdraw_success_withdraw_count: 99999,
-  //   charge_withdraw_success_withdraw_amount: 9999.99,
-  //   charge_withdraw_agent_withdraw_amount: 9999.99,
-  //   charge_withdraw_gold_count: 999,
-  //   charge_withdraw_manual_addition_amount: 9999.99,
-  //   charge_withdraw_manual_recharge_count: 999,
-  //   charge_withdraw_manual_top_amount: 9999.99,
-  //   charge_withdraw_none_withdraw_amount: 9999.99,
-  // },
-  // {
-  //   id: "8e8fd8fsdfd8fe8f8df8eg",
-  //   charge_withdraw_date_time: "2020-06-29",
-  //   charge_withdraw_platform_difference: 99999.99,
-  //   charge_withdraw_recharge_today_rate: 99.99,
-  //   charge_withdraw_recharge_count: 99999,
-  //   charge_withdraw_recharge_number: 99999,
-  //   charge_withdraw_success_recharge_count: 99999,
-  //   charge_withdraw_success_recharge_rate: 99.99,
-  //   charge_withdraw_first_charge_number: 999,
-  //   charge_withdraw_new_user_recharge_count: 999,
-  //   charge_withdraw_first_charge_amount: 99999.99,
-  //   charge_withdraw_new_user_recharge_amount: 99999.99,  
-  //   charge_withdraw_refill_user_count: 999,
-  //   charge_withdraw_refill_count: 999,
-  //   charge_withdraw_recharge_amount: 9999.99,
-  //   charge_withdraw_recharge_amount_proportion: 99.99,
-  //   charge_withdraw_registrant_count: 99999,
-  //   charge_withdraw_new_user_payment_rate: 99.99,
-  //   charge_withdraw_cash_withdrawal_app_count: 99999,
-  //   charge_withdraw_success_withdraw_count: 99999,
-  //   charge_withdraw_success_withdraw_amount: 9999.99,
-  //   charge_withdraw_agent_withdraw_amount: 9999.99,
-  //   charge_withdraw_gold_count: 999,
-  //   charge_withdraw_manual_addition_amount: 9999.99,
-  //   charge_withdraw_manual_recharge_count: 999,
-  //   charge_withdraw_manual_top_amount: 9999.99,
-  //   charge_withdraw_none_withdraw_amount: 9999.99,
-  // },
-  // {
-  //   id: "8e8fd8fsdfd8fe8f8df8eh",
-  //   charge_withdraw_date_time: "2020-06-28",
-  //   charge_withdraw_platform_difference: 99999.99,
-  //   charge_withdraw_recharge_today_rate: 99.99,
-  //   charge_withdraw_recharge_count: 99999,
-  //   charge_withdraw_recharge_number: 99999,
-  //   charge_withdraw_success_recharge_count: 99999,
-  //   charge_withdraw_success_recharge_rate: 99.99,
-  //   charge_withdraw_first_charge_number: 999,
-  //   charge_withdraw_new_user_recharge_count: 999,
-  //   charge_withdraw_first_charge_amount: 99999.99,
-  //   charge_withdraw_new_user_recharge_amount: 99999.99,  
-  //   charge_withdraw_refill_user_count: 999,
-  //   charge_withdraw_refill_count: 999,
-  //   charge_withdraw_recharge_amount: 9999.99,
-  //   charge_withdraw_recharge_amount_proportion: 99.99,
-  //   charge_withdraw_registrant_count: 99999,
-  //   charge_withdraw_new_user_payment_rate: 99.99,
-  //   charge_withdraw_cash_withdrawal_app_count: 99999,
-  //   charge_withdraw_success_withdraw_count: 99999,
-  //   charge_withdraw_success_withdraw_amount: 9999.99,
-  //   charge_withdraw_agent_withdraw_amount: 9999.99,
-  //   charge_withdraw_gold_count: 999,
-  //   charge_withdraw_manual_addition_amount: 9999.99,
-  //   charge_withdraw_manual_recharge_count: 999,
-  //   charge_withdraw_manual_top_amount: 9999.99,
-  //   charge_withdraw_none_withdraw_amount: 9999.99,
-  // },
-  // {
-  //   id: "8e8fd8fsdfd8fe8f8df8ei",
-  //   charge_withdraw_date_time: "2020-06-27",
-  //   charge_withdraw_platform_difference: 99999.99,
-  //   charge_withdraw_recharge_today_rate: 99.99,
-  //   charge_withdraw_recharge_count: 99999,
-  //   charge_withdraw_recharge_number: 99999,
-  //   charge_withdraw_success_recharge_count: 99999,
-  //   charge_withdraw_success_recharge_rate: 99.99,
-  //   charge_withdraw_first_charge_number: 999,
-  //   charge_withdraw_new_user_recharge_count: 999,
-  //   charge_withdraw_first_charge_amount: 99999.99,
-  //   charge_withdraw_new_user_recharge_amount: 99999.99,  
-  //   charge_withdraw_refill_user_count: 999,
-  //   charge_withdraw_refill_count: 999,
-  //   charge_withdraw_recharge_amount: 9999.99,
-  //   charge_withdraw_recharge_amount_proportion: 99.99,
-  //   charge_withdraw_registrant_count: 99999,
-  //   charge_withdraw_new_user_payment_rate: 99.99,
-  //   charge_withdraw_cash_withdrawal_app_count: 99999,
-  //   charge_withdraw_success_withdraw_count: 99999,
-  //   charge_withdraw_success_withdraw_amount: 9999.99,
-  //   charge_withdraw_agent_withdraw_amount: 9999.99,
-  //   charge_withdraw_gold_count: 999,
-  //   charge_withdraw_manual_addition_amount: 9999.99,
-  //   charge_withdraw_manual_recharge_count: 999,
-  //   charge_withdraw_manual_top_amount: 9999.99,
-  //   charge_withdraw_none_withdraw_amount: 9999.99,
-  // },
-  // {
-  //   id: "8e8fd8fsdfd8fe8f8df8ej",
-  //   charge_withdraw_date_time: "2020-06-26",
-  //   charge_withdraw_platform_difference: 99999.99,
-  //   charge_withdraw_recharge_today_rate: 99.99,
-  //   charge_withdraw_recharge_count: 99999,
-  //   charge_withdraw_recharge_number: 99999,
-  //   charge_withdraw_success_recharge_count: 99999,
-  //   charge_withdraw_success_recharge_rate: 99.99,
-  //   charge_withdraw_first_charge_number: 999,
-  //   charge_withdraw_new_user_recharge_count: 999,
-  //   charge_withdraw_first_charge_amount: 99999.99,
-  //   charge_withdraw_new_user_recharge_amount: 99999.99,  
-  //   charge_withdraw_refill_user_count: 999,
-  //   charge_withdraw_refill_count: 999,
-  //   charge_withdraw_recharge_amount: 9999.99,
-  //   charge_withdraw_recharge_amount_proportion: 99.99,
-  //   charge_withdraw_registrant_count: 99999,
-  //   charge_withdraw_new_user_payment_rate: 99.99,
-  //   charge_withdraw_cash_withdrawal_app_count: 99999,
-  //   charge_withdraw_success_withdraw_count: 99999,
-  //   charge_withdraw_success_withdraw_amount: 9999.99,
-  //   charge_withdraw_agent_withdraw_amount: 9999.99,
-  //   charge_withdraw_gold_count: 999,
-  //   charge_withdraw_manual_addition_amount: 9999.99,
-  //   charge_withdraw_manual_recharge_count: 999,
-  //   charge_withdraw_manual_top_amount: 9999.99,
-  //   charge_withdraw_none_withdraw_amount: 9999.99,
-  // },
 ])
 
 const handleDateRange = (date: string) => {
@@ -284,7 +139,8 @@ const handleDateRange = (date: string) => {
   }
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleReset = () => {
@@ -485,7 +341,7 @@ onMounted(()=>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
       </el-col>

@@ -6,12 +6,14 @@ import { userRetentionDataApi } from '@/api/dashboard';
 import { agencyDataAnalysisApi } from '@/api/dashboard';
 import { agentRetentionApi } from '@/api/dashboard';
 import { gameDataApi } from '@/api/dashboard';
+import { useRouter } from 'vue-router';
 
 
 import useStore from '@/store';
 //import { watch } from "fs";
 
 const { user } = useStore();
+const router = useRouter();
 
 const activeNames = ref(['1', '2', '3']);
 
@@ -128,7 +130,10 @@ const props = defineProps({
 })
 
 onMounted(()=>{
-    getSearchdata();
+    getSearchdata().catch(()=>{
+        localStorage.clear();
+        router.push({name: 'Dashboard'});
+    });
 })
 
 </script>

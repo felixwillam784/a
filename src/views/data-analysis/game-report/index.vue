@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import useStore from '@/store';
 import {getGameReport} from '@/api/DataAnalysis'
+import { tr } from 'element-plus/es/locale';
 const { user } = useStore();
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -141,7 +142,8 @@ const handleDateRange = (date: string) => {
   }
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleReset = () => {
@@ -149,10 +151,16 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 }
 onMounted(()=>{
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 const getData = async () =>{
   
@@ -270,7 +278,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
       </el-col>

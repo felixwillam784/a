@@ -132,102 +132,7 @@ const loading = ref<boolean>(false);
 const total = ref<number>(4);
 
 const userQualityReportList = ref<Array<GetRetentionReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    user_quality_date_time: "当前30日平均",
-		user_quality_register_count: 99999,
-		user_quality_ltv: "9.99",
-		user_quality_retention_rate_1: "99.99",
-		user_quality_retention_user_count_1: 99999,
-		user_quality_retention_first_depositor_count_1: 99999,
-		user_quality_retention_rate_2: "99.99",
-		user_quality_retention_user_count_2: 99999,
-		user_quality_retention_first_depositor_count_2: 99999,
-		user_quality_retention_rate_3: "99.99",
-		user_quality_retention_user_count_3: 99999,
-		user_quality_retention_first_depositor_count_3: 99999,
-		user_quality_retention_rate_4: "99.99",
-		user_quality_retention_user_count_4: 99999,
-		user_quality_retention_first_depositor_count_4: 99999,
-		user_quality_retention_rate_5: "99.99",
-		user_quality_retention_user_count_5: 99999,
-		user_quality_retention_first_depositor_count_5: 99999,
-		user_quality_retention_rate_6: "99.99",
-		user_quality_retention_user_count_6: 99999,
-		user_quality_retention_first_depositor_count_6: 99999,
-		user_quality_retention_rate_7: "99.99",
-		user_quality_retention_user_count_7: 99999,
-		user_quality_retention_first_depositor_count_7: 99999,
-		user_quality_retention_rate_8: "99.99",
-		user_quality_retention_user_count_8: 99999,
-		user_quality_retention_first_depositor_count_8: 99999,
-		user_quality_retention_rate_9: "99.99",
-		user_quality_retention_user_count_9: 99999,
-		user_quality_retention_first_depositor_count_9: 99999,
-		user_quality_retention_rate_10: "99.99",
-		user_quality_retention_user_count_10: 99999,
-		user_quality_retention_first_depositor_count_10: 99999,
-		user_quality_retention_rate_11: "99.99",
-		user_quality_retention_user_count_11: 99999,
-		user_quality_retention_first_depositor_count_11: 99999,
-		user_quality_retention_rate_12: "99.99",
-		user_quality_retention_user_count_12: 99999,
-		user_quality_retention_first_depositor_count_12: 99999,
-		user_quality_retention_rate_13: "99.99",
-		user_quality_retention_user_count_13: 99999,
-		user_quality_retention_first_depositor_count_13: 99999,
-		user_quality_retention_rate_14: "99.99",
-		user_quality_retention_user_count_14: 99999,
-		user_quality_retention_first_depositor_count_14: 99999,
-		user_quality_retention_rate_15: "99.99",
-		user_quality_retention_user_count_15: 99999,
-		user_quality_retention_first_depositor_count_15: 99999,
-		user_quality_retention_rate_16: "99.99",
-		user_quality_retention_user_count_16: 99999,
-		user_quality_retention_first_depositor_count_16: 99999,
-		user_quality_retention_rate_17: "99.99",
-		user_quality_retention_user_count_17: 99999,
-		user_quality_retention_first_depositor_count_17: 99999,
-		user_quality_retention_rate_18: "99.99",
-		user_quality_retention_user_count_18: 99999,
-		user_quality_retention_first_depositor_count_18: 99999,
-		user_quality_retention_rate_19: "99.99",
-		user_quality_retention_user_count_19: 99999,
-		user_quality_retention_first_depositor_count_19: 99999,
-		user_quality_retention_rate_20: "99.99",
-		user_quality_retention_user_count_20: 99999,
-		user_quality_retention_first_depositor_count_20: 99999,
-		user_quality_retention_rate_21: "99.99",
-		user_quality_retention_user_count_21: 99999,
-		user_quality_retention_first_depositor_count_21: 99999,
-		user_quality_retention_rate_22: "99.99",
-		user_quality_retention_user_count_22: 99999,
-		user_quality_retention_first_depositor_count_22: 99999,
-		user_quality_retention_rate_23: "99.99",
-		user_quality_retention_user_count_23: 99999,
-		user_quality_retention_first_depositor_count_23: 99999,
-		user_quality_retention_rate_24: "99.99",
-		user_quality_retention_user_count_24: 99999,
-		user_quality_retention_first_depositor_count_24: 99999,
-		user_quality_retention_rate_25: "99.99",
-		user_quality_retention_user_count_25: 99999,
-		user_quality_retention_first_depositor_count_25: 99999,
-		user_quality_retention_rate_26: "99.99",
-		user_quality_retention_user_count_26: 99999,
-		user_quality_retention_first_depositor_count_26: 99999,
-		user_quality_retention_rate_27: "99.99",
-		user_quality_retention_user_count_27: 99999,
-		user_quality_retention_first_depositor_count_27: 99999,
-		user_quality_retention_rate_28: "99.99",
-		user_quality_retention_user_count_28: 99999,
-		user_quality_retention_first_depositor_count_28: 99999,
-		user_quality_retention_rate_29: "99.99",
-		user_quality_retention_user_count_29: 99999,
-		user_quality_retention_first_depositor_count_29: 99999,
-		user_quality_retention_rate_30: "99.99",
-		user_quality_retention_user_count_30: 99999,
-		user_quality_retention_first_depositor_count_30: 99999,
-  },
+
 ])
 
 const handleDateRange = (date: string) => {
@@ -256,7 +161,8 @@ const handleDateRange = (date: string) => {
 	}  
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleExportLTV = () => {
@@ -269,10 +175,16 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(() => {
+    loading.value = false;
+  });
 }
 onMounted(()=>{
-  getData();
+  loading.value = true;
+  getData().then(() => {
+    loading.value = false;
+  });
 })
 const getData = async () =>{
   
@@ -790,7 +702,7 @@ const getData = async () =>{
           </el-table>
 					<div style="float: right;">
             <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
       </el-col>

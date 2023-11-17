@@ -7,6 +7,7 @@ import { Search, Refresh, } from '@element-plus/icons-vue';
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
 import {getUserAgentDetail, getUserAgentDetailBetHistory, getUserAgentDetailDepositHistory} from '@/api/Players'
+import { tr } from 'element-plus/es/locale';
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -22,97 +23,33 @@ const formData = ref<any>({
     ],
     min_amount: 0,
     max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const bettingRebateDialogVisible = ref(false);
 const rechargeRebateDialogVisible = ref(false);
 const agentRebateList = ref([
-    {
-        time: "2023-07-01",
-        betting_rebate: 999.99,
-        bettor_number: 999,
-        recharge_rebate: 999.99,
-        recharge_number: 999,
-        achievement_rewards: 999.99,
-        task_reward: 999.99,
-    },
-    {
-        time: "2023-07-01",
-        betting_rebate: 999.99,
-        bettor_number: 999,
-        recharge_rebate: 999.99,
-        recharge_number: 999,
-        achievement_rewards: 999.99,
-        task_reward: 999.99,
-    },
-    {
-        time: "2023-07-01",
-        betting_rebate: 999.99,
-        bettor_number: 999,
-        recharge_rebate: 999.99,
-        recharge_number: 999,
-        achievement_rewards: 999.99,
-        task_reward: 999.99,
-    },
-    {
-        time: "2023-07-01",
-        betting_rebate: 999.99,
-        bettor_number: 999,
-        recharge_rebate: 999.99,
-        recharge_number: 999,
-        achievement_rewards: 999.99,
-        task_reward: 999.99,
-    },
-    {
-        time: "2023-07-01",
-        betting_rebate: 999.99,
-        bettor_number: 999,
-        recharge_rebate: 999.99,
-        recharge_number: 999,
-        achievement_rewards: 999.99,
-        task_reward: 999.99,
-    },
+
 ])
 
 const bettingRebateList = ref([
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        betting_user_email: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        bet_amount: 200,
-        betting_rebate: 2,
-        betting_user_email: "fangda_0625@qq.com"
-    },
 ])
 
 const rechargeRebateList = ref([
-    {
-        time: "2023-07-01 16:00:00",
-        deposit_amount: 200,
-        deposit_rebate: 2,
-        deposit_user_email: "fangda_0625@qq.com"
-    },
-    {
-        time: "2023-07-01 16:00:00",
-        deposit_amount: 200,
-        deposit_rebate: 2,
-        deposit_user_email: "fangda_0625@qq.com"
-    },
 ]);
 
 const handleQuery = () => {
-    getData();
+
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value.dateRange = [
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+    ];
 }
 
 const goBack = () => {
@@ -133,7 +70,10 @@ const showRechargeRebateDialog = () => {
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{

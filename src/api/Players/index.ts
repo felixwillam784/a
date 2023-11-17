@@ -192,8 +192,6 @@ export function getUserManualDeductionDetail(token: string, id:any, formData:any
     amount_interval_key1: "change_amount",
     min_amount1: formData.min_amount,
     max_amount1: formData.max_amount,
-    page_num: formData.pageNum,
-    page_size: formData.pageSize
   }});
 }
 
@@ -209,8 +207,6 @@ export function getUserManualRechargeDetail(token: string, id:any, formData:any)
     amount_interval_key1: "recharge_amount",
     min_amount1: formData.min_amount,
     max_amount1: formData.max_amount,
-    page_num: formData.pageNum,
-    page_size: formData.pageSize
   }});
 }
 

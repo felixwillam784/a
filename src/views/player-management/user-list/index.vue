@@ -70,15 +70,20 @@ const customerList = ref<Array<GetCustomerData>>([
 
 const { user } = useStore();
 
-onMounted(async ()=>{
+onMounted(()=>{
     handleQuery();
 })
 const handleQuery = async () => {
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    })
+}
+const getData = async () => {
     let userListRes = await getUserListApi(user.token, formData.value);
     customerList.value = userListRes.data.data;
     total.value = customerList.value.length;
 }
-
 const resetQuery = () => {
     for (let property in formData.value) {
         if (formData.value.hasOwnProperty(property)) {

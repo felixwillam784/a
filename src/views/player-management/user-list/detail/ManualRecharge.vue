@@ -24,70 +24,38 @@ const formData = ref<any>({
     ],
     min_amount: 0,
     max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
 const totalPage = ref<number>(5);
 const manualRechargeList = ref([
-    {
-        time: "2023-07-01 15:23:00",
-        change_type: "人工充值",
-        operator: "UserName",
-        order_amount: 999.99,
-        required_code_amount: 999.99,
-        remark: "人工充值是因为",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        change_type: "主播加金",
-        operator: "UserName",
-        order_amount: 999.99,
-        required_code_amount: 999.99,
-        remark: "人工充值是因为",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        change_type: "异常补金",
-        operator: "UserName",
-        order_amount: 999.99,
-        required_code_amount: 999.99,
-        remark: "人工充值是因为",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        change_type: "手动赠金",
-        operator: "UserName",
-        order_amount: 999.99,
-        required_code_amount: 999.99,
-        remark: "人工充值是因为",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        change_type: "虚拟账号加金",
-        operator: "UserName",
-        order_amount: 999.99,
-        required_code_amount: 999.99,
-        remark: "人工充值是因为",
-    },
 ])
 
 const handleQuery = () => {
-    getData();
+    
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value.dateRange = [
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+    ];
 }
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
     let temp = await getUserManualRechargeDetail(user.token, route.params.id, formData.value);
     manualRechargeList.value = temp.data.data;
+    totalPage.value = manualRechargeList.value.length;
 }
 const goBack = () => {
     router.push({ name: "User List" });
@@ -98,19 +66,6 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name });
 }
 
-const handleScrollLoad = () => {
-    console.log("ok");
-
-    if (disabled.value) return;
-
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
-    }
-
-    if (formData.value.pageNum === totalPage.value) {
-        disabled.value = true;
-    }
-}
 </script>
 
 <template>
@@ -162,8 +117,7 @@ const handleScrollLoad = () => {
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="manualRechargeList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading"  :data="manualRechargeList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="时间" align="center" prop="time" width="200" />
                 <el-table-column label="变动类型" align="center" prop="change_type" />

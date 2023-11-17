@@ -24,10 +24,7 @@ const formData = ref<any>({
     ],
     min_amount: 0,
     max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
 const totalPage = ref<number>(5);
@@ -42,14 +39,23 @@ const manualDeducationList = ref([
 ])
 
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value.dateRange = [
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+    ];
 }
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
@@ -65,19 +71,6 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name, params:{id:route.params.id}});
 }
 
-const handleScrollLoad = () => {
-    console.log("ok");
-
-    if (disabled.value) return;
-
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
-    }
-
-    if (formData.value.pageNum === totalPage.value) {
-        disabled.value = true;
-    }
-}
 </script>
 
 <template>
@@ -129,8 +122,7 @@ const handleScrollLoad = () => {
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="manualDeducationList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading"  :data="manualDeducationList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="时间" align="center" prop="time" width="200" />
                 <el-table-column label="变动类型" align="center" prop="change_type" />

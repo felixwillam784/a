@@ -67,45 +67,7 @@ const loading = ref<boolean>(false);
 const total = ref<number>(1);
 
 const retentionReportList = ref<Array<GetRetentionReport>>([
-  {
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    retention_date_time: "2020-06-30",
-    retention_new_register_count: 99999,
-    retention_new_active_count: 99999,
-    retention_active_conversion_rate: 99.99,
-    retention_recharge_nextday: 99.99,
-    retention_recharge_3day: 99.99,
-    retention_active_retention_rate_1: 99.99,
-    retention_active_retention_rate_3: 99.99,
-    retention_active_retention_rate_7: 99.99,
-    retention_active_retention_rate_15: 99.99,
-    retention_active_retention_rate_30: 99.99,
-    retention_agent_retention_rate_1: 99.99,
-    retention_agent_retention_rate_3: 99.99,
-    retention_agent_retention_rate_7: 99.99,
-    retention_agent_retention_rate_15: 99.99,
-    retention_agent_retention_rate_30: 99.99,
-    retention_first_charge_retention_rate_1: 99.99,
-    retention_first_charge_retention_rate_3: 99.99,
-    retention_first_charge_retention_rate_7: 99.99,
-    retention_first_charge_retention_rate_15: 99.99,
-    retention_first_charge_retention_rate_30: 99.99,
-    retention_active_retention_value_1: 9999,
-    retention_active_retention_value_3: 9999,
-    retention_active_retention_value_7: 9999,
-    retention_active_retention_value_15: 9999,
-    retention_active_retention_value_30: 9999,
-    retention_agent_retention_value_1: 9999,
-    retention_agent_retention_value_3: 9999,
-    retention_agent_retention_value_7: 9999,
-    retention_agent_retention_value_15: 9999,
-    retention_agent_retention_value_30: 9999,
-    retention_first_charge_retention_value_1: 9999,
-    retention_first_charge_retention_value_3: 9999,
-    retention_first_charge_retention_value_7: 9999,
-    retention_first_charge_retention_value_15: 9999,
-    retention_first_charge_retention_value_30: 9999,
-  }
+  
 ])
 
 const handleDateRange = (date: string) => {
@@ -191,7 +153,8 @@ const handleButtonActive = (index: number) => {
     activeButton.value = index;
 }
 
-const handleQuery = () => {
+const handlePagination = () => {
+  handleSearch();
 }
 
 const handleReset = () => {
@@ -199,10 +162,16 @@ const handleReset = () => {
 }
 
 const handleSearch = () => {
-  getData();
+  loading.value = true;
+  getData().then(() =>{
+    loading.value = false;
+  });
 }
 onMounted(()=>{
-  getData();
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 const getData = async () =>{
   
@@ -387,7 +356,7 @@ const getData = async () =>{
           </el-table>
           <div style="float: right;">
             <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handleQuery" />
+              v-model:limit="formData.pageSize" @pagination="handlePagination" />
           </div>
         </el-card>
       </el-col>
