@@ -9,6 +9,8 @@ import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
 import {getUserWithDrawlRecordDetail} from '@/api/Players'
+import { loadavg } from 'os';
+import { fa } from 'element-plus/es/locale';
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -24,97 +26,34 @@ const formData = ref<any>({
     ],
     min_amount: 0,
     max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
-const totalPage = ref<number>(5);
 const withdrawalRecordList = ref([
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "待审批",
-        remark: ""
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "已打款",
-        remark: ""
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "打款中",
-        remark: ""
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "已拒绝",
-        remark: "封禁提现"
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "取消订单",
-        remark: ""
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        withdrawal_platform_number: "640c1f88fe2a3727b815f25",
-        withdrawal_amount: 999.99,
-        receipt_amount: 999.99,
-        handling_fee: 10,
-        free_charge: 0,
-        free_source_fee: "VIP",
-        operation_balance: 999.99,
-        order_status: "打款失败",
-        remark: ""
-    },
 ])
 
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value = {
+        dateRange: [
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        ],
+        min_amount: 0,
+        max_amount: 0,
+    }
 }
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
@@ -130,18 +69,6 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name, params:{id:route.params.id}});
 }
 
-const handleScrollLoad = () => {
-
-    if (disabled.value) return;
-
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
-    }
-
-    if (formData.value.pageNum === totalPage.value) {
-        disabled.value = true;
-    }
-}
 </script>
 
 <template>
@@ -193,8 +120,7 @@ const handleScrollLoad = () => {
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="withdrawalRecordList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading" :data="withdrawalRecordList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="提交时间" align="center" prop="submission_time" width="200" />
                 <el-table-column label="提现平台单号" align="center" prop="withdrawal_platform_number" width="200" />

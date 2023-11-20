@@ -22,66 +22,36 @@ const formData = ref<any>({
     ],
     min_amount: 0,
     max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
 const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
-const totalPage = ref<number>(5);
 const rechargeRecordList = ref([
-    {
-        submission_time: "2023-07-01 15:23:00",
-        payment_time: "_____",
-        platform_tracking_number: "6423565465f4645wed6567",
-        channel_order_number: "70985656456456",
-        gaia_order_number: "PPH20233445345345",
-        recharge_amount: 999.99,
-        bonus_amount: 999.99,
-        order_status: "未支付",
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        payment_time: "2023-07-01 15:23:00",
-        platform_tracking_number: "6423565465f4645wed6567",
-        channel_order_number: "70985656456456",
-        gaia_order_number: "PPH20233445345345",
-        recharge_amount: 999.99,
-        bonus_amount: 999.99,
-        order_status: "已完成",
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        payment_time: "_____",
-        platform_tracking_number: "6423565465f4645wed6567",
-        channel_order_number: "70985656456456",
-        gaia_order_number: "PPH20233445345345",
-        recharge_amount: 999.99,
-        bonus_amount: 999.99,
-        order_status: "等待支付",
-    },
-    {
-        submission_time: "2023-07-01 15:23:00",
-        payment_time: "_____",
-        platform_tracking_number: "6423565465f4645wed6567",
-        channel_order_number: "70985656456456",
-        gaia_order_number: "PPH20233445345345",
-        recharge_amount: 999.99,
-        bonus_amount: 999.99,
-        order_status: "已取消",
-    },
 ])
 
 const handleQuery = () => {
-    getData();
+    
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
-const resetQuery = () => {
+const resetQuery = () => {    
+    formData.value.dateRange = [
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+    ];
+    formData.value.min_amount = 0;
+    formData.value.max_amount = 0;
 
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
@@ -98,18 +68,6 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name, params:{id:route.params.id}});
 }
 
-const handleScrollLoad = () => {
-
-    if (disabled.value) return;
-
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
-    }
-
-    if (formData.value.pageNum === totalPage.value) {
-        disabled.value = true;
-    }
-}
 </script>
 
 <template>
@@ -161,8 +119,7 @@ const handleScrollLoad = () => {
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="rechargeRecordList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading" :data="rechargeRecordList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="提交时间" align="center" prop="submission_time" width="200" />
                 <el-table-column label="打款时间" align="center" prop="payment_time" />

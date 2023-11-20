@@ -90,8 +90,6 @@ export function getUserDetailFunding(token: string, id:any, daterange:any, formD
       max_amount1: formData.max_amount,
       sort_field: "time",
       sort_method: "desc",
-      page_num: 1,
-      page_size: 10
     }});
   }
 
@@ -158,8 +156,6 @@ export function getUserRechargeRecordDetail(token: string, id:any, formData:any)
     amount_interval_key1: "recharge_amount",
     min_amount1: formData.min_amount,
     max_amount1: formData.max_amount,
-    page_num: formData.pageNum,
-    page_size: formData.pageSize
   }});
 }
 
@@ -175,8 +171,6 @@ export function getUserWithDrawlRecordDetail(token: string, id:any, formData:any
     amount_interval_key1: "receipt_amount",
     min_amount1: formData.min_amount,
     max_amount1: formData.max_amount,
-    page_num: formData.pageNum,
-    page_size: formData.pageSize
   }});
 }
 
@@ -231,8 +225,6 @@ export function getUserBettingRecordDetail(token: string, id:any, formData:any):
     max_amount2: formData.winning_max_amount,
     sort_field: "betting_time",
     sort_mode: "desc",
-    page_num: formData.pageNum,
-    page_size: formData.pageSize
   }});
 }
 
@@ -245,8 +237,6 @@ export function getUserLoginRecordDetail(token: string, id:any, formData:any): a
     time_interval_key1: "login_time",
     start_time1: new Date(formData.dateRange[0]).toISOString(),
     end_time1: new Date(formData.dateRange[1]).toISOString(),
-    page_num: 1,
-    page_size: 10
   }});
 }
 

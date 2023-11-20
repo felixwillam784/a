@@ -132,7 +132,7 @@ const props = defineProps({
 onMounted(()=>{
     getSearchdata().catch(()=>{
         localStorage.clear();
-        router.push({name: 'Dashboard'});
+        router.push('/');
     });
 })
 

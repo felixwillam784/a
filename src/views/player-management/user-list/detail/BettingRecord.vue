@@ -28,8 +28,6 @@ const formData = ref<any>({
     max_amount: 0,
     winning_min_amount:0,
     winning_max_amount: 0,
-    pageNum: 1,
-    pageSize: 20,
 })
 
 const gameOptions = [
@@ -38,10 +36,8 @@ const gameOptions = [
     label: '全部',
   },
 ]
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
-const totalPage = ref<number>(5);
 const bettingRecordList = ref([
     {
         game: "DICE",
@@ -65,14 +61,31 @@ const totalData = ref<any>({
     revenue_rate: "-0.52777"
 })
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value = {
+        dateRange: [
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        ],
+        game: "",
+        winning_odds: "",
+        min_amount: 0,
+        max_amount: 0,
+        winning_min_amount:0,
+        winning_max_amount: 0,
+    };
 }
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
@@ -89,18 +102,6 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name, params:{id:route.params.id}});
 }
 
-const handleScrollLoad = () => {
-
-    if (disabled.value) return;
-
-    formData.value.pageNum++;
-    if (formData.value.pageNum <= totalPage.value) {
-    }
-
-    if (formData.value.pageNum === totalPage.value) {
-        disabled.value = true;
-    }
-}
 </script>
 
 <template>
@@ -185,8 +186,7 @@ const handleScrollLoad = () => {
                 </div>
             </div>
 
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="bettingRecordList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading"  :data="bettingRecordList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="游戏" align="center" prop="game" />
                 <el-table-column label="期数" align="center" prop="period" width="160"/>

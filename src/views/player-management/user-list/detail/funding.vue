@@ -8,6 +8,7 @@ import { default as vElTableInfiniteScroll } from "el-table-infinite-scroll";
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
 import {getUserDetailFunding} from '@/api/Players'
+import { fa } from 'element-plus/es/locale';
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -25,123 +26,30 @@ const formData = ref<any>({
     max_amount: 0,
     event_type: "",
     record_id: "",
-    page_num: 1,
-    page_size: 20,
 })
-const total = ref<number>(5);
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(false);
-const totalPage = ref<number>(5);
 const fundingDetailList = ref([
-    {
-        time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    // temp list
-    {
-        time: "2023-07-01 15:23:00",
-        event: "派奖",
-        details: "Crash",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "提现",
-        details: "User",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "充值",
-        details: "User",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "下注",
-        details: "Crash",
-        change_amount: -100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
-    {
-        time: "2023-07-01 15:23:00",
-        event: "活动",
-        details: "Login",
-        change_amount: 100,
-        before_change_amount: 100,
-        after_change_amount: 200,
-        record_id: "XXXXXXXXXXXX",
-        remark: "",
-    },
 ])
 
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
-
+    formData.value = {
+        dateRange: [
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+            moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        ],
+        min_amount: 0,
+        max_amount: 0,
+        event_type: "",
+        record_id: "",
+    };
 }
 
 const goBack = () => {
@@ -153,21 +61,11 @@ const handleButtonActive = (index: number, name: string) => {
     router.push({ name: name, params:{id:route.params.id}});
 }
 
-const handleScrollLoad = () => {
-    console.log("ok");
-
-    if (disabled.value) return;
-
-    formData.value.page_num++;
-    if (formData.value.page_num <= totalPage.value) {
-    }
-
-    if (formData.value.page_num === totalPage.value) {
-        disabled.value = true;
-    }
-}
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
@@ -235,8 +133,7 @@ const getData = async () =>{
         </el-card>
 
         <el-card style="margin-top: 10px;">
-            <el-table v-loading="loading" v-el-table-infinite-scroll="handleScrollLoad" :data="fundingDetailList"
-                :infinite-scroll-disabled="disabled" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
+            <el-table v-loading="loading" :data="fundingDetailList" style="width: 100%; margin-top: 10px; height: 535px; overflow: auto;">
 
                 <el-table-column label="时间" align="center" prop="time" width="200" />
                 <el-table-column label="事件" align="center" prop="event" />
