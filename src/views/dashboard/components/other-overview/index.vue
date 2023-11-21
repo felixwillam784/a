@@ -6,13 +6,14 @@ import { userRetentionDataApi } from '@/api/dashboard';
 import { agencyDataAnalysisApi } from '@/api/dashboard';
 import { agentRetentionApi } from '@/api/dashboard';
 import { gameDataApi } from '@/api/dashboard';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 
 import useStore from '@/store';
 //import { watch } from "fs";
 
 const { user } = useStore();
+const route = useRoute();
 const router = useRouter();
 
 const activeNames = ref(['1', '2', '3']);
@@ -130,9 +131,15 @@ const props = defineProps({
 })
 
 onMounted(()=>{
+    
     getSearchdata().catch(()=>{
-        localStorage.clear();
-        router.push('/');
+            localStorage.clear();
+            router.push({ name: "Login" });
+            user.token = '';
+        //router.push({name:'Login'});
+        // console.log("Asdf");
+        // const f5Event = new KeyboardEvent('keydown', { keyCode: 116 });
+        // document.dispatchEvent(f5Event);
     });
 })
 

@@ -15,6 +15,7 @@ export const Layout = () => import('@/layout/index.vue');
 export const constantRoutes: Array<RouteRecordRaw> = [
   {
     path: '/login',
+    name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: { hidden: true },
   },
@@ -36,6 +37,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: '401',
+        name:'401page',
         component: () => import('@/views/error-page/401.vue'),
         meta: { hidden: true },
       }
