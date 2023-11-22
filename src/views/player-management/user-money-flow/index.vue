@@ -123,7 +123,7 @@ const goUserFlowDetailPage = (id : any) => {
                                     ${{ scope.row.flow_amount }}
                                 </Font>
                                 <Font color="red" v-else>
-                                    -${{ scope.row.flow_amount.substring(1) }}
+                                    -${{ scope.row.flow_amount }}
                                 </Font>
                             </template>
                         </el-table-column>

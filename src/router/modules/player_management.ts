@@ -231,15 +231,50 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "agent/mangement",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Agent Management",
+                redirect: "a",
+                component: ChildrenLayout,
                 meta: {
                     title: "代理管理",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
                     keepAlive: true
-                }
+                },
+                children: [
+                    {
+                        path: "a",
+                        component: () => import('@/views/player-management/agency/index.vue'),
+                        name: "AgencyDetail",
+                        meta: {
+                            title: "",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "setting",
+                        component: () => import('@/views/player-management/agency/setting.vue'),
+                        name: "AgencySetting",
+                        meta: {
+                            title: "用户详情",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "setting/:user_account",
+                        component: () => import('@/views/player-management/agency/relation.vue'),
+                        name: "AgencyRelation",
+                        meta: {
+                            title: "用户详情",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
             },
             {
                 path: "warning",

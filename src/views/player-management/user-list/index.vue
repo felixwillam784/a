@@ -42,30 +42,7 @@ const loading = ref<boolean>(false);
 const total = ref<number>(2);
 
 const customerList = ref<Array<GetCustomerData>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        user_account: "test77@gmail.com",
-        nick_name: "UserName10001",
-        customer_type: "一般用户",
-        vip_level: "LV0",
-        account_status: 0,
-        prohibited_withdrawal: 0,
-        frozen_state: 0,
-        user_tag: "优质用户",
-        registration_time: "2023-07-26 23:12:00"
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        user_account: "test77@gmail.com",
-        nick_name: "UserName10002",
-        customer_type: "一般用户",
-        vip_level: "LV1",
-        account_status: 1,
-        prohibited_withdrawal: 1,
-        frozen_state: 1,
-        user_tag: "优质用户",
-        registration_time: "2023-07-26 23:12:00"
-    }
+
 ])
 
 const { user } = useStore();
