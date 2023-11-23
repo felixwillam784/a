@@ -257,7 +257,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         component: () => import('@/views/player-management/agency/setting.vue'),
                         name: "AgencySetting",
                         meta: {
-                            title: "用户详情",
+                            title: "代理设置",
                             hidden: true,
                             roles: ["ADMIN"],
                             keepAlive: true
@@ -268,7 +268,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         component: () => import('@/views/player-management/agency/relation.vue'),
                         name: "AgencyRelation",
                         meta: {
-                            title: "用户详情",
+                            title: "代理关系",
                             hidden: true,
                             roles: ["ADMIN"],
                             keepAlive: true

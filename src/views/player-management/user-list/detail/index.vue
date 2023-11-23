@@ -401,7 +401,7 @@ const getData = async () =>{
                             </el-form>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="总提现:">
+                            <el-form-item label="总提款:">
                                 {{ depositAndWithdrawalData.total_withdrawal }}
                             </el-form-item>
                         </el-col>

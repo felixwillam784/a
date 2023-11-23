@@ -18,17 +18,7 @@ const loading = ref<boolean>(false);
 const formData = ref<any>({
     user_account: "",
 })
-const userAccountList = ref<Array<any>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: -999,
-        flow_type: "下注",
-        flow_time: "2023-07-12 10:23:24",
-    },
-])
+
 const handleChange = () => {
 
 }
@@ -46,26 +36,28 @@ const goBack = () =>{
 
 interface GetAgentReport {
   id: string;
-  agent_date_time: string;
-  agent_agents_count: number;
-  agent_active_agents_count: number;
-  agent_new_active_agents_count: number;
-  agent_new_agents_count: number;
-  agent_new_level_payment_amount: string;
-  agent_withdrawal_amount: string;
-  agent_new_level_charge_withdraw_dif: string;
-  agent_new_charge_bonus: string;
-  agent_achievement_rewards: string;
-  agent_new_task_rewards: string;
-  agent_betting_rebate_amount: string;
-  agent_3_day_active_rate: string;
-  agent_7_day_active_rate: string;
-  agent_15_day_active_rate: string;
-  agent_30_day_active_rate: number | string;
+  user_account:string;
+  total_recharge:number;
+  total_withdraw:number;
+  account_balance:number;
+  bet_amount:number;
+  bet_count:number;
+  income:number;
+  status:string;
 }
 
 
-const agentReportList1 = ref<Array<GetAgentReport>>([
+const agentReportList1 = ref<Array<GetAgentReport>>([{
+  id:"52323523523523332",
+  user_account:"fangda_0625@gg.com",
+  total_recharge:999.99,
+  total_withdraw:999.99,
+  account_balance:999.99,
+  bet_amount:999.99,
+  bet_count:999.99,
+  income:999.99,
+  status:"正常",
+}
 ])
 const agentReportList2 = ref<Array<GetAgentReport>>([
 ])
@@ -85,14 +77,17 @@ const handleButtonActive = (index: number) => {
         </div>
         <div class="search">
             <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-                <el-form-item label="客户标签" prop="customer_label">
-                    <el-input v-model="formData.user_account" placeholder="请输入客户账号" clearable style="width: 200px" />
+                <el-form-item prop="customer_label">
+                    <p style="margin-right:10px">客户账号 </p>
+                    <el-input v-model="formData.user_account" placeholder="请输入客户账号" clearable />
                 </el-form-item>
-                <el-form-item label="客户标签" prop="customer_label">
-                    <el-select v-model="formData.user_account" placeholder="请输入客户账号" clearable style="width: 200px" />
+                <el-form-item prop="customer_label">
+                    <p style="margin-right:10px">客户状态 </p>
+                    <el-select v-model="formData.user_account" placeholder="请选择客户状态" clearable />
                 </el-form-item>
-                <el-form-item label="客户标签" prop="customer_label">
-                    <el-input v-model="formData.user_account" placeholder="请输入客户账号" clearable style="width: 200px" />
+                <el-form-item prop="customer_label">
+                    <p style="margin-right:10px">累计带来收益大于 </p>
+                    <el-input v-model="formData.user_account" placeholder="请输入累计收益金额" clearable />
                 </el-form-item>
 
                 <el-form-item style="float: right;">
@@ -103,292 +98,154 @@ const handleButtonActive = (index: number) => {
         </div>
         <div style="margin:20px 10px; display:flex">
             <div style="display:flex; align-items:center; justify-content:center;">
-                asdf:{{route.params.user_account}}
+                上级代理:<el-button type="primary" link>{{route.params.user_account}}</el-button>
             </div>
             <div style="margin-left:auto; display:flex">
-                <span class = "game-report-overview game-report-bg1">彩金总数: {{totablBonous}}</span>
-                <span class = "game-report-overview game-report-bg1">领取人数: {{recip_count}}</span>
+                <span class = "game-report-overview game-report-bg1">一级代理人数: 99999</span>
+                <span class = "game-report-overview game-report-bg1">一级代理累计返利: 99999</span>
             </div>
         </div>
         <div class="user-detail-header">
           <div >
             <el-button :type="activeButton == 0 ? 'warning' : ''"
-              @click="handleButtonActive(0)">代理活跃</el-button>
+              @click="handleButtonActive(0)">一级代理</el-button>
             <el-button :type="activeButton == 1 ? 'warning' : ''"
-              @click="handleButtonActive(1)">代理拉新</el-button>
+              @click="handleButtonActive(1)">二级代理</el-button>
             <el-button :type="activeButton == 2 ? 'warning' : ''"
-              @click="handleButtonActive(2)">代理风控</el-button>              
+              @click="handleButtonActive(2)">三级代理</el-button>              
           </div>
         </div>
         <el-card style="margin-top: 20px;" v-if="activeButton == 0">
           <el-table v-loading="loading" :data="agentReportList1" style="width: 100%;">
-            <el-table-column label = "时间" align="left" prop="agent_date_time" width="160">
+            <el-table-column label = "用户账号" align="left" prop="user_account">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <el-button type="primary" link>{{scope.row.user_account}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label = "总代理数" align="left" prop="agent_agents_count" width="160">
+            <el-table-column label = "充值总额" align="left" prop="total_recharge">
               <template #default="scope">
-                <p>{{ scope.row.agent_agents_count }}</p>
+                <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "总活跃代理数" align="left" prop="agent_active_agents_count" width="160">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
               <template #default="scope">
-                <p>{{ scope.row.agent_active_agents_count }}</p>
+                <p>{{ scope.row.total_withdraw }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增活跃代理数" align="left" prop="agent_new_active_agents_count" width="160">
+            <el-table-column label = "账户余额" align="left" prop="account_balance">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_active_agents_count }}</p>
+                <p>{{ scope.row.account_balance }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="160">
+            <el-table-column label = "累计下注金额" align="left" prop="bet_amount">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_agents_count }}</p>
+                <p>{{ scope.row.bet_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="160">
+            <el-table-column label = "累计下注次数" align="left" prop="bet_count">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_payment_amount }}</p>
+                <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增记忆提现金额" align="left" prop="agent_withdrawal_amount" width="160">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income">
               <template #default="scope">
-                <p>{{ scope.row.agent_withdrawal_amount }}</p>
+                <p>{{ scope.row.income }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级充提差" align="left" prop="agent_new_level_charge_withdraw_dif" width="160">
+            <el-table-column label = "账号状态" align="left" prop="status">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_charge_withdraw_dif }}</p>
+                <p>{{ scope.row.status }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增充值奖励" align="left" prop="agent_new_charge_bonus" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_charge_bonus }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增成就奖励" align="left" prop="agent_achievement_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增任务奖励" align="left" prop="agent_new_task_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_task_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增投注返佣金额" align="left" prop="agent_betting_rebate_amount" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "3日活跃率" align="left" prop="agent_3_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_3_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "7日活跃率" align="left" prop="agent_7_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_7_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "15日活跃率" align="left" prop="agent_15_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_15_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "30日活跃率" align="left" prop="agent_30_day_active_rate" width="160">
-              <template #default="scope">
-                <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate }}%</p>
-                <p v-else>{{ scope.row.agent_30_day_active_rate }}</p>
-              </template>
-            </el-table-column>
-            
           </el-table>
-          <div style="float: right;">
-            <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handlePagination" />
-          </div>
         </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 1">
           <el-table v-loading="loading" :data="agentReportList2" style="width: 100%;">
-            <el-table-column label = "时间" align="left" prop="agent_date_time" width="160">
+            <el-table-column label = "用户账号" align="left" prop="user_account">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <el-button type="primary" link>{{scope.row.user_account}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label = "总代理数" align="left" prop="agent_agents_count" width="160">
+            <el-table-column label = "充值总额" align="left" prop="total_recharge">
               <template #default="scope">
-                <p>{{ scope.row.agent_agents_count }}</p>
+                <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "总活跃代理数" align="left" prop="agent_active_agents_count" width="160">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
               <template #default="scope">
-                <p>{{ scope.row.agent_active_agents_count }}</p>
+                <p>{{ scope.row.total_withdraw }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增活跃代理数" align="left" prop="agent_new_active_agents_count" width="160">
+            <el-table-column label = "账户余额" align="left" prop="account_balance">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_active_agents_count }}</p>
+                <p>{{ scope.row.account_balance }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="160">
+            <el-table-column label = "累计下注金额" align="left" prop="bet_amount">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_agents_count }}</p>
+                <p>{{ scope.row.bet_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="160">
+            <el-table-column label = "累计下注次数" align="left" prop="bet_count">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_payment_amount }}</p>
+                <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增记忆提现金额" align="left" prop="agent_withdrawal_amount" width="160">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income">
               <template #default="scope">
-                <p>{{ scope.row.agent_withdrawal_amount }}</p>
+                <p>{{ scope.row.income }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级充提差" align="left" prop="agent_new_level_charge_withdraw_dif" width="160">
+            <el-table-column label = "账号状态" align="left" prop="status">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_charge_withdraw_dif }}</p>
+                <p>{{ scope.row.status }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增充值奖励" align="left" prop="agent_new_charge_bonus" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_charge_bonus }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增成就奖励" align="left" prop="agent_achievement_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增任务奖励" align="left" prop="agent_new_task_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_task_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增投注返佣金额" align="left" prop="agent_betting_rebate_amount" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "3日活跃率" align="left" prop="agent_3_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_3_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "7日活跃率" align="left" prop="agent_7_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_7_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "15日活跃率" align="left" prop="agent_15_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_15_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "30日活跃率" align="left" prop="agent_30_day_active_rate" width="160">
-              <template #default="scope">
-                <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate }}%</p>
-                <p v-else>{{ scope.row.agent_30_day_active_rate }}</p>
-              </template>
-            </el-table-column>
-            
           </el-table>
-          <div style="float: right;">
-            <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handlePagination" />
-          </div>
-        </el-card>
+        </el-card>    
         <el-card style="margin-top: 20px;" v-if="activeButton == 2">
           <el-table v-loading="loading" :data="agentReportList3" style="width: 100%;">
-            <el-table-column label = "时间" align="left" prop="agent_date_time" width="160">
+            <el-table-column label = "用户账号" align="left" prop="user_account">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <el-button type="primary" link>{{scope.row.user_account}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label = "总代理数" align="left" prop="agent_agents_count" width="160">
+            <el-table-column label = "充值总额" align="left" prop="total_recharge">
               <template #default="scope">
-                <p>{{ scope.row.agent_agents_count }}</p>
+                <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "总活跃代理数" align="left" prop="agent_active_agents_count" width="160">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
               <template #default="scope">
-                <p>{{ scope.row.agent_active_agents_count }}</p>
+                <p>{{ scope.row.total_withdraw }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增活跃代理数" align="left" prop="agent_new_active_agents_count" width="160">
+            <el-table-column label = "账户余额" align="left" prop="account_balance">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_active_agents_count }}</p>
+                <p>{{ scope.row.account_balance }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="160">
+            <el-table-column label = "累计下注金额" align="left" prop="bet_amount">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_agents_count }}</p>
+                <p>{{ scope.row.bet_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级付费金额" align="left" prop="agent_new_level_payment_amount" width="160">
+            <el-table-column label = "累计下注次数" align="left" prop="bet_count">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_payment_amount }}</p>
+                <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增记忆提现金额" align="left" prop="agent_withdrawal_amount" width="160">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income">
               <template #default="scope">
-                <p>{{ scope.row.agent_withdrawal_amount }}</p>
+                <p>{{ scope.row.income }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增一级充提差" align="left" prop="agent_new_level_charge_withdraw_dif" width="160">
+            <el-table-column label = "账号状态" align="left" prop="status">
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_charge_withdraw_dif }}</p>
+                <p>{{ scope.row.status }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "新增充值奖励" align="left" prop="agent_new_charge_bonus" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_charge_bonus }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增成就奖励" align="left" prop="agent_achievement_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增任务奖励" align="left" prop="agent_new_task_rewards" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_new_task_rewards }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "新增投注返佣金额" align="left" prop="agent_betting_rebate_amount" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "3日活跃率" align="left" prop="agent_3_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_3_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "7日活跃率" align="left" prop="agent_7_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_7_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "15日活跃率" align="left" prop="agent_15_day_active_rate" width="160">
-              <template #default="scope">
-                <p>{{ scope.row.agent_15_day_active_rate }}%</p>
-              </template>
-            </el-table-column>
-            <el-table-column label = "30日活跃率" align="left" prop="agent_30_day_active_rate" width="160">
-              <template #default="scope">
-                <p v-if="scope.row.agent_30_day_active_rate*1 > 0">{{ scope.row.agent_30_day_active_rate }}%</p>
-                <p v-else>{{ scope.row.agent_30_day_active_rate }}</p>
-              </template>
-            </el-table-column>
-            
           </el-table>
-          <div style="float: right;">
-            <pagination v-if="total1 > 0" :total="total1" v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize" @pagination="handlePagination" />
-          </div>
         </el-card>
     </div>
 </template>

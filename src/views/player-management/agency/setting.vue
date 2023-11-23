@@ -16,21 +16,25 @@ const activeButton = ref<number>(1);
 const loading = ref<boolean>(false);
 const editDialogShow = ref<boolean>(false);
 const editData = ref<any>({
-    account: "",
-    comment: "",
+    ratio1:"",
+    ratio2:"",
+    ratio3:""
 })
 const formData = ref<any>({
     user_account: "",
 })
 const userAccountList = ref<Array<any>>([
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: -999,
-        flow_type: "下注",
-        flow_time: "2023-07-12 10:23:24",
+        type:"一级代理",
+        ratio:3.0
+    },
+    {
+        type:"二级代理",
+        ratio:1.5
+    },
+    {
+        type:"三级代理",
+        ratio:0.5
     },
 ])
 const handleChange = () => {
@@ -51,6 +55,9 @@ const getData = async () =>{
 
 const showEditDialog = () => {
     editDialogShow.value = true;
+    editData.value.ratio1 = userAccountList.value[0].ratio;
+    editData.value.ratio2 = userAccountList.value[1].ratio;
+    editData.value.ratio3 = userAccountList.value[2].ratio;
 }
 </script>
 
@@ -59,35 +66,39 @@ const showEditDialog = () => {
         <div class="user-detail-header">
             <div style="margin-right: auto;">
                 <el-button :type="activeButton == 0 ? 'warning' : ''"
-                    @click="handleButtonActive(0, 'AgencyDetail')">用户详情</el-button>
+                    @click="handleButtonActive(0, 'AgencyDetail')">代理详情</el-button>
                 <el-button :type="activeButton == 1 ? 'warning' : ''"
-                    @click="handleButtonActive(1, 'AgencySetting')">资金明细</el-button>
+                    @click="handleButtonActive(1, 'AgencySetting')">代理设置</el-button>
             </div>
         </div>
         <el-card>
             <el-table v-loading="loading" :data="userAccountList" style="width: 100%;">
-                <el-table-column label="用户ID" align="center" prop="id" width="200" />
-                <el-table-column label="用户账号" align="center" prop="customer_account" width="200" />
+                <el-table-column label="类型" align="center" prop="type"/>
+                <el-table-column label="返利比例" align="center" prop="ratio">
+                    <template #default="scope">
+                        {{scope.row.ratio}}%
+                    </template>
+                </el-table-column>
                 <el-table-column align="center">
                     <template #default="scope">
-                        <el-button type="danger" link @click="showEditDialog()">详情</el-button>
+                        <el-button type="primary" link @click="showEditDialog()">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </el-card>
 
-        <el-dialog title="编辑用户" v-model="editDialogShow" width="500px" append-to-body align-center>
+        <el-dialog title="代理修改" v-model="editDialogShow" width="500px" append-to-body align-center>
            <el-row>
-                <el-col :span="6" class="edit-item-left-bg">账号</el-col>
-                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.account" placeholder="请输入账号" style="pediting: 0;"></el-input> </el-col>
+                <el-col :span="6" class="edit-item-left-bg">一级代理</el-col>
+                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.ratio1" style="pediting: 0;"></el-input> </el-col>
            </el-row> 
             <el-row>
-                <el-col :span="6" class="edit-item-left-bg">账号</el-col>
-                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.account" placeholder="请输入账号" style="pediting: 0;"></el-input> </el-col>
+                <el-col :span="6" class="edit-item-left-bg">二级代理</el-col>
+                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.ratio2"  style="pediting: 0;"></el-input> </el-col>
            </el-row> 
             <el-row>
-                <el-col :span="6" class="edit-item-left-bg">账号</el-col>
-                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.account" placeholder="请输入账号" style="pediting: 0;"></el-input> </el-col>
+                <el-col :span="6" class="edit-item-left-bg">三级代理</el-col>
+                <el-col :span="18" class ="edit-item-right-bg"><el-input v-model="editData.ratio3" style="pediting: 0;"></el-input> </el-col>
            </el-row> 
            
            <el-row style="margin-top: 50%;">
@@ -95,8 +106,8 @@ const showEditDialog = () => {
                 <el-input :rows="5" type="textarea" v-model="editData.comment"></el-input>
            </el-row>
            <template #footer>
-                <el-button type="primary">确认新增</el-button>
-                <el-button @click="closeeditDialog">取消新增</el-button>
+                <el-button type="primary">确认修改</el-button>
+                <el-button @click="closeeditDialog">取消修改</el-button>
            </template>
         </el-dialog>
     </div>

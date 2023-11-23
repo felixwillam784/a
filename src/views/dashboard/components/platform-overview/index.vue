@@ -94,7 +94,7 @@ onMounted(async () => {
             </el-col>
             <el-col :span="4">
                 <el-card shadow="always">
-                    <div>重提比</div>
+                    <div>充提比</div>
                     <div class="platform-text">{{platformOverview.lifting_ratio}}</div>
                 </el-card>
             </el-col>
