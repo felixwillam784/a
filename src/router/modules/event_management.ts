@@ -80,7 +80,7 @@ const eventManagementRoutes: RouteRecordRaw[] = [
         component: ChildrenLayout,
         name: "",
         meta: {
-          title: "打码返利配置",
+          title: "打码方案配置",
           hidden: false,
           // alwaysShow: false,
           roles: ["ADMIN"],
@@ -92,7 +92,7 @@ const eventManagementRoutes: RouteRecordRaw[] = [
               component: () => import('@/views/event-management/rebate-configuration/index.vue'),
               name: "Rebate Configuration",
               meta: {
-                  title: "打码返利配置",
+                  title: "打码方案配置",
                   hidden: false,
                   roles: ["ADMIN"],
                   keepAlive: true

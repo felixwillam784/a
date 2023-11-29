@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {getUserDetailTable, getUserDetailApi, getUserDetailDepositWithdrawl, getUserDetailAgent} from '@/api/Players'
+import {getAgentlist} from '@/api/Players'
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
 //import { watch } from "fs";
@@ -42,14 +42,26 @@ const handleButtonActive = (index: number, name: string) => {
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
+    let res = await getAgentlist(user.token, formData.user_account);
+    userAccountList.value = res.data.data;
 }
 
 const gotToRelationPage = (user_account:string) =>{
     router.push({name:'AgencyRelation', params:{user_account:user_account}}, );
+}
+
+const handleQuery = () => {
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 </script>

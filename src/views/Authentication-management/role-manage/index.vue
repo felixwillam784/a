@@ -81,8 +81,8 @@ const closeAddDialog = ()=>{
 }
 const groupIdOptions = ref<Array<any>>([
     {
-        label: "",
-        value: ""
+        label: "M1",
+        value: "M1"
     }
 ])
 
@@ -97,7 +97,7 @@ const editData = ref<any>({
     account:"",
     password:"",
     user:"",
-    group_id:"",
+    group_id:"M1",
     group_type:"",
     group_name:"",
     comment:"",
@@ -177,7 +177,7 @@ const closeeditDialog = ()=>{
            <el-row>
                 <el-col :span="6" class="add-item-left-bg">分组标识</el-col>
                 <el-col :span="18" class="add-item-right-bg">                   
-                    <el-select v-model="addData.group_id" placeholder="请选择拒绝原因" style="width: 100%;">
+                    <el-select v-model="addData.group_id" placeholder="请选择分组标识" style="width: 100%;">
                         <el-option v-for="(item, index) in groupIdOptions" :label="item.label" :value="item.value"
                                     :key="index"></el-option>
                     </el-select>
@@ -236,8 +236,8 @@ const closeeditDialog = ()=>{
                 <el-input :rows="5" type="textarea" v-model="editData.comment"></el-input>
            </el-row>
            <template #footer>
-                <el-button type="primary">确认新增</el-button>
-                <el-button @click="closeeditDialog">取消新增</el-button>
+                <el-button type="primary">确认编辑</el-button>
+                <el-button @click="closeeditDialog">取消编辑</el-button>
            </template>
         </el-dialog>
     </div>

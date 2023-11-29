@@ -165,8 +165,8 @@ const submitForm = () => {
                         <el-form-item label="VIP等级" prop="vip_level">
                             <el-input v-model="formData.vip_level" placeholder="请输入VIP等级" clearable />
                         </el-form-item>
-                        <el-form-item label="客户名字" prop="customer_name">
-                            <el-input v-model="formData.customer_name" placeholder="请输入客户名字" clearable />
+                        <el-form-item label="客户账号" prop="customer_name">
+                            <el-input v-model="formData.customer_name" placeholder="请输入客户账号" clearable />
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>

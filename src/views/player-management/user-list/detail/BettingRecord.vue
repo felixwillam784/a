@@ -144,8 +144,8 @@ const handleButtonActive = (index: number, name: string) => {
                     <el-select v-model="formData.game">
                         <el-option v-for="item in gameOptions" :key="item.value" :label="item.label" :value="item.value"/>                    </el-select>
                 </el-form-item>
-                <el-form-item label="中奖赔率:大于">
-                    <el-input v-model="formData.winning_odds" placeholder="请输入中奖赔率"/>
+                <el-form-item label="中奖倍率:大于">
+                    <el-input v-model="formData.winning_odds" placeholder="请输入中奖倍率"/>
                 </el-form-item>
             </el-form>
             <el-form :model="formData" :inline="true" label-width="120">

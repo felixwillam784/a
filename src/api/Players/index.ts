@@ -279,3 +279,40 @@ export function getUserMoneyFlowDetail(token: string, id:any): any {
     user_id: id,
   }});
 }
+
+export function getAgentlist(token: string, customer_account:any): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/agent/list', {headers : {
+    Authorization: token,
+  }, params:{
+    customer_account: customer_account,
+  }});
+}
+
+export function getAgentSettinglist(token: string): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+  return axios.get(baseURL+'/agent/setting/list', {headers : {
+    Authorization: token,
+  }});
+}
+
+export function getAgentRelationshipList(token: string, formData:any, relation_level:number): any {
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+  return axios.get(baseURL+'/agent/relationship/list', {headers : {
+    Authorization: token,
+  }, params:{
+    ...formData,
+    relation_level:1,
+  }});
+}
+
+export function updateAgentRealtionSetting(token: string,formData:any): any {
+
+  const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.post(baseURL+'/agent/setting/update', {
+      data:[...formData]
+    }, {
+        headers:{Authorization: token}
+    });
+}

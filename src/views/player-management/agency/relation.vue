@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from '@element-plus/icons-vue';
-import {getUserDetailTable, getUserDetailApi, getUserDetailDepositWithdrawl, getUserDetailAgent} from '@/api/Players'
+import {getAgentRelationshipList} from '@/api/Players'
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
 //import { watch } from "fs";
@@ -17,6 +17,8 @@ const loading = ref<boolean>(false);
 
 const formData = ref<any>({
     user_account: "",
+    account_status:"",
+    least_benefit:0,
 })
 
 const handleChange = () => {
@@ -24,10 +26,24 @@ const handleChange = () => {
 }
 
 onMounted(()=>{
-    getData();
+  loading.value = true;
+
+  getData().then(()=>{
+    loading.value = false;
+  });
 })
 
 const getData = async () =>{
+  let res = await getAgentRelationshipList(user.token, formData.value, 1);
+  agentReportList1.value = res.data.data;
+
+  console.log(res.data.data);
+
+  res = await getAgentRelationshipList(user.token, formData.value, 2);
+  agentReportList2.value = res.data.data;
+
+  res = await getAgentRelationshipList(user.token, formData.value, 3);
+  agentReportList3.value = res.data.data;
 }
 
 const goBack = () =>{
@@ -38,26 +54,16 @@ interface GetAgentReport {
   id: string;
   user_account:string;
   total_recharge:number;
-  total_withdraw:number;
+  total_withdraw_amount:number;
   account_balance:number;
   bet_amount:number;
   bet_count:number;
-  income:number;
-  status:string;
+  income_amount:number;
+  account_status:string;
 }
 
 
-const agentReportList1 = ref<Array<GetAgentReport>>([{
-  id:"52323523523523332",
-  user_account:"fangda_0625@gg.com",
-  total_recharge:999.99,
-  total_withdraw:999.99,
-  account_balance:999.99,
-  bet_amount:999.99,
-  bet_count:999.99,
-  income:999.99,
-  status:"正常",
-}
+const agentReportList1 = ref<Array<GetAgentReport>>([
 ])
 const agentReportList2 = ref<Array<GetAgentReport>>([
 ])
@@ -68,6 +74,12 @@ const handleButtonActive = (index: number) => {
     activeButton.value = index;
 }
 
+const handleQuery = () =>{
+  loading.value = true;
+  getData().then(()=>{
+    loading.value = false;
+  });
+}
 </script>
 
 <template>
@@ -83,11 +95,11 @@ const handleButtonActive = (index: number) => {
                 </el-form-item>
                 <el-form-item prop="customer_label">
                     <p style="margin-right:10px">客户状态 </p>
-                    <el-select v-model="formData.user_account" placeholder="请选择客户状态" clearable />
+                    <el-select v-model="formData.account_status" placeholder="请选择客户状态" clearable />
                 </el-form-item>
                 <el-form-item prop="customer_label">
                     <p style="margin-right:10px">累计带来收益大于 </p>
-                    <el-input v-model="formData.user_account" placeholder="请输入累计收益金额" clearable />
+                    <el-input v-model="formData.least_benefit" placeholder="请输入累计收益金额" clearable />
                 </el-form-item>
 
                 <el-form-item style="float: right;">
@@ -127,9 +139,9 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw_amount">
               <template #default="scope">
-                <p>{{ scope.row.total_withdraw }}</p>
+                <p>{{ scope.row.total_withdraw_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "账户余额" align="left" prop="account_balance">
@@ -147,14 +159,14 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "累计带来收益金额" align="left" prop="income">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income_amount">
               <template #default="scope">
-                <p>{{ scope.row.income }}</p>
+                <p>{{ scope.row.income_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "账号状态" align="left" prop="status">
+            <el-table-column label = "账号状态" align="left" prop="account_status">
               <template #default="scope">
-                <p>{{ scope.row.status }}</p>
+                <p>{{ scope.row.account_status }}</p>
               </template>
             </el-table-column>
           </el-table>
@@ -171,9 +183,9 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw_amount">
               <template #default="scope">
-                <p>{{ scope.row.total_withdraw }}</p>
+                <p>{{ scope.row.total_withdraw_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "账户余额" align="left" prop="account_balance">
@@ -191,18 +203,18 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "累计带来收益金额" align="left" prop="income">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income_amount">
               <template #default="scope">
-                <p>{{ scope.row.income }}</p>
+                <p>{{ scope.row.income_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "账号状态" align="left" prop="status">
+            <el-table-column label = "账号状态" align="left" prop="account_status">
               <template #default="scope">
-                <p>{{ scope.row.status }}</p>
+                <p>{{ scope.row.account_status }}</p>
               </template>
             </el-table-column>
           </el-table>
-        </el-card>    
+        </el-card>
         <el-card style="margin-top: 20px;" v-if="activeButton == 2">
           <el-table v-loading="loading" :data="agentReportList3" style="width: 100%;">
             <el-table-column label = "用户账号" align="left" prop="user_account">
@@ -215,9 +227,9 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.total_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "提现总额" align="left" prop="total_withdraw">
+            <el-table-column label = "提现总额" align="left" prop="total_withdraw_amount">
               <template #default="scope">
-                <p>{{ scope.row.total_withdraw }}</p>
+                <p>{{ scope.row.total_withdraw_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "账户余额" align="left" prop="account_balance">
@@ -235,14 +247,14 @@ const handleButtonActive = (index: number) => {
                 <p>{{ scope.row.bet_count }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "累计带来收益金额" align="left" prop="income">
+            <el-table-column label = "累计带来收益金额" align="left" prop="income_amount">
               <template #default="scope">
-                <p>{{ scope.row.income }}</p>
+                <p>{{ scope.row.income_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label = "账号状态" align="left" prop="status">
+            <el-table-column label = "账号状态" align="left" prop="account_status">
               <template #default="scope">
-                <p>{{ scope.row.status }}</p>
+                <p>{{ scope.row.account_status }}</p>
               </template>
             </el-table-column>
           </el-table>

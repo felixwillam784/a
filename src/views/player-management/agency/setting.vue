@@ -2,9 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {getUserDetailTable, getUserDetailApi, getUserDetailDepositWithdrawl, getUserDetailAgent} from '@/api/Players'
+import {getAgentSettinglist, updateAgentRealtionSetting} from '@/api/Players'
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
+import { fa } from 'element-plus/es/locale';
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -16,26 +17,16 @@ const activeButton = ref<number>(1);
 const loading = ref<boolean>(false);
 const editDialogShow = ref<boolean>(false);
 const editData = ref<any>({
-    ratio1:"",
-    ratio2:"",
-    ratio3:""
+    ratio1:0,
+    ratio2:0,
+    ratio3:0,
 })
 const formData = ref<any>({
     user_account: "",
 })
+const types = ["一级代理", "二级代理", "三级代理"];
 const userAccountList = ref<Array<any>>([
-    {
-        type:"一级代理",
-        ratio:3.0
-    },
-    {
-        type:"二级代理",
-        ratio:1.5
-    },
-    {
-        type:"三级代理",
-        ratio:0.5
-    },
+
 ])
 const handleChange = () => {
 
@@ -47,17 +38,37 @@ const handleButtonActive = (index: number, name: string) => {
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 
 const getData = async () =>{
+    let res = await getAgentSettinglist(user.token);
+    userAccountList.value = res.data.data;
 }
 
 const showEditDialog = () => {
     editDialogShow.value = true;
-    editData.value.ratio1 = userAccountList.value[0].ratio;
-    editData.value.ratio2 = userAccountList.value[1].ratio;
-    editData.value.ratio3 = userAccountList.value[2].ratio;
+    editData.value.ratio1 = parseFloat(userAccountList.value[0].ratio);
+    editData.value.ratio2 = parseFloat(userAccountList.value[1].ratio);
+    editData.value.ratio3 = parseFloat(userAccountList.value[2].ratio);
+}
+
+const handleQuery = () =>{
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
+}
+
+const updateRelationSetting = () =>{
+    let edited = userAccountList.value;
+    edited[0].ratio = editData.value.ratio1;
+    edited[1].ratio = editData.value.ratio2;
+    edited[2].ratio = editData.value.ratio3;
+    updateAgentRealtionSetting(user.token, edited);
 }
 </script>
 
@@ -73,14 +84,18 @@ const showEditDialog = () => {
         </div>
         <el-card>
             <el-table v-loading="loading" :data="userAccountList" style="width: 100%;">
-                <el-table-column label="类型" align="center" prop="type"/>
+                <el-table-column label="类型" align="center" prop="type">
+                    <template #default="scope">
+                        {{types[scope.row.type - 1]}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="返利比例" align="center" prop="ratio">
                     <template #default="scope">
                         {{scope.row.ratio}}%
                     </template>
                 </el-table-column>
                 <el-table-column align="center">
-                    <template #default="scope">
+                    <template #default>
                         <el-button type="primary" link @click="showEditDialog()">修改</el-button>
                     </template>
                 </el-table-column>
@@ -106,7 +121,7 @@ const showEditDialog = () => {
                 <el-input :rows="5" type="textarea" v-model="editData.comment"></el-input>
            </el-row>
            <template #footer>
-                <el-button type="primary">确认修改</el-button>
+                <el-button type="primary" @click="updateRelationSetting">确认修改</el-button>
                 <el-button @click="closeeditDialog">取消修改</el-button>
            </template>
         </el-dialog>

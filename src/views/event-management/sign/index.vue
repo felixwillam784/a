@@ -177,7 +177,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                                     :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="体现需求大妈赔率" prop="withdrawal_odds">
+                        <el-form-item label="提现需求打码倍率" prop="withdrawal_odds">
                             <el-select v-model="formData.withdrawal_odds">
                                 <el-option v-for="(item, index) in withdrawalOddsOptions" :key="index" :label="item.label"
                                     :value="item.value"></el-option>

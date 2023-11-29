@@ -155,7 +155,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
                 <div class="search">
                     <el-form ref="formDataRef" :model="formData" :inline="true" label-width="160">
-                        <el-form-item label="体现需求大妈赔率" prop="aunt_odds">
+                        <el-form-item label="提现需求打码倍率" prop="aunt_odds">
                             <el-select v-model="formData.aunt_odds">
                                 <el-option v-for="(item, index) in auntOptions" :key="index" :label="item.label"
                                     :value="item.value"></el-option>
@@ -207,7 +207,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 <el-form-item label="奖励($):">
                     <el-input v-model="agentAchievementItem.award_amount" />
                 </el-form-item>
-                <el-form-item label="体现需求的打码赔率:">
+                <el-form-item label="提现需求的打码倍率:">
                     <el-input v-model="agentAchievementItem.big_odds" />
                 </el-form-item>
             </el-form>

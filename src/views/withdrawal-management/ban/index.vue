@@ -256,7 +256,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-form ref="ruleFormRef" :rules="rules" :model="banItem">
                 <el-row style="align-items: center;">
                     <p style="font-size: 20px; color: red;">*</p>
-                    <h3>解封备注</h3>
+                    <h3>备注</h3>
                 </el-row>
                 <el-form-item prop="unblock_remark">
                     <el-input type="textarea" :rows="6" v-model="banItem.unblock_remark" />
