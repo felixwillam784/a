@@ -37,7 +37,6 @@ const userFlowInformation = ref<any>({
 onMounted(async ()=>{
     let res = await getUserMoneyFlowDetail(user.token, route.params.id);
     userFlowInformation.value = res.data.data;
-    console.log(res.data.data);
 })
 </script>
 

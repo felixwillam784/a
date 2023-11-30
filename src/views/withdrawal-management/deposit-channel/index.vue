@@ -188,8 +188,6 @@ const getData = async () =>{
     let res = await getDepositChannelList(user.token, formData.value);
     depositChannelList.value = res.data.data;
 
-    console.log(res.data.data);
-
     res = await getChannelAllList(user.token);
     channelNameOptions = res.data.data;
 

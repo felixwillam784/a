@@ -31,10 +31,10 @@ const totalPage = ref<number>(5);
 const manualDeducationList = ref([
     {
         time: "2023-07-01 15:23:00",
-        change_type: "人工充值",
+        change_type: "人工扣款",
         operator: "UserName",
         deduction_amount: 999.99,
-        remark: "人工充值是因为",
+        remark: "人工扣款是因为",
     },
 ])
 

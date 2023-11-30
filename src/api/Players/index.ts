@@ -18,7 +18,6 @@ export function getUserListApi(token: string, data:any): any {
   transformedData['page_num'] = data.page_num;
   transformedData['page_size'] = data.page_size;
 
-    console.log(transformedData);
     const baseURL = import.meta.env.VITE_APP_BASE_API;
       return axios.get(baseURL+'/user/list', {headers : {
           Authorization: token,

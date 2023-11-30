@@ -4,8 +4,11 @@ import { Chart, Grid, Line, Tooltip, Bar, Marker } from 'vue3-charts'
 import { Top, Bottom } from '@element-plus/icons-vue';
 import { getStatisticChartData } from '@/api/dashboard';
 import useStore from '@/store';
+import { useRouter, useRoute } from 'vue-router';
 
 const { user } = useStore();
+const router = useRouter();
+
 const chart1Array = [
   { date: '6-20', visitor_rate: 100},
   { date: '6-21', visitor_rate: 120},
@@ -90,13 +93,17 @@ const visitorOverview = ref({
 	recharge_code_rate: "",
 })
 
-onMounted(async () => {
-    let res =await getStatisticChartData(user.token);
-	chart1data.value = res.data.data.total_visit_count;
-	chart2data.value = res.data.data.total_active_user_count;
-	chart3data.value = res.data.data.total_realtime_online_count;
-	chart4data.value = res.data.data.total_recharge_count;
-	console.log(res);
+onMounted(() => {
+    getStatisticChartData(user.token).then((res:any)=>{
+		chart1data.value = res.data.data.total_visit_count;
+		chart2data.value = res.data.data.total_active_user_count;
+		chart3data.value = res.data.data.total_realtime_online_count;
+		chart4data.value = res.data.data.total_recharge_count;
+	}).catch(()=>{
+        localStorage.clear();
+        user.token = '';
+        router.push({ name: "Login" });
+	});
     //platformOverview.value  = platformRes.data.data;
     
 });

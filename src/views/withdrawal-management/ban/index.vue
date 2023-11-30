@@ -83,7 +83,6 @@ onMounted (()=>{
 
 const getData = async () => {
     let res = await getWithDrawalBanList(user.token, formData.value);
-    console.log(res.data.data);
     banList.value = res.data.data;
 }
 const addBanDialog = () => {

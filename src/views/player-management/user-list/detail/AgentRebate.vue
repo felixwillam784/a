@@ -215,7 +215,7 @@ const getData = async () =>{
                         <p>{{ scope.row.deposit_rebate }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="充值账号" align="center" prop="account">
+                <el-table-column label="充值账户" align="center" prop="account">
                     <template #default="scope">
                         <el-button type="primary" link>{{ scope.row.deposit_user_email	 }}</el-button>
                     </template>

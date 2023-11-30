@@ -133,13 +133,9 @@ const props = defineProps({
 onMounted(()=>{
     
     getSearchdata().catch(()=>{
-            localStorage.clear();
-            router.push({ name: "Login" });
-            user.token = '';
-        //router.push({name:'Login'});
-        // console.log("Asdf");
-        // const f5Event = new KeyboardEvent('keydown', { keyCode: 116 });
-        // document.dispatchEvent(f5Event);
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
     });
 })
 

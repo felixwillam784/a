@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { platformOverviewApi } from '@/api/dashboard';
 import useStore from '@/store';
+import { useRouter, useRoute } from 'vue-router';
 
 const { user } = useStore();
+const router = useRouter();
 
 const platformOverview = ref({
     platform_balance: "",
@@ -24,9 +26,14 @@ const platformOverview = ref({
 })
 
 
-onMounted(async () => {
-    let platformRes =await platformOverviewApi(user.token);
-    platformOverview.value  = platformRes.data.data;
+onMounted(() => {
+    platformOverviewApi(user.token).then((res:any)=>{
+        platformOverview.value  = res.data.data;
+    }).catch(()=>{
+        localStorage.clear();
+        user.token = '';
+        router.push({ name: "Login" });
+    });
     
 });
 

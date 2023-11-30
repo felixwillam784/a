@@ -104,7 +104,6 @@ onMounted(()=>{
 const getData = async () =>{
     let res = await getGameConfigList(user.token, formData.value);
     gameList.value = res.data.data;
-    console.log(res);
 }
 
 const  handleBatchAction = async (type:number)=>{
@@ -115,7 +114,6 @@ const  handleBatchAction = async (type:number)=>{
         game_ids.push(multipleSelection.value[i].game_id);
     }
     let res = await doBatchAction(user.token, type, game_ids);
-    console.log(res);
 
 
 }

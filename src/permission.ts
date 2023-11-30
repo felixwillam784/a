@@ -25,9 +25,7 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done();
     } else {
       const hasGetUserInfo = user.roles.length > 0;
-      // console.log(hasGetUserInfo);
       if (hasGetUserInfo) {
-        // console.log(to.matched);
         if (to.matched.length === 0) {
           from.name ? next({ name: from.name as any }) : next('/401');
         } else {

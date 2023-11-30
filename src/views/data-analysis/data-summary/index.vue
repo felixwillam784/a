@@ -336,7 +336,6 @@ const getData = async () =>{
   temp = await getDataSummaryChartDepositeWithdrawalTotalData(user.token, dateRange.value, formData.value);
   depositWithdrawlTotalData.value = temp.data.data;
 
-  console.log(temp.data.data);
   temp = await getDataSummaryChatGameTotal(user.token, dateRange.value, formData.value);
   gameTotalData.value = temp.data.data;
   

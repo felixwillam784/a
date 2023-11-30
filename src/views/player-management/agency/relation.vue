@@ -37,8 +37,6 @@ const getData = async () =>{
   let res = await getAgentRelationshipList(user.token, formData.value, 1);
   agentReportList1.value = res.data.data;
 
-  console.log(res.data.data);
-
   res = await getAgentRelationshipList(user.token, formData.value, 2);
   agentReportList2.value = res.data.data;
 

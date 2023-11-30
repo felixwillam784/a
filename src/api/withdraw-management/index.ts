@@ -167,7 +167,6 @@ export function addDepositeChannel(token: string, formData:any): any {
 
 export function updateDepositeChannel(token: string, formData:any): any {
 
-    console.log(formData);
     const baseURL = import.meta.env.VITE_APP_BASE_API;
     return axios.post(baseURL+'/deposit-channel/update', {
         product_id: formData.product_id,

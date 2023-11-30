@@ -350,9 +350,9 @@ const getData = async () =>{
                         </el-col>
                     </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="账号信息" name="2">
+                <el-collapse-item title="账户信息" name="2">
                     <template #title>
-                        <h2>账号信息</h2>
+                        <h2>账户信息</h2>
                     </template>
                     <el-row :gutter="20" style="justify-content: center;">
                         <el-col :span="8">
@@ -502,7 +502,7 @@ const getData = async () =>{
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
-                                <el-form-item label="VIP日奖励总计:">
+                                <el-form-item label="VIP会员日奖励总计:">
                                     {{ depositAndWithdrawalData.vip_day_rewards }}
                                 </el-form-item>
                             </el-col>
@@ -849,7 +849,6 @@ const getData = async () =>{
                                     </el-table-column>
                                     <el-table-column label="银行卡号" align="center" prop="bank_card_number" />
                                     <el-table-column label="RFC/CURP类型" align="center" prop="curp_type" />
-                                    <el-table-column label="RFC/CURP" align="center" prop="rfc_curp" />
                                     <el-table-column label="操作" align="center" width="160" fixed="right">
                                         <template #default="scope">
                                             <el-button type="primary" link>修改</el-button>

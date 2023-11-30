@@ -90,7 +90,6 @@ const editDialogShow = ref<boolean>(false);
 const handleedit = (item:GetAdminData) =>{
     editData.value.account = item.role_account;
     editData.value.user = item.role_user;
-    console.log(item);
     editDialogShow.value=true;
 }
 const editData = ref<any>({
