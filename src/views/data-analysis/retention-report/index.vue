@@ -7,7 +7,7 @@ import { number } from 'echarts';
 import useStore from '@/store';
 import {getRetentionReport} from '@/api/DataAnalysis'
 const { user } = useStore();
-
+const router = useRouter();
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -165,12 +165,20 @@ const handleSearch = () => {
   loading.value = true;
   getData().then(() =>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 }
 onMounted(()=>{
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 })
 const getData = async () =>{

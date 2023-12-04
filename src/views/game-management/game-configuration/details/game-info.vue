@@ -81,6 +81,13 @@ const handleShowTab = () => {
 
 const tabList = ref<any>(["Classic", "EvoPlay", "Club"])
 
+const groupTagColor = {
+    
+    NEW:"#80cccc",
+    HOT:"#ffcc99",
+    PG:"#b3e6ff",
+}
+
 const isClassic = ref(true)
 const isEvoPlay = ref(true)
 const isClub = ref(true)
@@ -141,7 +148,7 @@ const gameInformation = ref<any>({
 })
 
 const goBack = () => {
-    router.push({ name: "Game Configuration" });
+    router.push({ name: "Channel Management" });
 }
 
 const handleButtonActive = ( name: string) => {
@@ -265,7 +272,7 @@ onMounted(async ()=>{
                     <el-form >
                         <el-form-item label="游戏分组:">
                             <div style = "display: flex">
-                                <el-text class="game-group" v-for="(item, index) in gameInformation.game_group" :key="index" :style = "{'background-color': '#ff0000'}">{{ item }}</el-text>
+                                <el-text class="game-group" v-for="(item, index) in gameInformation.game_group" :key="index" :style = "{'background-color': groupTagColor[item]}">{{ item }}</el-text>
                             </div>
                         </el-form-item>
                     </el-form>

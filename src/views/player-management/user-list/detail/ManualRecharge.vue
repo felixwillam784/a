@@ -36,7 +36,11 @@ const handleQuery = () => {
     loading.value = true;
     getData().then(()=>{
         loading.value = false;
-    });
+    }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
+  });
 }
 
 const resetQuery = () => {
@@ -49,7 +53,11 @@ onMounted(()=>{
     loading.value = true;
     getData().then(()=>{
         loading.value = false;
-    });
+    }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
+  });
 })
 
 const getData = async () =>{

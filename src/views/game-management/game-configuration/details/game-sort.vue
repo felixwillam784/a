@@ -83,55 +83,11 @@ interface GetGameData {
 }
 
 const gameList = ref<Array<GetGameData>>([
-    {
-        game_index: 1,
-        game_id: "ABCD1234",
-        game_name: "DICE",
-        game_state: "启用",
-        game_type: "DICE",
-        game_distributor: "自研游戏",
-        game_maker: "自研游戏",
-    },
-    {
-        game_index: 2,
-        game_id: "ABCD1234",
-        game_name: "DICE",
-        game_state: "启用",
-        game_type: "DICE",
-        game_distributor: "XXXGame",
-        game_maker: "XXXGame",
-    },
-    {
-        game_index: 3,
-        game_id: "ABCD1234",
-        game_name: "DICE",
-        game_state: "维护中",
-        game_type: "DICE",
-        game_distributor: "XXXGame",
-        game_maker: "XXXGame",
-    },
-    {
-        game_index: 4,
-        game_id: "ABCD1234",
-        game_name: "DICE",
-        game_state: "启用",
-        game_type: "DICE",
-        game_distributor: "XXXGame",
-        game_maker: "XXXGame",
-    },
-    {
-        game_index: 5,
-        game_id: "ABCD1234",
-        game_name: "DICE",
-        game_state: "启用",
-        game_type: "DICE",
-        game_distributor: "XXXGame",
-        game_maker: "XXXGame",
-    },
+
 ])
 
 const goBack = () => {
-    router.push({ name: "Game Configuration" });
+    router.push({ name: "Channel Management" });
 }
 
 const handleButtonActive = (name: string) => {

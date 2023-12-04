@@ -9,7 +9,7 @@ import useStore from '@/store';
 //import { watch } from "fs";
 
 const { user } = useStore();
-
+const router = useRouter();
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -151,6 +151,10 @@ const handleSearch = () => {
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 }
 
@@ -163,6 +167,10 @@ const getData = async () =>{
 onMounted(()=>{
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 })
 </script>

@@ -17,6 +17,7 @@ const platformSettingRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "operation/management",
+        redirect: "a",
         component: ChildrenLayout,
         meta: {
             title: "operation_management",
@@ -26,12 +27,12 @@ const platformSettingRoutes: RouteRecordRaw[] = [
         },
         children: [
             {
-                path: "",
+                path: "a",
                 component: () => import('@/views/platform-setting/operation-management/basic_configuration.vue'),
                 name: "Basic Configuration",
                 meta: {
                     title: "basic_configuration",
-                    hidden: true,
+                    hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
                 },

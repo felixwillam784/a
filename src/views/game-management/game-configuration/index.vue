@@ -45,48 +45,13 @@ const loading = ref<boolean>(false);
 
 const total = ref<number>(3);
 
+const groupTagColor = {
+    
+    NEW:"#80cccc",
+    HOT:"#ffcc99",
+    PG:"#b3e6ff",
+}
 const gameList = ref<Array<GetGameData>>([
-    {
-        game_skin: "picture",
-        game_id: 2626832,
-        game_name: "Black Jack",
-        game_group: [{label: "HOT", color: "#ffcc99"}, {label: "NEW", color: "#80cccc"}, {label: "PG", color: "#b3e6ff"}],
-        game_type: "Poker",
-        game_provider: "PGGame",
-        game_maker: "XXXGame",
-        game_state: "启用",
-        maintenance_time: "",
-        rtp_value: 96.2,
-        game_tab: ["Classic", "EvoPlay", "Club"],
-        game_switch: true
-    },
-    {
-        game_skin: "picture",
-        game_id: 2626832,
-        game_name: "Black Jack",
-        game_group: [{label: "PG", color: "#b3e6ff"}],
-        game_type: "Poker",
-        game_provider: "PGGame",
-        game_maker: "YYYGame",
-        game_state: "维护中",
-        maintenance_time: "2023-06-30 19:00:00 - 2023-06-30 20:00:00",
-        rtp_value: 96.2,
-        game_tab: ["Classic", "EvoPlay", "Club"],
-        game_switch: true
-    },{
-        game_skin: "picture",
-        game_id: 2626832,
-        game_name: "Black Jack",
-        game_group: [{label: "PG", color: "#b3e6ff"}],
-        game_type: "Poker",
-        game_provider: "PGGame",
-        game_maker: "ZZZGame",
-        game_state: "下架",
-        maintenance_time: "",
-        rtp_value: 96.2,
-        game_tab: ["Classic", "EvoPlay", "Club"],
-        game_switch: true
-    },
 ])
 
 const handleQuery = () => {
@@ -224,8 +189,7 @@ const handleSelectionChange = (val: GetGameData[]) => {
                         <el-table-column label="游戏分组" align="left" prop="game_group" width="200">
                             <template #default="scope">
                                 <div style = "display: flex">
-                                    <!--<p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': item.color}">{{ item.label }}</p>--->
-                                    <p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': '#ff0000'}">{{ item }}</p>
+                                    <p class="game-group" v-for="(item, index) in scope.row.game_group" :key="index" :style = "{'background-color': groupTagColor[item]}">{{ item }}</p>
                                 </div>
                             </template>
                         </el-table-column>

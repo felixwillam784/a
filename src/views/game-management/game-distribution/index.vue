@@ -39,44 +39,10 @@ const loading = ref<boolean>(false);
 const total = ref<number>(3);
 
 const gameList = ref<Array<GetGameData>>([
-    {
-        game_index: 1,
-        game_skin: "picture",
-        game_name: "DICE",
-        game_id: 2626832,
-        game_distributor: "自研",
-        game_maker: "自研",
-        game_type: "DICE",
-        game_state: "启用",
-        rtp_value: 96.2,
-    },
-    {
-        game_index: 2,
-        game_skin: "picture",
-        game_name: "Crash",
-        game_id: 2626832,
-        game_distributor: "XXGame",
-        game_maker: "XXGame",
-        game_type: "Crash",
-        game_state: "维护中",
-        rtp_value: 96.2,
-    },
-    {
-        game_index: 3,
-        game_skin: "picture",
-        game_name: "Black Jack",
-        game_id: 2626832,
-        game_distributor: "YYGame",
-        game_maker: "YYGame",
-        game_type: "Poker",
-        game_state: "下架",
-        rtp_value: 96.2,
-    }
 ])
 
 const handleQuery = () => {
     getData();
-
 }
 
 
@@ -210,9 +176,9 @@ const handleSelectionChange = (val: GetGameData[]) => {
                         <el-form-item>
                             <el-button class="search-btn" @click="handleQuery">搜索</el-button>
                             <el-button class="search-btn" @click="handleQuery">重置</el-button>
-                            <el-button class="search-btn" @click="handleQuery">同步</el-button>
                         </el-form-item>
                         <el-form-item>
+                            <el-button class="search-btn" @click="handleQuery">同步</el-button>
                             <el-button class="search-btn" @click="handleQuery">导出Excel</el-button>
                             <el-button class="search-btn" @click="handleQuery">导入Excel</el-button>
                         </el-form-item>                    

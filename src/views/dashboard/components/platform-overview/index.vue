@@ -27,6 +27,7 @@ const platformOverview = ref({
 
 
 onMounted(() => {
+
     platformOverviewApi(user.token).then((res:any)=>{
         platformOverview.value  = res.data.data;
     }).catch(()=>{

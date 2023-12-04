@@ -63,6 +63,10 @@ const depositAndWithdrawalData = ref({
     vip_task_rewards: 10000,
     recharge_rebate: 10000,
     vip_event_bonus: 1000,
+
+    recharge_amount: 10000,
+    deduction_amount:10000,
+    bet_count:1543,
 })
 
 const agentInformation = ref({
@@ -158,7 +162,11 @@ const moreVipBonusShow = () => {
 }
 
 onMounted(()=>{
-    getData();
+    getData().catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
+  });
 })
 
 const getData = async () =>{
@@ -218,7 +226,7 @@ const getData = async () =>{
                     <el-row :gutter="20" style="justify-content: center;">
                         <el-col :span="8">
                             <el-form label-width="200">
-                                <el-form-item label="用户账号:">
+                                <el-form-item label="用户ID:">
                                     {{ basicInformation.user_account }}
                                     <el-button link>
                                         <el-icon>
@@ -414,8 +422,8 @@ const getData = async () =>{
                     <el-row :gutter="20" style="justify-content: center;">
                         <el-col :span="8">
                             <el-form label-width="200">
-                                <el-form-item label="投注金额:">
-                                    {{ depositAndWithdrawalData.bet_amount }}
+                                <el-form-item label="投注次数:">
+                                    {{ depositAndWithdrawalData.bet_count }}
                                 </el-form-item>
                             </el-form>
                         </el-col>
@@ -427,6 +435,25 @@ const getData = async () =>{
                         <el-col :span="8">
                             <el-form-item label="活动赠金:">
                                 {{ depositAndWithdrawalData.activity_bonus }}
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20" style="justify-content: center;">
+                        <el-col :span="8">
+                            <el-form label-width="200">
+                                <el-form-item label="投注金额:">
+                                    {{ depositAndWithdrawalData.bet_amount }}
+                                </el-form-item>
+                            </el-form>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="人工充值金额:">
+                                {{ depositAndWithdrawalData.recharge_amount }}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="人工扣款金额:">
+                                {{ depositAndWithdrawalData.deduction_amount }}
                             </el-form-item>
                         </el-col>
                     </el-row>

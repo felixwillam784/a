@@ -23,19 +23,12 @@ const loading = ref<boolean>(false);
 const total = ref<number>(4);
 
 const userMoneyFlowList = ref<Array<any>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        customer_account: "test77@gmail.com",
-        customer_name: "UserName10001",
-        customer_label: "用户备注",
-        flow_amount: -999,
-        flow_type: "下注",
-        flow_time: "2023-07-12 10:23:24",
-    },
 ])
 
 const handleQuery = () => {
-    getData();
+    getData().then(()=>{
+        loading.value = false;
+    });
 }
 
 const resetQuery = () => {
@@ -43,7 +36,10 @@ const resetQuery = () => {
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    });
 })
 const getData = async () =>{
     let temp = await getUserMoneyFlow(user.token, formData.value);

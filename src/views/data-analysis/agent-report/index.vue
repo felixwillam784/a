@@ -178,16 +178,24 @@ const handleSearch = () => {
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 }
 onMounted(()=>{
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 })
 const getData = async () =>{
-  
+  console.log("start");
   let agentReportListDataRes = await getAgentActivityReport(user.token, dateRange.value, formData.value);
   agentReportList.value  = agentReportListDataRes.data.data;
   total1.value = agentReportListDataRes.data.data.length;
