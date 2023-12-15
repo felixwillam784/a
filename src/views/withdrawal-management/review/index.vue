@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+
+import { getWithdrawlReviewList } from '@/api/withdraw-management';
+
+import useStore from '@/store';
+const { user } = useStore();
 
 interface GetWithdrawalReview {
     id: string,
@@ -24,7 +29,6 @@ interface GetWithdrawalReview {
     upstream_channel: string
     handling_fee: number | string
     free_charge: number | string
-    order_update_time: string
     total_recharge: number | string
     total_withdrawal: number | string
     withdrawal_channel: string
@@ -32,6 +36,9 @@ interface GetWithdrawalReview {
     review_status: number
     operator: string
     submission_time: string
+
+    
+    order_update_time: string
 }
 
 interface RejectInterface {
@@ -43,15 +50,16 @@ const router = useRouter();
 
 const formData = ref<any>({
     user_account: "",
-    nick_name: "",
     invitation_code: "",
-    submission_time: "",
-    wick_time: "",
+    submission_time:[],
+
+    order_update_time:[],
+
     platform_order_number: "",
     upstream_order_number: "",
-    order_status: "待处理",
-    pageNum: 1,
-    pageSize: 20,
+    order_status: 1,
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -72,181 +80,14 @@ const rules = ref<FormRules<RejectInterface>>({
 });
 
 const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        withdrawal_amount: 999,
-        actual_amount: 999,
-        order_status: "待处理",
-        risk_control_hint: "未风控",
-        order_number: "566756756756768568",
-        gaia_order_number: "65rttfer5qweqwedsfsdf",
-        successful_recharge_times: 99,
-        withdrawal_status: "否",
-        withdrawal_times: 11,
-        kol_user: "KOL用户",
-        platform_order_number: "P2Champspay_daishou",
-        upstream_order_number: "TP212334234234234234",
-        upstream_channel: "P2Champspay_daishou",
-        handling_fee: 1,
-        free_charge: 1,
-        order_update_time: "2023-07-12 19:00:00",
-        total_recharge: 1000,
-        total_withdrawal: 999,
-        withdrawal_channel: "XXXXXXXXXXX",
-        withdrawal_method: "GCASH.MAYA.BANK",
-        operator: "UserName",
-        review_status: 0,
-        submission_time: "2023-07-10 19:00:00",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        withdrawal_amount: 999,
-        actual_amount: 999,
-        order_status: "启动代付",
-        risk_control_hint: "未风控",
-        order_number: "566756756756768568",
-        gaia_order_number: "65rttfer5qweqwedsfsdf",
-        successful_recharge_times: 99,
-        withdrawal_status: "是",
-        withdrawal_times: 0,
-        kol_user: "KOL用户",
-        platform_order_number: "P2Champspay_daishou",
-        upstream_order_number: "TP212334234234234234",
-        upstream_channel: "P2Champspay_daishou",
-        handling_fee: 1,
-        free_charge: 1,
-        order_update_time: "2023-07-12 19:00:00",
-        total_recharge: 1000,
-        total_withdrawal: 999,
-        withdrawal_channel: "XXXXXXXXXXX",
-        withdrawal_method: "GCASH.MAYA.BANK",
-        operator: "UserName",
-        review_status: 0,
-        submission_time: "2023-07-10 19:00:00",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        withdrawal_amount: 999,
-        actual_amount: 999,
-        order_status: "已拒绝",
-        risk_control_hint: "IP风控",
-        order_number: "566756756756768568",
-        gaia_order_number: "65rttfer5qweqwedsfsdf",
-        successful_recharge_times: 99,
-        withdrawal_status: "否",
-        withdrawal_times: 11,
-        kol_user: "KOL用户",
-        platform_order_number: "P2Champspay_daishou",
-        upstream_order_number: "TP212334234234234234",
-        upstream_channel: "P2Champspay_daishou",
-        handling_fee: 1,
-        free_charge: 1,
-        order_update_time: "2023-07-12 19:00:00",
-        total_recharge: 1000,
-        total_withdrawal: 999,
-        withdrawal_channel: "XXXXXXXXXXX",
-        withdrawal_method: "GCASH.MAYA.BANK",
-        review_status: 1,
-        operator: "UserName",
-        submission_time: "2023-07-10 19:00:00",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        withdrawal_amount: 999,
-        actual_amount: 999,
-        order_status: "已退款",
-        risk_control_hint: "一级风控",
-        order_number: "566756756756768568",
-        gaia_order_number: "65rttfer5qweqwedsfsdf",
-        successful_recharge_times: 99,
-        withdrawal_status: "否",
-        withdrawal_times: 11,
-        kol_user: "KOL用户",
-        platform_order_number: "P2Champspay_daishou",
-        upstream_order_number: "TP212334234234234234",
-        upstream_channel: "P2Champspay_daishou",
-        handling_fee: 1,
-        free_charge: 1,
-        order_update_time: "2023-07-12 19:00:00",
-        total_recharge: 1000,
-        total_withdrawal: 999,
-        withdrawal_channel: "XXXXXXXXXXX",
-        withdrawal_method: "GCASH.MAYA.BANK",
-        review_status: 0,
-        operator: "UserName",
-        submission_time: "2023-07-10 19:00:00",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        withdrawal_amount: 999,
-        actual_amount: 999,
-        order_status: "已打款",
-        risk_control_hint: "未风控",
-        order_number: "566756756756768568",
-        gaia_order_number: "65rttfer5qweqwedsfsdf",
-        successful_recharge_times: 99,
-        withdrawal_status: "否",
-        withdrawal_times: 11,
-        kol_user: "KOL用户",
-        platform_order_number: "P2Champspay_daishou",
-        upstream_order_number: "TP212334234234234234",
-        upstream_channel: "P2Champspay_daishou",
-        handling_fee: 1,
-        free_charge: 1,
-        order_update_time: "2023-07-12 19:00:00",
-        total_recharge: 1000,
-        total_withdrawal: 999,
-        withdrawal_channel: "XXXXXXXXXXX",
-        withdrawal_method: "GCASH.MAYA.BANK",
-        review_status: 1,
-        operator: "UserName",
-        submission_time: "2023-07-10 19:00:00",
-    },
 ])
 
-const withdrawalReviewItem = ref<GetWithdrawalReview>({
-    id: "",
-    nick_name: "UserName10001",
-    user_account: "test777@gmail.com",
-    withdrawal_amount: 999,
-    actual_amount: 999,
-    order_status: "待处理",
-    risk_control_hint: "未风控",
-    order_number: "566756756756768568",
-    gaia_order_number: "65rttfer5qweqwedsfsdf",
-    successful_recharge_times: 99,
-    withdrawal_status: "否",
-    withdrawal_times: 11,
-    kol_user: "KOL用户",
-    platform_order_number: "P2Champspay_daishou",
-    upstream_order_number: "TP212334234234234234",
-    upstream_channel: "P2Champspay_daishou",
-    handling_fee: 1,
-    free_charge: 1,
-    order_update_time: "2023-07-12 19:00:00",
-    total_recharge: 1000,
-    total_withdrawal: 999,
-    withdrawal_channel: "XXXXXXXXXXX",
-    withdrawal_method: "GCASH.MAYA.BANK",
-    review_status: 0,
-    operator: "UserName",
-    submission_time: "2023-07-10 19:00:00",
-})
+const withdrawalReviewItem = ref<GetWithdrawalReview>()
 
 const orderStatusOptions = ref<Array<any>>([
     {
         label: "待处理",
-        value: "待处理"
+        value: 1
     }
 ])
 
@@ -258,9 +99,27 @@ const rejectOptions = ref<Array<any>>([
 ])
 
 const handleQuery = () => {
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
+    });
 }
 
 const resetQuery = () => {
+    formData.value.user_account="",
+    formData.value.invitation_code="",
+    formData.value.order_update_time=[],
+
+    formData.value.platform_order_number="",
+    formData.value.upstream_order_number="",
+    formData.value.order_status = 1;
+    let now = new Date();
+    formData.value.submission_time[0] = new Date('2020-12-31').toISOString().split('T')[0];
+    formData.value.submission_time[1] = now.toISOString().split('T')[0];
 }
 
 const detailWithdrawalReviewDialog = (item: GetWithdrawalReview) => {
@@ -305,12 +164,45 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const goBulkPassPage = () => {
-    // router.push({name: "Bulk Pass"});
+     router.push({name: "Bulk Pass"});
 }
 
 const goBulkRejectPage = () => {
-    // router.push({name: "Bulk Reject"});
+     router.push({name: "Bulk Reject"});
 }
+onMounted (()=>{
+    let now = new Date();
+    formData.value.submission_time[0] = new Date('2020-12-31').toISOString().split('T')[0];
+    formData.value.submission_time[1] = now.toISOString().split('T')[0];
+    
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
+    });
+})
+const getData = async () => {
+    let res = await getWithdrawlReviewList(user.token, formData.value);
+    withdrawalReviewList.value = res.data.data;
+    console.log(res.data.data);
+}
+
+const order_status = ["待处理","处理中","成功","失败","待人工处理"];
+
+const getFontStyle = (orderStatus : number) => {
+        let color = '';
+        // Determine the color based on the order status value
+        if (orderStatus !== 3) {
+            color = 'green';
+        } else {
+            color = 'red';
+        }
+        return `color: ${color}; font-weight: bold;`;
+}
+
 </script>
 
 <template>
@@ -324,17 +216,14 @@ const goBulkRejectPage = () => {
                                 <el-form-item label="用户账号" prop="user_account">
                                     <el-input v-model="formData.user_account" placeholder="请输入用户账号" />
                                 </el-form-item>
-                                <el-form-item label="邀请码" prop="invitation_code">
-                                    <el-input v-model="formData.invitation_code" placeholder="请输入客户邀请码" />
-                                </el-form-item>
                             </el-form>
                             <el-form :model="formData" :inline="true" label-width="100">
                                 <el-form-item label="订单提交时间" prop="submission_time">
-                                    <el-date-picker v-model="formData.submission_time" type="date" placeholder="选择提交时间"
+                                    <el-date-picker range-separator="到" v-model="formData.submission_time" type="daterange" placeholder="选择提交时间"
                                         format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                                 </el-form-item>
-                                <el-form-item label="订单更新时间" prop="wick_time">
-                                    <el-date-picker v-model="formData.wick_time" type="date" placeholder="选择更新时间"
+                                <el-form-item label="订单更新时间" prop="order_update_time">
+                                    <el-date-picker range-separator="到" v-model="formData.order_update_time" type="daterange" placeholder="选择更新时间"
                                         format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                                 </el-form-item>
                                 <el-form-item label="订单状态" prop="order_status">
@@ -374,26 +263,22 @@ const goBulkRejectPage = () => {
                         </el-table-column>
                         <el-table-column label="提现金额" align="center" prop="withdrawal_amount" width="120">
                             <template #default="scope">
-                                <p>${{ scope.row.withdrawal_amount.toFixed(2) }}</p>
+                                <p>${{ scope.row.withdrawal_amount }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="实到金额" align="center" prop="actual_amount" width="120">
                             <template #default="scope">
-                                <p>${{ scope.row.actual_amount.toFixed(2) }}</p>
+                                <p>${{ scope.row.actual_amount }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="免手续费" align="center" prop="free_charge" width="120">
                             <template #default="scope">
-                                <p>${{ scope.row.free_charge.toFixed(2) }}</p>
+                                <p>${{ scope.row.free_charge }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="订单状态" align="center" prop="order_status" width="120">
                             <template #default="scope">
-                                <Font color="green" v-if="scope.row.order_status == '已打款'">{{ scope.row.order_status }}
-                                </Font>
-                                <Font color="red" v-else-if="scope.row.order_status == '已拒绝'">{{ scope.row.order_status }}
-                                </Font>
-                                <Font v-else>{{ scope.row.order_status }}</Font>
+                                <font :style="getFontStyle(parseInt(scope.row.order_status))" style="font-weight: bold;">{{ order_status[parseInt(scope.row.order_status)] }}</font>
                             </template>
                         </el-table-column>
                         <el-table-column label="风控提示" align="center" prop="risk_control_hint" width="160">
@@ -491,8 +376,8 @@ const goBulkRejectPage = () => {
                         </el-table-column>
                     </el-table>
                     <div style="float: right;">
-                        <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                        <pagination v-if="total > 0" :total="total" v-model:page="formData.page_num"
+                            v-model:limit="formData.page_size" @pagination="handleQuery" />
                     </div>
                 </el-card>
             </el-col>
@@ -564,25 +449,25 @@ const goBulkRejectPage = () => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">提现金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.withdrawal_amount).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.withdrawal_amount) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">实到金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.actual_amount).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.actual_amount) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">手续费:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.handling_fee).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.handling_fee) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.free_charge).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.free_charge) }}</p>
                 </el-col>
             </el-row>
             <el-row>
@@ -600,13 +485,13 @@ const goBulkRejectPage = () => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户总充值:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.total_recharge).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.total_recharge) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户总提现:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.total_withdrawal).toFixed(2) }}</p>
+                    <p>${{ Number(withdrawalReviewItem.total_withdrawal) }}</p>
                 </el-col>
             </el-row>
             <el-row>

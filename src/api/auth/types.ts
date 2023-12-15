@@ -19,6 +19,9 @@ export interface LoginForm {
  * 登录响应类型声明
  */
 export interface LoginResult {
+  name:string;
+  id:number;
+  role_id:number;
   token: string;
   code: string;
   message: string;

@@ -2,19 +2,19 @@ import request from '@/utils/request';
 import axios, { AxiosPromise } from 'axios';
 
 
-export function depositOrderListApi(token: string): any {
+/*export function depositOrderListApi(token: string): any {
     const baseURL = import.meta.env.VITE_APP_BASE_API;
 
     return axios.get(baseURL+'/deposit-order/list', {headers : {
         Authorization: token,
     }});
-}
+}*/
 
 export function getManualPaymentList(token: string, formData: any): any {
     
     const baseURL = import.meta.env.VITE_APP_BASE_API;
     /**/
-    return axios.get(baseURL+'/manual/payment/', {headers : {
+    return axios.get(baseURL+'/manual/payment', {headers : {
         Authorization: token,
     }, params:{
         user_account:formData.user_account,
@@ -46,7 +46,7 @@ export function getWithDrawalBanList(token: string, formData: any): any {
     
     const baseURL = import.meta.env.VITE_APP_BASE_API;
     /**/
-    return axios.get(baseURL+'/withdrawal/ban/', {headers : {
+    return axios.get(baseURL+'/withdrawal/ban', {headers : {
         Authorization: token,
     }, params:{
         user_account:formData.user_account,
@@ -55,6 +55,7 @@ export function getWithDrawalBanList(token: string, formData: any): any {
         page_num:formData.pageNum,
         page_size:formData.pageSize,
     }});
+    
 }
 
 export function addBanList(token: string, formData: any): any {
@@ -200,4 +201,40 @@ export function getProductIDAllList(token:string){
     }});
 
 }
-    
+
+export function getWithdrawlReviewList(token:string, formData:any){
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.get(baseURL+'/withdrawal/review', {headers : {
+        Authorization: token,
+    }, params:{
+        user_account:formData.user_account,
+        submission_start:Math.floor(new Date(formData.submission_time[0]).getTime() / 1000),
+        submission_end:Math.floor(new Date(formData.submission_time[1]).getTime() / 1000),
+        page_num:formData.page_num,
+        page_size:formData.page_size,
+    }});
+}
+
+export function getDepositeOrderList(token:string, formData:any){
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.get(baseURL+'/deposit-order/list', {headers : {
+        Authorization: token,
+    }, params:{
+        user_account:formData.user_account,
+        submission_start:Math.floor(new Date(formData.order_update_time[0]).getTime() / 1000),
+        submission_end:Math.floor(new Date(formData.order_update_time[1]).getTime() / 1000),
+        page_num:formData.page_num,
+        page_size:formData.page_size,
+    }});
+}
+
+export function setDepositeAmount(token: string, id:string, order_amount:number): any {
+
+    const baseURL = import.meta.env.VITE_APP_BASE_API;
+    return axios.post(baseURL+'/deposit/suppliment', {
+        id:id,
+        order_amount:order_amount,
+    }, {
+        headers:{Authorization: token}
+    });
+}

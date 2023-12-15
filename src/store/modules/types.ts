@@ -26,6 +26,9 @@ export interface SettingState {
 export interface UserState {
   token: string;
   nickname: string;
+  name:string,
+  id:number;
+  role_id:number;
   avatar: string;
   roles: string[];
   perms: string[];

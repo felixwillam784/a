@@ -58,7 +58,7 @@ const handleQuery = async () => {
     localStorage.clear();
     router.push({ name: "Login" });
     user.token = '';
-  })
+  });
 }
 const getData = async () => {
     let userListRes = await getUserListApi(user.token, formData.value);

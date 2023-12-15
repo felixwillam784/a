@@ -8,6 +8,8 @@ import { Chart, Grid, Line, Tooltip, Bar, Marker } from 'vue3-charts'
 import useStore from '@/store';
 import {getDataSummaryChatGameTotal, getDataSummaryChartDepositeWithdrawalTotalData, getDataSummaryChartThirdGame, getDataSummaryChartSelfGame, getDataSummaryChartfirstDepositeRetention, getDataSummaryReport, getDataSummaryChartDepositeWithdrawalData, getDataSummaryChartfirstChargeCountData, getDataSummaryChartfirstChargeAmountData, getDataSummaryChartfirstActivityRetention, getDataSummaryChartAgentRetention} from '@/api/DataAnalysis'
 import { fa } from 'element-plus/es/locale';
+import {stringtoDate} from '@/utils/index'
+
 const { user } = useStore();
 const router = useRouter();
 const dateRange = ref([
@@ -288,7 +290,7 @@ const handlePagination = () => {
 }
 
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
@@ -302,13 +304,10 @@ const handleSearch = () => {
   });
 }
 onMounted(()=>{
+  handleDateRange('this week');
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
-  }).catch(()=>{
-    localStorage.clear();
-    router.push({ name: "Login" });
-    user.token = '';
   });
 })
 const getData = async () =>{
@@ -319,6 +318,7 @@ const getData = async () =>{
 
   let temp = await getDataSummaryChartDepositeWithdrawalData(user.token, dateRange.value, formData.value);
   chart1data.value = temp.data.data;
+  //chart1data.value.date = stringtoDate(chart1data.value.date); 
 
   temp = await getDataSummaryChartfirstChargeCountData(user.token, dateRange.value, formData.value);
   chart2data.value = temp.data.data;
@@ -404,7 +404,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="retentionReportList" style="width: 100%;" >
             <el-table-column label = "时间" align="left" prop="data_summary_date_time" width="100">
               <template #default="scope">
-                <p>{{ scope.row.data_summary_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.data_summary_date_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "活跃用户数" align="left" prop="data_summary_active_user_count" width="130">

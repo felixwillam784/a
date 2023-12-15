@@ -41,7 +41,11 @@ onMounted(()=>{
     loading.value = true;
     getData().then(()=>{
         loading.value = false;
-    });
+    }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
+  });
 })
 
 const getData = async () =>{
@@ -54,13 +58,6 @@ const showEditDialog = () => {
     editData.value.ratio1 = parseFloat(userAccountList.value[0].ratio);
     editData.value.ratio2 = parseFloat(userAccountList.value[1].ratio);
     editData.value.ratio3 = parseFloat(userAccountList.value[2].ratio);
-}
-
-const handleQuery = () =>{
-    loading.value = true;
-    getData().then(()=>{
-        loading.value = false;
-    });
 }
 
 const updateRelationSetting = () =>{

@@ -147,7 +147,7 @@ const handlePagination = () => {
 }
 
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
@@ -161,6 +161,7 @@ const handleSearch = () => {
   });
 }
 onMounted(()=>{
+  handleDateRange('this week');
   loading.value = true;
   getData().then(()=>{
     loading.value = false;

@@ -45,3 +45,9 @@ export function mix(color1: string, color2: string, weight: number) {
   const bStr = ('0' + (b || 0).toString(16)).slice(-2);
   return '#' + rStr + gStr + bStr;
 }
+
+export function stringtoDate(dateString:string) {
+  const date = new Date(dateString);
+  const formattedDate = date.toISOString().split('T')[0];
+  return formattedDate;
+}

@@ -6,6 +6,7 @@ import moment from 'moment-timezone';
 import { number } from 'echarts';
 import useStore from '@/store';
 import {getRetentionReport} from '@/api/DataAnalysis'
+import {stringtoDate} from '@/utils/index'
 const { user } = useStore();
 const router = useRouter();
 const dateRange = ref([
@@ -158,7 +159,7 @@ const handlePagination = () => {
 }
 
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
@@ -172,6 +173,7 @@ const handleSearch = () => {
   });
 }
 onMounted(()=>{
+  handleDateRange('this week');
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
@@ -237,7 +239,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="retentionReportList" style="width: 100%;" >
             <el-table-column label = "时间" align="left" prop="retention_date_time" width="100">
               <template #default="scope">
-                <p>{{ scope.row.retention_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.retention_date_time) }}</p>
               </template>
             </el-table-column> 
             <el-table-column label = "新增注册" align="left" prop="retention_new_register_count" width="100">

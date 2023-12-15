@@ -17,6 +17,9 @@ const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     token: localStorage.get('token') || '',
+    name:"",
+    id:-1,
+    role_id:-1,
     nickname: '',
     avatar: 'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif',
     roles: [],
@@ -50,13 +53,19 @@ const useUserStore = defineStore({
         })
           .then((response) => {
             console.log('>>>>>>>>>>>')
-            console.log(response.data)
             // const { token } = response;
             // // const access_token = tokenType + ' ' + accessToken;
             localStorage.set('token', 'Bearer ' + response.data.token);
             // // const networkData: NetworkData = NetworkData.getInstance();
             // // networkData.setToken(access_token);
             this.token = 'Bearer ' + response.data.token;
+            this.name = response.data.name;
+            this.id = response.data.id;
+            this.role_id = response.data.role_id;
+            
+            console.log(response.data);
+            console.log(this.id);
+            console.log(this.role_id);
             resolve(response.data);
           })
           .catch((error) => {

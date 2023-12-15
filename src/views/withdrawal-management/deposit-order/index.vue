@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { depositOrderListApi } from '@/api/withdraw-management';
 import { Search, Refresh, Upload, Plus, CopyDocument } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
+import { getDepositeOrderList, setDepositeAmount } from '@/api/withdraw-management';
 
 import useStore from '@/store';
 
@@ -22,7 +22,7 @@ interface GetDepositOrder {
     upstream_order_number: string
     order_status: string
     amount_type: string
-    order_amount: number | string
+    order_amount: string
     actual_amount: number
     submission_time: string
     order_update_time: string
@@ -42,8 +42,10 @@ const formData = ref<any>({
     user_account: "",
     nick_name: "",
     user_id: "",
-    submission_time: "",
-    order_update_time: "",
+    submission_time:[],
+
+    order_update_time:[],
+
     order_status: "",
     order_number: "",
     channel_order_number: "",
@@ -51,8 +53,8 @@ const formData = ref<any>({
     first_charge_status: "",
     upstream_channel: "",
     gaia_order_number: "",
-    pageNum: 1,
-    pageSize: 20,
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -74,30 +76,32 @@ const depositOrderList = ref<Array<GetDepositOrder>>([
     
 ])
 
-const depositOrderItem = ref<GetDepositOrder>({
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    user_account: "test777@gmail.com",
-    nick_name: "UserName10001",
-    user_name: "Faker",
-    order_number: "566756756756768568",
-    platform_order_number: "XXXXXXXXXXXXX",
-    channel_order_number: "YYYYYYYYYYYYY",
-    upstream_order_number: "ZZZZZZZZZZZZZ",
-    order_status: "支付失败",
-    amount_type: "充值",
-    order_amount: "",
-    actual_amount: 999,
-    submission_time: "2020-07-12 23:00:00",
-    order_update_time: "2020-07-12 23:00:00",
-    recharge_method: "NNNNNNNNN",
-    tax_number: "MMMMMMMM",
-    payment_channel: "gaia",
-    recharge_type: "理财活动",
-    first_charge_status: "是",
-    upstream_channel: "P2Champspay_daishou",
-    gaia_order_number: "65rttfer5qweqwedsfsdf",
-    deposit_type: "充值",
-});
+const depositOrderItem = ref<GetDepositOrder>(
+    {
+        id: "string",
+        user_account: "string",
+        nick_name: "string",
+        user_name: "string",
+        order_number: "string",
+        platform_order_number: "string",
+        channel_order_number: "string",
+        upstream_order_number: "string",
+        order_status: "string",
+        amount_type: "string",
+        order_amount: "number",
+        actual_amount: 854,
+        submission_time: "string",
+        order_update_time: "string",
+        recharge_method: "string",
+        tax_number: "string",
+        payment_channel: "string",
+        recharge_type: "string",
+        first_charge_status: "string",
+        upstream_channel: "string",
+        gaia_order_number: "string",
+        deposit_type: "string",
+    }
+);
 
 const orderStatusOptions = ref<Array<any>>([
     {
@@ -107,6 +111,7 @@ const orderStatusOptions = ref<Array<any>>([
 ])
 
 const handleQuery = () => {
+    getData();
 }
 
 const detailManualPaymentDialog = (item: GetDepositOrder) => {
@@ -123,7 +128,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            console.log('submit!');
+            setDepositeAmount(user.token, depositOrderItem.value.platform_order_number, parseInt(depositOrderItem.value?.order_amount));
+            console.log(depositOrderItem.value);
         } else {
             console.log('error submit!', fields)
         }
@@ -135,17 +142,34 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const makeOrder = (item: GetDepositOrder) => {
+    depositOrderItem.value = item;
     depositOrderDialogVisible.value = true;
 }
 
-onMounted(async () => {
+onMounted (()=>{
+    let now = new Date();
+    formData.value.order_update_time[0] = new Date('2020-12-31').toISOString().split('T')[0];
+    formData.value.order_update_time[1] = now.toISOString().split('T')[0];
+    
+    getData();
+})
+const getData = async () => {
+    let res = await getDepositeOrderList(user.token, formData.value);
+    depositOrderList.value = res.data.data;
+    console.log(res.data.data);
+}
 
-    let depositOrderRes =await depositOrderListApi(user.token);
-    depositOrderList.value  = depositOrderRes.data.data;
-
-
-});
-
+const getFontStyle = (orderStatus : number) => {
+        let color = '';
+        // Determine the color based on the order status value
+        if (orderStatus === 0 || orderStatus === 1) {
+            color = 'green';
+        } else {
+            color = 'red';
+        }
+        return `color: ${color}; font-weight: bold;`;
+}
+const order_stats = ["订单已关闭", "支付失败", "订单生成", "支付中", "支付成功", "业务处理完成", "已退款"];
 </script>
 
 <template>
@@ -176,11 +200,11 @@ onMounted(async () => {
                     </el-form>
                     <el-form :model="formData" :inline="true" label-width="100">
                         <el-form-item label="订单提交时间" prop="submission_time">
-                            <el-date-picker v-model="formData.submission_time" type="date" placeholder="请选择提交时间"
+                            <el-date-picker range-separator="到" v-model="formData.submission_time" type="daterange" placeholder="选择提交时间"
                                 format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                         </el-form-item>
                         <el-form-item label="订单更新时间" prop="order_update_time">
-                            <el-date-picker v-model="formData.order_update_time" type="date" placeholder="选择更新时间"
+                            <el-date-picker range-separator="到" v-model="formData.order_update_time" type="daterange" placeholder="选择更新时间"
                                 format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
                         </el-form-item>
                         
@@ -275,12 +299,7 @@ onMounted(async () => {
                         </el-table-column>
                         <el-table-column label="订单状态" align="center" prop="order_status" width="160">
                             <template #default="scope">
-                                <font v-if="scope.row.order_status == '支付中'" style="font-weight: bold;">{{
-                                    scope.row.order_status }}</font>
-                                <font color="green" v-else-if="scope.row.order_status == '支付成功'" style="font-weight: bold;">
-                                    {{ scope.row.order_status }}
-                                </font>
-                                <font color="red" v-else style="font-weight: bold;">{{ scope.row.order_status }}</font>
+                                <font :style="getFontStyle(parseInt(scope.row.order_status))" style="font-weight: bold;">{{ order_stats[parseInt(scope.row.order_status) + 2] }}</font>
                             </template>
                         </el-table-column>
                         <el-table-column label="存款类型" align="center" prop="deposit_type">

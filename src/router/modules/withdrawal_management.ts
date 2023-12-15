@@ -29,6 +29,7 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "review",
+                redirect: "a",
                 component: ChildrenLayout,
                 meta: {
                     title: "提现审核",
@@ -40,11 +41,12 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 
                 children: [
                     {
-                        path: "",
+                        path: "a",
                         component: () => import('@/views/withdrawal-management/review/index.vue'),
                         name: "Withdrawal Review",
                         meta: {
-                            hidden: true,
+                            hidden: false,
+                            title: "提现审核",
                             roles: ["ADMIN"],
                             keepAlive: true
                         },

@@ -28,6 +28,10 @@ const userMoneyFlowList = ref<Array<any>>([
 const handleQuery = () => {
     getData().then(()=>{
         loading.value = false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
     });
 }
 
@@ -39,6 +43,10 @@ onMounted(()=>{
     loading.value = true;
     getData().then(()=>{
         loading.value = false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
     });
 })
 const getData = async () =>{

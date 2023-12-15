@@ -50,42 +50,46 @@ const rules = ref<FormRules<GetBan>>({
 });
 
 const blackList = ref<Array<GetBan>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        user_account: "test777@gmail.com",
-        nick_name: "UserName10001",
-        blackout_time: "2023-07-10 19:00:00",
-        creation_reason: "违规行为XXX",
-        operator: "UserName",
-        ban_remark: "违规行为XXX",
-    },
 ])
 
 const blackItem = ref<GetBan>({
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    user_account: "test777@gmail.com",
-    nick_name: "UserName10001",
-    blackout_time: "2023-07-10 19:00:00",
-    creation_reason: "违规行为XXX",
-    operator: "UserName",
-    ban_remark: "违规行为XXX",
+    id: "",
+    user_account: "",
+    nick_name: "",
+    blackout_time: "",
+    creation_reason: "",
+    operator: "",
+    ban_remark: "",
 })
 
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    }).catch(()=>{
+    	localStorage.clear();
+    	router.push({ name: "Login" });
+    	user.token = '';
+  });
 }
 
 const handleReset = () => {
+    formData.value.user_account =  "";
+    formData.value.nick_name = "";
+    formData.value.ban_time= [
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+        moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
+    ];
 }
 
 const addBlackDialog = () => {
     blackItem.value = {
         id: "",
-        user_account: "test777@gmail.com",
-        nick_name: "UserName10001",
-        blackout_time: "2023-07-10 19:00:00",
-        creation_reason: "违规行为XXX",
-        operator: "UserName",
+        user_account: "",
+        nick_name: "",
+        blackout_time: "",
+        creation_reason: "",
+        operator: "",
         ban_remark: "",
     }
     blackDialogVisible.value = true;
@@ -135,7 +139,14 @@ const deleteBlackList = async () =>{
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    }).catch(()=>{
+    	localStorage.clear();
+    	router.push({ name: "Login" });
+    	user.token = '';
+    });
 })
 </script>
 
@@ -147,10 +158,10 @@ onMounted(()=>{
                 <div class="search">
                     <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
                         <el-form-item label="用户账号" prop="user_account">
-                            <el-input v-model="formData.user_cpf" placeholder="请输入用户账号" />
+                            <el-input v-model="formData.user_account" placeholder="请输入用户账号" />
                         </el-form-item>
                         <el-form-item label="客户昵称" prop="nick_name">
-                            <el-input v-model="formData.user_cpf" placeholder="请输入客户昵称" />
+                            <el-input v-model="formData.nick_name66532" placeholder="请输入客户昵称" />
                         </el-form-item>
                         <el-form-item label="封禁时间:">
                             <el-date-picker type="daterange" v-model="formData.ban_time" range-separator="至"

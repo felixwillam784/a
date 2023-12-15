@@ -6,6 +6,7 @@ import moment from 'moment-timezone';
 
 import {getChargeWidrawReport} from '@/api/DataAnalysis'
 import useStore from '@/store';
+import {stringtoDate} from '@/utils/index'
 //import { watch } from "fs";
 
 const { user } = useStore();
@@ -144,10 +145,11 @@ const handlePagination = () => {
 }
 
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
+  handleDateRange('this week');
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
@@ -165,6 +167,7 @@ const getData = async () =>{
   total.value = depositWithdrawDataRes.data.data.length;
 }
 onMounted(()=>{
+  handleDateRange('this week');
   getData().then(()=>{
     loading.value = false;
   }).catch(()=>{
@@ -217,7 +220,7 @@ onMounted(()=>{
           <el-table v-loading="loading" :data="chargeWithdrawReportList" style="width: 100%;">
             <el-table-column label = "时间" align="left" prop="charge_withdraw_date_time" width="120">
               <template #default="scope">
-                <p>{{ scope.row.charge_withdraw_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.charge_withdraw_date_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "平台充提差" align="left" prop="charge_withdraw_platform_difference" width="120">

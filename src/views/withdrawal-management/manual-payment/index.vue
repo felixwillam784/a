@@ -62,71 +62,6 @@ const rules = ref<FormRules<GetManualPayment>>({
 });
 
 const manualPaymentList = ref<Array<GetManualPayment>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        order_amount: 999,
-        change_type: "人工充值",
-        code_ratio: "1倍",
-        operator: "UserName",
-        invitation_code: "SJSHdkdk012",
-        user_type: "KOL用户",
-        submission_time: "2023-07-10 19:00:00",
-        remark: "desc desc desc",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        order_amount: 999,
-        change_type: "主播加金",
-        code_ratio: "1倍",
-        operator: "UserName",
-        invitation_code: "SJSHdkdk012",
-        user_type: "KOL用户",
-        submission_time: "2023-07-10 19:00:00",
-        remark: "desc desc desc",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        order_amount: 999,
-        change_type: "异常补金",
-        code_ratio: "1倍",
-        operator: "UserName",
-        invitation_code: "SJSHdkdk012",
-        user_type: "KOL用户",
-        submission_time: "2023-07-10 19:00:00",
-        remark: "desc desc desc",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        order_amount: 999,
-        change_type: "手动增金",
-        code_ratio: "1倍",
-        operator: "UserName",
-        invitation_code: "SJSHdkdk012",
-        user_type: "KOL用户",
-        submission_time: "2023-07-10 19:00:00",
-        remark: "desc desc desc",
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        nick_name: "UserName10001",
-        user_account: "test777@gmail.com",
-        order_amount: 999,
-        change_type: "虚拟账号加金",
-        code_ratio: "1倍",
-        operator: "UserName",
-        invitation_code: "SJSHdkdk012",
-        user_type: "KOL用户",
-        submission_time: "2023-07-10 19:00:00",
-        remark: "desc desc desc",
-    },
 ])
 
 const manualPaymentItem = ref<GetManualPayment>({
@@ -151,11 +86,25 @@ const typeOptions = ref<Array<any>>([
 ])
 
 const handleQuery = () => {
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value = false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
+    });
 }
 
 onMounted(()=>{
-    getData();
+    loading.value = true;
+    getData().then(()=>{
+        loading.value =false;
+    }).catch(()=>{
+        localStorage.clear();
+        router.push({ name: "Login" });
+        user.token = '';
+    });
 })
 
 const getData = async () =>{

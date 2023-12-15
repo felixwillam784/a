@@ -6,6 +6,8 @@ import moment from 'moment-timezone';
 import { number } from 'echarts';
 import useStore from '@/store';
 import {getAgentActivityReport, getAgentNewReport, getAgentWarningReport} from '@/api/DataAnalysis'
+import {stringtoDate} from '@/utils/index'
+
 const { user } = useStore();
 
 
@@ -171,7 +173,7 @@ const handlePagination = () => {
 }
 
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
@@ -185,6 +187,7 @@ const handleSearch = () => {
   });
 }
 onMounted(()=>{
+  handleDateRange('this week');
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
@@ -263,7 +266,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="agentReportList" style="width: 100%;">
             <el-table-column label = "时间" align="left" prop="agent_date_time" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.agent_date_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "总代理数" align="left" prop="agent_agents_count" width="160">
@@ -353,7 +356,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="newAgentReportList" style="width: 100%;">
             <el-table-column label = "时间" align="left" prop="agent_date_time" width="240">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.agent_date_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "新增代理数" align="left" prop="agent_new_agents_count" width="240">
@@ -396,7 +399,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="agentRiskList" style="width: 100%;">
             <el-table-column label = "时间" align="left" prop="agent_date_time" width="270">
               <template #default="scope">
-                <p>{{ scope.row.agent_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.agent_date_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column label = "活跃代理数" align="left" prop="agent_active_count" width="270">

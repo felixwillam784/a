@@ -7,6 +7,7 @@ import { number } from 'echarts';
 import { log } from 'console';
 import useStore from '@/store';
 import {getUserQualityReport} from '@/api/DataAnalysis'
+import {stringtoDate} from '@/utils/index'
 
 const { user } = useStore();
 const router = useRouter();
@@ -172,7 +173,7 @@ const handleExportLTV = () => {
 const handleExportRetention = () => {
 }
 const handleReset = () => {
-  handleDateRange('today');
+  handleDateRange('this week');
 }
 
 const handleSearch = () => {
@@ -186,6 +187,7 @@ const handleSearch = () => {
   });
 }
 onMounted(()=>{
+  handleDateRange('this week');
   loading.value = true;
   getData().then(() => {
     loading.value = false;
@@ -245,7 +247,7 @@ const getData = async () =>{
           <el-table v-loading="loading" :data="userQualityReportList" style="width: 100%;" >
             <el-table-column label = "时间" align="left" prop="user_quality_date_time" width="120">
               <template #default="scope">
-                <p>{{ scope.row.user_quality_date_time }}</p>
+                <p>{{ stringtoDate(scope.row.user_quality_date_time) }}</p>
               </template>
             </el-table-column>
 			<el-table-column label = "注册人数" align="left" prop="user_quality_register_count" width="120">

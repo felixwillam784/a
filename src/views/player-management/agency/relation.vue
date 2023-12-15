@@ -30,6 +30,10 @@ onMounted(()=>{
 
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
 })
 
@@ -76,7 +80,17 @@ const handleQuery = () =>{
   loading.value = true;
   getData().then(()=>{
     loading.value = false;
+  }).catch(()=>{
+    localStorage.clear();
+    router.push({ name: "Login" });
+    user.token = '';
   });
+}
+
+const resetQuery = () => {
+  formData.value.user_account = "";
+  formData.value.account_status = "";
+  formData.value.least_benefit = 0;
 }
 </script>
 
