@@ -85,15 +85,14 @@ const handleQuery = () => {
     });
 }
 onMounted (()=>{
-    /*loading.value = true;
+    loading.value = true;
     getData().then(()=>{
         loading.value = false;
     }).catch(()=>{
         localStorage.clear();
         router.push({ name: "Login" });
         user.token = '';
-    });*/
-    getData();
+    });
 })
 
 const getData = async () => {

@@ -34,7 +34,8 @@ interface GetWithdrawalReview {
     withdrawal_channel: string
     withdrawal_method: string
     review_status: number
-    operator: string
+    operator_id : string
+    operator_name : string
     submission_time: string
 
     
@@ -187,10 +188,12 @@ onMounted (()=>{
 const getData = async () => {
     let res = await getWithdrawlReviewList(user.token, formData.value);
     withdrawalReviewList.value = res.data.data;
+    console.log(user.id);
     console.log(res.data.data);
 }
 
 const order_status = ["待处理","处理中","成功","失败","待人工处理"];
+
 
 const getFontStyle = (orderStatus : number) => {
         let color = '';
@@ -203,6 +206,12 @@ const getFontStyle = (orderStatus : number) => {
         return `color: ${color}; font-weight: bold;`;
 }
 
+const operate = (action:number) => {
+
+}
+const lock = () => {
+
+}
 </script>
 
 <template>
@@ -367,11 +376,10 @@ const getFontStyle = (orderStatus : number) => {
                             <template #default="scope">
                                 <el-button type="danger" link
                                     @click="detailWithdrawalReviewDialog(scope.row)">详情</el-button>
-                                <el-button type="primary" link v-if="scope.row.order_status == '待处理'">锁定</el-button>
-                                <el-button type="success" link v-else-if="scope.row.order_status == '已打款'">同意</el-button>
-                                <el-button type="danger" link v-else>已锁定</el-button>
-                                <el-button type="danger" link
-                                    :class="scope.row.order_status != '已打款' ? 'hidden' : ''">拒绝</el-button>
+                                <el-button type="primary" link v-if="scope.row.order_status == 0">鎖定</el-button>
+                                <el-button type="success" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == user.id" @click="operate(1)">同意</el-button>
+                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == user.id" @click="operate(0)">拒绝</el-button>
+                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) != user.id" @click="lock()">已锁定</el-button>
                             </template>
                         </el-table-column>
                     </el-table>

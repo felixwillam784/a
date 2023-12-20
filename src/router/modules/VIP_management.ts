@@ -1,0 +1,44 @@
+import { RouteRecordRaw } from 'vue-router';
+export const Layout = () => import('@/layout/index.vue');
+const ChildrenLayout = () => import('@/views/layout/index.vue');
+
+const VIPManagementRoutes: RouteRecordRaw[] = [
+    {
+        path: "/VIP/management",
+        component: Layout,
+        redirect: "manage",
+        meta: {
+            title: "VIP管理",
+            icon: "system",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        },
+        children: [
+            {
+                path: "manage",
+                component: () => import('@/views/vip-management/index.vue'),
+                name: "VIPManagement",
+                meta: {
+                    title:"VIP管理",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },  
+            },
+            {
+                path: "other",
+                component: () => import('@/views/Authentication-management/role-manage/index.vue'),
+                name: "RoleManagement",
+                meta: {
+                    title:"asdf",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+        ]
+    },
+];
+
+export default VIPManagementRoutes;

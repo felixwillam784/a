@@ -5,22 +5,26 @@ import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 
 interface GetVIPData {
-    id: string,
-    vip_level: string,
-    required_recharge: number,
-    required_bet: number,
-    required_people_number: number,
-    bonus: number,
-    betting_rebate: number,
-    withdrawal_fee: number,
-    free_fee_quota: number,
+    vip_level:number,
+    vip_rank:string,
+    recharge_vip_upgrade:number,
+    coding_vip_upgrade:number,
+    withdrawal_fee:number,
+    free_amount_month:number,
+    maximum_amount_amount:number,
+    daily_limit_amount:number,
+    monthly_limit_amount:number,
+    daily_limit_time:number,
+    monthly_limit_time:number,
+    recharge_vip_up:number,
+    coding_vip_relegation:number,
+    vip_limit_days:number,
+    vip_and_was_lowered:number,
 }
 
 const router = useRouter();
 
 const formData = ref<any>({
-    vip_level: "",
-    customer_name: "",
     pageNum: 1,
     pageSize: 20,
 })
@@ -28,58 +32,48 @@ const formData = ref<any>({
 const loading = ref<boolean>(false);
 const vipDialogVisible = ref<boolean>(false);
 const vipDialogTitle = ref<string>("VIP信息修改");
-const total = ref<number>(3);
+const total = ref<number>(2);
 const modifyReason = ref<string>("");
 const submitBtnText = ref<string>("");
 const closeBtnText = ref<string>("");
 
-const vipList = ref<Array<GetVIPData>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        vip_level: "VIP0",
-        required_recharge: 0,
-        required_bet: 0,
-        required_people_number: 0,
-        bonus: 0,
-        betting_rebate: 0,
-        withdrawal_fee: 4,
-        free_fee_quota: 100,
+const vipList = ref<Array<GetVIPData>>([{
+        vip_level:0,
+        vip_rank:"Iron",
+        recharge_vip_upgrade:0,
+        coding_vip_upgrade:0,
+        withdrawal_fee:2.00,
+        free_amount_month:0.00,
+        maximum_amount_amount:20000.00,
+        daily_limit_amount:20000.00,
+        monthly_limit_amount:10,
+        daily_limit_time:30,
+        monthly_limit_time:0,
+        recharge_vip_up:0,
+        coding_vip_relegation:0,
+        vip_limit_days:30,
+        vip_and_was_lowered:0,
     },
     {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        vip_level: "VIP1",
-        required_recharge: 100,
-        required_bet: 100,
-        required_people_number: 1,
-        bonus: 100,
-        betting_rebate: 1,
-        withdrawal_fee: 3,
-        free_fee_quota: 100,
-    },
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        vip_level: "VIP2",
-        required_recharge: 200,
-        required_bet: 200,
-        required_people_number: 3,
-        bonus: 200,
-        betting_rebate: 2,
-        withdrawal_fee: 2,
-        free_fee_quota: 1000,
+        vip_level:1,
+        vip_rank:"Bronze",
+        recharge_vip_upgrade:0,
+        coding_vip_upgrade:0,
+        withdrawal_fee:1.95,
+        free_amount_month:0.00,
+        maximum_amount_amount:20000.00,
+        daily_limit_amount:20000.00,
+        monthly_limit_amount:10,
+        daily_limit_time:30,
+        monthly_limit_time:0,
+        recharge_vip_up:100,
+        coding_vip_relegation:100,
+        vip_limit_days:30,
+        vip_and_was_lowered:1,
     },
 ])
 
-const vipItem = ref<GetVIPData>({
-    id: "",
-    vip_level: "",
-    required_recharge: 0,
-    required_bet: 0,
-    required_people_number: 0,
-    bonus: 0,
-    betting_rebate: 0,
-    withdrawal_fee: 0,
-    free_fee_quota: 0,
-})
+const vipItem = ref<GetVIPData>()
 
 const handleQuery = () => {
 }
@@ -153,6 +147,7 @@ const parsePercentage = (value: string) => {
 const submitForm = () => {
 
 }
+const value1 = ref(true)
 </script>
 
 <template>
@@ -161,43 +156,48 @@ const submitForm = () => {
             <el-col :span="24" :xs="24">
 
                 <div class="search">
-                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-                        <el-form-item label="VIP等级" prop="vip_level">
-                            <el-input v-model="formData.vip_level" placeholder="请输入VIP等级" clearable />
-                        </el-form-item>
-                        <el-form-item label="客户账号" prop="customer_name">
-                            <el-input v-model="formData.customer_name" placeholder="请输入客户账号" clearable />
-                        </el-form-item>
+                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120" class="right_position">
                         <el-form-item>
-                            <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
-                            <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-                            <el-button :icon="Upload" @click="importExcel">excel导入</el-button>
-                            <el-button :icon="Plus" @click="addVIPDialog">添加</el-button>
+                            <el-button>新增VIP等级</el-button>
+                            <el-button>VIP段位</el-button>
+                            <el-button>模板导出</el-button>
+                            <el-button>Excel导入</el-button>
+                            <el-button>Excel导出</el-button>
                         </el-form-item>
                     </el-form>
+                    <div class="right_position" style="margin-right:20px">
+                        <el-switch
+                            size = "large"
+                            v-model="value1"
+                            inline-prompt
+                            active-text="开启"
+                            inactive-text="关闭"
+                        />
+                    </div>
                 </div>
 
                 <el-card>
                     <el-table v-loading="loading" :data="vipList" style="width: 100%;">
-                        <el-table-column label="VIP等级" align="center" prop="vip_level" width="160" />
-                        <el-table-column label="所需充值（$）" align="center" prop="required_recharge" width="140" />
-                        <el-table-column label="所需下注（$）" width="140" align="center" prop="required_bet" />
-                        <el-table-column label="所需要求人数" width="140" align="center" prop="required_people_number" />
-                        <el-table-column label="赠送彩金（$）" align="center" prop="bonus" width="140"></el-table-column>
-                        <el-table-column label="投注返利（%）" align="center" prop="betting_rebate">
+                        <el-table-column label="vip等级" align="center" prop="vip_level" width="160" />
+                        <el-table-column label="vip段位" align="center" prop="vip_rank" width="160" />
+                        <el-table-column label="vip升级所需充值" align="center" prop="recharge_vip_upgrade" width="160" />
+                        <el-table-column label="vip升级所需打码" align="center" prop="coding_vip_upgrade" width="160" />
+                        <el-table-column label="提现手续费" align="center" prop="withdrawal_fee" width="160" />
+                        <el-table-column label="提现免手续费 额度/月" align="center" prop="free_amount_month" width="160" />
+                        <el-table-column label="单笔最高提现金额" align="center" prop="maximum_amount_amount" width="160" />
+                        <el-table-column label="每日可提现额度" align="center" prop="daily_limit_amount" width="160" />
+                        <el-table-column label="每月可提现额度" align="center" prop="monthly_limit_amount" width="160" />
+                        <el-table-column label="每日提现次数限制" align="center" prop="daily_limit_time" width="160" />
+                        <el-table-column label="每月提现次数限制" align="center" prop="monthly_limit_time" width="160" />
+                        <el-table-column label="vip保级所需充值" align="center" prop="recharge_vip_up" width="160" />
+                        <el-table-column label="vip保级所需打码" align="center" prop="coding_vip_relegation" width="160" />
+                        <el-table-column label="vip保级时效(天)" align="center" prop="vip_limit_days" width="160" />
+                        <el-table-column label="vip保级失败降低等级" align="center" prop="vip_and_was_lowered" width="160" />
+                        
+                        <el-table-column label="操作" align="center" fixed="right" width="120">
                             <template #default="scope">
-                                <p>{{ scope.row.betting_rebate }}%</p>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="提现手续费（%）" align="center" prop="withdrawal_fee">
-                            <template #default="scope">
-                                <p>{{ scope.row.withdrawal_fee }}%</p>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="免手续费额度（$/月）" align="center" prop="free_fee_quota"></el-table-column>
-                        <el-table-column align="center" fixed="right" width="120">
-                            <template #default="scope">
-                                <el-button type="success" link @click="editVIPDialog(scope.row)">修改</el-button>
+                                <el-button type="primary" link>详情</el-button>
+                                <el-button type="danger" link>删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -263,5 +263,10 @@ const submitForm = () => {
 
 .el-table--enable-row-transition .el-table__body td.el-table__cell {
     height: 80px;
+}
+
+.right_position {
+    display: flex;
+    justify-content: right;
 }
 </style>

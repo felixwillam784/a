@@ -9,6 +9,7 @@ import gameManagementRoutes from "@/router/modules/game_management";
 import thirdpartyManagementRoutes from "@/router/modules/thirdparty_management";
 import authorityManagementRoutes from "@/router/modules/authority_management";
 import platformSettingRoutes from "@/router/modules/platform_setting";
+import VIPManagementRoutes from "@/router/modules/VIP_management";
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -48,6 +49,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
 export const asyncRoutes: Array<RouteRecordRaw> = [
   ...dataAnalysisManagementRoutes,
   ...playerManagementRoutes,
+  ...VIPManagementRoutes,
   ...webpageManagementRoutes,
   ...withdrawalManagementRoutes,
   ...eventManagementRoutes,
