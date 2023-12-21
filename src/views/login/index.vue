@@ -92,7 +92,6 @@ function handleLogin() {
     if (valid) {
 
       state.loading = true;
-
       user
         .login(state.loginForm)
         .then((res) => {
@@ -100,6 +99,7 @@ function handleLogin() {
           state.loading = false;
         })
         .catch(() => {
+          console.log("here3");
           state.loading = false;
           handleCaptchaGenerate();
         });

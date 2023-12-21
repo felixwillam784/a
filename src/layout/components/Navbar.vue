@@ -82,6 +82,7 @@ function logout() {
       })
       .then(() => {
         router.push(`/login?redirect=${route.fullPath}`);
+        router.go(0);
       });
   });
 }

@@ -63,6 +63,7 @@ const useUserStore = defineStore({
             this.name = response.data.name;
             this.id = response.data.id;
             this.role_id = response.data.role_id;
+            resolve(response);
           })
           .catch((error) => {
             reject(error);
@@ -81,7 +82,7 @@ const useUserStore = defineStore({
             localStorage.remove('token');
             this.RESET_STATE();
             resetRouter();
-            resolve(null);
+            resolve(res);
           })
           .catch((error) => {
             /*if(error == 'Request failed with status code 401')
