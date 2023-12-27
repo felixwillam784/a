@@ -9,7 +9,7 @@
           中文
         </el-dropdown-item>
         <el-dropdown-item :disabled="language === 'en'" command="en">
-          English
+          ENG
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>

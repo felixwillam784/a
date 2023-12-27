@@ -17,7 +17,7 @@ const authorityManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "auth",
-                redirect: "a",
+                redirect: "list",
                 component: ChildrenLayout,
                 //component: () => import('@/views/Authentication-management/auth-manage/index.vue'),
                 meta: {
@@ -28,7 +28,7 @@ const authorityManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/Authentication-management/auth-manage/index.vue'),
                         name: "AuthorityManagement",
                         meta: {
