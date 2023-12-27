@@ -4,6 +4,7 @@ import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import { fa } from 'element-plus/es/locale';
+import { NumberFormatProps } from 'vue-i18n';
 
 interface GetVIPRankData {
     vip_level:number,
@@ -24,6 +25,24 @@ interface GetVIPRankData {
 
     rebate_way:string,
     protect_vip:string,
+    rebate_mode:string,
+
+    game_types:Array<rebateGameType>,
+    rebate_order_time:string,
+    rebate_order_time_amount:string,
+    rebate_fund_time:string,
+    rebate_fund_time_amount:string,
+
+    client_lost_rebate_amount:number,
+    client_lost_rebate_mode:string,
+    client_lost_rebate_order_time:string,
+    client_lost_rebate_order_time_amount:string,
+    clien_lost_rebate_fund_time:string,
+    clien_lost_rebate_fund_time_amount:string,
+}
+interface rebateGameType {
+    game_type: string,
+    rebate_amount: number|string,
 }
 
 const router = useRouter();
@@ -59,6 +78,48 @@ const vipList = ref<Array<GetVIPRankData>>([{
         vip_and_was_lowered:0,
         rebate_way:'',
         protect_vip:'',
+        game_types: [    
+            {
+                game_type:"Casino",
+                rebate_amount:3.0,
+            },
+            {
+                game_type:"Sports",
+                rebate_amount:3.0,
+            },
+            {
+                game_type:"Racing",
+                rebate_amount:4.0,
+            },
+            {
+                game_type:"Trading",
+                rebate_amount:4.0,
+            },
+            {
+                game_type:"Futures",
+                rebate_amount:3.0,
+            },
+            {
+                game_type:"Lottery",
+                rebate_amount:3.0,
+            },
+            {
+                game_type:"Bingo",
+                rebate_amount:3.5,
+            }
+        ],
+        rebate_mode:'',
+        rebate_order_time:'',
+        rebate_order_time_amount:'',
+        rebate_fund_time:'',
+        rebate_fund_time_amount:'',
+        
+        client_lost_rebate_amount:0,
+        client_lost_rebate_mode:'',
+        client_lost_rebate_order_time:'',
+        client_lost_rebate_order_time_amount:'',
+        clien_lost_rebate_fund_time:'',
+        clien_lost_rebate_fund_time_amount:'',
     },
     {
         vip_level:1,
@@ -79,6 +140,19 @@ const vipList = ref<Array<GetVIPRankData>>([{
 
         rebate_way:'',
         protect_vip:'',
+        game_types: [],
+        rebate_mode:'',
+        rebate_order_time:'',
+        rebate_order_time_amount:'',
+        rebate_fund_time:'',
+        rebate_fund_time_amount:'',
+
+        client_lost_rebate_amount:0,
+        client_lost_rebate_mode:'',
+        client_lost_rebate_order_time:'',
+        client_lost_rebate_order_time_amount:'',
+        clien_lost_rebate_fund_time:'',
+        clien_lost_rebate_fund_time_amount:'',
     },
 ])
 const vipItem = ref<GetVIPRankData>()
@@ -91,6 +165,7 @@ onMounted(()=>{
         rank_options.push({value:vip_ranks.value[i], label:vip_ranks.value[i]})
 
 })
+
 // vip_rank_dialog
 const vip_level_rank = ref(false);
 const show_vip_rank_dialog = () =>{
@@ -104,14 +179,52 @@ const operate_new_vip_rank = (op :boolean) =>{
 }
 
 //vip_rank_detail
+const tab_index=ref(0);
+const select_tab = (index:number) => {
+    tab_index.value = index;
+}
+
 const vip_rank_detail_dialog = ref(false);
 const show_vip_rank_detail_dialog = (param:GetVIPRankData) =>{
     vip_rank_detail_dialog.value = true;
     vipItem.value = param;
 }
 const vip_rank_detail_label = ref<Array<string>>(['VIP等级', 'VIP段位', 'VIP升级所需充值', 'VIP升级所需打码量', '提现手续费', '免提现手续费额度/月', '单笔最高提现金额','每日可提现额度', '每月可提现额度', '每日可提现次数', '每月可提现次数', 'VIP保级所需充值', 'VIP保级所需打码','VIP保级时效','VIP保级失败降低等级']);
-let rank_options = [ ];
+let rank_options = [];
+const item_for_detail = () =>{
+    const keys = Object.keys(vipItem).slice(0, 14);
+    return vipItem;
+    console.log(keys);
+}
 
+//coderebate_setting
+const new_rebate_type=ref<rebateGameType>({
+    game_type:"",
+    rebate_amount:'',
+});
+const delete_rebate_type = (index:number) => {
+    if(index === 1000)
+        add_new_rebate.value = false;
+    else
+        vipItem.value?.game_types.splice(index, 1);
+}
+const add_rebate_type = () =>{
+    add_new_rebate.value = true;
+}
+const add_new_rebate = ref<boolean>(false);
+
+const is_disabled_rebate_fund_time_amount = () => {
+    if(vipItem.value?.rebate_fund_time == '释放')
+        return false;
+    return true;
+}
+
+//clientlost_setting
+const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
+    if(vipItem.value?.clien_lost_rebate_fund_time == '释放')
+        return false;
+    return true;
+}
 </script>
 
 <template>
@@ -209,7 +322,12 @@ let rank_options = [ ];
         </el-dialog>
 
         <el-dialog v-model='vip_rank_detail_dialog' title="VIP详情" :top="'5px'">
-            <div style="display:flex; flex-direction:column">            
+            <div style="margin-bottom:10px">
+                <el-button :type="tab_index == 0 ? 'warning' : ''" @click="select_tab(0)">基本详情</el-button>
+                <el-button :type="tab_index == 1 ? 'warning' : ''" @click="select_tab(1)">打码返利设置</el-button>
+                <el-button :type="tab_index == 2 ? 'warning' : ''" @click="select_tab(2)">客损返利设置</el-button>
+            </div>
+            <div v-if="tab_index === 0" style="display:flex; flex-direction:column">            
                 <div v-for="(item, key, index) in vipItem" :key="key" class="dl_row" :style="`order:${index}`">
                     <p style="width:20%">
                         {{`${vip_rank_detail_label[index]}`}}
@@ -223,7 +341,7 @@ let rank_options = [ ];
                                 :value="item.value"
                             />
                         </el-select>
-                            <button style="margin-left:100px; width:25px" @click="operate_new_vip_rank(true)">
+                            <button style="margin-left:100px; width:25px" @click="show_vip_rank_dialog(true)">
                             +
                         </button>
                     </div>
@@ -254,7 +372,129 @@ let rank_options = [ ];
                     </div>
                 </div>
             </div>
+            <div v-if="tab_index === 1">
+                <div v-for="(item, index) in vipItem.game_types" :key="index" class="dl_row">
+                    <p style="width:20%">
+                        {{`${item.game_type}`}}
+                    </p>
+                    <el-input v-model="vipItem.game_types[index].rebate_amount" :value="parseFloat(vipItem.game_types[index].rebate_amount).toFixed(1)" placeholder="Please input" style="width:50%; margin-left:20px"/>
+                    <p>
+                        %
+                    </p>
+                    <button v-if="index !== 0" style="margin-left:100px; width:25px" @click="delete_rebate_type(index)">
+                        -
+                    </button>
+                    <button v-if="index === vipItem.game_types.length - 1" style="margin-left:10px; width:25px" @click="add_rebate_type()">
+                        +
+                    </button>
+                </div>
+                <div v-if="add_new_rebate === true" class="dl_row">
+                    <p style="width:20%">
+                        <el-input v-model="new_rebate_type.game_type" placeholder="请输入新的类型"/>
+                    </p>
+                    <el-input v-model="new_rebate_type.rebate_amount" placeholder="请输入返利百分比" style="width:50%; margin-left:20px"/>
+                    <p>
+                        %
+                    </p>
+                    <button v-if="index !== 0" style="margin-left:100px; width:25px" @click="delete_rebate_type(1000)">
+                        -
+                    </button>
+                </div>
+                <div class="dl_row">
+                    <p style="width:20%">
+                        返利领取方式
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px">
+                        <el-radio-group v-model="vipItem.rebate_mode" class="ml-4">
+                            <el-radio label="玩家手动领取" size="large">玩家手动领取</el-radio>
+                            <el-radio label="结算时自动到账" size="large">结算时自动到账</el-radio>
+                        </el-radio-group>
+                    </div>
+                </div>
+                <div class="dl_row" style="order:10; height:80px">
+                    <p style="width:20%">
+                        返利结算周期
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px">
+                        <el-radio-group v-model="vipItem.rebate_order_time" class="ml-4">
+                            <el-radio label="实时结算" size="large">实时结算</el-radio>
+                            <el-radio label="每日刷新结算" size="large">每日刷新结算</el-radio>
+                            <el-radio label="每周刷新结算" size="large">每周刷新结算</el-radio>
+                            <el-radio label="每月刷新结算" size="large">每月刷新结算</el-radio>
+                            <el-radio label="天后刷新结算" size="large"><el-input v-model='vipItem.rebate_order_time_amount' style="width:80px" placeholder="请输入天数"/>天后刷新结算</el-radio>
+                        </el-radio-group>
+                    </div>
+                </div>
+                <div class="dl_row">
+                    <p style="width:20%">
+                        奖励释放周期
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px; align-items:center">
+                        <el-radio-group v-model="vipItem.rebate_fund_time" class="ml-4">
+                            <el-radio label="不释放" size="large">不释放</el-radio>
+                            <el-radio label="释放" size="large">释放</el-radio>
+                        </el-radio-group>
+                         <div style="display:flex; margin-left: 20px; height:30px; align-items:center">                               
+                            <el-input style="width:200px;" placeholder="请输入自动释放天数" v-model="vipItem.rebate_fund_time_amount" :disabled="is_disabled_rebate_fund_time_amount()"/>
+                            <label style="display:block;">天后释放</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="tab_index === 2">
+                <div class="dl_row">
+                    <p style="width:20%">
+                        客损返利比例
+                    </p>
+                    <div style="display:flex; width: 60%; margin-left:20px; align-items:center">
+                        <el-input style="height:30px;" v-model="vipItem.client_lost_rebate_amount" :value="parseFloat(vipItem.client_lost_rebate_amount).toFixed(1)"/>
+                        <p>
+                            %
+                        </p>
+                    </div>
+                </div>
+                 <div class="dl_row">
+                    <p style="width:20%">
+                        返利领取方式
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px; align-items:center">
+                        <el-radio-group v-model="vipItem.client_lost_rebate_mode" class="ml-4">
+                            <el-radio label="不释放" size="large">玩家手动领取</el-radio>
+                            <el-radio label="释放" size="large">结算时自动到账</el-radio>
+                        </el-radio-group>
+                    </div>
+                </div>
+                <div class="dl_row" style="order:10; height:80px">
+                    <p style="width:20%">
+                        返利结算周期
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px">
+                        <el-radio-group v-model="vipItem.client_lost_rebate_order_time" class="ml-4">
+                            <el-radio label="实时结算" size="large">实时结算</el-radio>
+                            <el-radio label="每日刷新结算" size="large">每日刷新结算</el-radio>
+                            <el-radio label="每周刷新结算" size="large">每周刷新结算</el-radio>
+                            <el-radio label="每月刷新结算" size="large">每月刷新结算</el-radio>
+                            <el-radio label="天后刷新结算" size="large"><el-input v-model='vipItem.client_lost_rebate_order_time_amount' style="width:80px" placeholder="请输入天数"/>天后刷新结算</el-radio>
+                        </el-radio-group>
+                    </div>
+                </div>
+                <div class="dl_row">
+                    <p style="width:20%">
+                        奖励释放周期
+                    </p>
+                    <div style="display:flex; width: 78.5%; margin-left:20px; align-items:center">
+                        <el-radio-group v-model="vipItem.clien_lost_rebate_fund_time" class="ml-4">
+                            <el-radio label="不释放" size="large">不释放</el-radio>
+                            <el-radio label="释放" size="large">释放</el-radio>
+                        </el-radio-group>
+                         <div style="display:flex; margin-left: 20px; height:30px; align-items:center">                               
+                            <el-input style="width:200px;" placeholder="请输入自动释放天数" v-model="vipItem.clien_lost_rebate_fund_time_amount" :disabled="is_disabled_clien_lost_rebate_fund_time_amount()"/>
+                            <label style="display:block;">天后释放</label>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
             <template #footer>
                 <div style="display:flex; justify-content:center">             
                     <el-button type="primary">确认</el-button>
@@ -305,5 +545,8 @@ let rank_options = [ ];
 .dl_row:nth-child(2n) {
   /* Style for even elements in the group */
   background-color: #ccc;
+}
+.el-radio__input.is-checked+.el-radio__label {
+    color: inherit;
 }
 </style>

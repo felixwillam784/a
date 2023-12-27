@@ -17,7 +17,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "user/list",
-                redirect: "a",
+                redirect: "list",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_list",
@@ -27,7 +27,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/player-management/user-list/index.vue'),
                         name: "User List",
                         meta: {
@@ -184,7 +184,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "user/money-flow",
-                redirect: "a",
+                redirect: "list",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_money_flow",
@@ -194,7 +194,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/player-management/user-money-flow/index.vue'),
                         name: "User Flow",
                         meta: {
@@ -231,7 +231,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "agent/mangement",
-                redirect: "a",
+                redirect: "list",
                 component: ChildrenLayout,
                 meta: {
                     title: "代理管理",
@@ -242,7 +242,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/player-management/agency/index.vue'),
                         name: "AgencyDetail",
                         meta: {

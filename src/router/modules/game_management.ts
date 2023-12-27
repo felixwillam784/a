@@ -29,7 +29,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "channel/management",
-                redirect: "a",
+                redirect: "list",
                 component: ChildrenLayout,
                 meta: {
                     
@@ -40,7 +40,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/game-management/game-configuration/index.vue'),
                         name: "Channel Management",
                         meta: {
@@ -77,7 +77,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
             {
                 path: "game/distribution",
                 component: ChildrenLayout,
-                redirect: "a",
+                redirect: "list",
                 meta: {
                     title: "游戏分组排序",
                     hidden: false,
@@ -87,7 +87,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "a",
+                        path: "list",
                         component: () => import('@/views/game-management/game-distribution/index.vue'),
                         name: "Game Distribution",
                         meta: {
