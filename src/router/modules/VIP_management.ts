@@ -4,7 +4,7 @@ const ChildrenLayout = () => import('@/views/layout/index.vue');
 
 const VIPManagementRoutes: RouteRecordRaw[] = [
     {
-        path: "/VIP/management",
+        path: "/VIP",
         component: Layout,
         redirect: "manage",
         meta: {
@@ -17,7 +17,7 @@ const VIPManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "manage",
-                component: () => import('@/views/vip-management/index.vue'),
+                component: () => import('@/views/vip-management/manage.vue'),
                 name: "VIPManagement",
                 meta: {
                     title:"VIP管理",
@@ -27,11 +27,11 @@ const VIPManagementRoutes: RouteRecordRaw[] = [
                 },  
             },
             {
-                path: "other",
-                component: () => import('@/views/Authentication-management/role-manage/index.vue'),
-                name: "RoleManagement",
+                path: "statistics",
+                component: () => import('@/views/vip-management/statistic.vue'),
+                name: "VIPStatistics",
                 meta: {
-                    title:"角色管理",
+                    title:"VIP统计",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true

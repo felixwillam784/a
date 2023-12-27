@@ -88,7 +88,7 @@ const eventManagementRoutes: RouteRecordRaw[] = [
         },
         children: [
           {
-              path: "a",
+              path: "list",
               component: () => import('@/views/event-management/rebate-configuration/index.vue'),
               name: "Rebate Configuration",
               meta: {
