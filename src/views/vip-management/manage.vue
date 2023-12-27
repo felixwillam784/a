@@ -191,10 +191,48 @@ const show_vip_rank_detail_dialog = (param:GetVIPRankData) =>{
 }
 const vip_rank_detail_label = ref<Array<string>>(['VIP等级', 'VIP段位', 'VIP升级所需充值', 'VIP升级所需打码量', '提现手续费', '免提现手续费额度/月', '单笔最高提现金额','每日可提现额度', '每月可提现额度', '每日可提现次数', '每月可提现次数', 'VIP保级所需充值', 'VIP保级所需打码','VIP保级时效','VIP保级失败降低等级']);
 let rank_options = [];
-const item_for_detail = () =>{
-    const keys = Object.keys(vipItem).slice(0, 14);
-    return vipItem;
-    console.log(keys);
+
+const slice_item_object = () =>{
+    if(vipItem.value){
+        const {
+            vip_level,
+            vip_rank,
+            recharge_vip_upgrade,
+            coding_vip_upgrade,
+            withdrawal_fee,
+            free_amount_month,
+            maximum_amount_amount,
+            daily_limit_amount,
+            monthly_limit_amount,
+            daily_limit_time,
+            monthly_limit_time,
+            recharge_vip_up,
+            coding_vip_relegation,
+            vip_limit_days,
+            vip_and_was_lowered,
+        } = vipItem.value;
+        const wrappedObject = {
+            vip_level,
+            vip_rank,
+            recharge_vip_upgrade,
+            coding_vip_upgrade,
+            withdrawal_fee,
+            free_amount_month,
+            maximum_amount_amount,
+            daily_limit_amount,
+            monthly_limit_amount,
+            daily_limit_time,
+            monthly_limit_time,
+            recharge_vip_up,
+            coding_vip_relegation,
+            vip_limit_days,
+            vip_and_was_lowered,
+        };
+        
+        return wrappedObject;
+    }
+    return undefined;
+
 }
 
 //coderebate_setting
@@ -328,7 +366,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
                 <el-button :type="tab_index == 2 ? 'warning' : ''" @click="select_tab(2)">客损返利设置</el-button>
             </div>
             <div v-if="tab_index === 0" style="display:flex; flex-direction:column">            
-                <div v-for="(item, key, index) in vipItem" :key="key" class="dl_row" :style="`order:${index}`">
+                <div v-for="(item, key, index) in slice_item_object()" :key="key" class="dl_row" :style="`order:${index}`" >
                     <p style="width:20%">
                         {{`${vip_rank_detail_label[index]}`}}
                     </p>

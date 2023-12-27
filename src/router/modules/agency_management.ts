@@ -1,0 +1,190 @@
+import { RouteRecordRaw } from 'vue-router';
+export const Layout = () => import('@/layout/index.vue');
+const ChildrenLayout = () => import('@/views/layout/index.vue');
+
+const agencyManagementRoutes: RouteRecordRaw[] = [
+    {
+        path: "/agency",
+        component: Layout,
+        redirect: "list",
+        meta: {
+            title: "代理管理",
+            icon: "system",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        },
+        children: [
+            {
+                path: "list",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgencyList",
+                        meta: {
+                            title: "代理列表",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "statistics-report",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgencyStatisticsReport",
+                        meta: {
+                            title: "代理统计报表",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "risk-control",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgencyRiskControl",
+                        meta: {
+                            title: "代理风控",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "invitation-reward",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgentInvitationReward",
+                        meta: {
+                            title: "代理邀请奖励",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "achievement-reward",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgentAchievementReward",
+                        meta: {
+                            title: "代理成就奖励",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "channel",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgentChannelManagement",
+                        meta: {
+                            title: "代理渠道管理",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
+                path: "record",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/list/index.vue'),
+                        name: "AgentLog",
+                        meta: {
+                            title: "代理日志",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+        ]
+    },
+];
+
+export default agencyManagementRoutes;
