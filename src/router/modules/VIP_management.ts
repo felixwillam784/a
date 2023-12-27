@@ -31,7 +31,7 @@ const VIPManagementRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/Authentication-management/role-manage/index.vue'),
                 name: "RoleManagement",
                 meta: {
-                    title:"asdf",
+                    title:"角色管理",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true

@@ -104,8 +104,8 @@ export class Network {
    * @param route
    * @param msg
    */
-  private GET(route: string, data: any, next: Function) {
-    return request({
+  private async GET(route: string, data: any, next: Function) {
+    await request({
       url: route,
       method: 'GET',
       data
