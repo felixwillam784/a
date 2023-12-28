@@ -37,6 +37,42 @@ const VIPManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 },
             },
+            {
+                path: "signinbonus",
+                component: ChildrenLayout,
+                redirect:"all",
+                meta: {
+                    title:"VIP签到奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children:[
+                    {
+                        path: "all",
+                        component: () => import('@/views/vip-management/singin-bonus/index.vue'),
+                        name: "VIPSigninBonus",
+                        meta: {
+                            title: "",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                    {
+                        path: "statistic",
+                        component: () => import('@/views/vip-management/singin-bonus/statistic.vue'),
+                        name: "VIPSigninBonusStatistic",
+                        meta: {
+                            title: "VIP签到数据统计",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+
+            },
         ]
     },
 ];
