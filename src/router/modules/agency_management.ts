@@ -36,6 +36,17 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                             keepAlive: true
                         },
                     },
+                    {
+                        path: "detail",
+                        component: () => import('@/views/agency-management/list/detail/index.vue'),
+                        name: "AgentDetail",
+                        meta: {
+                            title: "代理详情",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
                 ]
                 
             },

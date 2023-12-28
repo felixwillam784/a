@@ -6,18 +6,11 @@ import { ElForm, ElInput } from "element-plus";
 import router from "@/router";
 import LangSelect from "@/components/LangSelect/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-
-// 状态管理依赖
-import useStore from "@/store";
-
-// API依赖
-import { getCaptcha } from "@/api/auth";
 import { useRoute } from "vue-router";
-import { LoginForm } from "@/api/auth/types";
 import { authStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
+import { SigninRequestData } from "@/interface/auth";
 
-const { user } = useStore();
 const route = useRoute();
 const { dispatchSignIn } = authStore();
 
@@ -27,21 +20,20 @@ const passwordRef = ref(ElInput);
 const state = reactive({
   redirect: "",
   loginForm: {
-    username: "test123",
+    name: "test123",
     password: "password",
-  } as any,
+  } as SigninRequestData,
   loginRules: {
-    username: [{ required: true, trigger: "blur" }],
+    name: [{ required: true, trigger: "blur" }],
     password: [{ required: true, trigger: "blur", validator: validatePassword }],
   },
-  loading: false,
-  passwordType: "password",
-  verifyCodeImgUrl: "",
+  loading: false as boolean,
+  passwordType: "password" as string,
   // 大写提示禁用
-  capslockTooltipDisabled: true,
+  capslockTooltipDisabled: true as boolean,
   otherQuery: {},
   clientHeight: document.documentElement.clientHeight,
-  showCopyright: true,
+  showCopyright: true as boolean,
 });
 
 function validatePassword(rule: any, value: any, callback: any) {
@@ -57,7 +49,6 @@ const {
   loginRules,
   loading,
   passwordType,
-  verifyCodeImgUrl,
   capslockTooltipDisabled,
   showCopyright,
 } = toRefs(state);
@@ -87,46 +78,14 @@ function handleLogin() {
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       state.loading = true;
-      user
-        .login(state.loginForm)
-        .then((res) => {
-          router.push({ path: state.redirect || "/", query: state.otherQuery });
-          state.loading = false;
-        })
-        .catch(() => {
-          console.log("here3");
-          state.loading = false;
-          handleCaptchaGenerate();
-        });
 
-      // await dispatchSignIn(state.loginForm);
+      await dispatchSignIn(state.loginForm);
 
-      // if (success.value) {
-      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
-      //   state.loading = false;
-      // } else {
-      //   state.loading = false;
-      //   handleCaptchaGenerate();
-      // }
+      if (success.value) {
+        router.push({ path: state.redirect || "/", query: state.otherQuery });
+      }
 
-      // await dispatchRegister(state.loginForm);
-
-      // if (success.value) {
-      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
-      //   state.loading = false;
-      // } else {
-      //   state.loading = false;
-      //   handleCaptchaGenerate();
-      // }
-      // await dispatchLogout(state.loginForm);
-
-      // if (success.value) {
-      //   router.push({ path: state.redirect || '/', query: state.otherQuery });
-      //   state.loading = false;
-      // } else {
-      //   state.loading = false;
-      //   handleCaptchaGenerate();
-      // }
+      state.loading = false;
     } else {
       return false;
     }
@@ -154,18 +113,7 @@ function getOtherQuery(query: any) {
   }, {});
 }
 
-// 获取验证码
-function handleCaptchaGenerate() {
-  getCaptcha().then(({ data }) => {
-    const { verifyCodeBase64, verifyCodeKey } = data;
-    verifyCodeImgUrl.value = verifyCodeBase64;
-    loginForm.value.verifyCodeKey = verifyCodeKey;
-    loginForm.value.grant_type = "captcha";
-  });
-}
-
 onMounted(() => {
-  handleCaptchaGenerate();
   window.onresize = () => {
     if (state.clientHeight > document.documentElement.clientHeight) {
       state.showCopyright = false;
@@ -191,15 +139,15 @@ onMounted(() => {
         <lang-select class="set-language" />
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="name">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="name"
+          v-model="loginForm.name"
           :placeholder="$t('login.username')"
-          name="username"
+          name="name"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -237,7 +185,7 @@ onMounted(() => {
       </el-tooltip>
 
       <el-button
-        size="default"
+        size="large"
         :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
@@ -371,3 +319,4 @@ $dark_gray: #889aa4;
   }
 }
 </style>
+@/interface/auth
