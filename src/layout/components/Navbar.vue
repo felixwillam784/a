@@ -1,36 +1,33 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
-      @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
         <lang-select class="right-menu-item hover-effect" />
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
-          <p class="user-name-text">{{ nickname }}</p>
-          <!-- <CaretBottom style="width: 0.6em; height: 0.6em; margin-left: 5px" /> -->
         </div>
 
         <template #dropdown>
           <el-dropdown-menu>
-            <!-- <router-link to="/profile/index"> -->
-              <el-dropdown-item>{{ $t('navbar.profile') }}</el-dropdown-item>
-            <!-- </router-link> -->
+            <el-dropdown-item>{{ $t("navbar.profile") }}</el-dropdown-item>
             <router-link to="/">
-              <el-dropdown-item>{{ $t('navbar.dashboard') }}</el-dropdown-item>
+              <el-dropdown-item>{{ $t("navbar.dashboard") }}</el-dropdown-item>
             </router-link>
             <el-dropdown-item divided @click="logout">
-              {{ $t('navbar.logout') }}
+              {{ $t("navbar.logout") }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -39,51 +36,43 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { ElMessageBox } from 'element-plus';
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ElMessageBox } from "element-plus";
 
-import useStore from '@/store';
+import useStore from "@/store";
 
 // 组件依赖
-import Breadcrumb from '@/components/Breadcrumb/index.vue';
-import Hamburger from '@/components/Hamburger/index.vue';
-import Screenfull from '@/components/Screenfull/index.vue';
-import SizeSelect from '@/components/SizeSelect/index.vue';
-import LangSelect from '@/components/LangSelect/index.vue';
+import Breadcrumb from "@/components/Breadcrumb/index.vue";
+import Hamburger from "@/components/Hamburger/index.vue";
+import Screenfull from "@/components/Screenfull/index.vue";
+import LangSelect from "@/components/LangSelect/index.vue";
 
-// 图标依赖
-import { CaretBottom } from '@element-plus/icons-vue';
-
-const { app, user, tagsView } = useStore();
+const { app, auth, tagsView } = useStore();
 
 const route = useRoute();
 const router = useRouter();
 
 const sidebar = computed(() => app.sidebar);
 const device = computed(() => app.device);
-const avatar = computed(() => user.avatar);
-const nickname = computed(() => user.nickname);
+const avatar = computed(() => auth.userInfo.avatar);
 
 function toggleSideBar() {
   app.toggleSidebar();
 }
 
 function logout() {
-  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    user
-      .logout()
-      .then(() => {
-        tagsView.delAllViews();
-      })
-      .then(() => {
-        router.push(`/login?redirect=${route.fullPath}`);
-        router.go(0);
-      });
+  ElMessageBox.confirm("确定注销并退出系统吗？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(async () => {
+    await auth.dispatchSignout();
+    if (auth.success) {
+      tagsView.delAllViews();
+      router.push(`/login?redirect=${route.fullPath}`);
+      router.go(0);
+    }
   });
 }
 </script>
@@ -147,18 +136,17 @@ ul {
     }
 
     .avatar-container {
-      margin-right: 30px;
-
       .avatar-wrapper {
         display: flex;
         align-items: center;
         position: relative;
+        height: 100%;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 40px;
+          width: 36px;
+          height: 36px;
+          border-radius: 36px;
         }
 
         .user-name-text {

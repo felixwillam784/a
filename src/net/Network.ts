@@ -1,6 +1,4 @@
 import { EXITTYPE, NetworkData, SENDTYPE } from './NetworkData'
-import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
-import { get } from "lodash-es"
 import { io, Socket } from 'socket.io-client'
 import request from '@/utils/request';
 

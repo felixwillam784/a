@@ -1,13 +1,22 @@
-//Event Macro Definition
+// Event Macro Definition
 export namespace NETWORK {
-  //Login Related News
-  export class LOGIN {
-    static LOGIN: string = '/admin/login' //Login 
-    static REGISTER: string = '/admin/register' //Registration
+  // auth related api
+  export class AUTH {
+    static LOGIN: string = '/admin/login' // login api
+    static REGISTER: string = '/admin/register' // registration api
+    static LOGOUT: string = '/admin/logout' // logout api
   }
 
-  //Business logic after entering the dashboard page
+  // Business logic api after entering the dashboard page
   export class DASHBOARD {
+    static PLATFORM_OVERVIEW: string = '/dashboard/platform-overview' // platform overview api
+    static DEPOSIT_WITHDRAWAL: string = '/dashboard/deposit-withdrawal' // deposit withdrawal api
+    static USER_DATA: string = '/dashboard/user-data' // user data api
+    static USER_RETENTION: string = '/dashboard/user-retention' // user retention api
+    static AGENT_DATA: string = '/dashboard/agent-data' // agent data api
+    static AGENT_RETENTION: string = '/dashboard/agent-retention' // agent retention api
+    static GAME_DATA: string = '/dashboard/game-data' // game data api
+    static STATISTIC_CHART_DATA: string = '/dashboard/statistic-chart-data' // statistic chart api
   }
 
   //Listening events sent actively

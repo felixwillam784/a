@@ -4,66 +4,14 @@ import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import useStore from "@/store";
-import {
-  getAgentActivityReport,
-  getAgentNewReport,
-  getAgentWarningReport,
-} from "@/api/DataAnalysis";
-import { stringtoDate } from "@/utils/index";
 
 const { user } = useStore();
+const router = useRouter();
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
 ]);
-
-const buttonIndex = ref<number>(0);
-
-const activeButton = ref<number>(0);
-
-interface GetAgentReport {
-  id: string;
-  agent_date_time: string;
-  agent_agents_count: number;
-  agent_active_agents_count: number;
-  agent_new_active_agents_count: number;
-  agent_new_agents_count: number;
-  agent_new_level_payment_amount: string;
-  agent_withdrawal_amount: string;
-  agent_new_level_charge_withdraw_dif: string;
-  agent_new_charge_bonus: string;
-  agent_achievement_rewards: string;
-  agent_new_task_rewards: string;
-  agent_betting_rebate_amount: string;
-  agent_3_day_active_rate: string;
-  agent_7_day_active_rate: string;
-  agent_15_day_active_rate: string;
-  agent_30_day_active_rate: number | string;
-}
-
-interface GetNewAgentReport {
-  id: string;
-  agent_date_time: string;
-  agent_new_agents_count: number;
-  agent_new_first_register: number;
-  agent_new_level_payment: string;
-  agent_new_level_payment_amount: string;
-  agent_capita_invited_register_count: number;
-  agent_capita_invitation_register_amount: string;
-}
-
-interface GetAgentRiskReport {
-  id: string;
-  agent_date_time: string;
-  agent_active_count: number;
-  agent_risk_control_agents_count: number;
-  agent_risk_control_agent_users_count: number;
-  agent_risk_control_proportion: string;
-  agent_own_risk_control_agents_count: number;
-}
-
-const router = useRouter();
 
 const formData = ref<any>({
   pageNum: 1,
@@ -72,17 +20,69 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total1 = ref<number>(0);
+const total_count = ref<number>(0);
 
-const total2 = ref<number>(0);
+const agencyTerminateDialogVisible = ref<boolean>(false);
 
-const total3 = ref<number>(0);
+const comparatorOptions = ref<Array<any>>([
+  {
+    label: "≥",
+    value: "≥",
+  },
+  {
+    label: "＞",
+    value: "＞",
+  },
+  {
+    label: "≤",
+    value: "≤",
+  },
+  {
+    label: "＜",
+    value: "＜",
+  },
+  {
+    label: "＝",
+    value: "＝",
+  },
+]);
 
-const agentReportList = ref<Array<GetAgentReport>>([]);
+const agencyList = ref<Array<any>>([
+  {
+    item_1: "User001",
+    item_2: 9999,
+    item_3: 9999,
+    item_4: 9999,
+    item_5: 9999,
+    item_6: 9999,
+    item_7: 9999,
+    item_8: 9999,
+    item_9: 9999,
+    item_10: 9999,
+    item_11: 9999,
+    item_12: 9999,
+    item_13: 9999,
+    item_14: 9999,
+    item_15: 9999,
+    item_16: 9999,
+    item_17: 9999,
+    item_18: 9999,
+    item_19: 9999,
+    item_20: 9999,
+    item_21: 9999,
+    item_22: 9999,
+    item_23: 9999,
+    item_24: 9999,
+    item_25: 9999,
+    item_26: 9999,
+    item_27: 9999,
+    item_28: 9999,
+    item_29: 9999,
+    item_30: 9999,
+  },
+]);
 
-const newAgentReportList = ref<Array<GetNewAgentReport>>([]);
-
-const agentRiskList = ref<Array<GetAgentRiskReport>>([]);
+const buttonIndex = ref<number>(1);
 
 const handleDateRange = (date: string) => {
   switch (date) {
@@ -187,69 +187,25 @@ const handleDateRange = (date: string) => {
   }
 };
 
-const handleButtonActive = (index: number) => {
-  activeButton.value = index;
-};
-
 const handlePagination = () => {
-  handleSearch();
+  handleQuery();
 };
 
-const handleReset = () => {
+const handleQuery = () => {
+  loading.value = true;
+};
+
+const resetQuery = () => {
   handleDateRange("this week");
 };
 
-const handleSearch = () => {
-  loading.value = true;
-  getData()
-    .then(() => {
-      loading.value = false;
-    })
-    .catch(() => {
-      localStorage.clear();
-      router.push({ name: "Login" });
-      user.token = "";
-    });
+const showAgencyTerminateDialog = () => {
+  agencyTerminateDialogVisible.value = true;
 };
+
 onMounted(() => {
   handleDateRange("this week");
-  loading.value = true;
-  getData()
-    .then(() => {
-      loading.value = false;
-    })
-    .catch(() => {
-      localStorage.clear();
-      router.push({ name: "Login" });
-      user.token = "";
-    });
 });
-const getData = async () => {
-  console.log("start");
-  let agentReportListDataRes = await getAgentActivityReport(
-    user.token,
-    dateRange.value,
-    formData.value
-  );
-  agentReportList.value = agentReportListDataRes.data.data;
-  total1.value = agentReportListDataRes.data.data.length;
-
-  let newAgentReportListDataRes = await getAgentNewReport(
-    user.token,
-    dateRange.value,
-    formData.value
-  );
-  newAgentReportList.value = newAgentReportListDataRes.data.data;
-  total2.value = newAgentReportListDataRes.data.data.length;
-
-  let agentRiskListDataRes = await getAgentWarningReport(
-    user.token,
-    dateRange.value,
-    formData.value
-  );
-  agentRiskList.value = agentRiskListDataRes.data.data;
-  total3.value = agentRiskListDataRes.data.data.length;
-};
 </script>
 
 <template>
@@ -320,8 +276,13 @@ const getData = async () => {
                         v-model="formData.invitee_comparator"
                         style="width: 60px"
                       >
-                        <el-option label=">" value=">" />
-                        <el-option label="<" value="<" />
+                        <el-option
+                          v-for="item in comparatorOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
                       </el-select>
                     </template>
                   </el-input>
@@ -350,8 +311,13 @@ const getData = async () => {
                         v-model="formData.invitee_comparator"
                         style="width: 60px"
                       >
-                        <el-option label=">" value=">" />
-                        <el-option label="<" value="<" />
+                        <el-option
+                          v-for="item in comparatorOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
                       </el-select>
                     </template>
                   </el-input>
@@ -367,8 +333,13 @@ const getData = async () => {
                         v-model="formData.invitee_comparator"
                         style="width: 60px"
                       >
-                        <el-option label=">" value=">" />
-                        <el-option label="<" value="<" />
+                        <el-option
+                          v-for="item in comparatorOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
                       </el-select>
                     </template>
                   </el-input>
@@ -460,163 +431,165 @@ const getData = async () => {
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="agentReportList" style="width: 100%">
-            <el-table-column label="UserID" align="left" prop="user_id" width="160">
+          <el-table v-loading="loading" :data="agencyList" style="width: 100%">
+            <el-table-column label="UserID" align="left" prop="item_1" width="160">
               <template #default="scope">
-                <p>{{ stringtoDate(scope.row.user_id) }}</p>
+                <el-link
+                  :underline="false"
+                  class="el-link-decoration"
+                >
+                  {{ scope.row.item_1 }}
+                </el-link>
               </template>
             </el-table-column>
             <el-table-column
               label="总充值金额"
               align="left"
-              prop="agent_agents_count"
+              prop="item_2"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_agents_count }}</p>
+                <p>{{ scope.row.item_2 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总提现金额"
               align="left"
-              prop="agent_active_agents_count"
+              prop="item_3"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_active_agents_count }}</p>
+                <p>{{ scope.row.item_3 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总邀请人数"
               align="left"
-              prop="agent_new_active_agents_count"
+              prop="item_4"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_active_agents_count }}</p>
+                <p>{{ scope.row.item_4 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级充提差"
               align="left"
-              prop="agent_new_agents_count"
+              prop="item_5"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_agents_count }}</p>
+                <p>{{ scope.row.item_5 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费金额"
               align="left"
-              prop="agent_new_level_payment_amount"
+              prop="item_6"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_payment_amount }}</p>
+                <p>{{ scope.row.item_6 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级提现金额"
               align="left"
-              prop="agent_withdrawal_amount"
+              prop="item_7"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_withdrawal_amount }}</p>
+                <p>{{ scope.row.item_7 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="投注返佣金额"
               align="left"
-              prop="agent_new_level_charge_withdraw_dif"
+              prop="item_8"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_level_charge_withdraw_dif }}</p>
+                <p>{{ scope.row.item_8 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费人数"
               align="left"
-              prop="agent_new_charge_bonus"
+              prop="item_9"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_charge_bonus }}</p>
+                <p>{{ scope.row.item_9 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="风控代理人数"
               align="left"
-              prop="agent_achievement_rewards"
+              prop="item_10"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards }}</p>
+                <p>{{ scope.row.item_10 }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="代理平均充值"
               align="left"
-              prop="agent_new_task_rewards"
+              prop="item_11"
               width="160"
+              sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_new_task_rewards }}</p>
+                <p>{{ scope.row.item_11 }}</p>
               </template>
             </el-table-column>
-            <el-table-column
-              label="代理成就奖励"
-              align="left"
-              prop="agent_betting_rebate_amount"
-              width="160"
-            >
+            <el-table-column label="代理成就奖励" align="left" prop="item_12" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
+                <p>{{ scope.row.item_12 }}</p>
               </template>
             </el-table-column>
-            <el-table-column
-              label="代理邀请奖励"
-              align="left"
-              prop="agent_3_day_active_rate"
-              width="160"
-            >
+            <el-table-column label="代理邀请奖励" align="left" prop="item_13" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_3_day_active_rate }}%</p>
+                <p>{{ scope.row.item_13 }}%</p>
               </template>
             </el-table-column>
-            <el-table-column
-              label="代理状态"
-              align="left"
-              prop="agent_7_day_active_rate"
-              width="160"
-            >
+            <el-table-column label="代理状态" align="left" prop="item_14" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_7_day_active_rate }}%</p>
+                <p>{{ scope.row.item_14 }}%</p>
               </template>
             </el-table-column>
-            <el-table-column
-              label="账号风控状态"
-              align="left"
-              prop="agent_15_day_active_rate"
-              width="160"
-            >
+            <el-table-column label="账号风控状态" align="left" prop="item_15" width="160">
               <template #default="scope">
-                <p>{{ scope.row.agent_15_day_active_rate }}%</p>
+                <p>{{ scope.row.item_15 }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" width="200" fixed="right">
               <template #default="scope">
-                <el-button type="primary" link> 详情 </el-button>
-                <el-button type="danger" link>解除代理关系</el-button>
+                <el-button
+                  type="primary"
+                  link
+                  @click="router.push({ name: 'AgentDetail' })"
+                >
+                  详情
+                </el-button>
+                <el-button type="danger" link @click="showAgencyTerminateDialog">
+                  解除代理关系
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="float: right">
             <pagination
-              v-if="total1 > 0"
-              :total="total1"
+              :total="total_count"
               v-model:page="formData.pageNum"
               v-model:limit="formData.pageSize"
               @pagination="handlePagination"
@@ -625,6 +598,22 @@ const getData = async () => {
         </el-card>
       </el-col>
     </el-row>
+    <el-dialog title="解除代理关系" v-model="agencyTerminateDialogVisible">
+      <h4 class="text-center">确认后将会解除代理与其上级的关系</h4>
+      <h4 class="text-center">确认要解除代理关系？</h4>
+      <el-form ref="ruleFormRef">
+        <el-row style="align-items: center">
+          <h3>备注:</h3>
+        </el-row>
+        <el-form-item>
+          <el-input type="textarea" :rows="4" />
+        </el-form-item>
+      </el-form>
+      <el-footer class="text-center">
+        <el-button type="primary">确认</el-button>
+        <el-button @click="agencyTerminateDialogVisible = false">取消</el-button>
+      </el-footer>
+    </el-dialog>
   </div>
 </template>
 
@@ -648,5 +637,9 @@ const getData = async () => {
       }
     }
   }
+}
+
+.text-center {
+  text-align: center;
 }
 </style>

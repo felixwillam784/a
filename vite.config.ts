@@ -2,8 +2,8 @@ import { UserConfig, ConfigEnv, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'path';
+import * as fs from 'fs';
 
-// @see: https://gitee.com/holysheng/vite2-config-description/blob/master/vite.config.ts
 export default ({ mode }: ConfigEnv): UserConfig => {
   // 获取 .env 环境配置文件
   const env = loadEnv(mode, process.cwd());
@@ -11,6 +11,31 @@ export default ({ mode }: ConfigEnv): UserConfig => {
 
   return {
     base: VITE_PUBLIC_PATH,
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "@/styles/global.scss";`
+        }
+      }
+    },
+    optimizeDeps: {
+      include: ['vue-i18n'],
+      esbuildOptions: {
+        plugins: [
+          {
+            name: 'replace-feature-flags',
+            setup(build) {
+              build.onLoad({ filter: /vue-i18n/ }, async (args) => {
+                // Replace feature flag globals with boolean literals
+                const code = await fs.promises.readFile(args.path, 'utf-8');
+                const transformedCode = code.replace(/featureFlag/g, 'true'); // Replace featureFlag with the actual flag value
+                return { contents: transformedCode };
+              });
+            },
+          },
+        ],
+      },
+    },
     plugins: [
       vue(),
       createSvgIconsPlugin({
