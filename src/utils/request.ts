@@ -1,8 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { EXITTYPE, NetworkData, SENDTYPE } from '@/net/NetworkData'
+import { NetworkData } from '@/net/NetworkData'
 import { localStorage } from '@/utils/storage';
 import useStore from '@/store';
+import { useRoute, useRouter } from "vue-router";
 
 // 创建 axios 实例
 const service = axios.create({
@@ -21,16 +22,16 @@ service.interceptors.request.use(
       );
     }
 
-    // const networkData = NetworkData.getInstance()
+    const networkData = NetworkData.getInstance()
 
-    // if (networkData.getToken() != undefined) {
-    //   config.headers.Authorization = 'Bearer ' + networkData.getToken();
-    // }
-
-    const { user } = useStore();
-    if (user.token) {
-      config.headers.Authorization = `${localStorage.get('token')}`;
+    if (networkData.getToken() != undefined) {
+      config.headers.Authorization = 'Bearer ' + networkData.getToken();
     }
+
+    // const { user } = useStore();
+    // if (user.token) {
+    //   config.headers.Authorization = `${localStorage.get('token')}`;
+    // }
 
     return config;
   },
@@ -46,7 +47,7 @@ service.interceptors.response.use(
     const { code, msg } = response.data;
     if (code === "00000") {
       return response.data;
-    } else if(code==="00") {
+    } else if (code === "00") {
       return response.data;
     } else {
       // 响应数据为二进制流处理(Excel导出)
@@ -66,16 +67,13 @@ service.interceptors.response.use(
     if (error.response.data) {
       const { code, msg } = error.response.data;
       // token 过期,重新登录
-      if (code === 'A0230') {
-        ElMessageBox.confirm('当前页面已失效，请重新登录', 'Warning', {
-          confirmButtonText: 'OK',
-          type: 'warning',
-        }).then(() => {
-          localStorage.clear();
-          const networkData = NetworkData.getInstance()
-          networkData.resetData();
-          window.location.href = '/';
-        });
+      if (code === '06') {
+        const networkData = NetworkData.getInstance()
+        networkData.resetData();
+        const route = useRoute();
+        const router = useRouter();
+        router.push(`/login?redirect=${route.fullPath}`);
+        router.go(0);
       } else {
         ElMessage({
           message: msg || '系统出错',

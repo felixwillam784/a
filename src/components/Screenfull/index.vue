@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span style="margin-right: 10px;">今天：{{utcYear}}年{{utcMonth+1}}月{{utcDate}}日 UTC时间：{{ utcHour }}:{{ utcMinute }}:{{ utcSecond }}</span>
+    <span style="margin-right: 10px;">今天：{{utcYear}}年{{Number(utcMonth)+1}}月{{utcDate}}日 UTC时间：{{ utcHour }}:{{ utcMinute }}:{{ utcSecond }}</span>
     <svg-icon
       :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
       @click="toggle"

@@ -1,5 +1,5 @@
 import router from '@/router';
-import { EXITTYPE, NetworkData, SENDTYPE } from '@/net/NetworkData'
+import { NetworkData } from '@/net/NetworkData'
 import useStore from '@/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -11,12 +11,10 @@ const whiteList = ['/login', '/auth-redirect'];
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
 
-  const { user, permission } = useStore();
-  const hasToken = user.token;
+  const { auth, permission } = useStore();
 
-  // const networkData = NetworkData.getInstance()
-  // const hasToken = networkData.getToken();
-
+  const networkData = NetworkData.getInstance()
+  const hasToken = networkData.getToken();
 
   if (hasToken) {
     // 登录成功，跳转到首页
@@ -24,12 +22,12 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' });
       NProgress.done();
     } else {
-      const hasGetUserInfo = user.roles.length > 0;
+      const hasGetUserInfo = auth.userInfo.roles.length > 0;
       if (hasGetUserInfo) {
         if (to.matched.length === 0) {
           from.name ? next({ name: from.name as any }) : next('/401');
         } else {
-          const accessRoutes: any = await permission.generateRoutes(user.roles);
+          const accessRoutes: any = await permission.generateRoutes(auth.userInfo.roles);
           accessRoutes.forEach((route: any) => {
             router.addRoute(route);
           });
@@ -37,10 +35,8 @@ router.beforeEach(async (to, from, next) => {
         }
       } else {
         try {
-          //await user.getUserInfo();
-          user.roles = ["ADMIN"];
-          const roles = user.roles;
-          // const roles = ["ADMIN"];
+          auth.userInfo.roles = ["ADMIN"];
+          const roles = auth.userInfo.roles;
           const accessRoutes: any = await permission.generateRoutes(roles);
           accessRoutes.forEach((route: any) => {
             router.addRoute(route);
@@ -48,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
           next({ ...to, replace: true });
         } catch (error) {
           // 移除 token 并跳转登录页
-          await user.resetToken();
+          await auth.dispatchSignout();
           next(`/login?redirect=${to.path}`);
           NProgress.done();
         }

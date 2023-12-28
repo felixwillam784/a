@@ -2,9 +2,9 @@ import { RouteRecordRaw } from 'vue-router';
 export const Layout = () => import('@/layout/index.vue');
 const ChildrenLayout = () => import('@/views/layout/index.vue');
 
-const VIPManagementRoutes: RouteRecordRaw[] = [
+const vipManagementRoutes: RouteRecordRaw[] = [
     {
-        path: "/VIP",
+        path: "/vip",
         component: Layout,
         redirect: "manage",
         meta: {
@@ -77,4 +77,4 @@ const VIPManagementRoutes: RouteRecordRaw[] = [
     },
 ];
 
-export default VIPManagementRoutes;
+export default vipManagementRoutes;

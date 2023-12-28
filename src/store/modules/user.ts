@@ -8,10 +8,6 @@ import { resetRouter } from '@/router';
 import { LoginForm } from '@/api/auth/types';
 import { NetworkData } from '@/net/NetworkData';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
-
-const router = useRouter();
-const route = useRoute();
 
 const useUserStore = defineStore({
   id: 'user',
