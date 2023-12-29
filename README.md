@@ -31,6 +31,3 @@
           proxy_pass https://api.youlai.tech/;
       }
   }
-
-
-https://gitee.com/youlaiorg/mall-admin

@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import { ArrowLeft } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import AgentDetail from "./components/AgentDetail.vue";
-import FirstLevelAgentList from "./components/FirstLevelAgentList.vue";
+import RebateSetting from "./components/RebateSetting.vue";
+import RebateWithdrawalStatistics from "./components/RebateWithdrawalStatistics.vue";
 
 const router = useRouter();
 
@@ -20,21 +20,19 @@ const handleBtnTab = (index: number) => {
 
 <template>
   <div class="app-container">
-    <div class="go-back-header">
-      <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
-    </div>
     <el-card>
       <div>
         <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
-          代理详情
+          代理返利设置
         </el-button>
         <el-button :type="activeIndex == 1 ? 'warning' : ''" @click="handleBtnTab(1)">
-          一级代理名单
+          代理返利提现统计
         </el-button>
+        <el-button class="float-right" v-if="activeIndex == 0">修改日志</el-button>
       </div>
       <div class="mt-2">
-        <AgentDetail v-if="activeIndex == 0" />
-        <FirstLevelAgentList v-if="activeIndex == 1" />
+        <RebateSetting v-if="activeIndex == 0" />
+        <RebateWithdrawalStatistics v-if="activeIndex == 1" />
       </div>
     </el-card>
   </div>

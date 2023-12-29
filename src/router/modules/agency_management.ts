@@ -51,6 +51,30 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 
             },
             {
+                path: "rebate",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/rebate/index.vue'),
+                        name: "AgencyRebate",
+                        meta: {
+                            title: "代理返利",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+            {
                 path: "statistics-report",
                 component: ChildrenLayout,
                 redirect: "all",
