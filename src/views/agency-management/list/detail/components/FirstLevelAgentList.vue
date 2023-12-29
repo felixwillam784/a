@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
+import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+
 const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
@@ -22,6 +23,16 @@ const firstLevelAgentList = ref<Array<any>>([
     item_8: "正常",
   },
 ]);
+
+const handleQuery = () => {
+  loading.value = true;
+};
+
+const resetQuery = () => {
+};
+
+const handlePagination = () => {
+};
 </script>
 
 <template>
@@ -45,50 +56,50 @@ const firstLevelAgentList = ref<Array<any>>([
         <el-select v-model="formData.user_id" placeholder="请选择风控状态"> </el-select>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" :icon="Search" > 搜索 </el-button>
-        <el-button :icon="Refresh">重置</el-button>
+        <el-button type="primary" :icon="Search" @click="handleQuery"> 搜索 </el-button>
+        <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
   </el-card>
   <el-table v-loading="loading" :data="firstLevelAgentList" style="width: 100%" class="mt-2">
-    <el-table-column label="UserID" align="left" prop="item_1">
+    <el-table-column label="UserID" align="center" prop="item_1">
       <template #default="scope">
         <el-link :underline="false" class="el-link-decoration">
           {{ scope.row.item_1 }}
         </el-link>
       </template>
     </el-table-column>
-    <el-table-column label="充值总额" align="left" prop="item_2" sortable>
+    <el-table-column label="充值总额" align="center" prop="item_2" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_2 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="提现总额" align="left" prop="item_3" sortable>
+    <el-table-column label="提现总额" align="center" prop="item_3" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_3 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="账户余额" align="left" prop="item_4" width="160" sortable>
+    <el-table-column label="账户余额" align="center" prop="item_4" width="160" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="累计下注金额" align="left" prop="item_5" width="160" sortable>
+    <el-table-column label="累计下注金额" align="center" prop="item_5" width="160" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_5 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="累计下注次数" align="left" prop="item_6" sortable>
+    <el-table-column label="累计下注次数" align="center" prop="item_6" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_6 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="累计带来收益金额" align="left" prop="item_7" sortable>
+    <el-table-column label="累计带来收益金额" align="center" prop="item_7" sortable>
       <template #default="scope">
         <p>{{ scope.row.item_7 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="账号状态" align="left" prop="item_8">
+    <el-table-column label="账号状态" align="center" prop="item_8">
       <template #default="scope">
         <p>{{ scope.row.item_8 }}</p>
       </template>
@@ -99,6 +110,7 @@ const firstLevelAgentList = ref<Array<any>>([
       :total="total_count"
       v-model:page="formData.pageNum"
       v-model:limit="formData.pageSize"
+      @pagination="handlePagination"
     />
   </div>
 </template>
