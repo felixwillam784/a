@@ -81,7 +81,7 @@ const vipList = ref<Array<GetVIPRankData>>([{
         protect_vip:'',
     },
 ])
-const vipItem = ref<GetVIPRankData>()
+const vipItem = ref<GetVIPRankData>(vipList.value[0])
 
 const vip_maintain_switch = ref(true)
 
@@ -110,7 +110,7 @@ const show_vip_rank_detail_dialog = (param:GetVIPRankData) =>{
     vipItem.value = param;
 }
 const vip_rank_detail_label = ref<Array<string>>(['VIP等级', 'VIP段位', 'VIP升级所需充值', 'VIP升级所需打码量', '提现手续费', '免提现手续费额度/月', '单笔最高提现金额','每日可提现额度', '每月可提现额度', '每日可提现次数', '每月可提现次数', 'VIP保级所需充值', 'VIP保级所需打码','VIP保级时效','VIP保级失败降低等级']);
-let rank_options = [ ];
+let rank_options:any[] = [ ];
 
 </script>
 
@@ -171,7 +171,7 @@ let rank_options = [ ];
 
                     <div style="float: right;">
                         <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                            v-model:limit="formData.pageSize" />
                     </div>
                 </el-card>
             </el-col>
@@ -203,7 +203,7 @@ let rank_options = [ ];
             <template #footer>
                 <div style="display:flex; justify-content:center">             
                     <el-button type="primary">确认</el-button>
-                    <el-button @click="closeeditDialog">取消</el-button>
+                    <el-button>取消</el-button>
                 </div>
            </template>
         </el-dialog>
@@ -258,7 +258,7 @@ let rank_options = [ ];
             <template #footer>
                 <div style="display:flex; justify-content:center">             
                     <el-button type="primary">确认</el-button>
-                    <el-button @click="closeeditDialog">取消</el-button>
+                    <el-button>取消</el-button>
                 </div>
            </template>
         </el-dialog>

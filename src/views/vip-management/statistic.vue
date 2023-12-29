@@ -236,21 +236,21 @@ const select_tab = (index:number) => {
                         <el-button :type="buttonIndex == 10 ? 'primary' : ''" @click="handledateRange('last 30days')">过去30天</el-button>
                     </div>
                     <div>
-                        <el-button @click="handleReset" :icon="Refresh">重置</el-button>
-                        <el-button @click="handleSearch" :icon="Search">查新</el-button>
+                        <el-button :icon="Refresh">重置</el-button>
+                        <el-button :icon="Search">查新</el-button>
                     </div>
                 </el-row>
                 <el-row style="margin-top: 20px;">
                     <el-form :inline="true" style="width: 100%;">
                         <el-form-item>
-                            <el-button  @click="handleformDataRank.value.dateRange('previous day')">前一天</el-button>
+                            <el-button  @click="handledateRange('previous day')">前一天</el-button>
                         </el-form-item>
                         <el-form-item label="选择周期:">
                             <el-date-picker type="daterange" v-model="dateRange" range-separator="至"
                             value-format="YYYY-MM-DD"></el-date-picker>
                         </el-form-item>
                         <el-form-item>
-                            <el-button  @click="handleformDataRank.value.dateRange('next day')">后一天</el-button>
+                            <el-button  @click="handledateRange('next day')">后一天</el-button>
                         </el-form-item>
                         <el-form-item style="float: right;">
 
@@ -265,7 +265,7 @@ const select_tab = (index:number) => {
         </div>
         <div>              
             <el-card :span="24" :xs="24">
-                <el-table v-if="tab_index == 0" v-loading="loading" :data="rank_client_distribution_list" style="width: 100%;">
+                <el-table v-if="tab_index == 0" :data="rank_client_distribution_list" style="width: 100%;">
                     <el-table-column label = "ID" align="left" prop="id" width="120">
                         <template #default="scope">
                             <p>{{ scope.row.id }}</p>
@@ -284,7 +284,7 @@ const select_tab = (index:number) => {
                     
                 </el-table>
 
-                <el-table v-if="tab_index == 1" v-loading="loading" :data="level_client_distribution_list" style="width: 100%;">
+                <el-table v-if="tab_index == 1"  :data="level_client_distribution_list" style="width: 100%;">
                     <el-table-column label = "VIP等级" align="left" prop="level" width="120">
                         <template #default="scope">
                             <p>{{ scope.row.level }}</p>

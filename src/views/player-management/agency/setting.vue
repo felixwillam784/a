@@ -119,7 +119,7 @@ const updateRelationSetting = () =>{
            </el-row>
            <template #footer>
                 <el-button type="primary" @click="updateRelationSetting">确认修改</el-button>
-                <el-button @click="closeeditDialog">取消修改</el-button>
+                <el-button>取消修改</el-button>
            </template>
         </el-dialog>
     </div>
