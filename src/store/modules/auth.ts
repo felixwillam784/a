@@ -10,21 +10,19 @@ export const authStore = defineStore({
   state: () => ({
     success: false as boolean,
     errMessage: '' as string,
-    token: NetworkData.getInstance().getToken() as string | undefined,
     userInfo: {
-      id:0,
-      name:"",
-      role_id:1,
-      token: NetworkData.getInstance().getToken() as string  || '',
+      id: 0,
+      name: "",
+      role_id: 1,
+      token: NetworkData.getInstance().getToken() as string || '',
       avatar: 'https://oss.youlai.tech/youlai-boot/2023/05/16/811270ef31f548af9cffc026dfc3777b.gif',
       roles: [],
-      perms: ["sys:menu:delete", "sys:dept:edit", "sys:dict_type:add", "sys:dict:edit", "sys:dict:delete", "sys:dict_type:edit", "sys:menu:add", "sys:user:add", "sys:role:edit", "sys:dept:delete", "sys:user:edit", "sys:user:delete", "sys:user:reset_pwd", "sys:dept:add", "sys:role:delete", "sys:dict_type:delete", "sys:menu:edit", "sys:dict:add", "sys:role:add"],
+      perms: [],
     } as User.GetUserInfo,
   }),
   getters: {
     getSuccess: (state) => state.success,
     getErrMessage: (state) => state.errMessage,
-    getToken: (state) => state.token,
     getUserInfo: (state) => state.userInfo,
   },
   actions: {
@@ -37,10 +35,8 @@ export const authStore = defineStore({
     setToken(token: string) {
       const networkData: NetworkData = NetworkData.getInstance();
       networkData.setToken(token);
-      this.token = token;
     },
     removeToken() {
-      this.token = undefined;
       const networkData: NetworkData = NetworkData.getInstance();
       networkData.resetData();
     },

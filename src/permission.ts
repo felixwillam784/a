@@ -27,10 +27,6 @@ router.beforeEach(async (to, from, next) => {
         if (to.matched.length === 0) {
           from.name ? next({ name: from.name as any }) : next('/401');
         } else {
-          const accessRoutes: any = await permission.generateRoutes(auth.userInfo.roles);
-          accessRoutes.forEach((route: any) => {
-            router.addRoute(route);
-          });
           next();
         }
       } else {

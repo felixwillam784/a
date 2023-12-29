@@ -14,6 +14,10 @@
     justify-content: center;
 }
 
+.justify-end {
+    justify-content: end;
+}
+
 .el-link-decoration {
     color: #5393e0;
     text-decoration-line: underline
@@ -25,6 +29,14 @@
 
 .mt-2 {
     margin-top: 8px;
+}
+
+.mt-4 {
+    margin-top: 16px;
+}
+
+.float-right {
+    float: right;
 }
 
 .go-back-header {

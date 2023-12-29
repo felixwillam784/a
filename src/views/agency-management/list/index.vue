@@ -432,7 +432,7 @@ onMounted(() => {
         </el-card>
         <el-card style="margin-top: 20px">
           <el-table v-loading="loading" :data="agencyList" style="width: 100%">
-            <el-table-column label="UserID" align="left" prop="item_1" width="160">
+            <el-table-column label="UserID" align="center" prop="item_1" width="160">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -444,7 +444,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="总充值金额"
-              align="left"
+              align="center"
               prop="item_2"
               width="160"
               sortable
@@ -455,7 +455,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="总提现金额"
-              align="left"
+              align="center"
               prop="item_3"
               width="160"
               sortable
@@ -466,7 +466,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="总邀请人数"
-              align="left"
+              align="center"
               prop="item_4"
               width="160"
               sortable
@@ -477,7 +477,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="一级充提差"
-              align="left"
+              align="center"
               prop="item_5"
               width="160"
               sortable
@@ -488,7 +488,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="一级付费金额"
-              align="left"
+              align="center"
               prop="item_6"
               width="160"
               sortable
@@ -499,7 +499,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="一级提现金额"
-              align="left"
+              align="center"
               prop="item_7"
               width="160"
               sortable
@@ -510,7 +510,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="投注返佣金额"
-              align="left"
+              align="center"
               prop="item_8"
               width="160"
               sortable
@@ -521,7 +521,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="一级付费人数"
-              align="left"
+              align="center"
               prop="item_9"
               width="160"
               sortable
@@ -532,7 +532,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="风控代理人数"
-              align="left"
+              align="center"
               prop="item_10"
               width="160"
               sortable
@@ -543,7 +543,7 @@ onMounted(() => {
             </el-table-column>
             <el-table-column
               label="代理平均充值"
-              align="left"
+              align="center"
               prop="item_11"
               width="160"
               sortable
@@ -552,22 +552,22 @@ onMounted(() => {
                 <p>{{ scope.row.item_11 }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理成就奖励" align="left" prop="item_12" width="160">
+            <el-table-column label="代理成就奖励" align="center" prop="item_12" width="160">
               <template #default="scope">
                 <p>{{ scope.row.item_12 }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理邀请奖励" align="left" prop="item_13" width="160">
+            <el-table-column label="代理邀请奖励" align="center" prop="item_13" width="160">
               <template #default="scope">
                 <p>{{ scope.row.item_13 }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理状态" align="left" prop="item_14" width="160">
+            <el-table-column label="代理状态" align="center" prop="item_14" width="160">
               <template #default="scope">
                 <p>{{ scope.row.item_14 }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="账号风控状态" align="left" prop="item_15" width="160">
+            <el-table-column label="账号风控状态" align="center" prop="item_15" width="160">
               <template #default="scope">
                 <p>{{ scope.row.item_15 }}%</p>
               </template>

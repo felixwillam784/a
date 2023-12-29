@@ -28,11 +28,6 @@ service.interceptors.request.use(
       config.headers.Authorization = 'Bearer ' + networkData.getToken();
     }
 
-    // const { user } = useStore();
-    // if (user.token) {
-    //   config.headers.Authorization = `${localStorage.get('token')}`;
-    // }
-
     return config;
   },
   (error: any) => {
