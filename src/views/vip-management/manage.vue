@@ -42,7 +42,7 @@ interface GetVIPRankData {
 }
 interface rebateGameType {
     game_type: string,
-    rebate_amount: number|string,
+    rebate_amount: number,
 }
 
 const router = useRouter();
@@ -155,7 +155,7 @@ const vipList = ref<Array<GetVIPRankData>>([{
         clien_lost_rebate_fund_time_amount:'',
     },
 ])
-const vipItem = ref<GetVIPRankData>()
+const vipItem = ref<GetVIPRankData>(vipList.value[0])
 
 const vip_maintain_switch = ref(true)
 
@@ -190,7 +190,7 @@ const show_vip_rank_detail_dialog = (param:GetVIPRankData) =>{
     vipItem.value = param;
 }
 const vip_rank_detail_label = ref<Array<string>>(['VIP等级', 'VIP段位', 'VIP升级所需充值', 'VIP升级所需打码量', '提现手续费', '免提现手续费额度/月', '单笔最高提现金额','每日可提现额度', '每月可提现额度', '每日可提现次数', '每月可提现次数', 'VIP保级所需充值', 'VIP保级所需打码','VIP保级时效','VIP保级失败降低等级']);
-let rank_options = [];
+let rank_options:any[] = [];
 
 const slice_item_object = () =>{
     if(vipItem.value){
@@ -238,7 +238,7 @@ const slice_item_object = () =>{
 //coderebate_setting
 const new_rebate_type=ref<rebateGameType>({
     game_type:"",
-    rebate_amount:'',
+    rebate_amount:0,
 });
 const delete_rebate_type = (index:number) => {
     if(index === 1000)
@@ -322,7 +322,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
 
                     <div style="float: right;">
                         <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
+                            v-model:limit="formData.pageSize" />
                     </div>
                 </el-card>
             </el-col>
@@ -354,7 +354,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
             <template #footer>
                 <div style="display:flex; justify-content:center">             
                     <el-button type="primary">确认</el-button>
-                    <el-button @click="closeeditDialog">取消</el-button>
+                    <el-button>取消</el-button>
                 </div>
            </template>
         </el-dialog>
@@ -379,7 +379,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
                                 :value="item.value"
                             />
                         </el-select>
-                            <button style="margin-left:100px; width:25px" @click="show_vip_rank_dialog(true)">
+                            <button style="margin-left:100px; width:25px" @click="show_vip_rank_dialog()">
                             +
                         </button>
                     </div>
@@ -415,7 +415,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
                     <p style="width:20%">
                         {{`${item.game_type}`}}
                     </p>
-                    <el-input v-model="vipItem.game_types[index].rebate_amount" :value="parseFloat(vipItem.game_types[index].rebate_amount).toFixed(1)" placeholder="Please input" style="width:50%; margin-left:20px"/>
+                    <el-input v-model="vipItem.game_types[index].rebate_amount" :value="vipItem.game_types[index].rebate_amount.toFixed(1)" placeholder="Please input" style="width:50%; margin-left:20px"/>
                     <p>
                         %
                     </p>
@@ -434,7 +434,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
                     <p>
                         %
                     </p>
-                    <button v-if="index !== 0" style="margin-left:100px; width:25px" @click="delete_rebate_type(1000)">
+                    <button style="margin-left:100px; width:25px" @click="delete_rebate_type(1000)">
                         -
                     </button>
                 </div>
@@ -485,7 +485,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
                         客损返利比例
                     </p>
                     <div style="display:flex; width: 60%; margin-left:20px; align-items:center">
-                        <el-input style="height:30px;" v-model="vipItem.client_lost_rebate_amount" :value="parseFloat(vipItem.client_lost_rebate_amount).toFixed(1)"/>
+                        <el-input style="height:30px;" v-model="vipItem.client_lost_rebate_amount" :value="vipItem.client_lost_rebate_amount.toFixed(1)"/>
                         <p>
                             %
                         </p>
@@ -536,7 +536,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
             <template #footer>
                 <div style="display:flex; justify-content:center">             
                     <el-button type="primary">确认</el-button>
-                    <el-button @click="closeeditDialog">取消</el-button>
+                    <el-button>取消</el-button>
                 </div>
            </template>
         </el-dialog>

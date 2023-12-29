@@ -193,7 +193,7 @@ const getData = async () =>{
 <template>
     <div class="app-container">
         <div class="user-detail-header">
-            <el-button type="danger" :icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button type="danger" :icon="ArrowLeft" @click="goBack" >返回</el-button>
             <div style="margin-left: auto;">
                 <el-button :type="activeButton == 0 ? 'warning' : ''"
                     @click="handleButtonActive(0, 'UserDetail')">用户详情</el-button>

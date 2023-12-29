@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-
+import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
@@ -45,8 +45,8 @@ const firstLevelAgentList = ref<Array<any>>([
         <el-select v-model="formData.user_id" placeholder="请选择风控状态"> </el-select>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" :icon="Search" @click="handleQuery"> 搜索 </el-button>
-        <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="Search" > 搜索 </el-button>
+        <el-button :icon="Refresh">重置</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -99,7 +99,6 @@ const firstLevelAgentList = ref<Array<any>>([
       :total="total_count"
       v-model:page="formData.pageNum"
       v-model:limit="formData.pageSize"
-      @pagination="handlePagination"
     />
   </div>
 </template>
