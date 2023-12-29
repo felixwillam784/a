@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import {getAgentlist} from '@/api/Players'
 import useStore from '@/store';
 import {useRoute} from 'vue-router';
+import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 //import { watch } from "fs";
 
 const route = useRoute();

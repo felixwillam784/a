@@ -71,9 +71,9 @@ const signin_bonous_list = ref<Array<SignInBonusData>>([
 onMounted(()=>{
 })
 
-const getColumnHeaderStyle = (index:string) =>{
+const getColumnHeaderStyle = (index:number) =>{
     // Set the desired style for the header cell
-    return parseInt(index) % 2 == 0 ? {
+    return index % 2 == 0 ? {
         backgroundColor: 'yellow', // Example: Set the text color to red
         fontWeight: 'bold', // Example: Set the font weight to bold
         display:'flex',
@@ -99,7 +99,7 @@ const getColumnHeaderStyle = (index:string) =>{
 const dialog_title = ref<string>();
 //detail && add new
 const showDetailDialog=ref(false);
-const signin_bonous_item = ref<SignInBonusData>();
+const signin_bonous_item = ref<SignInBonusData>(signin_bonous_list.value[0]);
 const showDetail = (data : SignInBonusData) =>{
     showDetailDialog.value = true;
     signin_bonous_item.value = data;
@@ -154,7 +154,7 @@ const  gotovipsigninstatistic = () =>{
         <el-row :gutter="20">
             <el-col :span="24" :xs="24">
                 <div class="search">
-                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120" class="right_position">
+                    <el-form :inline="true" label-width="120" class="right_position">
                         <el-form-item>
                             <el-button @click="gotovipsigninstatistic()">签到数据统计 </el-button>
                             <el-button  @click="showAddNew()">新增签到奖励</el-button>
@@ -194,7 +194,7 @@ const  gotovipsigninstatistic = () =>{
                 </div>
 
                 <el-card>
-                    <el-table v-loading="loading" :data="signin_bonous_list" style="width: 100%;">
+                    <el-table  :data="signin_bonous_list" style="width: 100%;">
                         <el-table-column label="VIP等级" align="center" prop="vip_level" width="160" />
                         <el-table-column label="段位" align="center" prop="vip_rank" width="160" />
 
@@ -241,10 +241,6 @@ const  gotovipsigninstatistic = () =>{
                         </el-table-column>
                     </el-table>
 
-                    <div style="float: right;">
-                        <pagination v-if="total > 0" :total="total" v-model:page="formData.pageNum"
-                            v-model:limit="formData.pageSize" @pagination="handleQuery" />
-                    </div>
                 </el-card>
             </el-col>
 

@@ -527,7 +527,7 @@ const lock = () => {
             <el-row v-if="withdrawalReviewItem.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.operator }}</p>
+                    <p>{{ withdrawalReviewItem.operator_name }}</p>
                 </el-col>
             </el-row>
             <template #footer>
