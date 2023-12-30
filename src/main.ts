@@ -22,6 +22,8 @@ import i18n from '@/lang/index';
 // 自定义样式
 import '@/styles/index.scss';
 
+import './index.css'
+
 const app = createApp(App);
 
 // 自定义指令
