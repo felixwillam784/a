@@ -73,6 +73,17 @@ const vipManagementRoutes: RouteRecordRaw[] = [
                 ]
 
             },
+            {
+                path: "upgradebonus",
+                component: () => import('@/views/vip-management/upgrade-bonus.vue'),
+                name: "VIPUpgradeBonus",
+                meta: {
+                    title:"VIP升级奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
         ]
     },
 ];
