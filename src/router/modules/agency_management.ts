@@ -158,7 +158,7 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 children: [
                     {
                         path: "all",
-                        component: () => import('@/views/agency-management/list/index.vue'),
+                        component: () => import('@/views/agency-management/achievement-reward/index.vue'),
                         name: "AgentAchievementReward",
                         meta: {
                             title: "代理成就奖励",
