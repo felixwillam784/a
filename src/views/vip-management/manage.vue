@@ -25,9 +25,11 @@ interface GetVIPRankData {
 
     rebate_way:string,
     protect_vip:string,
-    rebate_mode:string,
 
+    
     game_types:Array<rebateGameType>,
+
+    rebate_mode:string,
     rebate_order_time:string,
     rebate_order_time_amount:string,
     rebate_fund_time:string,
@@ -569,8 +571,7 @@ const is_disabled_clien_lost_rebate_fund_time_amount = () =>{
     align-items: center;
 }
 .dl_row{
-    height: 40px;
-    padding: 20px;
+    padding: 1px 20px;
     margin-bottom: 4px;
     display: flex;
     align-items: center;

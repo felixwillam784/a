@@ -299,8 +299,7 @@ const  gotovipsigninstatistic = () =>{
 
 <style lang="scss">
 .dl_row{
-    height: 40px;
-    padding: 20px;
+    padding: 1px 20px;
     margin-bottom: 4px;
     display: flex;
     align-items: center;
