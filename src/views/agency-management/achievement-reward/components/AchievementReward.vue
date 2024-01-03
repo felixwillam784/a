@@ -3,14 +3,14 @@ import { ref, computed, watch, onMounted, toRefs } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 
 const props = defineProps<{
-  invitationRewardDialog: boolean;
-  invitationRewardCollectionDialog: boolean;
+  achievementRewardDialog: boolean;
+  achievementRewardCollectionDialog: boolean;
 }>();
-const { invitationRewardDialog, invitationRewardCollectionDialog } = toRefs(props);
+const { achievementRewardDialog, achievementRewardCollectionDialog } = toRefs(props);
 
 const emit = defineEmits<{
-  (e: "closeInvitationRewardDialog"): void;
-  (e: "closeInvitationRewardCollectionDialog"): void;
+  (e: "closeAchievementRewardDialog"): void;
+  (e: "closeAchievementRewardCollectionDialog"): void;
 }>();
 
 const formData = ref<any>({
@@ -20,9 +20,9 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const invitationRewardDialogVisible = ref<boolean>(false);
+const achievementRewardDialogVisible = ref<boolean>(false);
 
-const invitationRewardCollectionDialogVisible = ref<boolean>(false);
+const achievementRewardCollectionDialogVisible = ref<boolean>(false);
 
 const total_count = ref<number>(0);
 
@@ -35,33 +35,33 @@ const firstLevelAgentList = ref<Array<any>>([
   },
 ]);
 
-const dialogTitle = ref<string>("新增邀请奖励");
+const dialogTitle = ref<string>("代理成就详情");
 
 const handlePagination = () => {};
 
-const showInvitationRewardDialog = () => {
-  dialogTitle.value = "增邀请奖励详情";
-  invitationRewardDialogVisible.value = true;
+const showAchievementRewardDialog = () => {
+  dialogTitle.value = "代理成就详情";
+  achievementRewardDialogVisible.value = true;
 };
 
-watch(invitationRewardDialog, (value) => {
-  dialogTitle.value = "新增邀请奖励";
-  invitationRewardDialogVisible.value = value;
+watch(achievementRewardDialog, (value) => {
+  dialogTitle.value = "新增代理成就";
+  achievementRewardDialogVisible.value = value;
 });
 
-watch(invitationRewardDialogVisible, (value) => {
+watch(achievementRewardDialogVisible, (value) => {
   if (!value) {
-    emit("closeInvitationRewardDialog");
+    emit("closeAchievementRewardDialog");
   }
 });
 
-watch(invitationRewardCollectionDialog, (value) => {
-  invitationRewardCollectionDialogVisible.value = value;
+watch(achievementRewardCollectionDialog, (value) => {
+  achievementRewardCollectionDialogVisible.value = value;
 });
 
-watch(invitationRewardCollectionDialogVisible, (value) => {
+watch(achievementRewardCollectionDialogVisible, (value) => {
   if (!value) {
-    emit("closeInvitationRewardCollectionDialog");
+    emit("closeAchievementRewardCollectionDialog");
   }
 });
 </script>
@@ -80,7 +80,7 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
         </el-link>
       </template>
     </el-table-column>
-    <el-table-column label="邀请人数范围" align="center" prop="item_2">
+    <el-table-column label="邀请人数条件" align="center" prop="item_2">
       <template #default="scope">
         <p>{{ scope.row.item_2 }}</p>
       </template>
@@ -90,14 +90,14 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
         <p>{{ scope.row.item_3 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="需求打码倍率" align="center" prop="item_4">
+    <el-table-column label="打码倍率" align="center" prop="item_4">
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button type="primary" link @click="showInvitationRewardDialog">
+        <el-button type="primary" link @click="showAchievementRewardDialog">
           详情
         </el-button>
         <el-button type="danger" link> 删除 </el-button>
@@ -113,46 +113,43 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
       @pagination="handlePagination"
     />
   </div>
-  <el-dialog :title="dialogTitle" v-model="invitationRewardDialogVisible">
+  <el-dialog :title="dialogTitle" v-model="achievementRewardDialogVisible">
     <el-body>
       <el-form label-width="200">
-        <el-row class="bg-neutral-200 invitation-reward-dialog">
+        <el-row class="bg-neutral-200 achievement-reward-dialog">
           <el-form-item label="ID">
             <el-input class="w-400" />
           </el-form-item>
         </el-row>
-        <el-row class="bg-neutral-400 invitation-reward-dialog">
+        <el-row class="bg-neutral-400 achievement-reward-dialog">
           <el-form-item label="邀请人数条件">
-            <el-input class="w-200" placeholder="请输入邀请人数范围" />
-            &nbsp;&nbsp;&nbsp;&nbsp;━━━━&nbsp;&nbsp;&nbsp;&nbsp;
-            <el-input class="w-200" placeholder="请输入邀请人数范围" />
-            人
+            <el-input class="w-200" placeholder="请输入邀请人数条件" />
           </el-form-item>
         </el-row>
-        <el-row class="bg-neutral-400 invitation-reward-dialog">
+        <el-row class="bg-neutral-400 achievement-reward-dialog">
           <el-form-item label="邀请奖励金额">
-            <el-input class="w-400" placeholder="请输入奖励邀请金额" />
+            <el-input class="w-400" placeholder="请输入邀请奖励金额" />
           </el-form-item>
         </el-row>
-        <el-row class="bg-neutral-400 invitation-reward-dialog">
+        <el-row class="bg-neutral-400 achievement-reward-dialog">
           <el-form-item label="需求打码倍率">
-            <el-input class="w-400" placeholder="请输入奖励邀请金额" />
+            <el-input class="w-400" placeholder="请输入需求打码倍率" />
           </el-form-item>
         </el-row>
       </el-form>
     </el-body>
     <el-footer class="text-center mt-6">
       <el-button type="primary">确认</el-button>
-      <el-button @click="invitationRewardDialogVisible = false">取消</el-button>
+      <el-button @click="achievementRewardDialogVisible = false">取消</el-button>
     </el-footer>
   </el-dialog>
   <el-dialog
-    title="代理邀请奖励领取设置"
-    v-model="invitationRewardCollectionDialogVisible"
+    title="代理成就阶段奖励设置"
+    v-model="achievementRewardCollectionDialogVisible"
   >
     <el-body>
       <el-form label-width="200">
-        <el-row class="bg-neutral-400 invitation-reward-dialog pa-2">
+        <el-row class="bg-neutral-200 achievement-reward-dialog pa-2">
           <el-form-item label="返利领取方式">
             <el-radio-group>
               <el-radio :label="1">玩家手动领取</el-radio>
@@ -160,7 +157,10 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
             </el-radio-group>
           </el-form-item>
         </el-row>
-        <el-row class="bg-neutral-400 invitation-reward-dialog pa-2" style="height: 80px">
+        <el-row
+          class="bg-neutral-400 achievement-reward-dialog pa-2"
+          style="height: 80px"
+        >
           <el-form-item label="返利结算周期">
             <el-radio-group>
               <el-radio :label="1">实时结算</el-radio>
@@ -173,7 +173,7 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
             </el-radio-group>
           </el-form-item>
         </el-row>
-        <el-row class="bg-neutral-400 invitation-reward-dialog pa-2">
+        <el-row class="bg-neutral-400 achievement-reward-dialog pa-2">
           <el-form-item label="奖励释放周期">
             <el-radio-group>
               <el-radio :label="1">不释放</el-radio>
@@ -185,7 +185,7 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
             </el-radio-group>
           </el-form-item>
         </el-row>
-        <div class="bg-neutral-400 invitation-reward-dialog pa-2" style="height: 88px">
+        <div class="bg-neutral-400 achievement-reward-dialog pa-2" style="height: 88px">
           <el-form-item label="有效用户条件">
             <el-row>
               完成充值
@@ -203,13 +203,15 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
     </el-body>
     <el-footer class="text-center mt-6">
       <el-button type="primary">确认</el-button>
-      <el-button @click="invitationRewardCollectionDialogVisible = false">取消</el-button>
+      <el-button @click="achievementRewardCollectionDialogVisible = false"
+        >取消</el-button
+      >
     </el-footer>
   </el-dialog>
 </template>
 
 <style lang="scss">
-.invitation-reward-dialog {
+.achievement-reward-dialog {
   margin-bottom: 10px;
   align-items: center;
   height: 50px;
