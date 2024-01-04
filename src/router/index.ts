@@ -11,6 +11,7 @@ import authorityManagementRoutes from "@/router/modules/authority_management";
 import platformSettingRoutes from "@/router/modules/platform_setting";
 import vipManagementRoutes from "@/router/modules/VIP_management";
 import agencyManagementRoutes from '@/router/modules/agency_management';
+import riskManagementRoutes from '@/router/modules/risk_management';
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -50,6 +51,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
 export const asyncRoutes: Array<RouteRecordRaw> = [
   ...dataAnalysisManagementRoutes,
   ...playerManagementRoutes,
+  ...riskManagementRoutes,
   ...vipManagementRoutes,
   ...agencyManagementRoutes,
   ...webpageManagementRoutes,

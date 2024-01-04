@@ -4,6 +4,7 @@ import usePermissionStore from './modules/permission';
 import useSettingStore from './modules/settings';
 import useTagsViewStore from './modules/tagsView';
 import { authStore } from './modules/auth';
+import { dashboardStore } from './modules/dashboard';
 
 const useStore = () => ({
   auth: authStore(),
@@ -12,6 +13,7 @@ const useStore = () => ({
   permission: usePermissionStore(),
   setting: useSettingStore(),
   tagsView: useTagsViewStore(),
+  dashboard: dashboardStore(),
 });
 
 export default useStore;

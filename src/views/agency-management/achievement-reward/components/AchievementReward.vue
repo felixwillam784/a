@@ -114,30 +114,28 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     />
   </div>
   <el-dialog :title="dialogTitle" v-model="achievementRewardDialogVisible">
-    <el-body>
-      <el-form label-width="200">
-        <el-row class="bg-neutral-200 achievement-reward-dialog">
-          <el-form-item label="ID">
-            <el-input class="w-400" />
-          </el-form-item>
-        </el-row>
-        <el-row class="bg-neutral-400 achievement-reward-dialog">
-          <el-form-item label="邀请人数条件">
-            <el-input class="w-200" placeholder="请输入邀请人数条件" />
-          </el-form-item>
-        </el-row>
-        <el-row class="bg-neutral-400 achievement-reward-dialog">
-          <el-form-item label="邀请奖励金额">
-            <el-input class="w-400" placeholder="请输入邀请奖励金额" />
-          </el-form-item>
-        </el-row>
-        <el-row class="bg-neutral-400 achievement-reward-dialog">
-          <el-form-item label="需求打码倍率">
-            <el-input class="w-400" placeholder="请输入需求打码倍率" />
-          </el-form-item>
-        </el-row>
-      </el-form>
-    </el-body>
+    <el-form label-width="200">
+      <el-row class="bg-neutral-200 achievement-reward-dialog">
+        <el-form-item label="ID">
+          <el-input class="w-400" />
+        </el-form-item>
+      </el-row>
+      <el-row class="bg-neutral-400 achievement-reward-dialog">
+        <el-form-item label="邀请人数条件">
+          <el-input class="w-200" placeholder="请输入邀请人数条件" />
+        </el-form-item>
+      </el-row>
+      <el-row class="bg-neutral-400 achievement-reward-dialog">
+        <el-form-item label="邀请奖励金额">
+          <el-input class="w-400" placeholder="请输入邀请奖励金额" />
+        </el-form-item>
+      </el-row>
+      <el-row class="bg-neutral-400 achievement-reward-dialog">
+        <el-form-item label="需求打码倍率">
+          <el-input class="w-400" placeholder="请输入需求打码倍率" />
+        </el-form-item>
+      </el-row>
+    </el-form>
     <el-footer class="text-center mt-6">
       <el-button type="primary">确认</el-button>
       <el-button @click="achievementRewardDialogVisible = false">取消</el-button>
@@ -147,60 +145,55 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     title="代理成就阶段奖励设置"
     v-model="achievementRewardCollectionDialogVisible"
   >
-    <el-body>
-      <el-form label-width="200">
-        <el-row class="bg-neutral-200 achievement-reward-dialog pa-2">
-          <el-form-item label="返利领取方式">
-            <el-radio-group>
-              <el-radio :label="1">玩家手动领取</el-radio>
-              <el-radio :label="2">结算时自动到账</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-row>
-        <el-row
-          class="bg-neutral-400 achievement-reward-dialog pa-2"
-          style="height: 80px"
-        >
-          <el-form-item label="返利结算周期">
-            <el-radio-group>
-              <el-radio :label="1">实时结算</el-radio>
-              <el-radio :label="2">每日刷新结算</el-radio>
-              <el-radio :label="3">每周刷新结算</el-radio>
-              <el-radio :label="4">每月刷新结算</el-radio>
-              <el-radio :label="5">
-                <el-input placeholder="请输入天数" />天后刷新结算
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-row>
-        <el-row class="bg-neutral-400 achievement-reward-dialog pa-2">
-          <el-form-item label="奖励释放周期">
-            <el-radio-group>
-              <el-radio :label="1">不释放</el-radio>
-              <el-radio :label="5">
-                释放
-                <el-input placeholder="请输入自动释放天数" />
-                天后释放
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-row>
-        <div class="bg-neutral-400 achievement-reward-dialog pa-2" style="height: 88px">
-          <el-form-item label="有效用户条件">
-            <el-row>
-              完成充值
-              <el-input placeholder="请输入充值金额" class="w-64 mx-1" />
-              后认为是有效用户
-            </el-row>
-          </el-form-item>
-          <el-form-item label=" " class="mt-2">
-            完成打码
-            <el-input placeholder="请输入打码量" class="w-64 mx-1" />
+    <el-form label-width="200">
+      <el-row class="bg-neutral-200 achievement-reward-dialog pa-2">
+        <el-form-item label="返利领取方式">
+          <el-radio-group>
+            <el-radio :label="1">玩家手动领取</el-radio>
+            <el-radio :label="2">结算时自动到账</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-row>
+      <el-row class="bg-neutral-400 achievement-reward-dialog pa-2" style="height: 80px">
+        <el-form-item label="返利结算周期">
+          <el-radio-group>
+            <el-radio :label="1">实时结算</el-radio>
+            <el-radio :label="2">每日刷新结算</el-radio>
+            <el-radio :label="3">每周刷新结算</el-radio>
+            <el-radio :label="4">每月刷新结算</el-radio>
+            <el-radio :label="5">
+              <el-input placeholder="请输入天数" />天后刷新结算
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-row>
+      <el-row class="bg-neutral-400 achievement-reward-dialog pa-2">
+        <el-form-item label="奖励释放周期">
+          <el-radio-group>
+            <el-radio :label="1">不释放</el-radio>
+            <el-radio :label="5">
+              释放
+              <el-input placeholder="请输入自动释放天数" />
+              天后释放
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-row>
+      <div class="bg-neutral-400 achievement-reward-dialog pa-2" style="height: 88px">
+        <el-form-item label="有效用户条件">
+          <el-row>
+            完成充值
+            <el-input placeholder="请输入充值金额" class="w-64 mx-1" />
             后认为是有效用户
-          </el-form-item>
-        </div>
-      </el-form>
-    </el-body>
+          </el-row>
+        </el-form-item>
+        <el-form-item label=" " class="mt-2">
+          完成打码
+          <el-input placeholder="请输入打码量" class="w-64 mx-1" />
+          后认为是有效用户
+        </el-form-item>
+      </div>
+    </el-form>
     <el-footer class="text-center mt-6">
       <el-button type="primary">确认</el-button>
       <el-button @click="achievementRewardCollectionDialogVisible = false"
