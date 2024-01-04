@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import AchievementReward from "./components/AchievementReward.vue";
-import AchievementStatistics from "./components/AchievementStatistics.vue";
-import StageReward from "./components/StageReward.vue";
-import StageStatistics from "./components/StageStatistics.vue";
 import moment from "moment-timezone";
 import { Search, Refresh } from "@element-plus/icons-vue";
+import PersonalRiskControl from "./components/PersonalRiskControl.vue";
+import RiskControlWhiteList from "./components/RiskControlWhiteList.vue";
 
 const router = useRouter();
 
 const activeIndex = ref<number>(0);
 
-const achievementRewardDialog = ref<boolean>(false);
-const achievementRewardCollectionDialog = ref<boolean>(false);
-
-const invitation_reward_switch = ref<boolean>(true);
+const formData = ref<any>({});
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -134,112 +129,154 @@ const handleDateRange = (date: string) => {
 const handleQuery = () => {};
 
 const resetQuery = () => {};
-
-const achievementRewardDialogShow = () => {
-  achievementRewardDialog.value = true;
-};
-
-const achievementRewardCollectionDialogShow = () => {
-  achievementRewardCollectionDialog.value = true;
-};
-
-const closeAchievementRewardDialog = () => {
-  achievementRewardDialog.value = false;
-};
-
-const closeAchievementRewardCollectionDialog = () => {
-  achievementRewardCollectionDialog.value = false;
-};
 </script>
 
 <template>
   <div class="app-container">
-    <el-card v-if="activeIndex == 0 || activeIndex == 1">
-      <el-row class="justify-end">
-        <el-button @click="achievementRewardCollectionDialogShow">
-          {{ activeIndex == 0 ? "代理成就奖励领取设置" : "代理成就阶段奖励领取设置" }}
-        </el-button>
-        <el-button @click="achievementRewardDialogShow">
-          {{ activeIndex == 0 ? "新增代理成就奖励" : "新增代理成就阶段奖励" }}
-        </el-button>
-        <el-button>模版导出</el-button>
-        <el-button>Excel导入</el-button>
-        <el-button>Excel导出</el-button>
-      </el-row>
-      <el-row class="justify-end mt-4 align-center">
-        代理成就奖励功能开启/关闭
-        <el-switch
-          size="large"
-          v-model="invitation_reward_switch"
-          inline-prompt
-          active-text="开启"
-          inactive-text="关闭"
-          class="ms-2"
-        />
+    <el-card>
+      <el-row style="align-items: center">
+        <el-col :md="12" :lg="16">
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="UserID" prop="user_id">
+              <el-input v-model="formData.user_id" placeholder="请输入UserID" />
+            </el-form-item>
+            <el-form-item label="邮箱账号" prop="email_address">
+              <el-input
+                v-model="formData.email_address"
+                placeholder="请输入代理邮箱账号"
+              />
+            </el-form-item>
+            <el-form-item label="身份信息" prop="identity_information">
+              <el-input
+                v-model="formData.identity_information"
+                placeholder="请输入身份信息号"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="风控等级" prop="user_id">
+              <el-select v-model="formData.user_id" placeholder="请选择风控等级">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="风控行为" prop="user_id">
+              <el-select v-model="formData.user_id" placeholder="请选择风控行为">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作人员" prop="invitee_total_number">
+              <el-select v-model="formData.user_id" placeholder="请选择操作人员">
+              </el-select>
+            </el-form-item>
+            <el-form-item style="float: right"> </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="IP地址" prop="invitee_total_number">
+              <el-select v-model="formData.user_id" placeholder="请输入IP地址">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="设备ID" prop="invitee_total_number">
+              <el-select v-model="formData.user_id" placeholder="请输入设备ID">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="支付账号" prop="invitee_total_number">
+              <el-select v-model="formData.user_id" placeholder="请输入支付账号">
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :md="12" :lg="8" class="text-right">
+          <div>
+            <el-button :icon="Search" size="large" @click="handleQuery" class="w-32">
+              搜索
+            </el-button>
+            <el-button :icon="Refresh" size="large" @click="resetQuery" class="w-32">
+              重置
+            </el-button>
+          </div>
+          <div class="mt-2">
+            <el-button @click="handleQuery" size="large" class="w-32">
+              新增个人风控
+            </el-button>
+            <el-button @click="resetQuery" size="large" class="w-32">
+              个人风控设置
+            </el-button>
+          </div>
+        </el-col>
       </el-row>
     </el-card>
-    <el-card v-if="activeIndex == 2 || activeIndex == 3">
+    <el-card class="mt-1">
       <el-row>
         <el-button
           :type="buttonIndex == 0 ? 'primary' : ''"
           @click="handleDateRange('today')"
-          >今日</el-button
         >
+          今日
+        </el-button>
         <el-button
           :type="buttonIndex == 1 ? 'primary' : ''"
           @click="handleDateRange('yesterday')"
-          >昨日</el-button
         >
+          昨日
+        </el-button>
         <el-button
           :type="buttonIndex == 2 ? 'primary' : ''"
           @click="handleDateRange('before yesterday')"
-          >前日</el-button
         >
+          前日
+        </el-button>
         <el-button
           :type="buttonIndex == 3 ? 'primary' : ''"
           @click="handleDateRange('this week')"
-          >本周</el-button
         >
+          本周
+        </el-button>
         <el-button
           :type="buttonIndex == 4 ? 'primary' : ''"
           @click="handleDateRange('last week')"
-          >上周</el-button
         >
+          上周
+        </el-button>
         <el-button
           :type="buttonIndex == 5 ? 'primary' : ''"
           @click="handleDateRange('this month')"
-          >本月</el-button
         >
+          本月
+        </el-button>
         <el-button
           :type="buttonIndex == 6 ? 'primary' : ''"
           @click="handleDateRange('last month')"
-          >上月</el-button
         >
+          上月
+        </el-button>
         <el-button
           :type="buttonIndex == 7 ? 'primary' : ''"
           @click="handleDateRange('this year')"
-          >今年</el-button
         >
+          今年
+        </el-button>
         <el-button
           :type="buttonIndex == 8 ? 'primary' : ''"
           @click="handleDateRange('last year')"
-          >去年</el-button
         >
+          去年
+        </el-button>
         <el-button
           :type="buttonIndex == 9 ? 'primary' : ''"
           @click="handleDateRange('last 7days')"
-          >过去7天</el-button
         >
+          过去7天
+        </el-button>
         <el-button
           :type="buttonIndex == 10 ? 'primary' : ''"
           @click="handleDateRange('last 30days')"
-          >过去30天</el-button
         >
+          过去30天
+        </el-button>
         <el-button
           :type="buttonIndex == 11 ? 'primary' : ''"
           @click="handleDateRange('all')"
-          >全部</el-button
         >
+          全部
+        </el-button>
       </el-row>
       <el-row class="mt-6">
         <el-form ref="formDataRef" :inline="true" style="width: 100%">
@@ -257,65 +294,47 @@ const closeAchievementRewardCollectionDialog = () => {
           <el-form-item>
             <el-button @click="handleDateRange('next day')">后一天</el-button>
           </el-form-item>
-          <el-form-item style="float: right">
-            <el-button type="primary" :icon="Search" @click="handleQuery">
-              搜索
-            </el-button>
-            <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
         </el-form>
       </el-row>
     </el-card>
     <el-card class="mt-4">
       <div class="flex items-center">
         <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
-          代理成就奖励
+          <div>个人风控列表</div>
+          <div>（黑名单）</div>
         </el-button>
         <el-button :type="activeIndex == 1 ? 'warning' : ''" @click="handleBtnTab(1)">
-          代理成就阶段奖励
+          个人风控白名单
         </el-button>
         <el-button :type="activeIndex == 2 ? 'warning' : ''" @click="handleBtnTab(2)">
-          代理成就统计
+          风控IP列表
         </el-button>
         <el-button :type="activeIndex == 3 ? 'warning' : ''" @click="handleBtnTab(3)">
-          代理阶段成就统计
+          风控设备ID列表
         </el-button>
-        <div
-          class="d-flex justify-end invitation-statistics-card ms-auto"
-          v-if="activeIndex == 2 || activeIndex == 3"
-        >
-          <el-card>
-            <el-form-item label="总计达成成就人数:">99999999</el-form-item>
-          </el-card>
-          <el-card>
-            <el-form-item label="总计提现:">9999999</el-form-item>
-          </el-card>
+        <el-button :type="activeIndex == 4 ? 'warning' : ''" @click="handleBtnTab(4)">
+          风控手机号
+        </el-button>
+        <el-button :type="activeIndex == 5 ? 'warning' : ''" @click="handleBtnTab(5)">
+          风控银行账号
+        </el-button>
+        <el-button :type="activeIndex == 6 ? 'warning' : ''" @click="handleBtnTab(6)">
+          风控身份信息
+        </el-button>
+        <div class="d-flex justify-end risk-management-card ms-auto">
+          <el-button type="info">批量解除风控</el-button>
         </div>
       </div>
       <div class="mt-2">
-        <AchievementReward
-          v-if="activeIndex == 0"
-          :achievementRewardDialog="achievementRewardDialog"
-          :achievementRewardCollectionDialog="achievementRewardCollectionDialog"
-          @closeAchievementRewardDialog="closeAchievementRewardDialog"
-          @closeAchievementRewardCollectionDialog="closeAchievementRewardCollectionDialog"
-        />
-        <StageReward
-          v-if="activeIndex == 1"
-          :achievementRewardDialog="achievementRewardDialog"
-          :achievementRewardCollectionDialog="achievementRewardCollectionDialog"
-          @closeAchievementRewardDialog="closeAchievementRewardDialog"
-          @closeAchievementRewardCollectionDialog="closeAchievementRewardCollectionDialog"
-        />
-        <AchievementStatistics v-if="activeIndex == 2" />
-        <StageStatistics v-if="activeIndex == 3" />
+        <PersonalRiskControl v-if="activeIndex == 0" />
+        <RiskControlWhiteList v-if="activeIndex == 1" />
       </div>
     </el-card>
   </div>
 </template>
 
 <style lang="scss">
-.invitation-statistics-card {
+.risk-management-card {
   .el-card__body {
     padding: 4px !important;
   }
@@ -323,5 +342,8 @@ const closeAchievementRewardCollectionDialog = () => {
     margin-right: 0px !important;
     margin-bottom: 0px !important;
   }
+}
+.el-button > span {
+  display: block;
 }
 </style>

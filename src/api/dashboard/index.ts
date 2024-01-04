@@ -1,19 +1,6 @@
 import request from '@/utils/request';
 import axios, { AxiosPromise } from 'axios';
 
-/**
- *
- * @param data {LoginForm}
- * @returns
- */
-export function platformOverviewApi(token: string): any {
-    const baseURL = import.meta.env.VITE_APP_BASE_API;
-
-    return axios.get(baseURL+'/dashboard/platform-overview', {headers : {
-        Authorization: token,
-    }});
-}
-
 export function depositWithdrawDataApi(token: string, daterange:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
 
