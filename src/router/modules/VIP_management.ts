@@ -17,7 +17,7 @@ const vipManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "manage",
-                component: () => import('@/views/vip-management/manage.vue'),
+                component: () => import('@/views/vip-management/management/index.vue'),
                 name: "VIPManagement",
                 meta: {
                     title:"VIP管理",
@@ -28,7 +28,7 @@ const vipManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "statistics",
-                component: () => import('@/views/vip-management/statistic.vue'),
+                component: () => import('@/views/vip-management/statistic/index.vue'),
                 name: "VIPStatistics",
                 meta: {
                     title:"VIP统计",
@@ -75,10 +75,21 @@ const vipManagementRoutes: RouteRecordRaw[] = [
             },
             {
                 path: "upgradebonus",
-                component: () => import('@/views/vip-management/upgrade-bonus.vue'),
+                component: () => import('@/views/vip-management/upgrade-bonus/index.vue'),
                 name: "VIPUpgradeBonus",
                 meta: {
                     title:"VIP升级奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "rankupgradebonus",
+                component: () => import('@/views/vip-management/rank-upgrade-bonus/index.vue'),
+                name: "VIPRankUpgradeBonus",
+                meta: {
+                    title:"VIP段位提升奖励",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
