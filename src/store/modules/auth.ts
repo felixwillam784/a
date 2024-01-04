@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { NETWORK } from '@/net/NetworkCfg';
+import { NETWORKCFG } from '@/net/NetworkCfg';
 import type * as Auth from "@/interface/auth";
 import type * as User from "@/interface/user";
 import { Network } from "@/net/Network";
@@ -46,7 +46,7 @@ export const authStore = defineStore({
     // dipatch login
     async dispatchSignIn(msg: Auth.SigninRequestData) {
       this.setSuccess(false);
-      const route: string = NETWORK.AUTH.LOGIN;
+      const route: string = NETWORKCFG.AUTH.LOGIN;
       const network: Network = Network.getInstance();
       // response call back function
       const next = (response: Auth.GetSigninResponseData) => {
@@ -60,7 +60,7 @@ export const authStore = defineStore({
     // dispatch logout function
     async dispatchSignout() {
       this.setSuccess(false);
-      const route: string = NETWORK.AUTH.LOGOUT;
+      const route: string = NETWORKCFG.AUTH.LOGOUT;
       const network: Network = Network.getInstance();
       // response call back function
       const next = (response: Auth.GetSigninResponseData) => {

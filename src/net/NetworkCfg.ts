@@ -1,5 +1,5 @@
 // Event Macro Definition
-export namespace NETWORK {
+export namespace NETWORKCFG {
   // auth related api
   export class AUTH {
     static LOGIN: string = '/admin/login' // login api
