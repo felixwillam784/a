@@ -1,23 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-
-interface GetVIPRankData {
-  vip_level: number;
-  vip_rank: string;
-  recharge_vip_upgrade: number;
-  coding_vip_upgrade: number;
-  withdrawal_fee: number;
-  free_amount_month: number;
-  maximum_amount_amount: number;
-  daily_limit_amount: number;
-  monthly_limit_amount: number;
-  daily_limit_time: number;
-  monthly_limit_time: number;
-  recharge_vip_up: number;
-  coding_vip_relegation: number;
-  vip_limit_days: number;
-  vip_and_was_lowered: number;
-}
+import { onMounted, ref, computed } from "vue";
+import useStore from "@/store";
 
 const loading = ref<boolean>(false);
 const formData = ref<any>({
@@ -26,42 +9,14 @@ const formData = ref<any>({
 });
 
 const total = ref<number>(2);
-const vipList = ref<Array<GetVIPRankData>>([
-  {
-    vip_level: 0,
-    vip_rank: "Iron",
-    recharge_vip_upgrade: 0,
-    coding_vip_upgrade: 0,
-    withdrawal_fee: 2.0,
-    free_amount_month: 0.0,
-    maximum_amount_amount: 20000.0,
-    daily_limit_amount: 20000.0,
-    monthly_limit_amount: 10,
-    daily_limit_time: 30,
-    monthly_limit_time: 0,
-    recharge_vip_up: 0,
-    coding_vip_relegation: 0,
-    vip_limit_days: 30,
-    vip_and_was_lowered: 0,
-  },
-  {
-    vip_level: 1,
-    vip_rank: "Bronze",
-    recharge_vip_upgrade: 0,
-    coding_vip_upgrade: 0,
-    withdrawal_fee: 1.95,
-    free_amount_month: 0.0,
-    maximum_amount_amount: 20000.0,
-    daily_limit_amount: 20000.0,
-    monthly_limit_amount: 10,
-    daily_limit_time: 30,
-    monthly_limit_time: 0,
-    recharge_vip_up: 100,
-    coding_vip_relegation: 100,
-    vip_limit_days: 30,
-    vip_and_was_lowered: 1,
-  },
-]);
+
+const vipList = computed(() => {
+  return vip.getVIPManagementTable;
+});
+const { vip } = useStore();
+onMounted(async ()=>{
+  //await vip.dispatchVIPManagementTable();
+})
 </script>
 
 <template>

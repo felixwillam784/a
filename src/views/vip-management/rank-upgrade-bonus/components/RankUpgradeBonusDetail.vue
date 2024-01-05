@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { VIPRankUpgradeBonusData } from "../../../../interface/vipmanagement";
+//import { VIPRankUpgradeBonusData } from "../../../../interface/vipmanagement";
+import { VIPRankUpgradeBonusData } from "@/interface/vip";
 const vip_rank_upgrade_bonus_detail_list = ref<Array<VIPRankUpgradeBonusData>>([
   {
     id: 1,
@@ -31,3 +32,4 @@ defineExpose({
     </el-table-column>
   </el-table>
 </template>
+../../../../interface/vip

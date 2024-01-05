@@ -5,6 +5,7 @@ import useSettingStore from './modules/settings';
 import useTagsViewStore from './modules/tagsView';
 import { authStore } from './modules/auth';
 import { dashboardStore } from './modules/dashboard';
+import { vipStore } from './modules/vip';
 
 const useStore = () => ({
   auth: authStore(),
@@ -14,6 +15,8 @@ const useStore = () => ({
   setting: useSettingStore(),
   tagsView: useTagsViewStore(),
   dashboard: dashboardStore(),
+  vip: vipStore(),
 });
+
 
 export default useStore;

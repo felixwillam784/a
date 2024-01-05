@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { VIPRankUpgradeBonusDetailData } from "../../../../interface/vipmanagement";
+import { VIPRankUpgradeBonusDetailData } from "@/interface/vip";
 
 const is_show_dialog = ref(false);
 const dialog_title = ref("");
@@ -216,3 +216,4 @@ defineExpose({
   background-color: #ccc;
 }
 </style>
+../../../../interface/vip
