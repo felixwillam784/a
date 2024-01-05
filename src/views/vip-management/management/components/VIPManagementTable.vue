@@ -15,7 +15,7 @@ const vipList = computed(() => {
 });
 const { vip } = useStore();
 onMounted(async ()=>{
-  //await vip.dispatchVIPManagementTable();
+  await vip.dispatchVIPManagementTable();
 })
 </script>
 

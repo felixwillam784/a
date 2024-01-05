@@ -23,7 +23,7 @@ interface RealBonusData {
   weight: number;
 }
 
-interface UpgradeBonusData {
+interface WeeklyBonusData {
   vip_level: number;
   prop_bonus: Array<PropAndBUFFBonusData>;
   buff_bonus: Array<PropAndBUFFBonusData>;
@@ -31,7 +31,7 @@ interface UpgradeBonusData {
   real_bonus: Array<RealBonusData>;
 }
 
-interface UpgradeBonusStatisticData {
+interface WeeklyBonusStatisticData {
   vip_level: number;
   vip_level_count: number;
   vip_bonus_recevier_count: number;
@@ -42,7 +42,7 @@ interface UpgradeBonusStatisticData {
   buff_quantity: number;
   buff_usage_quantity: number;
 }
-const upgrade_bonus_list = ref<Array<UpgradeBonusData>>([
+const weekly_bonus_list = ref<Array<WeeklyBonusData>>([
   {
     vip_level: 1,
     prop_bonus: [
@@ -118,7 +118,7 @@ const upgrade_bonus_list = ref<Array<UpgradeBonusData>>([
   },
 ]);
 
-const vip_upgrade_bonus_switch = ref(true);
+const vip_weekly_bonus_switch = ref(true);
 
 const tab_index = ref(0);
 const select_tab = (index: number) => {
@@ -139,7 +139,7 @@ const relation_tooltip_html = (id: string) => {
   return res;
 };
 
-const upgrade_bonus_item = ref<UpgradeBonusData>({
+const weekly_bonus_item = ref<WeeklyBonusData>({
   vip_level: 0,
   prop_bonus: [],
   buff_bonus: [],
@@ -149,23 +149,23 @@ const upgrade_bonus_item = ref<UpgradeBonusData>({
 const show_dialog = ref(false);
 const dialog_title = ref<string>("");
 
-const show_detail = (data: UpgradeBonusData) => {
-  upgrade_bonus_item.value = data;
+const show_detail = (data: WeeklyBonusData) => {
+  weekly_bonus_item.value = data;
   show_dialog.value = true;
-  dialog_title.value = "VIP升级奖励详情";
+  dialog_title.value = "VIP每周奖励详情";
 };
 
 const new_bonus_data = () => {
-  upgrade_bonus_item.value = {
+  weekly_bonus_item.value = {
     vip_level:
-      upgrade_bonus_list.value[upgrade_bonus_list.value.length - 1].vip_level + 1,
+      weekly_bonus_list.value[weekly_bonus_list.value.length - 1].vip_level + 1,
     prop_bonus: [],
     buff_bonus: [],
     relation_bonus: [],
     real_bonus: [],
   };
   show_dialog.value = true;
-  dialog_title.value = "新增VIP升级奖励";
+  dialog_title.value = "新增VIP每周奖励";
 };
 
 const new_prop = ref<PropAndBUFFBonusData>({ id: "", amount: -1, weight: -1 });
@@ -181,19 +181,19 @@ const is_new_real = ref(false);
 const delete_row = (field: string, index: number) => {
   if (field === "prop") {
     if (index === 1000) is_new_prop.value = false;
-    else upgrade_bonus_item.value.prop_bonus.splice(index, 1);
+    else weekly_bonus_item.value.prop_bonus.splice(index, 1);
   }
   if (field === "buff") {
     if (index === 1000) is_new_buff.value = false;
-    else upgrade_bonus_item.value.buff_bonus.splice(index, 1);
+    else weekly_bonus_item.value.buff_bonus.splice(index, 1);
   }
   if (field === "relation") {
     if (index === 1000) is_new_relation.value = false;
-    else upgrade_bonus_item.value.relation_bonus.splice(index, 1);
+    else weekly_bonus_item.value.relation_bonus.splice(index, 1);
   }
   if (field === "real") {
     if (index === 1000) is_new_real.value = false;
-    else upgrade_bonus_item.value.real_bonus.splice(index, 1);
+    else weekly_bonus_item.value.real_bonus.splice(index, 1);
   }
 };
 
@@ -368,7 +368,7 @@ const vip_ranks = ref<Array<string>>([
   "Diamond",
 ]);
 
-const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
+const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
 </script>
 
 <template>
@@ -378,17 +378,17 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <div class="search">
           <el-form :inline="true" label-width="120" class="right_position">
             <el-form-item>
-              <el-button @click="new_bonus_data()">新增升级奖励</el-button>
+              <el-button @click="new_bonus_data()">新增每周奖励</el-button>
               <el-button>模版导出</el-button>
               <el-button>Excel导入</el-button>
               <el-button>Excel导出</el-button>
             </el-form-item>
           </el-form>
           <div class="right_position switch_div" style="margin-right: 20px">
-            <p>VIP升级奖励功能开启/关闭</p>
+            <p>VIP每周奖励功能开启/关闭</p>
             <el-switch
               size="large"
-              v-model="vip_upgrade_bonus_switch"
+              v-model="vip_weekly_bonus_switch"
               inline-prompt
               active-text="开"
               inactive-text="关"
@@ -618,7 +618,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
     </div>
 
     <el-card>
-      <el-table v-if="tab_index == 0" style="width: 100%" :data="upgrade_bonus_list">
+      <el-table v-if="tab_index == 0" style="width: 100%" :data="weekly_bonus_list">
         <el-table-column label="VIP等级" align="center" width="160" prop="vip_level" />
         <el-table-column label="关联道具及BUFF奖励ID" align="center">
           <template #header>
@@ -765,7 +765,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
       <el-table
         v-if="tab_index == 1"
         style="width: 100%"
-        :data="upgrade_bonus_statistic_list"
+        :data="weekly_bonus_statistic_list"
       >
         <el-table-column label="VIP等级" align="center" width="160" prop="vip_level" />
         <el-table-column
@@ -809,7 +809,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <p style="width: 20%">VIP等级</p>
         <div style="width: 80%">
           <el-input
-            v-model="upgrade_bonus_item.vip_level"
+            v-model="weekly_bonus_item.vip_level"
             disabled
             style="width: 50%"
           ></el-input>
@@ -819,7 +819,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <p style="width: 20%">道具 ID</p>
         <div style="width: 80%">
           <div
-            v-for="(item, index) in upgrade_bonus_item.prop_bonus"
+            v-for="(item, index) in weekly_bonus_item.prop_bonus"
             :key="index"
             style="display: flex; align-items: center; justify-content: space-between"
           >
@@ -853,7 +853,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
                 -
               </el-button>
               <el-button
-                v-if="index == upgrade_bonus_item.prop_bonus.length - 1"
+                v-if="index == weekly_bonus_item.prop_bonus.length - 1"
                 @click="insert_row('prop')"
               >
                 +
@@ -861,7 +861,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             </div>
           </div>
           <div
-            v-if="is_new_prop || upgrade_bonus_item.prop_bonus.length == 0"
+            v-if="is_new_prop || weekly_bonus_item.prop_bonus.length == 0"
             style="display: flex; align-items: center; justify-content: space-between"
           >
             <div
@@ -896,7 +896,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               "
             >
               <el-button
-                v-if="upgrade_bonus_item.prop_bonus.length != 0"
+                v-if="weekly_bonus_item.prop_bonus.length != 0"
                 @click="delete_row('prop', 1000)"
               >
                 -
@@ -910,7 +910,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <p style="width: 20%">Buff ID</p>
         <div style="width: 80%">
           <div
-            v-for="(item, index) in upgrade_bonus_item.buff_bonus"
+            v-for="(item, index) in weekly_bonus_item.buff_bonus"
             :key="index"
             style="display: flex; align-items: center; justify-content: space-between"
           >
@@ -944,7 +944,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
                 -
               </el-button>
               <el-button
-                v-if="index == upgrade_bonus_item.buff_bonus.length - 1"
+                v-if="index == weekly_bonus_item.buff_bonus.length - 1"
                 @click="insert_row('buff')"
               >
                 +
@@ -952,7 +952,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             </div>
           </div>
           <div
-            v-if="is_new_buff || upgrade_bonus_item.buff_bonus.length == 0"
+            v-if="is_new_buff || weekly_bonus_item.buff_bonus.length == 0"
             style="display: flex; align-items: center; justify-content: space-between"
           >
             <div
@@ -987,7 +987,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               "
             >
               <el-button
-                v-if="upgrade_bonus_item.buff_bonus.length != 0"
+                v-if="weekly_bonus_item.buff_bonus.length != 0"
                 @click="delete_row('buff', 1000)"
               >
                 -
@@ -1001,7 +1001,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <p style="width: 20%">奖金ID</p>
         <div style="width: 80%">
           <div
-            v-for="(item, index) in upgrade_bonus_item.relation_bonus"
+            v-for="(item, index) in weekly_bonus_item.relation_bonus"
             :key="index"
             style="display: flex; align-items: center; justify-content: space-between"
           >
@@ -1032,7 +1032,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
                 -
               </el-button>
               <el-button
-                v-if="index == upgrade_bonus_item.relation_bonus.length - 1"
+                v-if="index == weekly_bonus_item.relation_bonus.length - 1"
                 @click="insert_row('relation')"
               >
                 +
@@ -1040,7 +1040,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             </div>
           </div>
           <div
-            v-if="is_new_relation || upgrade_bonus_item.relation_bonus.length == 0"
+            v-if="is_new_relation || weekly_bonus_item.relation_bonus.length == 0"
             style="display: flex; align-items: center; justify-content: space-between"
           >
             <div
@@ -1068,7 +1068,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               "
             >
               <el-button
-                v-if="upgrade_bonus_item.relation_bonus.length != 0"
+                v-if="weekly_bonus_item.relation_bonus.length != 0"
                 @click="delete_row('relation', 1000)"
               >
                 -
@@ -1082,7 +1082,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <p style="width: 20%">真金</p>
         <div style="width: 80%">
           <div
-            v-for="(item, index) in upgrade_bonus_item.real_bonus"
+            v-for="(item, index) in weekly_bonus_item.real_bonus"
             :key="index"
             style="display: flex; align-items: center; justify-content: space-between"
           >
@@ -1116,7 +1116,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
                 -
               </el-button>
               <el-button
-                v-if="index == upgrade_bonus_item.real_bonus.length - 1"
+                v-if="index == weekly_bonus_item.real_bonus.length - 1"
                 @click="insert_row('real')"
               >
                 +
@@ -1124,7 +1124,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             </div>
           </div>
           <div
-            v-if="is_new_real || upgrade_bonus_item.real_bonus.length == 0"
+            v-if="is_new_real || weekly_bonus_item.real_bonus.length == 0"
             style="display: flex; align-items: center; justify-content: space-between"
           >
             <div
@@ -1165,7 +1165,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               "
             >
               <el-button
-                v-if="upgrade_bonus_item.real_bonus.length != 0"
+                v-if="weekly_bonus_item.real_bonus.length != 0"
                 @click="delete_row('real', 1000)"
               >
                 -
@@ -1179,7 +1179,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <div style="display: flex; justify-content: center">
           <el-button
             type="primary"
-            @click="console.log(upgrade_bonus_item.prop_bonus[0].id)"
+            @click="console.log(weekly_bonus_item.prop_bonus[0].id)"
             >确认</el-button
           >
           <el-button>取消</el-button>

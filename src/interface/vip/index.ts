@@ -15,10 +15,35 @@ export interface GetVIPManagementTableData {
   vip_limit_days: number;
   vip_and_was_lowered: number;
 }
-
 export type GetVIPManagementTableDataResponse = {
   code: number | string
   data: Array<GetVIPManagementTableData>
+  message: string
+}
+
+export interface GetVipRankBasicDetailData {
+  vip_level: number;
+  vip_rank: string;
+  recharge_vip_upgrade: number;
+  coding_vip_upgrade: number;
+  withdrawal_fee: number;
+  free_amount_month: number;
+  maximum_amount_amount: number;
+  daily_limit_amount: number;
+  monthly_limit_amount: number;
+  daily_limit_time: number;
+  monthly_limit_time: number;
+  recharge_vip_up: number;
+  coding_vip_relegation: number;
+  vip_limit_days: number;
+  vip_and_was_lowered: number;
+
+  rebate_way: string;
+  protect_vip: string;
+}
+export type GetVipRankBasicDetailDataResponse = {
+  code: number | string
+  data: GetVipRankBasicDetailData
   message: string
 }
 
