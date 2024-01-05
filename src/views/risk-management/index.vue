@@ -5,12 +5,37 @@ import moment from "moment-timezone";
 import { Search, Refresh } from "@element-plus/icons-vue";
 import PersonalRiskControl from "./components/PersonalRiskControl.vue";
 import RiskControlWhiteList from "./components/RiskControlWhiteList.vue";
+import RiskControlIPList from "./components/RiskControlIPList.vue";
+import RiskControlDeviceList from "./components/RiskControlDeviceList.vue";
 
 const router = useRouter();
 
 const activeIndex = ref<number>(0);
 
 const formData = ref<any>({});
+
+const comparatorOptions = ref<Array<any>>([
+  {
+    label: "≥",
+    value: "≥",
+  },
+  {
+    label: "＞",
+    value: "＞",
+  },
+  {
+    label: "≤",
+    value: "≤",
+  },
+  {
+    label: "＜",
+    value: "＜",
+  },
+  {
+    label: "＝",
+    value: "＝",
+  },
+]);
 
 const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
@@ -133,7 +158,7 @@ const resetQuery = () => {};
 
 <template>
   <div class="app-container">
-    <el-card>
+    <el-card v-if="activeIndex == 0 || activeIndex == 1">
       <el-row style="align-items: center">
         <el-col :md="12" :lg="16">
           <el-form :model="formData" :inline="true" label-width="100">
@@ -184,6 +209,100 @@ const resetQuery = () => {};
           </el-form>
         </el-col>
         <el-col :md="12" :lg="8" class="text-right">
+          <div>
+            <el-button :icon="Search" size="large" @click="handleQuery" class="w-32">
+              搜索
+            </el-button>
+            <el-button :icon="Refresh" size="large" @click="resetQuery" class="w-32">
+              重置
+            </el-button>
+          </div>
+          <div class="mt-2">
+            <el-button @click="handleQuery" size="large" class="w-32">
+              新增个人风控
+            </el-button>
+            <el-button @click="resetQuery" size="large" class="w-32">
+              个人风控设置
+            </el-button>
+          </div>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card class="risk-control-search-other" v-else>
+      <el-row style="align-items: center">
+        <el-col :md="12" :lg="18">
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="风控等级" prop="user_id">
+              <el-select
+                v-model="formData.user_id"
+                placeholder="请选择风控等级"
+                style="min-width: 252px"
+              >
+              </el-select>
+            </el-form-item>
+            <el-form-item label="处罚范围" prop="user_id">
+              <el-select
+                v-model="formData.user_id"
+                placeholder="请选择风控行为"
+                style="min-width: 252px"
+              >
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作人员" prop="invitee_total_number">
+              <el-select
+                v-model="formData.user_id"
+                placeholder="请选择操作人员"
+                style="min-width: 252px"
+              >
+              </el-select>
+            </el-form-item>
+            <el-form-item style="float: right"> </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="IP地址" prop="invitee_total_number">
+              <el-input placeholder="请输入IP地址" style="min-width: 252px" />
+            </el-form-item>
+            <el-form-item label="同IP注册人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="同IP登录人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :md="12" :lg="6" class="text-right">
           <div>
             <el-button :icon="Search" size="large" @click="handleQuery" class="w-32">
               搜索
@@ -328,6 +447,8 @@ const resetQuery = () => {};
       <div class="mt-2">
         <PersonalRiskControl v-if="activeIndex == 0" />
         <RiskControlWhiteList v-if="activeIndex == 1" />
+        <RiskControlIPList v-if="activeIndex == 2" />
+        <RiskControlDeviceList v-if="activeIndex == 3"/>
       </div>
     </el-card>
   </div>
@@ -345,5 +466,21 @@ const resetQuery = () => {};
 }
 .el-button > span {
   display: block;
+}
+
+.input-with-select .el-input-group__prepend {
+  background-color: var(--el-fill-color-blank);
+  .el-select {
+    .el-input {
+      width: 60px;
+    }
+  }
+}
+.risk-control-search-other {
+  .el-select {
+    .el-input {
+      width: 252px;
+    }
+  }
 }
 </style>
