@@ -19,6 +19,12 @@ export namespace NETWORKCFG {
     static STATISTIC_CHART_DATA: string = '/dashboard/statistic-chart-data' // statistic chart api
   }
 
+  
+  export class VIP {
+    static VIPMANAGEMENT_TABLE: string = '/vip/list' // Vip Management getlist api
+    static VIPMANAGEMENT_BASIC_DETAIL: string = '/vip/detail/basic-detail' //get VIPManagement BasicDetail data
+  }
+
   //Listening events sent actively
   export class UNSOLICITED {}
 }

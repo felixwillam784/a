@@ -1,46 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-interface GetVIPRankData {
-  vip_level: number;
-  vip_rank: string;
-  recharge_vip_upgrade: number;
-  coding_vip_upgrade: number;
-  withdrawal_fee: number;
-  free_amount_month: number;
-  maximum_amount_amount: number;
-  daily_limit_amount: number;
-  monthly_limit_amount: number;
-  daily_limit_time: number;
-  monthly_limit_time: number;
-  recharge_vip_up: number;
-  coding_vip_relegation: number;
-  vip_limit_days: number;
-  vip_and_was_lowered: number;
+import { onMounted, ref, watch, computed } from "vue";
+import {GetVipRankBasicDetailData} from "@/interface/vip"
+import useStore from "@/store";
 
-  rebate_way: string;
-  protect_vip: string;
-}
-
-const vipItem = ref<GetVIPRankData>({
-  vip_level: -1,
-  vip_rank: "",
-  recharge_vip_upgrade: -1,
-  coding_vip_upgrade: -1,
-  withdrawal_fee: -1,
-  free_amount_month: -1,
-  maximum_amount_amount: -1,
-  daily_limit_amount: -1,
-  monthly_limit_amount: -1,
-  daily_limit_time: -1,
-  monthly_limit_time: -1,
-  recharge_vip_up: -1,
-  coding_vip_relegation: -1,
-  vip_limit_days: -1,
-  vip_and_was_lowered: -1,
-
-  rebate_way: "",
-  protect_vip: "",
-});
+const { vip } = useStore();
 
 const slice_item_object = () => {
   if (vipItem.value) {
@@ -111,20 +74,32 @@ const vip_ranks = ref<Array<string>>([
 ]);
 let rank_options: any[] = [];
 
-onMounted(() => {
+onMounted(async () => {
   rank_options = [];
   for (let i = 0; i < vip_ranks.value.length; i++)
     rank_options.push({ value: vip_ranks.value[i], label: vip_ranks.value[i] });
 
-  if (props.vip_level != undefined) vipItem.value.vip_level = props.vip_level;
+  if (props.vip_level != undefined){
+    vipItem.value.vip_level = props.vip_level;
+    await vip.dispatchVIPManagementBasicDetailData(props.vip_level);
+  }
+
+  
+});
+
+const vipItem = computed(() => {
+  return vip.getVIPManagementBasicDetailData;
 });
 
 const props = defineProps({
   vip_level: Number,
 });
 
-watch(props, () => {
-  if (props.vip_level != undefined) vipItem.value.vip_level = props.vip_level;
+watch(props, async () => {
+  if (props.vip_level != undefined){
+    vipItem.value.vip_level = props.vip_level;
+    await vip.dispatchVIPManagementBasicDetailData(props.vip_level);
+  }
 });
 </script>
 

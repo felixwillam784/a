@@ -95,6 +95,17 @@ const vipManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 },
             },
+            {
+                path: "weeklybonus",
+                component: () => import('@/views/vip-management/weekly-bonus/index.vue'),
+                name: "VIPWeeklyBonus",
+                meta: {
+                    title:"VIP每周奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
         ]
     },
 ];
