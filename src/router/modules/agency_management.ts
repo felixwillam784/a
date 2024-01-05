@@ -86,7 +86,7 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 children: [
                     {
                         path: "all",
-                        component: () => import('@/views/agency-management/list/index.vue'),
+                        component: () => import('@/views/agency-management/statistics-report/index.vue'),
                         name: "AgencyStatisticsReport",
                         meta: {
                             title: "代理统计报表",
