@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import RankUpgradeBonusSwitch from "./components/RankUpgradeBonusSwitch.vue";
 import RankUpgradeBonusDetailTable from "./components/RankUpgradeBonusDetail.vue";
 import RankUpgradeBonusDetailDialog from "./components/RankUpgradeBonusDetailDialog.vue";
-import { VIPRankUpgradeBonusData } from "../../../interface/vipmanagement";
+import { VIPRankUpgradeBonusData } from "@/interface/vip";
 
 const tab_index = ref(0);
 const select_tab = (index: number) => {
@@ -62,3 +62,4 @@ const add_new_bonus_data = () => {
   justify-content: right;
 }
 </style>
+../../../interface/vip

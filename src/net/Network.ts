@@ -60,8 +60,6 @@ export class Network {
     // Build a contract structure
     let msgData = this.msgParsing(route, msg, type)
 
-    console.log(msgData);
-
     switch (type) {
       case SENDTYPE.HTTP:
         switch (requestType) {
