@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
-import {GetVipRankBasicDetailData} from "@/interface/vip"
 import useStore from "@/store";
 
 const { vip } = useStore();
