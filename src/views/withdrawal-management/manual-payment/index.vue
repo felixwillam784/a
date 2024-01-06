@@ -165,6 +165,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
     formEl.resetFields()
     manualDialogVisible.value = false;
 }
+
+const number_formatter = (value: string) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, '');
 </script>
 
 <template>
@@ -173,16 +176,18 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-col :span="24" :xs="24">
 
                 <div class="search">
-                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-                        <el-form-item label="用户账户" prop="user_account">
-                            <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
-                        </el-form-item>
-                        <el-form-item label="客户昵称" prop="nick_name">
-                            <el-input v-model="formData.nick_name" placeholder="请输入客户昵称" />
-                        </el-form-item>
-                        <el-form-item label="邀请码" prop="invitation_code">
-                            <el-input v-model="formData.invitation_code" placeholder="请输入邀请码" />
-                        </el-form-item>
+                    <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120" style="display:flex; justify-content:space-between">
+                        <div>
+                            <el-form-item label="用户账户" prop="user_account">
+                                <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
+                            </el-form-item>
+                            <el-form-item label="客户昵称" prop="nick_name">
+                                <el-input v-model="formData.nick_name" placeholder="请输入客户昵称" />
+                            </el-form-item>
+                            <el-form-item label="邀请码" prop="invitation_code">
+                                <el-input v-model="formData.invitation_code" placeholder="请输入邀请码" />
+                            </el-form-item>
+                        </div>
                         <el-form-item>
                             <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
                             <el-button :icon="Plus" @click="addManualPaymentDialog">添加订单</el-button>
@@ -249,8 +254,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 </el-form-item>
                 <el-form-item label="打款金额:" prop="order_amount">
                     <el-input v-model="manualPaymentItem.order_amount"
-                        :formatter="(value: string) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')" />
+                        :formatter="number_formatter"
+                        :parser="number_parser" />
                 </el-form-item>
                 <el-form-item label="打款类型:" prop="change_type">
                     <el-select v-model="manualPaymentItem.change_type">
@@ -277,68 +282,70 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </template>
         </el-dialog>
 
-        <el-dialog title="人工打款详情" v-model="manualPaymentDetailDialogVisible" width="600px" append-to-body
+        <el-dialog title="用户信息修改" v-model="manualPaymentDetailDialogVisible" width="600px" append-to-body
             @close="closeDialog">
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.user_account }}</p>
+                    <el-input v-model="manualPaymentItem.user_account"></el-input>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户名:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.nick_name }}</p>
+                    <el-input v-model="manualPaymentItem.nick_name"></el-input>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">邀请码:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.invitation_code }}</p>
+                    <el-input v-model="manualPaymentItem.invitation_code" />
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户类型:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.user_type }}</p>
+                    <el-input v-model="manualPaymentItem.user_type"></el-input>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
                 <el-col :span="6" class="detail-item-left-bg">打款金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(manualPaymentItem.order_amount) }}</p>
+                    <el-input v-model="manualPaymentItem.order_amount"
+                        :formatter="number_formatter"
+                        :parser="number_parser" />
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">打款类型:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.change_type }}</p>
+                    <el-input v-model="manualPaymentItem.change_type"></el-input>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">打码倍率:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.code_ratio }}</p>
+                    <el-input v-model="manualPaymentItem.code_ratio"/>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">打款时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.submission_time }}</p>
+                    <el-input v-model="manualPaymentItem.submission_time"></el-input>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.operator }}</p>
+                    <el-input v-model="manualPaymentItem.operator"></el-input>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">备注:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ manualPaymentItem.remark }}</p>
+                    <el-input v-model="manualPaymentItem.remark"/>
                 </el-col>
             </el-row>
             <template #footer>
@@ -373,7 +380,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     border: 1px solid gray;
     display: flex;
     align-items: center;
-    padding: 0px 20px;
+    padding: 0px 0px;
     height: 36px;
 }
 

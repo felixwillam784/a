@@ -7,6 +7,9 @@ import PersonalRiskControl from "./components/PersonalRiskControl.vue";
 import RiskControlWhiteList from "./components/RiskControlWhiteList.vue";
 import RiskControlIPList from "./components/RiskControlIPList.vue";
 import RiskControlDeviceList from "./components/RiskControlDeviceList.vue";
+import RiskControlPhoneNumberList from "./components/RiskControlPhoneNumberList.vue";
+import RiskControlBankAccount from "./components/RiskControlBankAccount.vue";
+import RiskControlIdentityInformation from "./components/RiskControlIdentityInformation.vue";
 
 const router = useRouter();
 
@@ -231,7 +234,7 @@ const resetQuery = () => {};
     <el-card class="risk-control-search-other" v-else>
       <el-row style="align-items: center">
         <el-col :md="12" :lg="18">
-          <el-form :model="formData" :inline="true" label-width="100">
+          <el-form :model="formData" :inline="true" label-width="120">
             <el-form-item label="风控等级" prop="user_id">
               <el-select
                 v-model="formData.user_id"
@@ -258,7 +261,7 @@ const resetQuery = () => {};
             </el-form-item>
             <el-form-item style="float: right"> </el-form-item>
           </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
+          <el-form :model="formData" :inline="true" label-width="120" v-if="activeIndex == 2">
             <el-form-item label="IP地址" prop="invitee_total_number">
               <el-input placeholder="请输入IP地址" style="min-width: 252px" />
             </el-form-item>
@@ -282,6 +285,121 @@ const resetQuery = () => {};
               </el-input>
             </el-form-item>
             <el-form-item label="同IP登录人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="120" v-if="activeIndex == 3">
+            <el-form-item label="设备ID" prop="invitee_total_number">
+              <el-input placeholder="请输入设备ID" style="min-width: 252px" />
+            </el-form-item>
+            <el-form-item label="同设备注册人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="同设备登录人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="120" v-if="activeIndex == 4">
+            <el-form-item label="手机号" prop="invitee_total_number">
+              <el-input placeholder="请输入手机号" style="min-width: 252px" />
+            </el-form-item>
+            <el-form-item label="同手机号人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="120" v-if="activeIndex == 5">
+            <el-form-item label="银行账号" prop="invitee_total_number">
+              <el-input placeholder="请输入银行账号" style="min-width: 252px" />
+            </el-form-item>
+            <el-form-item label="同银行账号人数" prop="invitee_total_number">
+              <el-input
+                v-model="formData.invitee_total_number"
+                placeholder="请输入人数"
+                class="input-with-select"
+              >
+                <template #prepend>
+                  <el-select v-model="formData.invitee_comparator" style="width: 60px">
+                    <el-option
+                      v-for="item in comparatorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="120" v-if="activeIndex == 6">
+            <el-form-item label="身份信息" prop="invitee_total_number">
+              <el-input placeholder="请输入手机号" style="min-width: 252px" />
+            </el-form-item>
+            <el-form-item label="同银行账号人数" prop="invitee_total_number">
               <el-input
                 v-model="formData.invitee_total_number"
                 placeholder="请输入人数"
@@ -449,6 +567,9 @@ const resetQuery = () => {};
         <RiskControlWhiteList v-if="activeIndex == 1" />
         <RiskControlIPList v-if="activeIndex == 2" />
         <RiskControlDeviceList v-if="activeIndex == 3"/>
+        <RiskControlPhoneNumberList v-if="activeIndex == 4"/>
+        <RiskControlBankAccount v-if="activeIndex == 5"/>
+        <RiskControlIdentityInformation v-if="activeIndex == 6"/>
       </div>
     </el-card>
   </div>

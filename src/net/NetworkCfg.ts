@@ -23,6 +23,8 @@ export namespace NETWORKCFG {
   export class VIP {
     static VIPMANAGEMENT_TABLE: string = '/vip/list' // Vip Management getlist api
     static VIPMANAGEMENT_BASIC_DETAIL: string = '/vip/detail/basic-detail' //get VIPManagement BasicDetail data
+    static VIPMANAGEMENT_CODE_REBATE_DETAIL: string = '/vip/detail/code-rebate-setting'
+    static VIPMANAGEMENT_CLIENT_LOST_REBATE_DETAIL: string = '/vip/detail/client-lost-rebate-setting'
   }
 
   //Listening events sent actively

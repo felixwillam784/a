@@ -21,7 +21,8 @@ export type GetVIPManagementTableDataResponse = {
   message: string
 }
 
-export interface GetVipRankBasicDetailData {
+//VIPManagement Basic Detail
+export interface GetVIPManagementRankBasicDetailData {
   vip_level: number;
   vip_rank: string;
   recharge_vip_upgrade: number;
@@ -41,9 +42,48 @@ export interface GetVipRankBasicDetailData {
   rebate_way: string;
   protect_vip: string;
 }
-export type GetVipRankBasicDetailDataResponse = {
+export type GetVIPManagementRankBasicDetailDataResponse = {
   code: number | string
-  data: GetVipRankBasicDetailData
+  data: GetVIPManagementRankBasicDetailData
+  message: string
+}
+
+//VIPManagement Code Rebate Detail
+export interface GetVIPManagementRankCodeRebateDetailData {
+  vip_level: number;
+
+  game_types: Array<rebateGameType>;
+
+  rebate_mode: string | number;
+  rebate_order_time: string | number;
+  rebate_order_time_amount: string;
+  rebate_fund_time: string | number;
+  rebate_fund_time_amount: string;
+}
+export interface rebateGameType {
+  game_type: string;
+  rebate_amount: number;
+}
+export type GetVIPManagementRankCodeRebateDetailDataResponse = {
+  code: number | string
+  data: GetVIPManagementRankCodeRebateDetailData
+  message: string
+}
+
+//VIPManagement Client Lost Rebate Detail
+export interface GetVIPMAnagementRankClientLostRebateDetailData {
+  vip_level: number;
+
+  client_lost_rebate_amount: number;
+  client_lost_rebate_mode: string;
+  client_lost_rebate_order_time: string;
+  client_lost_rebate_order_time_amount: string;
+  client_lost_rebate_fund_time: string;
+  client_lost_rebate_fund_time_amount: string;
+}
+export type GetVIPMAnagementRankClientLostRebateDetailDataResponse = {
+  code: number | string
+  data: GetVIPMAnagementRankClientLostRebateDetailData
   message: string
 }
 
