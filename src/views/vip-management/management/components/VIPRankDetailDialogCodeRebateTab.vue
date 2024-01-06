@@ -1,32 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
+import {GetVIPManagementRankCodeRebateDetailData, rebateGameType} from '@/interface/vip'
+import useStore from "@/store";
 
-interface GetVIPRankData {
-  vip_level: number;
+const { vip } = useStore();
 
-  game_types: Array<rebateGameType>;
-
-  rebate_mode: string;
-  rebate_order_time: string;
-  rebate_order_time_amount: string;
-  rebate_fund_time: string;
-  rebate_fund_time_amount: string;
-}
-interface rebateGameType {
-  game_type: string;
-  rebate_amount: number;
-}
-
-const vipItem = ref<GetVIPRankData>({
-  vip_level: -1,
-
-  game_types: [],
-
-  rebate_mode: "",
-  rebate_order_time: "",
-  rebate_order_time_amount: "",
-  rebate_fund_time: "",
-  rebate_fund_time_amount: "",
+const vipItem = computed(() => {
+  return vip.getVIPManagementCodeRebateDetailData;
 });
 
 const new_rebate_type = ref<rebateGameType>({
@@ -47,16 +27,27 @@ const is_disabled_rebate_fund_time_amount = () => {
   return true;
 };
 
-onMounted(() => {
-  if (props.vip_level != undefined) vipItem.value.vip_level = props.vip_level;
+const is_disabled_rebate_order_time_amount = () => {
+  if (vipItem.value?.rebate_order_time == "天后刷新结算") return false;
+  return true;
+};
+
+onMounted(async () => {
+  if (props.vip_level != undefined){
+    vipItem.value.vip_level = props.vip_level;
+    await vip.dispatchVIPManagementCodeRebateDetailData(props.vip_level);
+  }
 });
 
 const props = defineProps({
   vip_level: Number,
 });
 
-watch(props, () => {
-  if (props.vip_level != undefined) vipItem.value.vip_level = props.vip_level;
+watch(props,async () => {
+  if (props.vip_level != undefined){
+    vipItem.value.vip_level = props.vip_level;
+    await vip.dispatchVIPManagementCodeRebateDetailData(props.vip_level);
+  }
 });
 </script>
 
@@ -68,7 +59,6 @@ watch(props, () => {
       </p>
       <el-input
         v-model="vipItem.game_types[index].rebate_amount"
-        :value="vipItem.game_types[index].rebate_amount.toFixed(1)"
         placeholder="Please input"
         style="width: 50%; margin-left: 20px"
       />
@@ -81,14 +71,14 @@ watch(props, () => {
         -
       </button>
       <button
-        v-if="index === vipItem.game_types.length - 1"
+        v-if="index === vipItem.game_types?.length - 1"
         style="margin-left: 10px; width: 25px"
         @click="add_rebate_type()"
       >
         +
       </button>
     </div>
-    <div v-if="add_new_rebate === true || vipItem.game_types.length == 0" class="dl_row">
+    <div v-if="add_new_rebate === true || vipItem.game_types?.length == 0" class="dl_row">
       <p style="width: 20%">
         <el-input v-model="new_rebate_type.game_type" placeholder="请输入新的类型" />
       </p>
@@ -100,7 +90,7 @@ watch(props, () => {
       />
       <p>%</p>
       <button
-        v-if="vipItem.game_types.length != 0"
+        v-if="vipItem.game_types?.length != 0"
         style="margin-left: 100px; width: 25px"
         @click="delete_rebate_type(1000)"
       >
@@ -131,6 +121,7 @@ watch(props, () => {
               v-model="vipItem.rebate_order_time_amount"
               style="width: 80px"
               placeholder="请输入天数"
+              :disabled="is_disabled_rebate_order_time_amount()"
             />天后刷新结算</el-radio
           >
         </el-radio-group>
