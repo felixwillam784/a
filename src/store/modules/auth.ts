@@ -40,8 +40,12 @@ export const authStore = defineStore({
       const networkData: NetworkData = NetworkData.getInstance();
       networkData.resetData();
     },
-    setUserInfo(userInfo: User.GetUserInfo) {
-      this.userInfo = userInfo;
+    setUserInfo(userInfo: Auth.SigninResponseData) {
+      //this.userInfo = userInfo;
+      this.userInfo.id = userInfo.id;
+      this.userInfo.name = userInfo.name;
+      this.userInfo.role_id = userInfo.role_id;
+      this.userInfo.token = userInfo.token;
     },
     // dipatch login
     async dispatchSignIn(msg: Auth.SigninRequestData) {
@@ -52,6 +56,7 @@ export const authStore = defineStore({
       const next = (response: Auth.GetSigninResponseData) => {
         if (response.code == "00") {
           this.setToken(response.data.token);
+          this.setUserInfo(response.data);
           this.setSuccess(true);
         }
       }
@@ -63,7 +68,7 @@ export const authStore = defineStore({
       const route: string = NETWORKCFG.AUTH.LOGOUT;
       const network: Network = Network.getInstance();
       // response call back function
-      const next = (response: Auth.GetSigninResponseData) => {
+      const next = (response: Auth.SignOutResponseData) => {
         console.log(response);
         if (response.code == "00") {
           this.removeToken();

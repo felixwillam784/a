@@ -328,7 +328,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-row>
             <el-row>
                 <el-col :span="24" class="detail-item-right-bg" style="height: 120px;">
-                    <p>{{ banItem.ban_remark }}</p>
+                    <el-input v-model="banItem.ban_remark" type="textarea" :row="10"/>
                 </el-col>
             </el-row>
             <template #footer>
