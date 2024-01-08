@@ -10,16 +10,19 @@ export const vipStore = defineStore({
     success: false as boolean,
     errMessage: '' as string,
 
+    VIPRanks: [] as Array<string>,
     VIPManagementTableData: [] as Array<VIP.GetVIPManagementTableData>,
     VIPManagementBasicDetailData: {} as VIP.GetVIPManagementRankBasicDetailData,
     VIPManagementCodeRebateDetailData: {} as VIP.GetVIPManagementRankCodeRebateDetailData,
     VIPMAnagementClientLostRebateDetailData: {} as VIP.GetVIPMAnagementRankClientLostRebateDetailData,
+
   }),
   
   getters: {
     getSuccess: (state) => state.success,
     getErrMessage: (state) => state.errMessage,
 
+    getVIPRanks: (state) => state.VIPRanks,
     getVIPManagementTable: (state) => state.VIPManagementTableData,
     getVIPManagementBasicDetailData: (state) => state.VIPManagementBasicDetailData,
     getVIPManagementCodeRebateDetailData: (state) => state.VIPManagementCodeRebateDetailData,
@@ -46,6 +49,37 @@ export const vipStore = defineStore({
     setVIPManagementClientLostRebateDetailData(data: VIP.GetVIPMAnagementRankClientLostRebateDetailData) {
       this.VIPMAnagementClientLostRebateDetailData = data
     },
+    setVIPRanks(data:Array<string>) {
+      this.VIPRanks = data;
+    },
+
+    //get VIPRanks Data
+    async dispatchVIPRanks() {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPRanks;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.GetVIPRanksDataResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setVIPRanks(response.data.data);
+
+        }
+      }
+      await network.sendMsg(route, {}, next, 1, 4);
+    },
+    async dispatchUpdateVIPRanks() {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPUpdateRanks;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.ResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+        }
+      }
+      await network.sendMsg(route, {data:this.getVIPRanks}, next, 1);
+    },
 
     // get table data
     async dispatchVIPManagementTable() {
@@ -63,7 +97,7 @@ export const vipStore = defineStore({
       await network.sendMsg(route, {}, next, 1, 4);
     },
 
-    // get basic detail data
+    // basic detail data
     async dispatchVIPManagementBasicDetailData(vip_level:number) {
       this.setSuccess(false);
       const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_BASIC_DETAIL;
@@ -73,18 +107,26 @@ export const vipStore = defineStore({
         if (response.code == "00") {
           this.setSuccess(true);
           this.setVIPManagementBasicDetailData(response.data);
-          let rebate_way_letter = ['', '打码返利', '客损返利', '无返利'];
-          let protect_vip_letter = ['', '开启保级', '关闭保级'];
 
-          let t : any = response.data.rebate_way;
-          response.data.rebate_way = rebate_way_letter[t];
-          t = response.data.protect_vip;
-          response.data.protect_vip = protect_vip_letter[t];
         }
       }
       await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
     },
+    async dispatchUpdateVIPManagementBasicDetailData() {
+      console.log(this.getVIPManagementBasicDetailData);
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_BASIC_DETAIL;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.ResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+        }
+      }
+      await network.sendMsg(route, this.getVIPManagementBasicDetailData, next, 1);
+    },
 
+    // code rebate detail data
     async dispatchVIPManagementCodeRebateDetailData(vip_level:number) {
       this.setSuccess(false);
       const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_CODE_REBATE_DETAIL;
@@ -93,21 +135,26 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPManagementRankCodeRebateDetailDataResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          let fund_letter = ['', '不释放', '释放'];
-          let order_letter = ['', '实时结算', '每日刷新结算', '每周刷新结算', '每月刷新结算', '天后刷新结算'];
-          let rebate_mode_letter = ['', '玩家手动领取', '结算时自动到账'];
-          let t : any = response.data.rebate_fund_time;
-          response.data.rebate_fund_time = fund_letter[t];
-          t = response.data.rebate_order_time
-          response.data.rebate_order_time = order_letter[t];
-          t = response.data.rebate_mode
-          response.data.rebate_mode = rebate_mode_letter[t];
           this.setVIPManagementCodeRebateDetailData(response.data);
         }
       }
       await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
     },
+    async dispatchUpdateVIPManagementCodeRebateDetailData() {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_CODE_REBATE_DETAIL;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.ResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+        }
+      }
+      console.log(this.getVIPManagementCodeRebateDetailData);
+      await network.sendMsg(route, this.getVIPManagementCodeRebateDetailData, next, 1);
+    },
 
+    //client lost rebate detail data
     async dispatchVIPManagementClientLostRebateDetailData(vip_level:number) {
       this.setSuccess(false);
       const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_CLIENT_LOST_REBATE_DETAIL;
@@ -116,19 +163,23 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPMAnagementRankClientLostRebateDetailDataResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          let fund_letter = ['', '不释放', '释放'];
-          let order_letter = ['', '实时结算', '每日刷新结算', '每周刷新结算', '每月刷新结算', '天后刷新结算'];
-          let rebate_mode_letter = ['', '玩家手动领取', '结算时自动到账'];
-          let t : any = response.data.client_lost_rebate_fund_time;
-          response.data.client_lost_rebate_fund_time = fund_letter[t];
-          t = response.data.client_lost_rebate_order_time;
-          response.data.client_lost_rebate_order_time = order_letter[t];
-          t = response.data.client_lost_rebate_mode;
-          response.data.client_lost_rebate_mode = rebate_mode_letter[t];
           this.setVIPManagementClientLostRebateDetailData(response.data);
         }
       }
       await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
     },
+    async dispatchUpdateVIPManagementClientLostRebateDetailData() {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_CLIENT_LOST_REBATE_DETAIL;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.ResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+        }
+      }
+      await network.sendMsg(route, this.getVIPManagementClientLostRebateDetailData , next, 1);
+    },
+
   }
 })

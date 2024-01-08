@@ -21,6 +21,14 @@ export type GetVIPManagementTableDataResponse = {
   message: string
 }
 
+//VIPRank
+export type GetVIPRanksDataResponse = {
+  code: number | string
+  data: {data:Array<string>},
+  message: string
+}
+
+
 //VIPManagement Basic Detail
 export interface GetVIPManagementRankBasicDetailData {
   vip_level: number;
@@ -39,8 +47,8 @@ export interface GetVIPManagementRankBasicDetailData {
   vip_limit_days: number;
   vip_and_was_lowered: number;
 
-  rebate_way: string;
-  protect_vip: string;
+  rebate_way: number;
+  protect_vip: number;
 }
 export type GetVIPManagementRankBasicDetailDataResponse = {
   code: number | string
@@ -54,11 +62,11 @@ export interface GetVIPManagementRankCodeRebateDetailData {
 
   game_types: Array<rebateGameType>;
 
-  rebate_mode: string | number;
-  rebate_order_time: string | number;
-  rebate_order_time_amount: string;
-  rebate_fund_time: string | number;
-  rebate_fund_time_amount: string;
+  rebate_mode: number;
+  rebate_order_time: number;
+  rebate_order_time_amount: number;
+  rebate_fund_time: number;
+  rebate_fund_time_amount: number;
 }
 export interface rebateGameType {
   game_type: string;
@@ -75,17 +83,19 @@ export interface GetVIPMAnagementRankClientLostRebateDetailData {
   vip_level: number;
 
   client_lost_rebate_amount: number;
-  client_lost_rebate_mode: string;
-  client_lost_rebate_order_time: string;
-  client_lost_rebate_order_time_amount: string;
-  client_lost_rebate_fund_time: string;
-  client_lost_rebate_fund_time_amount: string;
+  client_lost_rebate_mode: number;
+  client_lost_rebate_order_time: number;
+  client_lost_rebate_order_time_amount: number;
+  client_lost_rebate_fund_time: number;
+  client_lost_rebate_fund_time_amount: number;
 }
 export type GetVIPMAnagementRankClientLostRebateDetailDataResponse = {
   code: number | string
   data: GetVIPMAnagementRankClientLostRebateDetailData
   message: string
 }
+
+
 
 export interface VIPRankUpgradeBonusData {
     id: number;
@@ -106,4 +116,9 @@ export interface VIPRankUpgradeBonusDetailData {
   rebate_order_time_amount: number;
   rebate_fund_time: string;
   rebate_fund_time_amount: number;
+}
+
+export type ResponseData = {
+  code: number | string
+  message: string
 }

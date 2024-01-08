@@ -11,6 +11,9 @@ const vipItemLevel = ref(-1);
 const vip_maintain_switch = ref(true);
 
 const VIPRankDailogRef = ref();
+const VIPBasicDetailDataRef = ref();
+const VIPCodeRebateDetailDataRef = ref();
+const VIPClientLostRebateDetailDataRef = ref();
 
 // vip_rank_dialog
 const show_vip_rank_dialog = () => {
@@ -28,6 +31,27 @@ const show_vip_rank_detail_dialog = (param: number) => {
   vip_rank_detail_dialog.value = true;
   vipItemLevel.value = param;
 };
+
+const detail_dialog_ok_btn_clicked = () => {
+
+  if(tab_index.value == 0){
+    VIPBasicDetailDataRef.value.update_basic_detail();
+  }
+
+  else if(tab_index.value == 1){
+    VIPCodeRebateDetailDataRef.value.update_code_rebate_detail();
+  }
+
+  else if(tab_index.value == 2){
+    VIPClientLostRebateDetailDataRef.value.update_client_lost_detail();
+  }
+
+  vip_rank_detail_dialog.value = false;
+}
+
+const detail_dialog_cancel_btn_clicked = () => {
+  vip_rank_detail_dialog.value = false;
+}
 </script>
 
 <template>
@@ -77,19 +101,22 @@ const show_vip_rank_detail_dialog = (param: number) => {
         v-if="tab_index === 0"
         @show_vip_rank_dialog="show_vip_rank_dialog"
         :vip_level="vipItemLevel"
+        ref="VIPBasicDetailDataRef"
       />
       <VIPRankDetailDialogCodeRebateTab
         v-if="tab_index === 1"
         :vip_level="vipItemLevel"
+        ref="VIPCodeRebateDetailDataRef"
       />
       <VIPRankDetailDialogClientLostRebateTab
         v-if="tab_index === 2"
         :vip_level="vipItemLevel"
+        ref="VIPClientLostRebateDetailDataRef"
       />
       <template #footer>
         <div style="display: flex; justify-content: center">
-          <el-button type="primary">确认</el-button>
-          <el-button>取消</el-button>
+          <el-button type="primary" @click="detail_dialog_ok_btn_clicked()">确认</el-button>
+          <el-button @click="detail_dialog_cancel_btn_clicked()">取消</el-button>
         </div>
       </template>
     </el-dialog>

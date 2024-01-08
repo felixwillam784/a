@@ -17,7 +17,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "user/list",
-                redirect: "list",
+                redirect: "all",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_list",
@@ -27,7 +27,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 },
                 children: [
                     {
-                        path: "list",
+                        path: "all",
                         component: () => import('@/views/player-management/user-list/index.vue'),
                         name: "User List",
                         meta: {
@@ -218,57 +218,33 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                 ]
             },
             {
-                path: "vip",
-                component: () => import('@/views/player-management/vip/index.vue'),
-                name: "VIP Management",
-                meta: {
-                    title: "VIP管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
-            {
-                path: "agent/mangement",
-                redirect: "list",
+                path: "test/account",
                 component: ChildrenLayout,
+                redirect: "",
                 meta: {
-                    title: "代理管理",
+                    title: "测试账号管理",
                     hidden: false,
-                    // alwaysShow: false,
                     roles: ["ADMIN"],
                     keepAlive: true
                 },
                 children: [
                     {
-                        path: "list",
-                        component: () => import('@/views/player-management/agency/index.vue'),
-                        name: "AgencyDetail",
+                        path: "",
+                        component: () => import('@/views/player-management/test-account/index.vue'),
+                        name: "TestAccountManagment",
                         meta: {
                             title: "",
-                            hidden: false,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                    {
-                        path: "setting",
-                        component: () => import('@/views/player-management/agency/setting.vue'),
-                        name: "AgencySetting",
-                        meta: {
-                            title: "代理设置",
                             hidden: true,
                             roles: ["ADMIN"],
                             keepAlive: true
                         },
                     },
                     {
-                        path: "setting/:user_account",
-                        component: () => import('@/views/player-management/agency/relation.vue'),
-                        name: "AgencyRelation",
+                        path: "detail",
+                        component: () => import('@/views/player-management/test-account/detail.vue'),
+                        name: "TestAccountDetail",
                         meta: {
-                            title: "代理关系",
+                            title: "测试账号详情",
                             hidden: true,
                             roles: ["ADMIN"],
                             keepAlive: true
@@ -276,86 +252,145 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                     },
                 ]
             },
-            {
-                path: "warning",
-                component: ChildrenLayout,
-                meta: {
-                    title: "预警管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                },
-                children: [
-                    {
-                        path: "",
-                        component: () => import('@/views/player-management/warning/index.vue'),
-                        name: "Early Warning Managment",
-                        meta: {
-                            hidden: true,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                    {
-                        path: "setting",
-                        component: () => import('@/views/player-management/warning/Setting.vue'),
-                        name: "Risk Control Settings",
-                        meta: {
-                            title: "风控设置",
-                            hidden: true,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                ]
-            },
-            {
-                path: "information/push",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Information Push",
-                meta: {
-                    title: "信息推送",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
-            {
-                path: "kol",
-                component: ChildrenLayout,
-                meta: {
-                    title: "KOL用户管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                },
-                children: [
-                    {
-                        path: "",
-                        component: () => import('@/views/player-management/kol/index.vue'),
-                        name: "KOL Managment",
-                        meta: {
-                            hidden: true,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                    {
-                        path: "setting",
-                        component: () => import('@/views/player-management/kol/Setting.vue'),
-                        name: "KOL General Settings",
-                        meta: {
-                            title: "KOL通用设置",
-                            hidden: true,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                ]
-            },
+            // {
+            //     path: "vip",
+            //     component: () => import('@/views/player-management/vip/index.vue'),
+            //     name: "VIP Management",
+            //     meta: {
+            //         title: "VIP管理",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     }
+            // },
+            // {
+            //     path: "agent/mangement",
+            //     redirect: "list",
+            //     component: ChildrenLayout,
+            //     meta: {
+            //         title: "代理管理",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     },
+            //     children: [
+            //         {
+            //             path: "list",
+            //             component: () => import('@/views/player-management/agency/index.vue'),
+            //             name: "AgencyDetail",
+            //             meta: {
+            //                 title: "",
+            //                 hidden: false,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //         {
+            //             path: "setting",
+            //             component: () => import('@/views/player-management/agency/setting.vue'),
+            //             name: "AgencySetting",
+            //             meta: {
+            //                 title: "代理设置",
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //         {
+            //             path: "setting/:user_account",
+            //             component: () => import('@/views/player-management/agency/relation.vue'),
+            //             name: "AgencyRelation",
+            //             meta: {
+            //                 title: "代理关系",
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //     ]
+            // },
+            // {
+            //     path: "warning",
+            //     component: ChildrenLayout,
+            //     meta: {
+            //         title: "预警管理",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     },
+            //     children: [
+            //         {
+            //             path: "",
+            //             component: () => import('@/views/player-management/warning/index.vue'),
+            //             name: "Early Warning Managment",
+            //             meta: {
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //         {
+            //             path: "setting",
+            //             component: () => import('@/views/player-management/warning/Setting.vue'),
+            //             name: "Risk Control Settings",
+            //             meta: {
+            //                 title: "风控设置",
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //     ]
+            // },
+            // {
+            //     path: "information/push",
+            //     component: () => import('@/views/withdrawal-management/review/index.vue'),
+            //     name: "Information Push",
+            //     meta: {
+            //         title: "信息推送",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     }
+            // },
+            // {
+            //     path: "kol",
+            //     component: ChildrenLayout,
+            //     meta: {
+            //         title: "KOL用户管理",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     },
+            //     children: [
+            //         {
+            //             path: "",
+            //             component: () => import('@/views/player-management/kol/index.vue'),
+            //             name: "KOL Managment",
+            //             meta: {
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //         {
+            //             path: "setting",
+            //             component: () => import('@/views/player-management/kol/Setting.vue'),
+            //             name: "KOL General Settings",
+            //             meta: {
+            //                 title: "KOL通用设置",
+            //                 hidden: true,
+            //                 roles: ["ADMIN"],
+            //                 keepAlive: true
+            //             },
+            //         },
+            //     ]
+            // },
         ]
     },
 ];

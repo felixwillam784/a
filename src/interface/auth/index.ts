@@ -15,3 +15,9 @@ export type GetSigninResponseData = {
   data: SigninResponseData
   message: string
 }
+
+
+export type SignOutResponseData = {
+  code: number | string
+  message: string
+}

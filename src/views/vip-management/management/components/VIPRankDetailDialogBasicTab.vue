@@ -63,14 +63,10 @@ const vip_rank_detail_label = ref<Array<string>>([
   "VIP保级失败降低等级",
 ]);
 
-const vip_ranks = ref<Array<string>>([
-  "Iron",
-  "Bronze",
-  "Silver",
-  "Gold",
-  "Platinum",
-  "Diamond",
-]);
+const vip_ranks = computed(() => {
+  return vip.getVIPRanks;
+});
+
 let rank_options: any[] = [];
 
 onMounted(async () => {
@@ -94,12 +90,20 @@ const props = defineProps({
   vip_level: Number,
 });
 
+const update_basic_detail = () => {
+  vip.dispatchUpdateVIPManagementBasicDetailData()
+}
+
 watch(props, async () => {
   if (props.vip_level != undefined){
     vipItem.value.vip_level = props.vip_level;
     await vip.dispatchVIPManagementBasicDetailData(props.vip_level);
   }
 });
+
+defineExpose({
+  update_basic_detail,
+})
 </script>
 
 <template>
@@ -145,9 +149,9 @@ watch(props, async () => {
       <p style="width: 20%">VIP返利类型</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px">
         <el-radio-group v-model="vipItem.rebate_way" class="ml-4">
-          <el-radio label="打码返利" size="large">打码返利</el-radio>
-          <el-radio label="客损返利" size="large">客损返利</el-radio>
-          <el-radio label="无返利" size="large">无返利</el-radio>
+          <el-radio :label="1"  size="large">打码返利</el-radio>
+          <el-radio :label="2"  size="large">客损返利</el-radio>
+          <el-radio :label="3"  size="large">无返利</el-radio>
         </el-radio-group>
       </div>
     </div>
@@ -155,8 +159,8 @@ watch(props, async () => {
       <p style="width: 20%">是否保级</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px">
         <el-radio-group v-model="vipItem.protect_vip" class="ml-4">
-          <el-radio label="开启保级" size="large">开启保级</el-radio>
-          <el-radio label="关闭保级" size="large">关闭保级</el-radio>
+          <el-radio :label="1" size="large">开启保级</el-radio>
+          <el-radio :label="2" size="large">关闭保级</el-radio>
         </el-radio-group>
       </div>
     </div>
