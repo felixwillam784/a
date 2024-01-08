@@ -123,12 +123,12 @@ const goUserFlowDetailPage = (id : any) => {
                         <el-table-column label="用户标签" width="200" align="center" prop="customer_label" />
                         <el-table-column label="流水金额" width="200" align="center" prop="flow_amount">
                             <template #default="scope">
-                                <Font color="green" v-if="scope.row.flow_amount > 0">
+                                <font color="green" v-if="scope.row.flow_amount > 0">
                                     ${{ scope.row.flow_amount }}
-                                </Font>
-                                <Font color="red" v-else>
+                                </font>
+                                <font color="red" v-else>
                                     -${{ scope.row.flow_amount }}
-                                </Font>
+                                </font>
                             </template>
                         </el-table-column>
                         <el-table-column label="类型" align="center" prop="flow_type" width="120"></el-table-column>
