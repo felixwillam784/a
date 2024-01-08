@@ -6,10 +6,9 @@ import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
 
 import { getWithdrawlReviewList } from '@/api/withdraw-management';
+import useStore from "@/store";
 
-import useStore from '@/store';
-const { user } = useStore();
-
+const { auth } = useStore();
 interface GetWithdrawalReview {
     id: string,
     nick_name: string
@@ -106,7 +105,7 @@ const handleQuery = () => {
     }).catch(()=>{
         localStorage.clear();
         router.push({ name: "Login" });
-        user.token = '';
+        //user.token = '';
     });
 }
 
@@ -175,24 +174,12 @@ onMounted (()=>{
     let now = new Date();
     formData.value.submission_time[0] = new Date('2020-12-31').toISOString().split('T')[0];
     formData.value.submission_time[1] = now.toISOString().split('T')[0];
-    
-    loading.value = true;
-    getData().then(()=>{
-        loading.value = false;
-    }).catch(()=>{
-        localStorage.clear();
-        router.push({ name: "Login" });
-        user.token = '';
-    });
 })
 const getData = async () => {
-    let res = await getWithdrawlReviewList(user.token, formData.value);
-    withdrawalReviewList.value = res.data.data;
-    console.log(user.id);
-    console.log(res.data.data);
+    //let res = await getWithdrawlReviewList("Bearer" + auth.userInfo.token, formData.value);
 }
 
-const order_status = ["待处理","处理中","成功","失败","待人工处理"];
+const order_status = ["待处理","已拒绝","已打款","启动代付","已退款"];
 
 
 const getFontStyle = (orderStatus : number) => {
@@ -220,7 +207,7 @@ const lock = () => {
             <el-col :span="24" :xs="24">
                 <el-card>
                     <el-row style="align-items: center;">
-                        <el-col :span="24" :md="12" :lg="18">
+                        <el-col >
                             <el-form :model="formData" :inline="true" label-width="100">
                                 <el-form-item label="用户账号" prop="user_account">
                                     <el-input v-model="formData.user_account" placeholder="请输入用户账号" />
@@ -242,20 +229,22 @@ const lock = () => {
                                     </el-select>
                                 </el-form-item>
                             </el-form>
-                            <el-form :model="formData" :inline="true" label-width="100">
-                                <el-form-item label="平台订单号" prop="platform_order_number">
-                                    <el-input v-model="formData.platform_order_number" placeholder="请输入平台订单号" />
-                                </el-form-item>
-                                <el-form-item label="上游订单号" prop="upstream_order_number">
-                                    <el-input v-model="formData.upstream_order_number" placeholder="请输入上游订单号" />
-                                </el-form-item>
+                            <el-form :model="formData" :inline="true" label-width="100" style="display:flex; justify-content:space-between">
+                                <div>
+                                    <el-form-item label="平台订单号" prop="platform_order_number">
+                                        <el-input v-model="formData.platform_order_number" placeholder="请输入平台订单号" />
+                                    </el-form-item>
+                                    <el-form-item label="上游订单号" prop="upstream_order_number">
+                                        <el-input v-model="formData.upstream_order_number" placeholder="请输入上游订单号" />
+                                    </el-form-item>
+                                </div>
+                                <div>
+                                    <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+                                    <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
+                                    <el-button @click="goBulkPassPage">批量同意</el-button>
+                                    <el-button @click="goBulkRejectPage">批量拒绝</el-button>
+                                </div>
                             </el-form>
-                        </el-col>
-                        <el-col :span="24" :md="12" :lg="6">
-                            <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
-                            <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-                            <el-button @click="goBulkPassPage">批量同意</el-button>
-                            <el-button @click="goBulkRejectPage">批量拒绝</el-button>
                         </el-col>
                     </el-row>
                 </el-card>
@@ -377,9 +366,9 @@ const lock = () => {
                                 <el-button type="danger" link
                                     @click="detailWithdrawalReviewDialog(scope.row)">详情</el-button>
                                 <el-button type="primary" link v-if="scope.row.order_status == 0">鎖定</el-button>
-                                <el-button type="success" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == user.id" @click="operate(1)">同意</el-button>
-                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == user.id" @click="operate(0)">拒绝</el-button>
-                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) != user.id" @click="lock()">已锁定</el-button>
+                                <el-button type="success" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == auth.userInfo.id" @click="operate(1)">同意</el-button>
+                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) == auth.userInfo.id" @click="operate(0)">拒绝</el-button>
+                                <el-button type="danger" link v-if="scope.row.order_status == 1 && parseInt(scope.row.operator_id) != auth.userInfo.id" @click="lock()">已锁定</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -433,105 +422,105 @@ const lock = () => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.user_account }}</p>
+                    <p>{{ withdrawalReviewItem?.user_account }}</p>
                 </el-col>
             </el-row>
-            <el-row v-if="withdrawalReviewItem.review_status == 1">
+            <el-row v-if="withdrawalReviewItem?.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">用户名:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.nick_name }}</p>
+                    <p>{{ withdrawalReviewItem?.nick_name }}</p>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
                 <el-col :span="6" class="detail-item-left-bg">订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.order_number }}</p>
+                    <p>{{ withdrawalReviewItem?.order_number }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">Gaia订单号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.gaia_order_number }}</p>
+                    <p>{{ withdrawalReviewItem?.gaia_order_number }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">提现金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.withdrawal_amount) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.withdrawal_amount) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">实到金额:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.actual_amount) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.actual_amount) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">手续费:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.handling_fee) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.handling_fee) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.free_charge) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.free_charge) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.submission_time }}</p>
+                    <p>{{ withdrawalReviewItem?.submission_time }}</p>
                 </el-col>
             </el-row>
-            <el-row v-if="withdrawalReviewItem.review_status == 1">
+            <el-row v-if="withdrawalReviewItem?.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.order_update_time }}</p>
+                    <p>{{ withdrawalReviewItem?.order_update_time }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户总充值:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.total_recharge) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.total_recharge) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">用户总提现:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>${{ Number(withdrawalReviewItem.total_withdrawal) }}</p>
+                    <p>${{ Number(withdrawalReviewItem?.total_withdrawal) }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">提现渠道:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.withdrawal_channel }}</p>
+                    <p>{{ withdrawalReviewItem?.withdrawal_channel }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">提现方式:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.withdrawal_method }}</p>
+                    <p>{{ withdrawalReviewItem?.withdrawal_method }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">风控提示:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <Font color="red"
-                        v-if="withdrawalReviewItem.risk_control_hint == 'IP风控' || withdrawalReviewItem.risk_control_hint == '一级风控'">
-                        {{ withdrawalReviewItem.risk_control_hint }}
+                        v-if="withdrawalReviewItem?.risk_control_hint == 'IP风控' || withdrawalReviewItem?.risk_control_hint == '一级风控'">
+                        {{ withdrawalReviewItem?.risk_control_hint }}
                     </Font>
-                    <Font v-else>{{ withdrawalReviewItem.risk_control_hint }}</Font>
+                    <Font v-else>{{ withdrawalReviewItem?.risk_control_hint }}</Font>
                 </el-col>
             </el-row>
-            <el-row v-if="withdrawalReviewItem.review_status == 1">
+            <el-row v-if="withdrawalReviewItem?.review_status == 1">
                 <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ withdrawalReviewItem.operator_name }}</p>
+                    <p>{{ withdrawalReviewItem?.operator_name }}</p>
                 </el-col>
             </el-row>
             <template #footer>
-                <div class="dialog-footer" v-if="withdrawalReviewItem.review_status == 0">
+                <div class="dialog-footer" v-if="withdrawalReviewItem?.review_status == 0">
                     <el-button type="primary" @click="passDialogShow">通过</el-button>
                     <el-button type="warning" @click="rejectDialogShow">拒绝</el-button>
                     <el-button @click="closeDialog">取消</el-button>

@@ -1,27 +1,43 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
+import useStore from "@/store";
+
+const { vip } = useStore();
 
 const vip_level_rank = ref(false);
 const show_vip_rank_dialog = () => {
   vip_level_rank.value = true;
 };
-const vip_ranks = ref<Array<string>>([
-  "Iron",
-  "Bronze",
-  "Silver",
-  "Gold",
-  "Platinum",
-  "Diamond",
-]);
+const vip_ranks = computed(() => {
+  return vip.getVIPRanks;
+});
+
 const add_vip_rank = ref(false);
 const new_vip_rank_txt = ref("");
+
 const operate_new_vip_rank = (op: boolean) => {
   add_vip_rank.value = op;
 };
 
+onMounted(()=>{
+  vip.dispatchVIPRanks();
+})
+
 defineExpose({
   show_vip_rank_dialog,
 });
+
+const ok_btn_clicked = () => {
+  if(add_vip_rank.value) {
+    vip_ranks.value.push(new_vip_rank_txt.value);
+    vip.dispatchUpdateVIPRanks();
+  }
+  vip_level_rank.value = false;
+
+}
+const cancel_btn_clicked = () => {
+  vip_level_rank.value = false;
+}
 </script>
 
 <template>
@@ -65,8 +81,8 @@ defineExpose({
 
     <template #footer>
       <div style="display: flex; justify-content: center">
-        <el-button type="primary">确认</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="ok_btn_clicked()">确认</el-button>
+        <el-button @click="cancel_btn_clicked()">取消</el-button>
       </div>
     </template>
   </el-dialog>

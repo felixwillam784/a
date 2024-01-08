@@ -23,12 +23,12 @@ const add_rebate_type = () => {
 const add_new_rebate = ref<boolean>(false);
 
 const is_disabled_rebate_fund_time_amount = () => {
-  if (vipItem.value?.rebate_fund_time == "释放") return false;
+  if (vipItem.value?.rebate_fund_time == 2) return false;
   return true;
 };
 
 const is_disabled_rebate_order_time_amount = () => {
-  if (vipItem.value?.rebate_order_time == "天后刷新结算") return false;
+  if (vipItem.value?.rebate_order_time == 5) return false;
   return true;
 };
 
@@ -49,6 +49,18 @@ watch(props,async () => {
     await vip.dispatchVIPManagementCodeRebateDetailData(props.vip_level);
   }
 });
+
+const update_code_rebate_detail = () => {
+  if(add_new_rebate.value){
+    add_new_rebate.value = false;
+    vipItem.value.game_types.push(new_rebate_type.value);
+  }
+  vip.dispatchUpdateVIPManagementCodeRebateDetailData();
+}
+
+defineExpose({
+  update_code_rebate_detail
+})
 </script>
 
 <template>
@@ -102,8 +114,8 @@ watch(props,async () => {
       <p style="width: 20%">返利领取方式</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px">
         <el-radio-group v-model="vipItem.rebate_mode" class="ml-4">
-          <el-radio label="玩家手动领取" size="large">玩家手动领取</el-radio>
-          <el-radio label="结算时自动到账" size="large">结算时自动到账</el-radio>
+          <el-radio :label="1" size="large">玩家手动领取</el-radio>
+          <el-radio :label="2" size="large">结算时自动到账</el-radio>
         </el-radio-group>
       </div>
     </div>
@@ -112,11 +124,11 @@ watch(props,async () => {
       <p style="width: 20%">返利结算周期</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px">
         <el-radio-group v-model="vipItem.rebate_order_time" class="ml-4">
-          <el-radio label="实时结算" size="large">实时结算</el-radio>
-          <el-radio label="每日刷新结算" size="large">每日刷新结算</el-radio>
-          <el-radio label="每周刷新结算" size="large">每周刷新结算</el-radio>
-          <el-radio label="每月刷新结算" size="large">每月刷新结算</el-radio>
-          <el-radio label="天后刷新结算" size="large"
+          <el-radio :label="1" size="large">实时结算</el-radio>
+          <el-radio :label="2" size="large">每日刷新结算</el-radio>
+          <el-radio :label="3" size="large">每周刷新结算</el-radio>
+          <el-radio :label="4" size="large">每月刷新结算</el-radio>
+          <el-radio :label="5" size="large"
             ><el-input
               v-model="vipItem.rebate_order_time_amount"
               style="width: 80px"
@@ -132,8 +144,8 @@ watch(props,async () => {
       <p style="width: 20%">奖励释放周期</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px; align-items: center">
         <el-radio-group v-model="vipItem.rebate_fund_time" class="ml-4">
-          <el-radio label="不释放" size="large">不释放</el-radio>
-          <el-radio label="释放" size="large">释放</el-radio>
+          <el-radio :label="1" size="large">不释放</el-radio>
+          <el-radio :label="2" size="large">释放</el-radio>
         </el-radio-group>
         <div style="display: flex; margin-left: 20px; height: 30px; align-items: center">
           <el-input
