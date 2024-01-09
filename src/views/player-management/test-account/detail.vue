@@ -4,6 +4,9 @@ import { ArrowLeft } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import TestAccountDetail from "./components/TestAccountDetail.vue";
 import ParticipateGameSetting from "./components/ParticipateGameSetting.vue";
+import FundDetail from "./components/FundDetail.vue";
+import BettingRecord from "./components/BettingRecord.vue";
+import RegistrationRecord from "./components/RegistrationRecord.vue";
 
 const router = useRouter();
 
@@ -39,6 +42,9 @@ const handleBtnTab = (index: number) => {
     <el-card class="mt-2">
       <TestAccountDetail v-if="activeIndex == 0" />
       <ParticipateGameSetting v-if="activeIndex == 1" />
+      <FundDetail v-if="activeIndex == 2" />
+      <BettingRecord v-if="activeIndex == 3" />
+      <RegistrationRecord v-if="activeIndex == 4" />
     </el-card>
   </div>
 </template>
