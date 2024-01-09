@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import GameCategory from "./paticipate-game-setting/GameCategory.vue";
 import GameChannel from "./paticipate-game-setting/GameChannel.vue";
+import SpecificGame from "./paticipate-game-setting/SpecificGame.vue";
 
 const activeIndex = ref<number>(0);
 const handleBtnTab = (index: number) => {
@@ -42,6 +43,7 @@ const handleBtnTab = (index: number) => {
   <el-card>
     <GameCategory v-if="activeIndex == 0" />
     <GameChannel v-if="activeIndex == 1" />
+    <SpecificGame v-if="activeIndex == 2" />
   </el-card>
 </template>
 

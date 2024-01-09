@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
+import BasicSetting from "./components/dialog/BasicSetting.vue";
 
 const router = useRouter();
 
@@ -22,7 +23,10 @@ const loading = ref<boolean>(false);
 
 const total_count = ref<number>(0);
 
+const activeIndex = ref<number>(0);
+
 const agencyTerminateDialogVisible = ref<boolean>(false);
+const addTestNumberDialogVisible = ref<boolean>(false);
 
 const comparatorOptions = ref<Array<any>>([
   {
@@ -203,6 +207,10 @@ const showAgencyTerminateDialog = () => {
   agencyTerminateDialogVisible.value = true;
 };
 
+const handleBtnTab = (index: number) => {
+  activeIndex.value = index;
+};
+
 onMounted(() => {
   handleDateRange("this week");
 });
@@ -237,7 +245,9 @@ onMounted(() => {
                   </el-select>
                 </el-form-item>
                 <el-form-item style="float: right">
-                  <el-button @click="handleQuery"> 新增测试号 </el-button>
+                  <el-button @click="addTestNumberDialogVisible = true">
+                    新增测试号
+                  </el-button>
                   <el-button type="primary" :icon="Search" @click="handleQuery">
                     搜索
                   </el-button>
@@ -657,6 +667,21 @@ onMounted(() => {
         </el-card>
       </el-col>
     </el-row>
+    <el-dialog title="新增测试号" v-model="addTestNumberDialogVisible">
+      <el-row>
+        <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
+          基本设置
+        </el-button>
+        <el-button :type="activeIndex == 1 ? 'warning' : ''" @click="handleBtnTab(1)">
+          可参与游戏设定
+        </el-button>
+      </el-row>
+      <BasicSetting v-if="activeIndex == 0" />
+      <el-footer class="text-center">
+        <el-button type="primary">下一页</el-button>
+        <el-button @click="addTestNumberDialogVisible = false">取消添加</el-button>
+      </el-footer>
+    </el-dialog>
     <el-dialog title="解除代理关系" v-model="agencyTerminateDialogVisible">
       <h4 class="text-center">确认后将会解除代理与其上级的关系</h4>
       <h4 class="text-center">确认要解除代理关系？</h4>
