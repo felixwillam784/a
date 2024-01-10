@@ -4,6 +4,7 @@ import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import BasicSetting from "./components/dialog/BasicSetting.vue";
+import GameSetting from "./components/dialog/GameSetting.vue";
 
 const router = useRouter();
 
@@ -668,7 +669,7 @@ onMounted(() => {
       </el-col>
     </el-row>
     <el-dialog title="新增测试号" v-model="addTestNumberDialogVisible">
-      <el-row>
+      <el-row v-if="activeIndex != 2 && activeIndex != 3">
         <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
           基本设置
         </el-button>
@@ -677,8 +678,52 @@ onMounted(() => {
         </el-button>
       </el-row>
       <BasicSetting v-if="activeIndex == 0" />
+      <GameSetting v-if="activeIndex == 1" />
+      <el-form v-if="activeIndex == 2" class="my-2">
+        <el-form-item label="请输入生成测试号数量:">
+          <el-input placeholder="不填默认为生成1个测试号" />
+        </el-form-item>
+      </el-form>
+      <div v-if="activeIndex == 3" class="my-2 h-96">
+        <el-card>
+          <div class="font-bold">测试账号1</div>
+          <el-row class="mt-2 align-center">
+            <el-col :span="18">
+              <el-row class="bg-neutral-300 h-10 pa-2 align-center">
+                <el-col :span="6">账号邮箱:</el-col>
+                <el-col :span="18"> 123@gmail.com</el-col>
+              </el-row>
+              <el-row class="bg-neutral-100 h-10 pa-2 align-center mt-1">
+                <el-col :span="6">账号密码:</el-col>
+                <el-col :span="18"> abcd1234 </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6" class="text-center">
+              <el-button class="h-16">
+                <div>复制账</div>
+                <div class="mt-1">号密码</div>
+              </el-button>
+            </el-col>
+          </el-row>
+        </el-card>
+        <div class="text-center mt-4">
+          <el-button>添加测试号</el-button>
+        </div>
+      </div>
       <el-footer class="text-center">
-        <el-button type="primary">下一页</el-button>
+        <el-button
+          type="primary"
+          @click="activeIndex == 2 ? (activeIndex = 1) : (activeIndex = 2)"
+          v-if="activeIndex == 2 || activeIndex == 3"
+        >
+          上一页
+        </el-button>
+        <el-button
+          type="primary"
+          @click="activeIndex == 1 ? (activeIndex = 2) : (activeIndex = 3)"
+        >
+          下一页
+        </el-button>
         <el-button @click="addTestNumberDialogVisible = false">取消添加</el-button>
       </el-footer>
     </el-dialog>
@@ -734,5 +779,9 @@ onMounted(() => {
     margin-right: 0px !important;
     margin-bottom: 0px !important;
   }
+}
+
+.el-button > span {
+  display: block;
 }
 </style>
