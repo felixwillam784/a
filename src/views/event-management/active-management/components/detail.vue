@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import {
   GetActiveManagementDetailData,
   ActiveCondition,
@@ -16,27 +16,18 @@ const active_item = ref<GetActiveManagementDetailData>({
   event_type: "",
   event_name: "",
   event_description: "",
-  trigger_condition: [
-    { condition: "1", amount: 0 },
-    { condition: "2", amount: 0 },
-  ],
-  takin_condition: [
-    { condition: "1", amount: 0 },
-    { condition: "2", amount: 0 },
-  ],
-  event_weight: -1,
-  code_rebate: -1,
-  deposite_threshold: -1,
-  bonus_id: [
-    { deposite_minimum: 1, deposite_maximum: 1, bonus_id: 1 },
-    { deposite_minimum: 1, deposite_maximum: 1, bonus_id: 1 },
-  ],
+  trigger_condition: [],
+  takin_condition: [],
+  event_weight: "",
+  code_rebate: "",
+  deposite_threshold: "",
+  bonus_id: [],
   event_takin_time: "",
   event_takin_cycle: "",
-  times_in_cycle: -1,
+  times_in_cycle: "",
   event_active_time: "",
   event_time: "",
-  reamrk: "",
+  remark: "",
   event_status: "",
 });
 
@@ -63,7 +54,7 @@ const takin_condition_options = ref<Array<string>>(["e", "f"]);
 const is_add_new_takin_condition = ref(false);
 const new_takin_condition = ref<ActiveCondition>({
   condition: "",
-  amount: -1,
+  amount: "",
 });
 
 const takin_condition_operate = (op: boolean, id: number) => {
@@ -101,7 +92,7 @@ const bonus_id_operate = (op: boolean, id: number) => {
 
 <template>
   <div style="display: flex; flex-direction: column">
-    <div class="dl_row">
+    <div class="dl_row" v-if="props.event_id != -1">
       <p style="width: 20%">活动类型</p>
       <div style="display: flex; width: 78.5%; margin-left: 20px">
         <el-input v-model="active_item.event_type" disabled />
@@ -439,9 +430,6 @@ const bonus_id_operate = (op: boolean, id: number) => {
           v-model="active_item.event_time"
           type="date"
           placeholder="请选择活动有效时间"
-          :disabled-date="disabledDate"
-          :shortcuts="shortcuts"
-          :size="large"
           style="width: 100%"
         />
       </div>
@@ -465,6 +453,9 @@ const bonus_id_operate = (op: boolean, id: number) => {
 </template>
 
 <style lang="scss">
+p {
+  font-size: 10x;
+}
 .right_position {
   display: flex;
   justify-content: right;

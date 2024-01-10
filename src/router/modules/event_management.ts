@@ -17,14 +17,39 @@ const eventManagementRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "list",
-        component: () => import('@/views/event-management/active-management/index.vue'),
-        name: "EventManagement",
+        component: ChildrenLayout,
+        redirect:"all",
+
         meta: {
             hidden: false,
             title: "活动管理",
             roles: ["ADMIN"],
             keepAlive: true
         },
+        children:[
+          {
+              path: "all",
+              component: () => import('@/views/event-management/active-management/index.vue'),
+              name: "EventManagement",
+              meta: {
+                  title: "",
+                  hidden: false,
+                  roles: ["ADMIN"],
+                  keepAlive: true
+              },
+          },
+          {
+              path: "new",
+              component: () => import('@/views/event-management/active-management/components/add.vue'),
+              name: "NewEvent",
+              meta: {
+                  title: "",
+                  hidden: true,
+                  roles: ["ADMIN"],
+                  keepAlive: true
+              },
+          },
+        ]
       },
       {
         path: "a",
