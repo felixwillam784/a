@@ -32,7 +32,7 @@ export interface GetActiveManagementDetailData {
     times_in_cycle: number | string;
     event_active_time: string;
     event_time: string;
-    reamrk:string;
+    remark:string;
     event_status: string;
 }
 

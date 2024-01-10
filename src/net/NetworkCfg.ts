@@ -37,6 +37,10 @@ export namespace NETWORKCFG {
     //VIPManagement ClientLostRebate Data
     static VIPMANAGEMENT_CLIENT_LOST_REBATE_DETAIL: string = '/vip/detail/client-lost-rebate-setting'
     static VIPMANAGEMENT_UPDATE_CLIENT_LOST_REBATE_DETAIL: string = '/vip/update/client-lost-rebate-setting'
+
+    //StatisticDatas
+    static VIPRankStatistic_Table: string = '/vip/rank-count-list'
+    static VIPLevelStatistic_Table: string = '/vip/level-count-list'
   }
 
   //Listening events sent actively

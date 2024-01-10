@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 import { GetActiveManagementData } from "@/interface/event";
 import ActivityManagementDetail from "./components/detail.vue";
+const router = useRouter();
 
 const formData = ref({
   event_id: "",
@@ -27,7 +29,7 @@ const event_takin_times_options = ref<Array<string>>(["cc", "dd"]);
 const event_takin_cycle_options = ref<Array<string>>(["de", "ff"]);
 
 const add_new_event = () => {
-  console.log(formData.value.event_type);
+  router.push({ name: "NewEvent" });
 };
 
 const active_management_list = ref<Array<GetActiveManagementData>>([
