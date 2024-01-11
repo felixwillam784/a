@@ -100,7 +100,6 @@ export class Network {
    * @param msg
    */
   private async GET(route: string, data: any, next: Function) {
-    console.log("test", data)
     await request({
       url: route,
       method: 'GET',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import useStore from "@/store";
+import { fa } from "element-plus/es/locale";
 
 const loading = ref<boolean>(false);
 const formData = ref<any>({
@@ -14,9 +15,11 @@ const vipList = computed(() => {
   return vip.getVIPManagementTable;
 });
 const { vip } = useStore();
-onMounted(async ()=>{
+onMounted(async () => {
+  loading.value = true;
   await vip.dispatchVIPManagementTable();
-})
+  loading.value = false;
+});
 </script>
 
 <template>

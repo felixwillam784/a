@@ -203,7 +203,7 @@ export const vipStore = defineStore({
     //VIPRankStatisticTableData
     async dispatchVIPRankStatisticTableData(form_data:any) {
       this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPRankStatistic_Table + "?" + JSON.stringify(form_data);
+      const route: string = NETWORKCFG.VIP.VIPRankStatistic_Table;
       const network: Network = Network.getInstance();
       // response call back function
       const next = (response: VIP.RankClientDistributionResponseData) => {
@@ -217,7 +217,7 @@ export const vipStore = defineStore({
 
     async dispatchVIPLevelStatisticTableData(form_data:any) {
       this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPLevelStatistic_Table + "?" + JSON.stringify(form_data);
+      const route: string = NETWORKCFG.VIP.VIPLevelStatistic_Table;
       const network: Network = Network.getInstance();
       // response call back function
       const next = (response: VIP.LevelClientDistributionResponseData) => {

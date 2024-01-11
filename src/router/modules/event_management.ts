@@ -52,12 +52,12 @@ const eventManagementRoutes: RouteRecordRaw[] = [
         ]
       },
       {
-        path: "a",
+        path: "statistic",
         component: () => import('@/views/event-management/active-management/index.vue'),
-        name: "aaa",
+        name: "EventStatistic",
         meta: {
             hidden: false,
-            title: "aaa",
+            title: "活动统计",
             roles: ["ADMIN"],
             keepAlive: true
         },

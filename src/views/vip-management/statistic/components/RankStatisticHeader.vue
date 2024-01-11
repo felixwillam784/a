@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Search, Refresh, Upload, Plus } from "@element-plus/icons-vue";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, provide } from "vue";
 import useStore from "@/store";
 
 const { vip } = useStore();
@@ -13,8 +13,11 @@ const formDataRank = ref({
 const vip_ranks = computed(() => {
   return vip.getVIPRanks;
 });
+
+const emit = defineEmits(["get_rank_statistic_data"]);
 onMounted(() => {
   vip.dispatchVIPRanks();
+  emit("get_rank_statistic_data", formDataRank);
 });
 
 const op_options = ref<Array<any>>([

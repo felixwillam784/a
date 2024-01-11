@@ -95,28 +95,30 @@ export type GetVIPMAnagementRankClientLostRebateDetailDataResponse = {
   message: string
 }
 
-//VIP Statistic
+//VIP Rank Statistic
 export interface RankClientDistribution {
   id: number;
   vip_rank: string;
-  vip_rank_client_distribution: string;
+  vip_rank_people_count: number;
 }
 export type RankClientDistributionResponseData = {
   code: number | string
   data: Array<RankClientDistribution>,
   message: string
 }
-
+//VIP LevelStatistic
 export interface LevelClientDistribution {
-  level: number;
+  vip_level: number;
   vip_rank: string;
-  vip_level_client_distribution: string;
+  vip_level_people_count: number;
 }
 export type LevelClientDistributionResponseData = {
   code: number | string
   data: Array<LevelClientDistribution>,
   message: string
 }
+
+//VIPRankUpgradeBonus
 export interface VIPRankUpgradeBonusData {
     id: number;
     vip_rank: string;

@@ -10,23 +10,30 @@ import useStore from "@/store";
 const { vip } = useStore();
 
 const DateRangeSelectorRef = ref();
+const RankStatisticTableRef = ref();
+const LevelStatisticTableRef = ref();
+
 const tab_index = ref(0);
+
 const select_tab = (index: number) => {
   tab_index.value = index;
 };
 
-const get_rank_statistic_data = (form_data: any) => {
-  vip.dispatchVIPRankStatisticTableData({
+const get_rank_statistic_data = async (form_data: any) => {
+  RankStatisticTableRef.value.set_table_loading(true);
+  await vip.dispatchVIPRankStatisticTableData({
     start_date: new Date(DateRangeSelectorRef.value.dateRange[0]).getTime() / 1000,
     end_date: new Date(DateRangeSelectorRef.value.dateRange[1]).getTime() / 1000,
     vip_rank: form_data.vip_rank,
     vip_rank_people_count: form_data.rank_clients_number,
     vip_rank_people_count_operator_type: form_data.rank_clients_op,
   });
+  RankStatisticTableRef.value.set_table_loading(false);
 };
 
-const get_level_statistic_data = (form_data: any) => {
-  vip.dispatchVIPLevelStatisticTableData({
+const get_level_statistic_data = async (form_data: any) => {
+  LevelStatisticTableRef.value.set_table_loading(true);
+  await vip.dispatchVIPLevelStatisticTableData({
     start_date: new Date(DateRangeSelectorRef.value.dateRange[0]).getTime() / 1000,
     end_date: new Date(DateRangeSelectorRef.value.dateRange[1]).getTime() / 1000,
     vip_rank: form_data.vip_rank,
@@ -35,6 +42,7 @@ const get_level_statistic_data = (form_data: any) => {
     vip_level_people_count: form_data.level_clients_number,
     vip_level_people_count_operator_type: form_data.level_clients_op,
   });
+  LevelStatisticTableRef.value.set_table_loading(false);
 };
 </script>
 
@@ -61,8 +69,8 @@ const get_level_statistic_data = (form_data: any) => {
     </div>
     <div>
       <el-card :span="24" :xs="24">
-        <RankStatisticTable v-if="tab_index == 0" />
-        <LevelStatisticTable v-if="tab_index == 1" />
+        <RankStatisticTable v-if="tab_index == 0" ref="RankStatisticTableRef" />
+        <LevelStatisticTable v-if="tab_index == 1" ref="LevelStatisticTableRef" />
       </el-card>
     </div>
   </div>
