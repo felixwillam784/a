@@ -5,7 +5,6 @@ import useStore from "@/store";
 
 const { vip } = useStore();
 
-const vip_level_rank = ref(false);
 const formDataLevel = ref({
   level_op: 1,
   level_number: 0,
@@ -17,8 +16,11 @@ const formDataLevel = ref({
 const vip_ranks = computed(() => {
   return vip.getVIPRanks;
 });
+
+const emit = defineEmits(["get_level_statistic_data"]);
 onMounted(() => {
   vip.dispatchVIPRanks();
+  emit("get_level_statistic_data", formDataLevel);
 });
 const op_options = ref<Array<any>>([
   {

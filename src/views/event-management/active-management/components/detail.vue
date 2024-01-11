@@ -31,7 +31,12 @@ const active_item = ref<GetActiveManagementDetailData>({
   event_status: "",
 });
 
-const trigger_condition_options = ref<Array<string>>(["e", "f"]);
+const trigger_condition_options = ref<Array<string>>([
+  "首次充值",
+  "本金亏损",
+  "下载APP并登录",
+  "APP登录",
+]);
 const is_add_new_trigger_condition = ref(false);
 const new_trigger_condition = ref<ActiveCondition>({
   condition: "",
@@ -50,7 +55,12 @@ const trigger_condition_operate = (op: boolean, id: number) => {
   }
 };
 
-const takin_condition_options = ref<Array<string>>(["e", "f"]);
+const takin_condition_options = ref<Array<string>>([
+  "VIP",
+  "风控等级",
+  "充值金额",
+  "打码量",
+]);
 const is_add_new_takin_condition = ref(false);
 const new_takin_condition = ref<ActiveCondition>({
   condition: "",

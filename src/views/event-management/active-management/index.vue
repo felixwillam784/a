@@ -9,24 +9,38 @@ const router = useRouter();
 const formData = ref({
   event_id: "",
   event_name: "",
-  event_type: "",
-  event_status: "",
-  trigger_condition: "",
-  takein_condition: "",
+  event_type: 1,
+  event_status: 1,
+  trigger_condition: 1,
+  takein_condition: 1,
   bonus_id: "",
-  event_takin_times: "",
-  event_takin_cycle: "",
+  event_takin_times: 1,
+  event_takin_cycle: 1,
   event_active_time: "",
   event_time: "",
 });
 
-const event_type_options = ref<Array<string>>(["a", "b"]);
-const event_status_options = ref<Array<string>>(["c", "d"]);
-const trigger_condition_options = ref<Array<string>>(["e", "f"]);
-const takein_condition_options = ref<Array<string>>(["g", "h"]);
-const bonus_id_options = ref<Array<string>>(["aa", "nb"]);
-const event_takin_times_options = ref<Array<string>>(["cc", "dd"]);
-const event_takin_cycle_options = ref<Array<string>>(["de", "ff"]);
+const event_type_options = ref<Array<string>>([
+  "存款活动",
+  "救援金",
+  "下载APP",
+  "免费奖金",
+]);
+const event_status_options = ref<Array<string>>(["进行中", "未开启"]);
+const trigger_condition_options = ref<Array<string>>([
+  "首次充值",
+  "本金亏损",
+  "下载APP并登录",
+  "APP登录",
+]);
+const takein_condition_options = ref<Array<string>>([
+  "VIP",
+  "风控等级",
+  "充值金额",
+  "打码量",
+]);
+const event_takin_times_options = ref<Array<string>>(["单次", "多次"]);
+const event_takin_cycle_options = ref<Array<string>>(["每天", "每周", "每月"]);
 
 const add_new_event = () => {
   router.push({ name: "NewEvent" });
@@ -185,14 +199,10 @@ const show_detail_dialog = (data: GetActiveManagementData) => {
               >
                 <div>
                   <el-form-item label="奖金ID" prop="bonus_id">
-                    <el-select v-model="formData.bonus_id" placeholder="请输入奖金方案ID">
-                      <el-option
-                        v-for="(item, index) in bonus_id_options"
-                        :label="item"
-                        :value="index + 1"
-                        :key="index"
-                      ></el-option>
-                    </el-select>
+                    <el-input
+                      v-model="formData.bonus_id"
+                      placeholder="请输入奖金方案ID"
+                    />
                   </el-form-item>
                   <el-form-item label="活动参与次数" prop="event_takin_times">
                     <el-select
