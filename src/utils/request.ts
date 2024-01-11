@@ -4,6 +4,8 @@ import { NetworkData } from '@/net/NetworkData'
 import { localStorage } from '@/utils/storage';
 import useStore from '@/store';
 import { useRoute, useRouter } from "vue-router";
+import { isEmpty } from 'lodash'
+import qs from 'qs'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -11,6 +13,10 @@ const service = axios.create({
   timeout: 50000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' },
 });
+
+function stringify (data: any) {
+  return qs.stringify(data, { allowDots: true, encode: false })
+}
 
 
 // 请求拦截器
@@ -26,6 +32,11 @@ service.interceptors.request.use(
 
     if (networkData.getToken() != undefined) {
       config.headers.Authorization = 'Bearer ' + networkData.getToken();
+    }
+
+    // json
+    if (!isEmpty(config.data.params)) {
+      config.url = config.url + '?' + stringify(config.data.params)
     }
 
     return config;

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { NETWORKCFG } from '@/net/NetworkCfg';
 import { Network } from "@/net/Network";
 import type * as VIP from "@/interface/vip";
+import { stringify } from 'querystring';
 
 
 export const vipStore = defineStore({
@@ -11,10 +12,14 @@ export const vipStore = defineStore({
     errMessage: '' as string,
 
     VIPRanks: [] as Array<string>,
+
     VIPManagementTableData: [] as Array<VIP.GetVIPManagementTableData>,
     VIPManagementBasicDetailData: {} as VIP.GetVIPManagementRankBasicDetailData,
     VIPManagementCodeRebateDetailData: {} as VIP.GetVIPManagementRankCodeRebateDetailData,
     VIPMAnagementClientLostRebateDetailData: {} as VIP.GetVIPMAnagementRankClientLostRebateDetailData,
+
+    VIPRankStatisticTableData: [] as Array<VIP.RankClientDistribution>,
+    VIPLevelStatisticTableData: [] as Array<VIP.LevelClientDistribution>,
 
   }),
   
@@ -23,10 +28,14 @@ export const vipStore = defineStore({
     getErrMessage: (state) => state.errMessage,
 
     getVIPRanks: (state) => state.VIPRanks,
+
     getVIPManagementTable: (state) => state.VIPManagementTableData,
     getVIPManagementBasicDetailData: (state) => state.VIPManagementBasicDetailData,
     getVIPManagementCodeRebateDetailData: (state) => state.VIPManagementCodeRebateDetailData,
     getVIPManagementClientLostRebateDetailData: (state) => state.VIPMAnagementClientLostRebateDetailData,
+
+    getVIPRankStatisticTableData: (state) => state.VIPRankStatisticTableData,
+    getVIPLevelStatisticTableData: (state) => state.VIPLevelStatisticTableData,
   },
 
   actions: {
@@ -35,6 +44,10 @@ export const vipStore = defineStore({
     },
     setErrorMessage(message: string) {
       this.errMessage = message
+    },
+
+    setVIPRanks(data:Array<string>) {
+      this.VIPRanks = data;
     },
 
     setVIPManagementTable(tableData: Array<VIP.GetVIPManagementTableData>) {
@@ -49,9 +62,15 @@ export const vipStore = defineStore({
     setVIPManagementClientLostRebateDetailData(data: VIP.GetVIPMAnagementRankClientLostRebateDetailData) {
       this.VIPMAnagementClientLostRebateDetailData = data
     },
-    setVIPRanks(data:Array<string>) {
-      this.VIPRanks = data;
+
+    setVIPRankStatisticTableData(data:Array<VIP.RankClientDistribution>){
+      this.VIPRankStatisticTableData = data
     },
+    setVIPLevelStatisticTableData(data:Array<VIP.LevelClientDistribution>){
+      this.VIPLevelStatisticTableData = data;
+    },
+
+
 
     //get VIPRanks Data
     async dispatchVIPRanks() {
@@ -179,6 +198,35 @@ export const vipStore = defineStore({
         }
       }
       await network.sendMsg(route, this.getVIPManagementClientLostRebateDetailData , next, 1);
+    },
+
+    //VIPRankStatisticTableData
+    async dispatchVIPRankStatisticTableData(form_data:any) {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPRankStatistic_Table;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.RankClientDistributionResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setVIPRankStatisticTableData(response.data);
+        }
+      }
+      await network.sendMsg(route, {params:form_data}, next, 1, 4);
+    },
+
+    async dispatchVIPLevelStatisticTableData(form_data:any) {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.VIP.VIPLevelStatistic_Table;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: VIP.LevelClientDistributionResponseData) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setVIPLevelStatisticTableData(response.data);
+        }
+      }
+      await network.sendMsg(route, {params:form_data}, next, 1, 4);
     },
 
   }

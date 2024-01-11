@@ -59,7 +59,6 @@ export class Network {
   public async sendMsg(route: string, msg: any, next: Function, type: SENDTYPE = SENDTYPE.SOCKET, requestType: SENDTYPE = SENDTYPE.POST) {
     // Build a contract structure
     let msgData = this.msgParsing(route, msg, type)
-
     switch (type) {
       case SENDTYPE.HTTP:
         switch (requestType) {

@@ -38,7 +38,7 @@ export const dashboardStore = defineStore({
           this.setPlatformOverview(response.data);
         }
       }
-      await network.sendMsg(route, {}, next, 1, 4);
+      await network.sendMsg(route, {params: {level: 3}}, next, 1, 4);
     },
   }
 })
