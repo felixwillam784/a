@@ -43,6 +43,13 @@ export namespace NETWORKCFG {
     static VIPLevelStatistic_Table: string = '/vip/level-count-list'
   }
 
+  export class AGENT {
+    static AGENT_LIST: string = '/agent/list';
+    static AGENT_DETAIL: string = '/agent/detail';
+    static AGENT_DELETE: string = '/agent/delete-relation';
+    static AGENT_RISK_CONTROL_STATUS_LIST = 'agent/risk-control/status-list'
+  }
+
   //Listening events sent actively
   export class UNSOLICITED {}
 }

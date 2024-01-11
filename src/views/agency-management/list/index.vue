@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import useStore from "@/store";
 
-const { user } = useStore();
+const { agent } = useStore();
 const router = useRouter();
 
 const dateRange = ref([
@@ -13,7 +13,24 @@ const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
 ]);
 
+const selectedAgentId = ref<number>();
+const remark = ref<string>("");
+
 const formData = ref<any>({
+  user_id: "",
+  email_address: "",
+  identity_information: "",
+  agent_status: "",
+  risk_control_status: "",
+  total_invite_count: "",
+  total_invite_count_operator_type: "",
+  level1_paid_user_count: "",
+  level1_paid_user_count_operator_type: "",
+  agent_betting_rebate_amount: "",
+  agent_betting_rebate_amount_operator_type: "",
+  start_date: "",
+  end_date: "",
+  invitee_comparator: "＞",
   pageNum: 1,
   pageSize: 20,
 });
@@ -47,40 +64,9 @@ const comparatorOptions = ref<Array<any>>([
   },
 ]);
 
-const agencyList = ref<Array<any>>([
-  {
-    item_1: "User001",
-    item_2: 9999,
-    item_3: 9999,
-    item_4: 9999,
-    item_5: 9999,
-    item_6: 9999,
-    item_7: 9999,
-    item_8: 9999,
-    item_9: 9999,
-    item_10: 9999,
-    item_11: 9999,
-    item_12: 9999,
-    item_13: 9999,
-    item_14: 9999,
-    item_15: 9999,
-    item_16: 9999,
-    item_17: 9999,
-    item_18: 9999,
-    item_19: 9999,
-    item_20: 9999,
-    item_21: 9999,
-    item_22: 9999,
-    item_23: 9999,
-    item_24: 9999,
-    item_25: 9999,
-    item_26: 9999,
-    item_27: 9999,
-    item_28: 9999,
-    item_29: 9999,
-    item_30: 9999,
-  },
-]);
+const agentList = computed(() => {
+  return agent.agentList;
+});
 
 const buttonIndex = ref<number>(1);
 
@@ -191,20 +177,41 @@ const handlePagination = () => {
   handleQuery();
 };
 
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[0] + " 23:59:59").valueOf();
+  await agent.dispatchAgentList(formData.value);
+  loading.value = false;
 };
 
 const resetQuery = () => {
   handleDateRange("this week");
 };
 
-const showAgencyTerminateDialog = () => {
+const showAgencyTerminateDialog = (id: number) => {
   agencyTerminateDialogVisible.value = true;
+  selectedAgentId.value = id;
 };
 
-onMounted(() => {
+const terminateAgent = async () => {
+  await agent.dispatchTerminateAgent({
+    user_id: selectedAgentId.value,
+    remarK: remark.value,
+  });
+  agencyTerminateDialogVisible.value = false;
+  loading.value = true;
+  await agent.dispatchAgentList(formData.value);
+  loading.value = false;
+};
+
+onMounted(async () => {
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[0] + " 23:59:59").valueOf();
+  loading.value = true;
   handleDateRange("this week");
+  await agent.dispatchAgentList(formData.value);
+  loading.value = false;
 });
 </script>
 
@@ -249,25 +256,25 @@ onMounted(() => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="代理状态" prop="user_id">
+                <el-form-item label="代理状态" prop="agent_status">
                   <el-select
-                    v-model="formData.user_id"
+                    v-model="formData.agent_status"
                     placeholder="请选择代理状态"
                     style="min-width: 252px"
                   >
                   </el-select>
                 </el-form-item>
-                <el-form-item label="风控状态" prop="user_id">
+                <el-form-item label="风控状态" prop="risk_control_status">
                   <el-select
-                    v-model="formData.user_id"
+                    v-model="formData.risk_control_status"
                     placeholder="请选择风控状态"
                     style="width: 252px"
                   >
                   </el-select>
                 </el-form-item>
-                <el-form-item label="总邀请人数" prop="invitee_total_number">
+                <el-form-item label="总邀请人数" prop="total_invite_count">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.total_invite_count"
                     placeholder="请输入总邀请人数"
                     class="input-with-select"
                   >
@@ -300,9 +307,9 @@ onMounted(() => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="一级付费人数" prop="invitee_total_number">
+                <el-form-item label="一级付费人数" prop="level1_paid_user_count">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.level1_paid_user_count"
                     placeholder="亲输入人数"
                     class="input-with-select"
                   >
@@ -322,9 +329,9 @@ onMounted(() => {
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="投注返佣金额" prop="invitee_total_number">
+                <el-form-item label="投注返佣金额" prop="agent_betting_rebate_amount">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.agent_betting_rebate_amount"
                     placeholder="请输入金额"
                     class="input-with-select"
                   >
@@ -431,145 +438,162 @@ onMounted(() => {
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="agencyList" style="width: 100%">
-            <el-table-column label="UserID" align="center" prop="item_1" width="160">
+          <el-table v-loading="loading" :data="agentList" style="width: 100%">
+            <el-table-column label="UserID" align="center" prop="user_id" width="160">
               <template #default="scope">
-                <el-link
-                  :underline="false"
-                  class="el-link-decoration"
-                >
-                  {{ scope.row.item_1 }}
+                <el-link :underline="false" class="el-link-decoration">
+                  {{ scope.row.user_id }}
                 </el-link>
               </template>
             </el-table-column>
             <el-table-column
               label="总充值金额"
               align="center"
-              prop="item_2"
+              prop="total_recharge_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_2 }}</p>
+                <p>{{ scope.row.total_recharge_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总提现金额"
               align="center"
-              prop="item_3"
+              prop="total_withdrawal_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_3 }}</p>
+                <p>{{ scope.row.total_withdrawal_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总邀请人数"
               align="center"
-              prop="item_4"
+              prop="total_invite_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_4 }}</p>
+                <p>{{ scope.row.total_invite_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级充提差"
               align="center"
-              prop="item_5"
+              prop="level1_charge_withdraw_difference"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_5 }}</p>
+                <p>{{ scope.row.level1_charge_withdraw_difference }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费金额"
               align="center"
-              prop="item_6"
+              prop="level1_payment_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_6 }}</p>
+                <p>{{ scope.row.level1_payment_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
-              label="一级提现金额"
+              label="总邀请人数"
               align="center"
-              prop="item_7"
+              prop="level1_withdrawal_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_7 }}</p>
+                <p>{{ scope.row.level1_withdrawal_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
-              label="投注返佣金额"
+              label="总邀请人数-操作符类型"
               align="center"
-              prop="item_8"
+              prop="agent_betting_rebate_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_8 }}</p>
+                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费人数"
               align="center"
-              prop="item_9"
+              prop="level1_paid_user_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_9 }}</p>
+                <p>{{ scope.row.level1_paid_user_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="风控代理人数"
               align="center"
-              prop="item_10"
+              prop="risk_control_agent_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_10 }}</p>
+                <p>{{ scope.row.risk_control_agent_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="代理平均充值"
               align="center"
-              prop="item_11"
+              prop="average_agent_recharge"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_11 }}</p>
+                <p>{{ scope.row.average_agent_recharge }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理成就奖励" align="center" prop="item_12" width="160">
+            <el-table-column
+              label="代理成就奖励"
+              align="center"
+              prop="agent_achievement_rewards"
+              width="160"
+            >
               <template #default="scope">
-                <p>{{ scope.row.item_12 }}</p>
+                <p>{{ scope.row.agent_achievement_rewards }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理邀请奖励" align="center" prop="item_13" width="160">
+            <el-table-column
+              label="代理邀请奖励"
+              align="center"
+              prop="agent_invitation_rewards"
+              width="160"
+            >
               <template #default="scope">
-                <p>{{ scope.row.item_13 }}%</p>
+                <p>{{ scope.row.agent_invitation_rewards }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="代理状态" align="center" prop="item_14" width="160">
+            <el-table-column
+              label="代理状态"
+              align="center"
+              prop="agent_status"
+              width="160"
+            >
               <template #default="scope">
-                <p>{{ scope.row.item_14 }}%</p>
+                <p>{{ scope.row.agent_status }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="账号风控状态" align="center" prop="item_15" width="160">
+            <el-table-column
+              label="账号风控状态"
+              align="center"
+              prop="account_risk_countrol_status"
+              width="160"
+            >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.account_risk_countrol_status }}</p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="200" fixed="right">
@@ -577,11 +601,20 @@ onMounted(() => {
                 <el-button
                   type="primary"
                   link
-                  @click="router.push({ name: 'AgentDetail' })"
+                  @click="
+                    router.push({
+                      name: 'AgentDetail',
+                      query: { user_id: scope.row.user_id },
+                    })
+                  "
                 >
                   详情
                 </el-button>
-                <el-button type="danger" link @click="showAgencyTerminateDialog">
+                <el-button
+                  type="danger"
+                  link
+                  @click="showAgencyTerminateDialog(scope.row.user_id)"
+                >
                   解除代理关系
                 </el-button>
               </template>
@@ -606,11 +639,11 @@ onMounted(() => {
           <h3>备注:</h3>
         </el-row>
         <el-form-item>
-          <el-input type="textarea" :rows="4" />
+          <el-input type="textarea" :rows="4" v-model="remark" />
         </el-form-item>
       </el-form>
       <el-footer class="text-center">
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="terminateAgent">确认</el-button>
         <el-button @click="agencyTerminateDialogVisible = false">取消</el-button>
       </el-footer>
     </el-dialog>
