@@ -34,8 +34,6 @@ service.interceptors.request.use(
       config.headers.Authorization = 'Bearer ' + networkData.getToken();
     }
 
-    console.log("1111111111", config.data);
-
     // json
     if (!isEmpty(config.data.params)) {
       config.url = config.url + '?' + stringify(config.data.params)

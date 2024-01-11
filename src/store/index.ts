@@ -6,6 +6,7 @@ import useTagsViewStore from './modules/tagsView';
 import { authStore } from './modules/auth';
 import { dashboardStore } from './modules/dashboard';
 import { vipStore } from './modules/vip';
+import { agentStore } from './modules/agent';
 
 const useStore = () => ({
   auth: authStore(),
@@ -16,6 +17,7 @@ const useStore = () => ({
   tagsView: useTagsViewStore(),
   dashboard: dashboardStore(),
   vip: vipStore(),
+  agent: agentStore(),
 });
 
 
