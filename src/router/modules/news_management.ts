@@ -28,7 +28,7 @@ const newsManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "platform",
-        component: () => import('@/views/event-management/active-management/index.vue'),
+        component: () => import('@/views/news-management/platform/index.vue'),
         name: "NewsPlatform",
         meta: {
             hidden: false,

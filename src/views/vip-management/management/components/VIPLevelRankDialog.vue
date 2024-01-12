@@ -9,7 +9,7 @@ const show_vip_rank_dialog = () => {
   vip_level_rank.value = true;
 };
 const vip_ranks = computed(() => {
-  return vip.getVIPRanks;
+  return vip.getVIPRanks?.map((item) => item.name);
 });
 
 const add_vip_rank = ref(false);
@@ -19,25 +19,24 @@ const operate_new_vip_rank = (op: boolean) => {
   add_vip_rank.value = op;
 };
 
-onMounted(()=>{
+onMounted(() => {
   vip.dispatchVIPRanks();
-})
+});
 
 defineExpose({
   show_vip_rank_dialog,
 });
 
 const ok_btn_clicked = () => {
-  if(add_vip_rank.value) {
+  if (add_vip_rank.value) {
     vip_ranks.value.push(new_vip_rank_txt.value);
     vip.dispatchUpdateVIPRanks();
   }
   vip_level_rank.value = false;
-
-}
+};
 const cancel_btn_clicked = () => {
   vip_level_rank.value = false;
-}
+};
 </script>
 
 <template>

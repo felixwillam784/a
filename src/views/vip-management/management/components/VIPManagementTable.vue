@@ -4,12 +4,6 @@ import useStore from "@/store";
 import { fa } from "element-plus/es/locale";
 
 const loading = ref<boolean>(false);
-const formData = ref<any>({
-  pageNum: 1,
-  pageSize: 20,
-});
-
-const total = ref<number>(2);
 
 const vipList = computed(() => {
   return vip.getVIPManagementTable;
@@ -118,14 +112,5 @@ onMounted(async () => {
         </template>
       </el-table-column>
     </el-table>
-
-    <div style="float: right">
-      <pagination
-        v-if="total > 0"
-        :total="total"
-        v-model:page="formData.pageNum"
-        v-model:limit="formData.pageSize"
-      />
-    </div>
   </el-card>
 </template>
