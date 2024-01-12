@@ -11,13 +11,17 @@ export const agentStore = defineStore({
     agentList: [] as Array<Agent.AgentListData>,
     agentData: {} as Agent.AgentDetailData,
     agentRiskControlStatusList: [] as Array<Agent.AgentRiskControlStatusData>,
+    agentRebateStatisticsData: {} as Agent.AgentRebateStatisticData,
+    agentStatisticReportList: [] as Array<Agent.AgentStatisticReportData>
   }),
   getters: {
     getSuccess: (state) => state.success,
     getErrMessage: (state) => state.errMessage,
     getAgentList: (state) => state.agentList,
     getAgentData: (state) => state.agentData,
-    getAgentRiskControlStatusList: (state) => state.agentRiskControlStatusList
+    getAgentRiskControlStatusList: (state) => state.agentRiskControlStatusList,
+    getAgentRebateStatisticsData: (state) => state.agentRebateStatisticsData,
+    getAgentStatisticReportList: (state) => state.agentStatisticReportList,
   },
   actions: {
     setSuccess(success: boolean) {
@@ -34,6 +38,12 @@ export const agentStore = defineStore({
     },
     setAgentRiskControlStatusList(agentRiskControlStatusList: Array<Agent.AgentRiskControlStatusData>) {
       this.agentRiskControlStatusList = agentRiskControlStatusList;
+    },
+    setAgentRebateStatisticsData(agentRebateStatisticsData: Agent.AgentRebateStatisticData) {
+      this.agentRebateStatisticsData = agentRebateStatisticsData
+    },
+    setAgentStatisticReportList(agentStatisticReportList: Array<Agent.AgentStatisticReportData>) {
+      this.agentStatisticReportList = agentStatisticReportList
     },
     // get agent list data
     async dispatchAgentList(formData: any) {
@@ -86,6 +96,47 @@ export const agentStore = defineStore({
         if (response.code == "00") {
           this.setSuccess(true);
           this.setAgentRiskControlStatusList(response.data);
+        }
+      }
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    // get agent rebate setting
+    async dispatchAgentRebateSetting(formData: Agent.AgentRebateSettingFormData) {
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_REBATE_SETTING;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentRebateSettingResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    },
+    // get agent rebate statistic data
+    async dispatchAgentRebateStatisticList(formData: any) {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_REBATE_STATISTIC_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentRebateStatisticsResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentRebateStatisticsData(response.data);
+        }
+      }
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    // get agent statistic report data
+    async dispatchAgentStatisticReportList(formData: any) {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_STATISTIC_REPORT_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentStatisticReportResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentStatisticReportList(response.data);
         }
       }
       await network.sendMsg(route, {params: formData}, next, 1, 4);
