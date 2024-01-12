@@ -1,3 +1,6 @@
+import { number } from "echarts";
+import { string } from "vue-types";
+
 export interface GetVIPManagementTableData {
   vip_level: number;
   vip_rank: string;
@@ -22,9 +25,13 @@ export type GetVIPManagementTableDataResponse = {
 }
 
 //VIPRank
+export interface GetVIPRanksData {
+  id:number,
+  name:string
+}
 export type GetVIPRanksDataResponse = {
   code: number | string
-  data: {data:Array<string>},
+  data: Array<GetVIPRanksData>,
   message: string
 }
 
