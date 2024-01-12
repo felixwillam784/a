@@ -11,7 +11,7 @@ export const vipStore = defineStore({
     success: false as boolean,
     errMessage: '' as string,
 
-    VIPRanks: [] as Array<string>,
+    VIPRanks: [] as Array<VIP.GetVIPRanksData>,
 
     VIPManagementTableData: [] as Array<VIP.GetVIPManagementTableData>,
     VIPManagementBasicDetailData: {} as VIP.GetVIPManagementRankBasicDetailData,
@@ -46,8 +46,9 @@ export const vipStore = defineStore({
       this.errMessage = message
     },
 
-    setVIPRanks(data:Array<string>) {
+    setVIPRanks(data:Array<VIP.GetVIPRanksData>) {
       this.VIPRanks = data;
+      console.log(data);
     },
 
     setVIPManagementTable(tableData: Array<VIP.GetVIPManagementTableData>) {
@@ -81,13 +82,14 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPRanksDataResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setVIPRanks(response.data.data);
+          this.setVIPRanks(response.data);
 
         }
       }
       await network.sendMsg(route, {}, next, 1, 4);
     },
     async dispatchUpdateVIPRanks() {
+      console.log(this.getVIPRanks);
       this.setSuccess(false);
       const route: string = NETWORKCFG.VIP.VIPUpdateRanks;
       const network: Network = Network.getInstance();

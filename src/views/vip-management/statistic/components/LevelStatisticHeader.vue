@@ -14,7 +14,7 @@ const formDataLevel = ref({
 });
 
 const vip_ranks = computed(() => {
-  return vip.getVIPRanks;
+  return vip.getVIPRanks?.map((item) => item.name);
 });
 
 const emit = defineEmits(["get_level_statistic_data"]);
