@@ -63,6 +63,67 @@ export interface AgentRiskControlStatusData {
     name: string
 }
 
+export interface AgentRebateSettingFormData {
+    agent_mode: number | string
+    level1_agent_rebate: number | string
+    level2_agent_rebate: number | string
+    level3_agent_rebate: number | string
+    rebate_mode: number | string
+    rebate_fund_time: number | string
+    rebate_fund_time_amount: number | string
+    rebate_order_time: number | string
+    rebate_order_time_amount: number | string
+    betting_odds: number | string
+}
+
+export interface AgentRebateStatisticList {
+    agent_withdraw_amount: number
+    agent_withdraw_count: number
+    agent_withdraw_user_count: number
+    date: number
+}
+
+export interface AgentRebateStatisticData {
+    agent_withdraw_total_amount: number
+    agent_withdraw_total_count: number
+    agent_withdraw_user_total_count: number
+    data_list: Array<AgentRebateStatisticList>
+}
+
+export interface AgentStatisticReportData {
+    date: number
+    day15_activity_rate: number
+    day30_activity_rate: number
+    day3_activity_rate: number
+    day7_activity_rate: number
+    new_achievement_reward: number
+    new_active_agent_count: number
+    new_agent_count: number
+    new_betting_rebate_amount: number
+    new_deposit_reward: number
+    new_level_deposit_withdraw_difference: number
+    new_level_payment_amount: number
+    new_level_payment_count: number
+    new_level_register_count: number
+    new_level_withdraw_amount: number
+    own_risk_control_agent_count: number
+    risk_control_agent_count: number
+    total_active_agent_count: number
+    total_agent_count: number
+}
+
+export type GetAgentStatisticReportResponse = {
+    code: number | string
+    data: Array<AgentStatisticReportData>
+    message: string
+}
+
+export type GetAgentRebateStatisticsResponse = {
+    code: number | string
+    data: AgentRebateStatisticData
+    message: string
+}
+
 export type GetAgentListDataResponse = {
     code: number | string
     data: Array<AgentListData>
@@ -70,6 +131,11 @@ export type GetAgentListDataResponse = {
 }
 
 export type GetAgentTerminateResponse = {
+    code: number | string
+    message: string
+}
+
+export type GetAgentRebateSettingResponse = {
     code: number | string
     message: string
 }

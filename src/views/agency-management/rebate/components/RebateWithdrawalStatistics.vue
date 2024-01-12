@@ -2,8 +2,13 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import moment from "moment-timezone";
+import useStore from "@/store";
+
+const { agent } = useStore();
 
 const formData = ref<any>({
+  start_date: 0,
+  end_date: 0,
   pageNum: 1,
   pageSize: 20,
 });
@@ -31,6 +36,10 @@ const firstLevelAgentList = ref<Array<any>>([
     item_4: 99999.99,
   },
 ]);
+
+const agentRebateStatisticsData = computed(() => {
+  return agent.getAgentRebateStatisticsData;
+});
 
 const buttonIndex = ref<number>(0);
 
@@ -137,13 +146,25 @@ const handleDateRange = (date: string) => {
   }
 };
 
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[1] + " 23:59:59").valueOf();
+  await agent.dispatchAgentRebateStatisticList(formData.value);
+  loading.value = false;
 };
 
 const resetQuery = () => {};
 
 const handlePagination = () => {};
+
+onMounted(async () => {
+  loading.value = true;
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[1] + " 23:59:59").valueOf();
+  await agent.dispatchAgentRebateStatisticList(formData.value);
+  loading.value = false;
+});
 </script>
 
 <template>
@@ -235,39 +256,60 @@ const handlePagination = () => {};
   </el-card>
   <div class="d-flex justify-end mt-4 rebate-withdrawal-statistics">
     <el-card>
-      <el-form-item label="总计提现总人数:">99999999</el-form-item>
+      <el-form-item label="总计提现总人数:">
+        {{ agentRebateStatisticsData.agent_withdraw_user_total_count }}
+      </el-form-item>
     </el-card>
     <el-card>
-      <el-form-item label="总计提现总次数:">9999999</el-form-item>
+      <el-form-item label="总计提现总次数:">
+        {{ agentRebateStatisticsData.agent_withdraw_total_count }}
+      </el-form-item>
     </el-card>
     <el-card>
-      <el-form-item label="总计提现金额:">999999999999</el-form-item>
+      <el-form-item label="总计提现金额:">
+        {{ agentRebateStatisticsData.agent_withdraw_total_amount }}
+      </el-form-item>
     </el-card>
   </div>
   <el-table
     v-loading="loading"
-    :data="firstLevelAgentList"
+    :data="agentRebateStatisticsData.data_list"
     style="width: 100%"
     class="mt-2"
   >
-    <el-table-column label="日期" align="center" prop="item_1">
+    <el-table-column label="日期" align="center" prop="date">
       <template #default="scope">
-        {{ scope.row.item_1 }}
+        {{ scope.row.date }}
       </template>
     </el-table-column>
-    <el-table-column label="代理提现人数" align="center" prop="item_2" sortable>
+    <el-table-column
+      label="代理提现人数"
+      align="center"
+      prop="agent_withdraw_user_count"
+      sortable
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_2 }}</p>
+        <p>{{ scope.row.agent_withdraw_user_count }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="代理提现次数" align="center" prop="item_3" sortable>
+    <el-table-column
+      label="代理提现次数"
+      align="center"
+      prop="agent_withdraw_count"
+      sortable
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_3 }}</p>
+        <p>{{ scope.row.agent_withdraw_count }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="代理提现金额" align="center" prop="item_4" sortable>
+    <el-table-column
+      label="代理提现金额"
+      align="center"
+      prop="agent_withdraw_amount"
+      sortable
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.agent_withdraw_amount }}</p>
       </template>
     </el-table-column>
   </el-table>
@@ -286,6 +328,7 @@ const handlePagination = () => {};
   .el-card__body {
     padding: 4px !important;
   }
+
   .el-form-item {
     margin-right: 0px !important;
     margin-bottom: 0px !important;

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import useStore from "@/store";
 
-const { user } = useStore();
+const { agent } = useStore();
 const router = useRouter();
 
 const dateRange = ref([
@@ -56,6 +56,10 @@ const agencyList = ref<Array<any>>([
     item_30: 9999,
   },
 ]);
+
+const agentStatisticReportList = computed(() => {
+  return agent.getAgentStatisticReportList;
+});
 
 const buttonIndex = ref<number>(1);
 
@@ -166,16 +170,25 @@ const handlePagination = () => {
   handleQuery();
 };
 
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[1] + " 23:59:59").valueOf();
+  await agent.dispatchAgentStatisticReportList(formData.value);
+  loading.value = false;
 };
 
 const resetQuery = () => {
   handleDateRange("this week");
 };
 
-onMounted(() => {
+onMounted(async () => {
   handleDateRange("this week");
+  loading.value = true;
+  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
+  formData.value.end_date = moment(dateRange.value[1] + " 23:59:59").valueOf();
+  await agent.dispatchAgentStatisticReportList(formData.value);
+  loading.value = false;
 });
 </script>
 
@@ -272,195 +285,206 @@ onMounted(() => {
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="agencyList" style="width: 100%">
-            <el-table-column label="时间" align="center" prop="item_1" width="160">
+          <el-table
+            v-loading="loading"
+            :data="agentStatisticReportList"
+            style="width: 100%"
+          >
+            <el-table-column label="时间" align="center" prop="date" width="160">
               <template #default="scope">
-                  {{ scope.row.item_1 }}
+                {{
+                  moment.unix(scope.row.date).tz("Asia/Hong_Kong").format("YYYY-MM-DD")
+                }}
               </template>
             </el-table-column>
             <el-table-column
               label="总代理数"
               align="center"
-              prop="item_2"
+              prop="total_agent_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_2 }}</p>
+                <p>{{ scope.row.total_agent_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总活跃代理数"
               align="center"
-              prop="item_3"
+              prop="total_active_agent_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_3 }}</p>
+                <p>{{ scope.row.total_active_agent_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增活跃代理数"
               align="center"
-              prop="item_4"
+              prop="new_active_agent_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_4 }}</p>
+                <p>{{ scope.row.new_active_agent_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增代理数"
               align="center"
-              prop="item_5"
+              prop="new_agent_count"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_5 }}</p>
+                <p>{{ scope.row.new_agent_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增一级付费金额"
               align="center"
-              prop="item_6"
+              prop="new_level_payment_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_6 }}</p>
+                <p>{{ scope.row.new_level_payment_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增一级提现金额"
               align="center"
-              prop="item_7"
+              prop="new_level_withdraw_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_7 }}</p>
+                <p>{{ scope.row.new_level_withdraw_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增一级充提差"
               align="center"
-              prop="item_8"
+              prop="new_level_deposit_withdraw_difference"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_8 }}</p>
+                <p>{{ scope.row.new_level_deposit_withdraw_difference }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增充值奖励"
               align="center"
-              prop="item_9"
+              prop="new_deposit_reward"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_9 }}</p>
+                <p>{{ scope.row.new_deposit_reward }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增成就奖励"
               align="center"
-              prop="item_10"
+              prop="new_achievement_reward"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_10 }}</p>
+                <p>{{ scope.row.new_achievement_reward }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增投注返佣金额"
               align="center"
-              prop="item_11"
+              prop="new_betting_rebate_amount"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_11 }}</p>
+                <p>{{ scope.row.new_betting_rebate_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增一级注册人数"
               align="center"
-              prop="item_12"
+              prop="new_level_register_count"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_12 }}</p>
+                <p>{{ scope.row.new_level_register_count }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="新增一级付费人数"
               align="center"
-              prop="item_13"
+              prop="new_level_payment_count"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_13 }}%</p>
+                <p>{{ scope.row.new_level_payment_count }}%</p>
               </template>
             </el-table-column>
-            <el-table-column label="风控代理数" align="center" prop="item_14" width="160">
+            <el-table-column
+              label="风控代理数"
+              align="center"
+              prop="risk_control_agent_count"
+              width="160"
+            >
               <template #default="scope">
-                <p>{{ scope.row.item_14 }}%</p>
+                <p>{{ scope.row.risk_control_agent_count }}%</p>
               </template>
             </el-table-column>
             <el-table-column
               label="自身风控代理数"
               align="center"
-              prop="item_15"
+              prop="own_risk_control_agent_count"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.own_risk_control_agent_count }}%</p>
               </template>
             </el-table-column>
             <el-table-column
               label="3日活跃率"
               align="center"
-              prop="item_15"
+              prop="day3_activity_rate"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.day3_activity_rate }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="7日活跃率"
               align="center"
-              prop="item_15"
+              prop="day7_activity_rate"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.day7_activity_rate }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="15日活跃率"
               align="center"
-              prop="item_15"
+              prop="day15_activity_rate"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.day15_activity_rate }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="30日活跃率"
               align="center"
-              prop="item_15"
+              prop="day30_activity_rate"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.item_15 }}%</p>
+                <p>{{ scope.row.day30_activity_rate }}</p>
               </template>
             </el-table-column>
           </el-table>
@@ -492,6 +516,7 @@ onMounted(() => {
 
   .input-with-select .el-input-group__prepend {
     background-color: var(--el-fill-color-blank);
+
     .el-select {
       .el-input {
         width: 60px;

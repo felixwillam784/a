@@ -44,10 +44,25 @@ export namespace NETWORKCFG {
   }
 
   export class AGENT {
+    // agent list api
     static AGENT_LIST: string = '/agent/list';
     static AGENT_DETAIL: string = '/agent/detail';
     static AGENT_DELETE: string = '/agent/delete-relation';
     static AGENT_RISK_CONTROL_STATUS_LIST = 'agent/risk-control/status-list'
+    
+    // agent channel api
+    static AGENT_CHANNEL_MANAGEMENT_LIST: string = '/agent/channel/management-list';
+    static AGENT_CHANNEL_LIST: string = '/agent/channel/agent-list';
+    static AGENT_CHANNEL_STATISTIC_LIST: string = '/agent/channel/statistic-list';
+    static AGENT_CHANNEL_CREATE_GROUP: string = '/agent/channel-group';
+    static AGENT_CHANNEL_UPDATE_GROUP: string = '/agent/channel-group/id1';
+
+    // agent rebate api
+    static AGENT_REBATE_SETTING: string = '/agent/rebate/setting';
+    static AGENT_REBATE_STATISTIC_LIST: string = '/agent/rebate/statistic-list';
+
+    // agent statistic report api
+    static AGENT_STATISTIC_REPORT_LIST = '/agent/statistic-report/list';
   }
 
   //Listening events sent actively

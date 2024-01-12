@@ -23,14 +23,13 @@ const formData = ref<any>({
   agent_status: "",
   risk_control_status: "",
   total_invite_count: "",
-  total_invite_count_operator_type: "",
+  total_invite_count_operator_type: 1,
   level1_paid_user_count: "",
-  level1_paid_user_count_operator_type: "",
+  level1_paid_user_count_operator_type: 1,
   agent_betting_rebate_amount: "",
-  agent_betting_rebate_amount_operator_type: "",
+  agent_betting_rebate_amount_operator_type: 1,
   start_date: "",
   end_date: "",
-  invitee_comparator: "＞",
   pageNum: 1,
   pageSize: 20,
 });
@@ -44,23 +43,23 @@ const agencyTerminateDialogVisible = ref<boolean>(false);
 const comparatorOptions = ref<Array<any>>([
   {
     label: "≥",
-    value: "≥",
+    value: 1,
   },
   {
     label: "＞",
-    value: "＞",
+    value: 2,
   },
   {
     label: "≤",
-    value: "≤",
+    value: 3,
   },
   {
     label: "＜",
-    value: "＜",
+    value: 4,
   },
   {
     label: "＝",
-    value: "＝",
+    value: 5,
   },
 ]);
 
@@ -208,6 +207,9 @@ const terminateAgent = async () => {
 onMounted(async () => {
   formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
   formData.value.end_date = moment(dateRange.value[0] + " 23:59:59").valueOf();
+  formData.value.agent_betting_rebate_amount = Number(
+    formData.value.agent_betting_rebate_amount
+  );
   loading.value = true;
   handleDateRange("this week");
   await agent.dispatchAgentList(formData.value);
@@ -280,7 +282,7 @@ onMounted(async () => {
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.invitee_comparator"
+                        v-model="formData.total_invite_count_operator_type"
                         style="width: 60px"
                       >
                         <el-option
@@ -315,7 +317,7 @@ onMounted(async () => {
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.invitee_comparator"
+                        v-model="formData.level1_paid_user_count_operator_type"
                         style="width: 60px"
                       >
                         <el-option
@@ -337,7 +339,7 @@ onMounted(async () => {
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.invitee_comparator"
+                        v-model="formData.agent_betting_rebate_amount_operator_type"
                         style="width: 60px"
                       >
                         <el-option
