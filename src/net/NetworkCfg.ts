@@ -63,6 +63,13 @@ export namespace NETWORKCFG {
 
     // agent statistic report api
     static AGENT_STATISTIC_REPORT_LIST = '/agent/statistic-report/list';
+
+    // agent invitaion reward api
+    static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward-list';
+    static AGENT_INVITAION_STATISTIC_LIST = '/agent/invitation/statistic-list';
+
+    // agent achievement reward api
+    static AGENT_ACHIEVEMENT_REWARD_LIST = '/agent/achievement/reward-list';
   }
 
   //Listening events sent actively

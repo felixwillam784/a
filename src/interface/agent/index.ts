@@ -112,6 +112,53 @@ export interface AgentStatisticReportData {
     total_agent_count: number
 }
 
+export interface AgentInvitationRewardData {
+    id: number
+    invite_reward_amount: number
+    maximum_invite_number: number
+    minimum_invite_number: number
+    required_code_magnification: number
+}
+
+export type GetAgentInvitationRewardListResponse = {
+    code: number | string
+    data: Array<AgentInvitationRewardData>
+    message: string
+}
+
+export interface AgentInvitationStatisticData {
+    condition_satisfaction_total_count: number
+    id: number
+    maximum_invite_number: number
+    minimum_invite_number: number
+    total_withdraw_amount: number
+}
+
+export interface AgentInvitationStatisticList {
+    total_invite_count: number
+    total_statisitc_withdrawal: number
+    data_list: Array<AgentInvitationStatisticData>
+}
+
+export interface AgentAchievementRewardData {
+    code_magnification: number
+    id: number
+    invite_number_condition: number
+    invite_reward_amount: number
+}
+
+export type GetAgentAchievementRewardListResponse = {
+    code: number | string
+    data: Array<AgentAchievementRewardData>
+    message: string
+}
+
+export type GetAgentInvitationStatisticListResponse = {
+    code: number | string
+    data: AgentInvitationStatisticList
+    message: string
+}
+
 export type GetAgentStatisticReportResponse = {
     code: number | string
     data: Array<AgentStatisticReportData>
