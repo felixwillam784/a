@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import useStore from "@/store";
 
 const { vip } = useStore();
@@ -18,10 +18,6 @@ const new_vip_rank_txt = ref("");
 const operate_new_vip_rank = (op: boolean) => {
   add_vip_rank.value = op;
 };
-
-onMounted(() => {
-  vip.dispatchVIPRanks();
-});
 
 defineExpose({
   show_vip_rank_dialog,
