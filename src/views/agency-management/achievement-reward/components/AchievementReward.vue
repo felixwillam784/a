@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, toRefs } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+import { type AgentAchievementRewardData } from "@/interface/agent";
 
 const props = defineProps<{
-  achievementRewardDialog: boolean;
-  achievementRewardCollectionDialog: boolean;
+  achievementRewardDialog: boolean
+  achievementRewardCollectionDialog: boolean
+  loading: boolean
+  agentAchievementRewardList: Array<AgentAchievementRewardData>
 }>();
-const { achievementRewardDialog, achievementRewardCollectionDialog } = toRefs(props);
+const { achievementRewardDialog, achievementRewardCollectionDialog, agentAchievementRewardList, loading } = toRefs(props);
 
 const emit = defineEmits<{
   (e: "closeAchievementRewardDialog"): void;
@@ -17,8 +20,6 @@ const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
 });
-
-const loading = ref<boolean>(false);
 
 const achievementRewardDialogVisible = ref<boolean>(false);
 
@@ -69,30 +70,28 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
 <template>
   <el-table
     v-loading="loading"
-    :data="firstLevelAgentList"
+    :data="agentAchievementRewardList"
     style="width: 100%"
     class="mt-2"
   >
-    <el-table-column label="ID" align="center" prop="item_1">
+    <el-table-column label="ID" align="center" prop="id">
       <template #default="scope">
-        <el-link :underline="false" class="el-link-decoration">
-          {{ scope.row.item_1 }}
-        </el-link>
+        {{ scope.row.id }}
       </template>
     </el-table-column>
-    <el-table-column label="邀请人数条件" align="center" prop="item_2">
+    <el-table-column label="邀请人数条件" align="center" prop="invite_number_condition">
       <template #default="scope">
-        <p>{{ scope.row.item_2 }}</p>
+        <p>{{ scope.row.invite_number_condition }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="邀请奖励金额" align="center" prop="item_3">
+    <el-table-column label="邀请奖励金额" align="center" prop="invite_reward_amount">
       <template #default="scope">
-        <p>{{ scope.row.item_3 }}</p>
+        <p>{{ scope.row.invite_reward_amount }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="打码倍率" align="center" prop="item_4">
+    <el-table-column label="打码倍率" align="center" prop="code_magnification">
       <template #default="scope">
-        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.code_magnification }}</p>
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center">

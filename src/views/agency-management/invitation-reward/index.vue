@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import InvitationReward from "./components/InvitationReward.vue";
 import InvitationStatistics from "./components/InvitationStatistics.vue";
 import moment from "moment-timezone";
 import { Search, Refresh } from "@element-plus/icons-vue";
+import useStore from "@/store";
 
 const router = useRouter();
+const { agent } = useStore();
 
 const activeIndex = ref<number>(0);
+const loading = ref<boolean>(false);
 
 const invitationRewardDialog = ref<boolean>(false);
 const invitationRewardCollectionDialog = ref<boolean>(false);
@@ -25,6 +28,14 @@ const handleBtnTab = (index: number) => {
 };
 
 const buttonIndex = ref<number>(0);
+
+const agentInvitationRewardList = computed(() => {
+  return agent.agentInvitationRewardList;
+});
+
+const agentInvitationStatisticList = computed(() => {
+  return agent.agentInvitaionStatisticList;
+});
 
 const handleDateRange = (date: string) => {
   switch (date) {
@@ -139,22 +150,34 @@ const invitationRewardDialogShow = () => {
 
 const invitationRewardCollectionDialogShow = () => {
   invitationRewardCollectionDialog.value = true;
-}
+};
 
 const closeInvitationRewardDialog = () => {
   invitationRewardDialog.value = false;
 };
 
 const closeInvitationRewardCollectionDialog = () => {
-  invitationRewardCollectionDialog.value = false
-}
+  invitationRewardCollectionDialog.value = false;
+};
+
+onMounted(async () => {
+  loading.value = true;
+  await agent.dispatchAgentInvitationReward();
+  await agent.dispatchAgentInvitationStatistic({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+  });
+  loading.value = false;
+});
 </script>
 
 <template>
   <div class="app-container">
     <el-card v-if="activeIndex == 0">
       <el-row class="justify-end">
-        <el-button @click="invitationRewardCollectionDialogShow">代理邀请奖励 领取设置</el-button>
+        <el-button @click="invitationRewardCollectionDialogShow"
+          >代理邀请奖励 领取设置</el-button
+        >
         <el-button @click="invitationRewardDialogShow">新增邀请奖励</el-button>
         <el-button>模板导出</el-button>
         <el-button>Excel导入</el-button>
@@ -273,10 +296,14 @@ const closeInvitationRewardCollectionDialog = () => {
           v-if="activeIndex == 1"
         >
           <el-card>
-            <el-form-item label="总计邀请人数:">99999999</el-form-item>
+            <el-form-item label="总计邀请人数:">
+              {{ agentInvitationStatisticList.total_invite_count }}
+            </el-form-item>
           </el-card>
           <el-card>
-            <el-form-item label="总计提现:">9999999</el-form-item>
+            <el-form-item label="总计提现:">
+              {{ agentInvitationStatisticList.total_statisitc_withdrawal }}
+            </el-form-item>
           </el-card>
         </div>
       </div>
@@ -285,10 +312,16 @@ const closeInvitationRewardCollectionDialog = () => {
           v-if="activeIndex == 0"
           :invitationRewardDialog="invitationRewardDialog"
           :invitationRewardCollectionDialog="invitationRewardCollectionDialog"
+          :loading="loading"
+          :agentInvitationRewardList="agentInvitationRewardList"
           @closeInvitationRewardDialog="closeInvitationRewardDialog"
           @closeInvitationRewardCollectionDialog="closeInvitationRewardCollectionDialog"
         />
-        <InvitationStatistics v-if="activeIndex == 1" />
+        <InvitationStatistics
+          v-if="activeIndex == 1"
+          :agentInvitationStatisticList="agentInvitationStatisticList"
+          :loading="loading"
+        />
       </div>
     </el-card>
   </div>
@@ -299,6 +332,7 @@ const closeInvitationRewardCollectionDialog = () => {
   .el-card__body {
     padding: 4px !important;
   }
+
   .el-form-item {
     margin-right: 0px !important;
     margin-bottom: 0px !important;

@@ -12,7 +12,10 @@ export const agentStore = defineStore({
     agentData: {} as Agent.AgentDetailData,
     agentRiskControlStatusList: [] as Array<Agent.AgentRiskControlStatusData>,
     agentRebateStatisticsData: {} as Agent.AgentRebateStatisticData,
-    agentStatisticReportList: [] as Array<Agent.AgentStatisticReportData>
+    agentStatisticReportList: [] as Array<Agent.AgentStatisticReportData>,
+    agentInvitationRewardList: [] as Array<Agent.AgentInvitationRewardData>,
+    agentInvitaionStatisticList: {} as Agent.AgentInvitationStatisticList,
+    agentAchievementRewardList: [] as Array<Agent.AgentAchievementRewardData>
   }),
   getters: {
     getSuccess: (state) => state.success,
@@ -22,6 +25,9 @@ export const agentStore = defineStore({
     getAgentRiskControlStatusList: (state) => state.agentRiskControlStatusList,
     getAgentRebateStatisticsData: (state) => state.agentRebateStatisticsData,
     getAgentStatisticReportList: (state) => state.agentStatisticReportList,
+    getAgentInvitaionRewardList: (state) => state.agentInvitationRewardList,
+    getAgentInvitationStatisticList: (state) => state.agentInvitaionStatisticList,
+    getAgentAchievementRewardList: (state) => state.agentAchievementRewardList,
   },
   actions: {
     setSuccess(success: boolean) {
@@ -44,6 +50,15 @@ export const agentStore = defineStore({
     },
     setAgentStatisticReportList(agentStatisticReportList: Array<Agent.AgentStatisticReportData>) {
       this.agentStatisticReportList = agentStatisticReportList
+    },
+    setAgentInvitaionRewardList(agentInvitaionRewardList: Array<Agent.AgentInvitationRewardData>) {
+      this.agentInvitationRewardList = agentInvitaionRewardList
+    },
+    setAgentInvitaionStatisticList(agentInvitaionStatisticList: Agent.AgentInvitationStatisticList) {
+      this.agentInvitaionStatisticList = agentInvitaionStatisticList
+    },
+    setAgentAchievementRewardList(agentAchievementRewardList: Array<Agent.AgentAchievementRewardData>) {
+      this.agentAchievementRewardList = agentAchievementRewardList
     },
     // get agent list data
     async dispatchAgentList(formData: any) {
@@ -140,6 +155,48 @@ export const agentStore = defineStore({
         }
       }
       await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    // get agent invitation reward data
+    async dispatchAgentInvitationReward() {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_INVITAION_REWARD_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentInvitationRewardListResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentInvitaionRewardList(response.data);
+        }
+      }
+      await network.sendMsg(route, {}, next, 1, 4);
+    },
+    // get agent statistic report data
+    async dispatchAgentInvitationStatistic(formData: any) {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_INVITAION_STATISTIC_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentInvitationStatisticListResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentInvitaionStatisticList(response.data);
+        }
+      }
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    // get agent achievement reward data
+    async dispatchAgentAchievementReward() {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_ACHIEVEMENT_REWARD_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentAchievementRewardListResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentAchievementRewardList(response.data);
+        }
+      }
+      await network.sendMsg(route, {}, next, 1, 4);
     },
   }
 })

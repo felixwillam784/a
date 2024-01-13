@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import useStore from "@/store";
 import VIPManagementTable from "./components/VIPManagementTable.vue";
 import VIPRankDialog from "./components/VIPLevelRankDialog.vue";
 import VIPRankDetailDialogBasicTab from "./components/VIPRankDetailDialogBasicTab.vue";
 import VIPRankDetailDialogCodeRebateTab from "./components/VIPRankDetailDialogCodeRebateTab.vue";
 import VIPRankDetailDialogClientLostRebateTab from "./components/VIPRankDetailDialogClientLostRebateTab.vue";
 
+const { vip } = useStore();
 const vipItemLevel = ref(-1);
 
 const vip_maintain_switch = ref(true);
@@ -17,6 +19,7 @@ const VIPClientLostRebateDetailDataRef = ref();
 
 // vip_rank_dialog
 const show_vip_rank_dialog = () => {
+  vip.dispatchVIPRanks();
   VIPRankDailogRef.value.show_vip_rank_dialog();
 };
 
@@ -33,25 +36,20 @@ const show_vip_rank_detail_dialog = (param: number) => {
 };
 
 const detail_dialog_ok_btn_clicked = () => {
-
-  if(tab_index.value == 0){
+  if (tab_index.value == 0) {
     VIPBasicDetailDataRef.value.update_basic_detail();
-  }
-
-  else if(tab_index.value == 1){
+  } else if (tab_index.value == 1) {
     VIPCodeRebateDetailDataRef.value.update_code_rebate_detail();
-  }
-
-  else if(tab_index.value == 2){
+  } else if (tab_index.value == 2) {
     VIPClientLostRebateDetailDataRef.value.update_client_lost_detail();
   }
 
   vip_rank_detail_dialog.value = false;
-}
+};
 
 const detail_dialog_cancel_btn_clicked = () => {
   vip_rank_detail_dialog.value = false;
-}
+};
 </script>
 
 <template>
@@ -115,7 +113,9 @@ const detail_dialog_cancel_btn_clicked = () => {
       />
       <template #footer>
         <div style="display: flex; justify-content: center">
-          <el-button type="primary" @click="detail_dialog_ok_btn_clicked()">确认</el-button>
+          <el-button type="primary" @click="detail_dialog_ok_btn_clicked()"
+            >确认</el-button
+          >
           <el-button @click="detail_dialog_cancel_btn_clicked()">取消</el-button>
         </div>
       </template>

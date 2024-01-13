@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import ConditionDialog from "./ConditionDlg.vue";
+
+const dialog_mode = ref(0);
+
+const set_dialog_mode = (op: number) => {
+  console.log(op);
+  dialog_mode.value = op;
+};
 
 const collapse_open = ref([0, 1, 2, 3, 4, 5, 6, 7]);
 
@@ -58,6 +65,10 @@ const ConditionDialogRef = ref();
 const show_condition_dialog = () => {
   ConditionDialogRef.value.show_dialog(true);
 };
+
+defineExpose({
+  set_dialog_mode,
+});
 </script>
 
 <template>
@@ -87,6 +98,18 @@ const show_condition_dialog = () => {
               >+</el-button
             >
           </div>
+          <el-select
+            placeholder="请选择发送商户"
+            style="width: 20%"
+            v-if="dialog_mode != 0"
+          >
+            <el-option
+              v-for="(jtem, j) in type_options"
+              :label="jtem"
+              :value="j + 1"
+              :key="j"
+            ></el-option>
+          </el-select>
           <el-date-picker
             style="width: 20%"
             type="daterange"

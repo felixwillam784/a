@@ -48,7 +48,6 @@ export const vipStore = defineStore({
 
     setVIPRanks(data:Array<VIP.GetVIPRanksData>) {
       this.VIPRanks = data;
-      console.log(data);
     },
 
     setVIPManagementTable(tableData: Array<VIP.GetVIPManagementTableData>) {
