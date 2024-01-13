@@ -22,21 +22,6 @@ const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
 ]);
 
-const firstLevelAgentList = ref<Array<any>>([
-  {
-    item_1: "2023-12-20",
-    item_2: 100,
-    item_3: 100,
-    item_4: 99999.99,
-  },
-  {
-    item_1: "2023-12-20",
-    item_2: 100,
-    item_3: 100,
-    item_4: 99999.99,
-  },
-]);
-
 const agentRebateStatisticsData = computed(() => {
   return agent.getAgentRebateStatisticsData;
 });

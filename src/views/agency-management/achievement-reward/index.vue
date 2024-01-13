@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import AchievementReward from "./components/AchievementReward.vue";
 import AchievementStatistics from "./components/AchievementStatistics.vue";
@@ -7,10 +7,14 @@ import StageReward from "./components/StageReward.vue";
 import StageStatistics from "./components/StageStatistics.vue";
 import moment from "moment-timezone";
 import { Search, Refresh } from "@element-plus/icons-vue";
+import useStore from "@/store";
 
 const router = useRouter();
+const { agent } = useStore();
 
 const activeIndex = ref<number>(0);
+
+const loading = ref<boolean>(false);
 
 const achievementRewardDialog = ref<boolean>(false);
 const achievementRewardCollectionDialog = ref<boolean>(false);
@@ -27,6 +31,10 @@ const handleBtnTab = (index: number) => {
 };
 
 const buttonIndex = ref<number>(0);
+
+const agentAchievementRewardList = computed(() => {
+  return agent.getAgentAchievementRewardList;
+});
 
 const handleDateRange = (date: string) => {
   switch (date) {
@@ -150,6 +158,12 @@ const closeAchievementRewardDialog = () => {
 const closeAchievementRewardCollectionDialog = () => {
   achievementRewardCollectionDialog.value = false;
 };
+
+onMounted(async () => {
+  loading.value = true;
+  await agent.dispatchAgentAchievementReward();
+  loading.value = false;
+});
 </script>
 
 <template>
@@ -297,6 +311,8 @@ const closeAchievementRewardCollectionDialog = () => {
           v-if="activeIndex == 0"
           :achievementRewardDialog="achievementRewardDialog"
           :achievementRewardCollectionDialog="achievementRewardCollectionDialog"
+          :agentAchievementRewardList="agentAchievementRewardList"
+          :loading="loading"
           @closeAchievementRewardDialog="closeAchievementRewardDialog"
           @closeAchievementRewardCollectionDialog="closeAchievementRewardCollectionDialog"
         />
@@ -319,6 +335,7 @@ const closeAchievementRewardCollectionDialog = () => {
   .el-card__body {
     padding: 4px !important;
   }
+
   .el-form-item {
     margin-right: 0px !important;
     margin-bottom: 0px !important;
