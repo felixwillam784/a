@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, setTransitionHooks } from "vue";
 import Setting from "./components/setting.vue";
+import ChannelSetting from "./components/channelSetting.vue";
 
 const tab_index = ref(0);
+
+const SettingRef = ref();
+const ChannelSettingRef = ref();
+
 const select_tab = (index: number) => {
   tab_index.value = index;
+  SettingRef.value.set_dialog_mode(index);
+  ChannelSettingRef.value.set_dialog_mode(index - 1);
+};
+const show_channel_setting = () => {
+  ChannelSettingRef.value.show_dialog(true);
 };
 </script>
 <template>
@@ -22,11 +32,14 @@ const select_tab = (index: number) => {
         >
       </div>
       <div>
-        <el-button>更换渠道</el-button>
+        <el-button v-if="tab_index != 0" @click="show_channel_setting"
+          >更换渠道</el-button
+        >
         <el-button>Excel导入</el-button>
         <el-button>Excel导出</el-button>
       </div>
     </el-row>
-    <Setting />
+    <Setting ref="SettingRef" />
+    <ChannelSetting ref="ChannelSettingRef" />
   </div>
 </template>
