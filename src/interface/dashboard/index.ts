@@ -16,6 +16,24 @@ export interface PlatformOverviewData {
     recharge_code_rate: number | string
 }
 
+export interface StatisticsChartData {
+    date: string
+    visitor_rate: number
+}
+
+export interface StatisticsChartList {
+    total_active_user_count: Array<StatisticsChartData>
+    total_realtime_online_count: Array<StatisticsChartData>
+    total_recharge_count: Array<StatisticsChartData>
+    total_visit_count: Array<StatisticsChartData>
+}
+
+export type GetStatisticsChartListResponse = {
+    code: number | string
+    data: StatisticsChartList
+    message: string
+}
+
 export type GetPlatformOverviewResponse = {
     code: number | string
     data: PlatformOverviewData

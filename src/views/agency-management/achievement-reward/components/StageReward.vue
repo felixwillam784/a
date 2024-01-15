@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, toRefs } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+import useStore from "@/store";
+
+const { agent } = useStore();
 
 const props = defineProps<{
   achievementRewardDialog: boolean;
@@ -26,16 +29,11 @@ const achievementRewardCollectionDialogVisible = ref<boolean>(false);
 
 const total_count = ref<number>(0);
 
-const firstLevelAgentList = ref<Array<any>>([
-  {
-    item_1: 1,
-    item_2: 9999,
-    item_3: 9999,
-    item_4: 9999,
-  },
-]);
-
 const dialogTitle = ref<string>("新增代理成就阶段成就");
+
+const agentAchievementStageRewardList = computed(() => {
+  return agent.getAgentAchievementStageRewardList;
+});
 
 const handlePagination = () => {};
 
@@ -64,35 +62,43 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     emit("closeAchievementRewardCollectionDialog");
   }
 });
+
+onMounted(async () => {
+  loading.value = true;
+  await agent.dispatchAgentAchievementStageRewardList();
+  loading.value = false;
+});
 </script>
 
 <template>
   <el-table
     v-loading="loading"
-    :data="firstLevelAgentList"
+    :data="agentAchievementStageRewardList"
     style="width: 100%"
     class="mt-2"
   >
-    <el-table-column label="ID" align="center" prop="item_1">
+    <el-table-column label="ID" align="center" prop="id">
       <template #default="scope">
-        <el-link :underline="false" class="el-link-decoration">
-          {{ scope.row.item_1 }}
-        </el-link>
+        {{ scope.row.id }}
       </template>
     </el-table-column>
-    <el-table-column label="完成成就的个数" align="center" prop="item_2">
+    <el-table-column
+      label="完成成就的个数"
+      align="center"
+      prop="completed_achievement_count"
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_2 }}</p>
+        <p>{{ scope.row.completed_achievement_count }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="阶段奖励金额" align="center" prop="item_3">
+    <el-table-column label="阶段奖励金额" align="center" prop="stage_reward_amount">
       <template #default="scope">
-        <p>{{ scope.row.item_3 }}</p>
+        <p>{{ scope.row.stage_reward_amount }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="打码倍率" align="center" prop="item_4">
+    <el-table-column label="打码倍率" align="center" prop="code_magnification">
       <template #default="scope">
-        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.code_magnification }}</p>
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center">
@@ -181,9 +187,11 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
   margin-bottom: 10px;
   align-items: center;
   height: 50px;
+
   .el-form-item--default {
     margin-bottom: 0px !important;
   }
+
   .el-form-item__label {
     font-size: 16px;
     font-weight: 700;
