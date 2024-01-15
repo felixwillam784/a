@@ -15,7 +15,10 @@ export const agentStore = defineStore({
     agentStatisticReportList: [] as Array<Agent.AgentStatisticReportData>,
     agentInvitationRewardList: [] as Array<Agent.AgentInvitationRewardData>,
     agentInvitaionStatisticList: {} as Agent.AgentInvitationStatisticList,
-    agentAchievementRewardList: [] as Array<Agent.AgentAchievementRewardData>
+    agentAchievementRewardList: [] as Array<Agent.AgentAchievementRewardData>,
+    agentAchievementStageRewardList: [] as Array<Agent.AgentAchievementStageRewardData>,
+    agentAchievementStatisticList: {} as Agent.AgentAchievementStatisticList,
+    agentAchievementStageStatisticList: {} as Agent.AgentAchievementStageStatisticList,
   }),
   getters: {
     getSuccess: (state) => state.success,
@@ -28,6 +31,9 @@ export const agentStore = defineStore({
     getAgentInvitaionRewardList: (state) => state.agentInvitationRewardList,
     getAgentInvitationStatisticList: (state) => state.agentInvitaionStatisticList,
     getAgentAchievementRewardList: (state) => state.agentAchievementRewardList,
+    getAgentAchievementStageRewardList: (state) => state.agentAchievementStageRewardList,
+    getAgentAchievementStatisticList: (state) => state.agentAchievementStatisticList,
+    getAgentAchievementStageStatisticList: (state) => state.agentAchievementStageStatisticList,
   },
   actions: {
     setSuccess(success: boolean) {
@@ -59,6 +65,15 @@ export const agentStore = defineStore({
     },
     setAgentAchievementRewardList(agentAchievementRewardList: Array<Agent.AgentAchievementRewardData>) {
       this.agentAchievementRewardList = agentAchievementRewardList
+    },
+    setAgentAchievementStageRewardList(agentAchievementStageRewardList: Array<Agent.AgentAchievementStageRewardData>) {
+      this.agentAchievementStageRewardList = agentAchievementStageRewardList
+    },
+    setAgentAchievementStatisticList(agentAchievementStatisticList: Agent.AgentAchievementStatisticList) {
+      this.agentAchievementStatisticList = agentAchievementStatisticList
+    },
+    setAgentAchievementStageStatisticList(agentAchievementStageStatisticList: Agent.AgentAchievementStageStatisticList) {
+      this.agentAchievementStageStatisticList = agentAchievementStageStatisticList
     },
     // get agent list data
     async dispatchAgentList(formData: any) {
@@ -185,7 +200,7 @@ export const agentStore = defineStore({
       await network.sendMsg(route, {params: formData}, next, 1, 4);
     },
     // get agent achievement reward data
-    async dispatchAgentAchievementReward() {      
+    async dispatchAgentAchievementRewardList() {
       this.setSuccess(false);
       const route: string = NETWORKCFG.AGENT.AGENT_ACHIEVEMENT_REWARD_LIST;
       const network: Network = Network.getInstance();
@@ -197,6 +212,48 @@ export const agentStore = defineStore({
         }
       }
       await network.sendMsg(route, {}, next, 1, 4);
+    },
+    // get agent achievement reward data
+    async dispatchAgentAchievementStageRewardList() {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_ACHIEVEMENT_STAGE_REWARD_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentAchievementStageRewardResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentAchievementStageRewardList(response.data);
+        }
+      }
+      await network.sendMsg(route, {}, next, 1, 4);
+    },
+    // get agent achievement reward data
+    async dispatchAgentAchievementStatisticList(formData: any) {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_ACHIEVEMENT_STATISTIC_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentAchievementStatisticListResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentAchievementStatisticList(response.data);
+        }
+      }
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    // get agent achievement reward data
+    async dispatchAgentAchievementStageStatisticList(formData: any) {      
+      this.setSuccess(false);
+      const route: string = NETWORKCFG.AGENT.AGENT_ACHIEVEMENT_STAGE_STATISTIC_LIST;
+      const network: Network = Network.getInstance();
+      // response call back function
+      const next = (response: Agent.GetAgentAchievementStageStatisticResponse) => {
+        if (response.code == "00") {
+          this.setSuccess(true);
+          this.setAgentAchievementStageStatisticList(response.data);
+        }
+      }
+      await network.sendMsg(route, {paramas: formData}, next, 1, 4);
     },
   }
 })

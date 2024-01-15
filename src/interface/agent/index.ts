@@ -147,6 +147,57 @@ export interface AgentAchievementRewardData {
     invite_reward_amount: number
 }
 
+export interface AgentAchievementStageRewardData {
+    id: number
+    code_magnification: number
+    completed_achievement_count: number
+    stage_reward_amount: number
+}
+
+export interface AgentAchievementStatisticData {
+    id: number
+    condition_meet_total_count: number
+    invite_number_condition: number
+    total_withdraw_amount: number
+}
+
+export interface AgentAchievementStatisticList {
+    meet_condition_total_count: number
+    total_withdrawal_amount: number
+    data_list: Array<AgentAchievementStatisticData>
+}
+
+export interface AgentAchievementStageStatisticData {
+    id: number
+    receive_stage_reward_count: number
+    receiver_total_count: number
+    total_withdraw_amount: number
+}
+
+export interface AgentAchievementStageStatisticList {
+    data_list: Array<AgentAchievementStageStatisticData>
+    meet_condition_total_count: number
+    total_withdrawal_amount: number
+}
+
+export type GetAgentAchievementStageStatisticResponse = {
+    code: number | string
+    data: AgentAchievementStageStatisticList
+    message: string
+}
+
+export type GetAgentAchievementStatisticListResponse = {
+    code: number | string
+    data: AgentAchievementStatisticList
+    message: string
+}
+
+export type GetAgentAchievementStageRewardResponse = {
+    code: number | string
+    data: Array<AgentAchievementStageRewardData>
+    message: string
+}
+
 export type GetAgentAchievementRewardListResponse = {
     code: number | string
     data: Array<AgentAchievementRewardData>

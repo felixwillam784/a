@@ -1,61 +1,63 @@
 import { deepEqual } from 'assert'; import { deepEqual } from 'assert';
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, toRefs } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import moment from "moment-timezone";
+import { type AgentAchievementStageStatisticList } from "@/interface/agent";
+
+const props = defineProps<{ agentAchievementStageStatisticList: AgentAchievementStageStatisticList, loading: boolean }>()
+
+const { agentAchievementStageStatisticList, loading } = toRefs(props);
 
 const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
 });
 
-const loading = ref<boolean>(false);
-
 const total_count = ref<number>(0);
 
-const firstLevelAgentList = ref<Array<any>>([
-  {
-    item_1: 1,
-    item_2: 100,
-    item_3: 100,
-    item_4: 99999.99,
-  },
-  {
-    item_1: 1,
-    item_2: 100,
-    item_3: 100,
-    item_4: 99999.99,
-  },
-]);
-
-const handlePagination = () => {};
+const handlePagination = () => { };
 </script>
 
 <template>
   <el-table
     v-loading="loading"
-    :data="firstLevelAgentList"
+    :data="agentAchievementStageStatisticList.data_list"
     style="width: 100%"
     class="mt-2 invitation-reward-statistics-table"
   >
-    <el-table-column label="ID" align="center" prop="item_1">
+    <el-table-column label="ID" align="center" prop="id">
       <template #default="scope">
-        {{ scope.row.item_1 }}
+        {{ scope.row.id }}
       </template>
     </el-table-column>
-    <el-table-column label="领取阶段奖励个数" align="center" prop="item_2">
+    <el-table-column
+      label="领取阶段奖励个数"
+      align="center"
+      prop="receive_stage_reward_count"
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_2 }}</p>
+        <p>{{ scope.row.receive_stage_reward_count }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="领取总人数" align="center" prop="item_3" sortable>
+    <el-table-column
+      label="领取总人数"
+      align="center"
+      prop="receiver_total_count"
+      sortable
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_3 }}</p>
+        <p>{{ scope.row.receiver_total_count }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="提现总金额" align="center" prop="item_4" sortable>
+    <el-table-column
+      label="提现总金额"
+      align="center"
+      prop="total_withdraw_amount"
+      sortable
+    >
       <template #default="scope">
-        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.total_withdraw_amount }}</p>
       </template>
     </el-table-column>
   </el-table>
@@ -69,5 +71,4 @@ const handlePagination = () => {};
   </div>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
