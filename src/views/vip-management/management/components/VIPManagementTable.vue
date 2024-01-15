@@ -6,12 +6,12 @@ import { fa } from "element-plus/es/locale";
 const loading = ref<boolean>(false);
 
 const vipList = computed(() => {
-  return vip.getVIPManagementTable;
+  return vip.getVIPLevelData;
 });
 const { vip } = useStore();
 onMounted(async () => {
   loading.value = true;
-  await vip.dispatchVIPManagementTable();
+  await vip.dispatchVIPLevel();
   loading.value = false;
 });
 </script>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import useStore from "@/store";
+import type * as VIP from "@/interface/vip";
 
 const { vip } = useStore();
 
@@ -8,10 +9,19 @@ const vip_level_rank = ref(false);
 const show_vip_rank_dialog = () => {
   vip_level_rank.value = true;
 };
-const vip_ranks = computed(() => {
+
+const vip_ranks_datas = computed(() => {
   return vip.getVIPRanks?.map((item) => item.name);
 });
 
+const vip_ranks = ref<Array<string>>([]);
+
+const handle_dialog_opened = () => {
+  vip_ranks.value.length = 0;
+  vip_ranks_datas.value.forEach((element) => {
+    vip_ranks.value?.push(element);
+  });
+};
 const add_vip_rank = ref(false);
 const new_vip_rank_txt = ref("");
 
@@ -26,8 +36,14 @@ defineExpose({
 const ok_btn_clicked = () => {
   if (add_vip_rank.value) {
     vip_ranks.value.push(new_vip_rank_txt.value);
-    vip.dispatchUpdateVIPRanks();
   }
+
+  let param_data: Array<VIP.GetVIPRanksData> = [];
+  for (let i = 0; i < vip_ranks.value.length; i++) {
+    param_data.push({ id: i + 1, name: vip_ranks.value[i] });
+  }
+  vip.setVIPRanks(param_data);
+  vip.dispatchUpdateVIPRanks();
   vip_level_rank.value = false;
 };
 const cancel_btn_clicked = () => {
@@ -36,7 +52,12 @@ const cancel_btn_clicked = () => {
 </script>
 
 <template>
-  <el-dialog v-model="vip_level_rank" title="VIP段位">
+  <el-dialog
+    v-model="vip_level_rank"
+    title="VIP段位"
+    @opened="handle_dialog_opened"
+    align-center
+  >
     <div style="margin-bottom: 200px">
       <div v-for="(item, index) in vip_ranks" :key="index" class="dl_row">
         <p>

@@ -25,18 +25,7 @@ export namespace NETWORKCFG {
     static VIPRanks: string = '/vip/rank/list'
     static VIPUpdateRanks: string = '/vip/rank/update'
 
-    static VIPMANAGEMENT_TABLE: string = '/vip/list' // Vip Management getlist api
-    //VIPManagement BasicDetail data
-    static VIPMANAGEMENT_BASIC_DETAIL: string = '/vip/detail/basic-detail'
-    static VIPMANAGEMENT_UPDATE_BASIC_DETAIL: string = '/vip/update/basic-detail'
-
-    //VIPManagement CodeRebate Data
-    static VIPMANAGEMENT_CODE_REBATE_DETAIL: string = '/vip/detail/code-rebate-setting'
-    static VIPMANAGEMENT_UPDATE_CODE_REBATE_DETAIL: string = '/vip/update/code-rebate-setting'
-
-    //VIPManagement ClientLostRebate Data
-    static VIPMANAGEMENT_CLIENT_LOST_REBATE_DETAIL: string = '/vip/detail/client-lost-rebate-setting'
-    static VIPMANAGEMENT_UPDATE_CLIENT_LOST_REBATE_DETAIL: string = '/vip/update/client-lost-rebate-setting'
+    static VIPMANAGEMENT_TABLE: string = '/vip/level/list' // Vip Management getlist api
 
     //StatisticDatas
     static VIPRankStatistic_Table: string = '/vip/rank-count-list'

@@ -12,11 +12,7 @@ export const vipStore = defineStore({
     errMessage: '' as string,
 
     VIPRanks: [] as Array<VIP.GetVIPRanksData>,
-
-    VIPManagementTableData: [] as Array<VIP.GetVIPManagementTableData>,
-    VIPManagementBasicDetailData: {} as VIP.GetVIPManagementRankBasicDetailData,
-    VIPManagementCodeRebateDetailData: {} as VIP.GetVIPManagementRankCodeRebateDetailData,
-    VIPMAnagementClientLostRebateDetailData: {} as VIP.GetVIPMAnagementRankClientLostRebateDetailData,
+    VIPLevelData: [] as Array<VIP.GetVIPLevelData>,
 
     VIPRankStatisticTableData: [] as Array<VIP.RankClientDistribution>,
     VIPLevelStatisticTableData: [] as Array<VIP.LevelClientDistribution>,
@@ -29,13 +25,11 @@ export const vipStore = defineStore({
 
     getVIPRanks: (state) => state.VIPRanks,
 
-    getVIPManagementTable: (state) => state.VIPManagementTableData,
-    getVIPManagementBasicDetailData: (state) => state.VIPManagementBasicDetailData,
-    getVIPManagementCodeRebateDetailData: (state) => state.VIPManagementCodeRebateDetailData,
-    getVIPManagementClientLostRebateDetailData: (state) => state.VIPMAnagementClientLostRebateDetailData,
+    getVIPLevelData:(state) => state.VIPLevelData,
 
     getVIPRankStatisticTableData: (state) => state.VIPRankStatisticTableData,
     getVIPLevelStatisticTableData: (state) => state.VIPLevelStatisticTableData,
+
   },
 
   actions: {
@@ -50,17 +44,8 @@ export const vipStore = defineStore({
       this.VIPRanks = data;
     },
 
-    setVIPManagementTable(tableData: Array<VIP.GetVIPManagementTableData>) {
-      this.VIPManagementTableData = tableData
-    },
-    setVIPManagementBasicDetailData(data: VIP.GetVIPManagementRankBasicDetailData) {
-      this.VIPManagementBasicDetailData = data
-    },
-    setVIPManagementCodeRebateDetailData(data: VIP.GetVIPManagementRankCodeRebateDetailData) {
-      this.VIPManagementCodeRebateDetailData = data
-    },
-    setVIPManagementClientLostRebateDetailData(data: VIP.GetVIPMAnagementRankClientLostRebateDetailData) {
-      this.VIPMAnagementClientLostRebateDetailData = data
+    setVIPLevelData(data:Array<VIP.GetVIPLevelData>){
+      this.VIPLevelData = data;
     },
 
     setVIPRankStatisticTableData(data:Array<VIP.RankClientDistribution>){
@@ -98,108 +83,24 @@ export const vipStore = defineStore({
           this.setSuccess(true);
         }
       }
-      await network.sendMsg(route, {data:this.getVIPRanks}, next, 1);
+      await network.sendMsg(route, this.getVIPRanks, next, 1);
     },
 
-    // get table data
-    async dispatchVIPManagementTable() {
+    //VIPLevel
+    async dispatchVIPLevel() {
       this.setSuccess(false);
       const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_TABLE;
       const network: Network = Network.getInstance();
       // response call back function
-      const next = (response: VIP.GetVIPManagementTableDataResponse) => {
+      const next = (response: VIP.GetVIPLevelResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setVIPManagementTable(response.data);
-
+          this.setVIPLevelData(response.data);
         }
       }
-      await network.sendMsg(route, {}, next, 1, 4);
+      await network.sendMsg(route, {params:{page_num:1, page_size:99999}}, next, 1, 4);
     },
 
-    // basic detail data
-    async dispatchVIPManagementBasicDetailData(vip_level:number) {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_BASIC_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.GetVIPManagementRankBasicDetailDataResponse) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-          this.setVIPManagementBasicDetailData(response.data);
-
-        }
-      }
-      await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
-    },
-    async dispatchUpdateVIPManagementBasicDetailData() {
-      console.log(this.getVIPManagementBasicDetailData);
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_BASIC_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.ResponseData) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-        }
-      }
-      await network.sendMsg(route, this.getVIPManagementBasicDetailData, next, 1);
-    },
-
-    // code rebate detail data
-    async dispatchVIPManagementCodeRebateDetailData(vip_level:number) {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_CODE_REBATE_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.GetVIPManagementRankCodeRebateDetailDataResponse) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-          this.setVIPManagementCodeRebateDetailData(response.data);
-        }
-      }
-      await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
-    },
-    async dispatchUpdateVIPManagementCodeRebateDetailData() {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_CODE_REBATE_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.ResponseData) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-        }
-      }
-      console.log(this.getVIPManagementCodeRebateDetailData);
-      await network.sendMsg(route, this.getVIPManagementCodeRebateDetailData, next, 1);
-    },
-
-    //client lost rebate detail data
-    async dispatchVIPManagementClientLostRebateDetailData(vip_level:number) {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_CLIENT_LOST_REBATE_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.GetVIPMAnagementRankClientLostRebateDetailDataResponse) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-          this.setVIPManagementClientLostRebateDetailData(response.data);
-        }
-      }
-      await network.sendMsg(route, {'vip_level':vip_level}, next, 1, 4);
-    },
-    async dispatchUpdateVIPManagementClientLostRebateDetailData() {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.VIP.VIPMANAGEMENT_UPDATE_CLIENT_LOST_REBATE_DETAIL;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: VIP.ResponseData) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-        }
-      }
-      await network.sendMsg(route, this.getVIPManagementClientLostRebateDetailData , next, 1);
-    },
 
     //VIPRankStatisticTableData
     async dispatchVIPRankStatisticTableData(form_data:any) {
