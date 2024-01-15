@@ -26,14 +26,37 @@ const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
 ]);
 
-const handleBtnTab = (index: number) => {
+const handleBtnTab = async (index: number) => {
   activeIndex.value = index;
+  loading.value = true;
+  if (activeIndex.value == 0) {
+    await agent.dispatchAgentAchievementRewardList();
+  } else if (activeIndex.value == 1) {
+    await agent.dispatchAgentAchievementStatisticList({
+      start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+      end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+    });
+  } else if (activeIndex.value == 2) {
+    await agent.dispatchAgentAchievementStageStatisticList({
+      start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+      end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+    });
+  }
+  loading.value = false;
 };
 
 const buttonIndex = ref<number>(0);
 
 const agentAchievementRewardList = computed(() => {
   return agent.getAgentAchievementRewardList;
+});
+
+const agentAchievementStatisticList = computed(() => {
+  return agent.getAgentAchievementStatisticList;
+});
+
+const agentAchievementStageStatisticList = computed(() => {
+  return agent.getAgentAchievementStageStatisticList;
 });
 
 const handleDateRange = (date: string) => {
@@ -161,7 +184,15 @@ const closeAchievementRewardCollectionDialog = () => {
 
 onMounted(async () => {
   loading.value = true;
-  await agent.dispatchAgentAchievementReward();
+  await agent.dispatchAgentAchievementRewardList();
+  await agent.dispatchAgentAchievementStatisticList({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+  });
+  await agent.dispatchAgentAchievementStageStatisticList({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+  });
   loading.value = false;
 });
 </script>
@@ -299,10 +330,22 @@ onMounted(async () => {
           v-if="activeIndex == 2 || activeIndex == 3"
         >
           <el-card>
-            <el-form-item label="总计达成成就人数:">99999999</el-form-item>
+            <el-form-item label="总计达成成就人数:">
+              {{
+                activeIndex == 2
+                  ? agentAchievementStatisticList.meet_condition_total_count
+                  : agentAchievementStageStatisticList.meet_condition_total_count
+              }}
+            </el-form-item>
           </el-card>
           <el-card>
-            <el-form-item label="总计提现:">9999999</el-form-item>
+            <el-form-item label="总计提现:">
+              {{
+                activeIndex == 2
+                  ? agentAchievementStatisticList.total_withdrawal_amount
+                  : agentAchievementStageStatisticList.total_withdrawal_amount
+              }}
+            </el-form-item>
           </el-card>
         </div>
       </div>
@@ -323,8 +366,16 @@ onMounted(async () => {
           @closeAchievementRewardDialog="closeAchievementRewardDialog"
           @closeAchievementRewardCollectionDialog="closeAchievementRewardCollectionDialog"
         />
-        <AchievementStatistics v-if="activeIndex == 2" />
-        <StageStatistics v-if="activeIndex == 3" />
+        <AchievementStatistics
+          v-if="activeIndex == 2"
+          :loading="loading"
+          :agentAchievementStatisticList="agentAchievementStatisticList"
+        />
+        <StageStatistics
+          v-if="activeIndex == 3"
+          :loading="loading"
+          :agentAchievementStageStatisticList="agentAchievementStageStatisticList"
+        />
       </div>
     </el-card>
   </div>

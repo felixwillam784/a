@@ -59,6 +59,9 @@ export namespace NETWORKCFG {
 
     // agent achievement reward api
     static AGENT_ACHIEVEMENT_REWARD_LIST = '/agent/achievement/reward-list';
+    static AGENT_ACHIEVEMENT_STAGE_REWARD_LIST = '/agent/achievement/stage-reward-list';
+    static AGENT_ACHIEVEMENT_STATISTIC_LIST = '/agent/achievement/statistic-list';
+    static AGENT_ACHIEVEMENT_STAGE_STATISTIC_LIST = '/agent/achievement/stage-statistic-list';
   }
 
   //Listening events sent actively
