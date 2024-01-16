@@ -13,6 +13,7 @@ import vipManagementRoutes from "@/router/modules/VIP_management";
 import agencyManagementRoutes from '@/router/modules/agency_management';
 import riskManagementRoutes from '@/router/modules/risk_management';
 import newsManagementRoutes from '@/router/modules/news_management';
+import bonusManagementRoutes from './modules/bonus-management';
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -63,6 +64,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
   ...authorityManagementRoutes,
   ...platformSettingRoutes,
   ...newsManagementRoutes,
+  ...bonusManagementRoutes,
 ]
 
 // 创建路由
