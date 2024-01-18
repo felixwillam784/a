@@ -15,7 +15,7 @@ interface GameInChannel {
 
 const game_group_list = ref<Array<GameGroup>>([
   {
-    channel_name: "PGSoft",
+    channel_name: "Ezugi",
     games: [
       {
         game_id: 1002,
@@ -27,7 +27,7 @@ const game_group_list = ref<Array<GameGroup>>([
     ],
   },
   {
-    channel_name: "PragmaticPlay",
+    channel_name: "Evolution",
     games: [
       {
         game_id: 1003,
@@ -69,4 +69,5 @@ const game_group_list = ref<Array<GameGroup>>([
     </el-collapse-item>
   </el-collapse>
 </template>
+
 <style lang="scss"></style>
