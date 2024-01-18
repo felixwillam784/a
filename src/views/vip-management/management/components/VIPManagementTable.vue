@@ -19,18 +19,18 @@ onMounted(async () => {
 <template>
   <el-card>
     <el-table v-loading="loading" :data="vipList" style="width: 100%">
-      <el-table-column label="VIP等级" align="center" prop="vip_level" width="160" />
-      <el-table-column label="VIP段位" align="center" prop="vip_rank" width="160" />
+      <el-table-column label="VIP等级" align="center" prop="level" width="160" />
+      <el-table-column label="VIP段位" align="center" prop="rank_name" width="160" />
       <el-table-column
         label="VIP升级所需充值"
         align="center"
-        prop="recharge_vip_upgrade"
+        prop="deposit_exp"
         width="160"
       />
       <el-table-column
         label="VIP升级所需打码"
         align="center"
-        prop="coding_vip_upgrade"
+        prop="bet_exp"
         width="160"
       />
       <el-table-column
@@ -42,61 +42,61 @@ onMounted(async () => {
       <el-table-column
         label="提现免手续费 额度/月"
         align="center"
-        prop="free_amount_month"
+        prop="free_withdrawals"
         width="160"
       />
       <el-table-column
         label="单笔最高提现金额"
         align="center"
-        prop="maximum_amount_amount"
+        prop="withdrawals_max"
         width="160"
       />
       <el-table-column
         label="每日可提现额度"
         align="center"
-        prop="daily_limit_amount"
+        prop="withdrawals_amonut"
         width="160"
       />
       <el-table-column
         label="每月可提现额度"
         align="center"
-        prop="monthly_limit_amount"
+        prop="month_withdrawals_amount"
         width="160"
       />
       <el-table-column
         label="每日提现次数限制"
         align="center"
-        prop="daily_limit_time"
+        prop="withdrawals_times"
         width="160"
       />
       <el-table-column
         label="每月提现次数限制"
         align="center"
-        prop="monthly_limit_time"
+        prop="month_withdrawals_times"
         width="160"
       />
       <el-table-column
         label="VIP保级所需充值"
         align="center"
-        prop="recharge_vip_up"
+        prop="protection_deposit_amount"
         width="160"
       />
       <el-table-column
         label="VIP保级所需打码"
         align="center"
-        prop="coding_vip_relegation"
+        prop="protection_bet_amount"
         width="160"
       />
       <el-table-column
         label="VIP保级时效(天)"
         align="center"
-        prop="vip_limit_days"
+        prop="protection_days"
         width="160"
       />
       <el-table-column
         label="VIP保级失败降低等级"
         align="center"
-        prop="vip_and_was_lowered"
+        prop="downgrade_level"
         width="160"
       />
 

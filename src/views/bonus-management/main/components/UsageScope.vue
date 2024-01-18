@@ -8,20 +8,42 @@ const tab_index = ref(0);
 const select_tab = (index: number) => {
   tab_index.value = index;
 };
+
+const get_class_name_for_usage_scope = (param: number) => {
+  if (param == 0) return "orange-background";
+  if (param == 1) return "yellow-background";
+  if (param == 2) return "green-background";
+  return "";
+};
 </script>
 <template>
   <div style="border: 1px solid black; padding: 10px; margin-bottom: 50px">
     <div style="display: flex">
       <p>已选择的使用分类</p>
-      <div style="display: flex; align-items: center; margin-left: 20px">Originals</div>
+      <div
+        style="display: flex; align-items: center; margin-left: 20px"
+        :class="get_class_name_for_usage_scope(0)"
+      >
+        Originals
+      </div>
     </div>
     <div style="display: flex">
       <p>已选择的使用渠道</p>
-      <div style="display: flex; align-items: center; margin-left: 20px">PGSoft</div>
+      <div
+        style="display: flex; align-items: center; margin-left: 20px"
+        :class="get_class_name_for_usage_scope(1)"
+      >
+        PGSoft
+      </div>
     </div>
     <div style="display: flex">
       <p>已选择的使用游戏</p>
-      <div style="display: flex; align-items: center; margin-left: 20px">1001</div>
+      <div
+        style="display: flex; align-items: center; margin-left: 20px"
+        :class="get_class_name_for_usage_scope(2)"
+      >
+        1001
+      </div>
     </div>
   </div>
 
@@ -42,4 +64,20 @@ const select_tab = (index: number) => {
     <IndividualGame v-if="tab_index == 2" />
   </div>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.yellow-background {
+  background-color: yellow;
+  padding: 5px;
+  margin: 5px;
+}
+.orange-background {
+  background-color: orange;
+  padding: 5px;
+  margin: 5px;
+}
+.green-background {
+  background-color: green;
+  padding: 5px;
+  margin: 5px;
+}
+</style>

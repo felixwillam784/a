@@ -21,7 +21,7 @@ export interface GetVIPLevelData {
   bet_exp:number,
   withdrawal_fee:number,
   free_withdrawals:number,
-  withdrawal_max:number,
+  withdrawals_max:number,
   withdrawals_amonut:number
   month_withdrawals_amount:number,
   withdrawals_times:number,
@@ -35,7 +35,10 @@ export interface GetVIPLevelData {
   bet_award:BetAward,
 }
 export interface BetAward{
-
+  custom_interval:number,
+  cycle:number,
+  rate:any,
+  release_cycle:number,
 }
 
 export type GetVIPLevelResponse = {
