@@ -57,60 +57,38 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
       },
       {
         path: "game/report",
-        component: import('@/views/data-analysis/game-report/index.vue'),
+        redirect:"list",
+        component: ChildrenLayout,
         meta: {
-            title: "game_report",
+            title: "",
             hidden: false,
             roles: ["ADMIN"],
             keepAlive: true
         },
-        // children: [
-        //     {
-        //         path: "",
-        //         component: import('@/views/data-analysis/game-report/index.vue'),
-        //         name: "Game Report",
-        //         meta: {
-        //             hidden: true,
-        //             roles: ["ADMIN"],
-        //             keepAlive: true
-        //         },
-        //     },
-        //     {
-        //         path: "detail",
-        //         component: import('@/views/data-analysis/game-report/detail.vue'),
-        //         name: "GameReportDetail",
-        //         meta: {
-        //             title: "Dice",
-        //             hidden: true,
-        //             roles: ["ADMIN"],
-        //             keepAlive: true
-        //         },
-        //     },
-        // ]
-      },
-      {
-        path: "withdrawal/report",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Withdrawal Report",
-        meta: {
-          title: "winnings_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
-      {
-        path: "activity/statement",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Activity Statement",
-        meta: {
-          title: "activity_statement",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
+         children: [
+             {
+                 path: "list",
+                 component: import('@/views/data-analysis/game-report/index.vue'),
+                 name: "Game Report",
+                 meta: {
+                     title: "game_report",
+                     hidden: false,
+                     roles: ["ADMIN"],
+                     keepAlive: true
+                 },
+             },
+             {
+                 path: "detail/:name",
+                 component: import('@/views/data-analysis/game-report/detail.vue'),
+                 name: "GameReportDetail",
+                 meta: {
+                     title: "",
+                     hidden: true,
+                     roles: ["ADMIN"],
+                     keepAlive: true
+                 },
+             },
+         ]
       },
       {
         path: "data/summary",
@@ -124,18 +102,7 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
-      {
-        path: "pool/report",
-        component: import('@/views/withdrawal-management/review/index.vue'),
-        name: "Prize Pool Report",
-        meta: {
-          title: "game_chanel_report",
-          hidden: false,
-          // alwaysShow: false,
-          roles: ["ADMIN"],
-          keepAlive: true
-        }
-      },
+
     ]
   },
 ];
