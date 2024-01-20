@@ -14,6 +14,7 @@ import agencyManagementRoutes from '@/router/modules/agency_management';
 import riskManagementRoutes from '@/router/modules/risk_management';
 import newsManagementRoutes from '@/router/modules/news_management';
 import bonusManagementRoutes from './modules/bonus-management';
+import BuffManagementRoutes from './modules/buff_management';
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -56,15 +57,18 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
   ...riskManagementRoutes,
   ...vipManagementRoutes,
   ...agencyManagementRoutes,
-  ...webpageManagementRoutes,
+  ...bonusManagementRoutes,
+  ...authorityManagementRoutes,
+
   ...withdrawalManagementRoutes,
   ...eventManagementRoutes,
+  ...webpageManagementRoutes,
   ...gameManagementRoutes,
-  ...thirdpartyManagementRoutes,
-  ...authorityManagementRoutes,
-  ...platformSettingRoutes,
+  
   ...newsManagementRoutes,
-  ...bonusManagementRoutes,
+  ...thirdpartyManagementRoutes,
+  ...platformSettingRoutes,
+  ...BuffManagementRoutes,
 ]
 
 // 创建路由

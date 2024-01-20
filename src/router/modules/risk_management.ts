@@ -12,7 +12,8 @@ const riskManagementRoutes: RouteRecordRaw[] = [
             icon: "system",
             hidden: false,
             roles: ["ADMIN"],
-            keepAlive: true
+            keepAlive: true,
+            alwaysShow:true,
         },
         children: [
             {
@@ -20,8 +21,8 @@ const riskManagementRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/risk-management/index.vue'),
                 name: "RiskList",
                 meta: {
-                    title: "风控管理",
-                    hidden: true,
+                    title: "用户风控列表",
+                    hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
                 },

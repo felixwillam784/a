@@ -17,11 +17,10 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
         },
         children: [
             {
-                path: "top/management",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Top Management",
+                path: "banner/management",
+                component: () => ChildrenLayout,
                 meta: {
-                    title: "顶部管理",
+                    title: "banner图配置",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -29,11 +28,10 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "sidebar/management",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Sidebar Management",
+                path: "advertisement/management",
+                component: () => ChildrenLayout,
                 meta: {
-                    title: "侧边栏管理",
+                    title: "广告页面配置",
                     hidden: false,
                     // alwaysShow: false,
                     roles: ["ADMIN"],
@@ -43,7 +41,6 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
             {
                 path: "pop-up/management",
                 component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Popup Management",
                 meta: {
                     title: "弹窗管理",
                     hidden: false,
@@ -51,31 +48,7 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
                     roles: ["ADMIN"],
                     keepAlive: true
                 }
-            },
-            {
-                path: "tag/mangement",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Tag Management",
-                meta: {
-                    title: "标签管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
-            {
-                path: "service/management",
-                component: () => import('@/views/withdrawal-management/review/index.vue'),
-                name: "Customer Service Management",
-                meta: {
-                    title: "客服管理",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
+            }
         ]
     },
 ];
