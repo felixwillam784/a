@@ -2,13 +2,13 @@ import { RouteRecordRaw } from 'vue-router';
 export const Layout = () => import('@/layout/index.vue');
 const ChildrenLayout = () => import('@/views/layout/index.vue');
 
-const thirdpartyManagementRoutes: RouteRecordRaw[] = [
+const BuffManagementRoutes: RouteRecordRaw[] = [
     {
-        path: "/thirdparty",
+        path: "/buff",
         component: Layout,
-        redirect: "/thirdparty/management",
+        redirect: "/buff/management",
         meta: {
-            title: "第三方管理",
+            title: "道具及BUFF管理",
             icon: "system",
             hidden: false,
             roles: ["ADMIN", "EDITOR"],
@@ -18,7 +18,7 @@ const thirdpartyManagementRoutes: RouteRecordRaw[] = [
             {
                 path: "management",
                 component: () => ChildrenLayout,
-                name: "ThirdParty Management",
+                name: "Buff Management",
                 meta: {
                     hidden: true,
                     roles: ["ADMIN", "EDITOR"],
@@ -29,4 +29,4 @@ const thirdpartyManagementRoutes: RouteRecordRaw[] = [
     },
 ];
 
-export default thirdpartyManagementRoutes;
+export default BuffManagementRoutes;
