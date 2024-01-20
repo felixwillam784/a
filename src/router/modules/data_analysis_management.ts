@@ -45,16 +45,8 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
             keepAlive: true
         }
       },
-      {
-        path: "agent/report",
-        component: import('@/views/data-analysis/agent-report/index.vue'),
-        meta: {
-            title: "agent_report",
-            hidden: false,
-            roles: ["ADMIN"],
-            keepAlive: true
-        }
-      },
+      
+
       {
         path: "game/report",
         redirect:"list",
@@ -91,6 +83,16 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
          ]
       },
       {
+        path: "activity/report",
+        component: ChildrenLayout,
+        meta: {
+            title: "活动报表",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
+      {
         path: "data/summary",
         component: import('@/views/data-analysis/data-summary/index.vue'),
         name: "Data Summary",
@@ -102,7 +104,16 @@ const dataAnalysisManagementRoutes: RouteRecordRaw[] = [
           keepAlive: true
         }
       },
-
+      {
+        path: "gamechannel/report",
+        component: ChildrenLayout,
+        meta: {
+            title: "游戏渠道报表",
+            hidden: false,
+            roles: ["ADMIN"],
+            keepAlive: true
+        }
+      },
     ]
   },
 ];

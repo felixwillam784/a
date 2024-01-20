@@ -75,30 +75,6 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 
             },
             {
-                path: "statistics-report",
-                component: ChildrenLayout,
-                redirect: "all",
-                meta: {
-                    hidden: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                },
-                children: [
-                    {
-                        path: "all",
-                        component: () => import('@/views/agency-management/statistics-report/index.vue'),
-                        name: "AgencyStatisticsReport",
-                        meta: {
-                            title: "代理统计报表",
-                            hidden: false,
-                            roles: ["ADMIN"],
-                            keepAlive: true
-                        },
-                    },
-                ]
-                
-            },
-            {
                 path: "risk-control",
                 component: ChildrenLayout,
                 redirect: "all",
@@ -122,6 +98,31 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 ]
                 
             },
+            {
+                path: "statistics-report",
+                component: ChildrenLayout,
+                redirect: "all",
+                meta: {
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+                children: [
+                    {
+                        path: "all",
+                        component: () => import('@/views/agency-management/statistics-report/index.vue'),
+                        name: "AgencyStatisticsReport",
+                        meta: {
+                            title: "代理统计报表",
+                            hidden: false,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
+                ]
+                
+            },
+
             {
                 path: "invitation-reward",
                 component: ChildrenLayout,

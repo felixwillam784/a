@@ -95,12 +95,45 @@ const vipManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 },
             },
+
+            {
+                path: "carousel",
+                component: () => ChildrenLayout,
+                meta: {
+                    title:"VIP转盘",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+
             {
                 path: "weeklybonus",
                 component: () => import('@/views/vip-management/weekly-bonus/index.vue'),
                 name: "VIPWeeklyBonus",
                 meta: {
                     title:"VIP每周奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            
+            {
+                path: "monthlybonus",
+                component: () => ChildrenLayout,
+                meta: {
+                    title:"VIP每月奖励",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "task",
+                component: () => ChildrenLayout,
+                meta: {
+                    title:"VIP任务",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
