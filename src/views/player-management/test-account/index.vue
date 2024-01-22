@@ -3,8 +3,8 @@ import { ref, onMounted } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
-import BasicSetting from "./components/dialog/BasicSetting.vue";
-import GameSetting from "./components/dialog/GameSetting.vue";
+import BasicSetting from "./components/BasicSetting.vue";
+import GameSetting from "./components/UsageScope.vue";
 
 const router = useRouter();
 
@@ -677,8 +677,10 @@ onMounted(() => {
           可参与游戏设定
         </el-button>
       </el-row>
+
       <BasicSetting v-if="activeIndex == 0" />
       <GameSetting v-if="activeIndex == 1" />
+
       <el-form v-if="activeIndex == 2" class="my-2">
         <el-form-item label="请输入生成测试号数量:">
           <el-input placeholder="不填默认为生成1个测试号" />
@@ -713,20 +715,23 @@ onMounted(() => {
       <el-footer class="text-center">
         <el-button
           type="primary"
-          @click="activeIndex == 2 ? (activeIndex = 1) : (activeIndex = 2)"
-          v-if="activeIndex == 2 || activeIndex == 3"
+          @click="activeIndex == 0 ? (activeIndex = 0) : (activeIndex = activeIndex - 1)"
+          v-if="activeIndex != 0"
         >
           上一页
         </el-button>
         <el-button
           type="primary"
-          @click="activeIndex == 1 ? (activeIndex = 2) : (activeIndex = 3)"
+          @click="
+            activeIndex == 3 ? (activeIndex = 3) : (activeIndex = (activeIndex + 1) % 4)
+          "
         >
           下一页
         </el-button>
         <el-button @click="addTestNumberDialogVisible = false">取消添加</el-button>
       </el-footer>
     </el-dialog>
+
     <el-dialog title="解除代理关系" v-model="agencyTerminateDialogVisible">
       <h4 class="text-center">确认后将会解除代理与其上级的关系</h4>
       <h4 class="text-center">确认要解除代理关系？</h4>

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 
 import { Chart, Grid, Line, Tooltip, Bar, Marker } from "vue3-charts";
+
 const chart1direction = ref<any>("horizontal");
 const chart1margin = ref({
   left: 0,

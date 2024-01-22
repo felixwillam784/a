@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch,computed } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import useStore from "@/store";
 
 const { vip } = useStore();
 
-const vipItem = computed(() => {
-  return vip.getVIPManagementClientLostRebateDetailData;
-});
+const vipItem = ref<any>();
 
 const is_disabled_client_lost_rebate_fund_time_amount = () => {
   if (vipItem.value?.client_lost_rebate_fund_time == 2) return false;
@@ -17,10 +15,8 @@ const is_disabled_client_lost_rebate_order_time_amount = () => {
   return true;
 };
 onMounted(() => {
-  if (props.vip_level != undefined)
-  {
+  if (props.vip_level != undefined) {
     vipItem.value.vip_level = props.vip_level;
-    vip.dispatchVIPManagementClientLostRebateDetailData(props.vip_level)
   }
 });
 
@@ -29,20 +25,16 @@ const props = defineProps({
 });
 
 watch(props, () => {
-  if (props.vip_level != undefined)
-  {
+  if (props.vip_level != undefined) {
     vipItem.value.vip_level = props.vip_level;
-    vip.dispatchVIPManagementClientLostRebateDetailData(props.vip_level)
   }
 });
 
-const update_client_lost_detail = () => {
-  vip.dispatchUpdateVIPManagementClientLostRebateDetailData();
-}
+const update_client_lost_detail = () => {};
 
 defineExpose({
-  update_client_lost_detail
-})
+  update_client_lost_detail,
+});
 </script>
 <template>
   <div>
