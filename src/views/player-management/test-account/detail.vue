@@ -3,7 +3,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { ArrowLeft } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import TestAccountDetail from "./components/TestAccountDetail.vue";
-import ParticipateGameSetting from "./components/ParticipateGameSetting.vue";
+import ParticipateGameSetting from "./components/UsageScope.vue";
 import FundDetail from "./components/FundDetail.vue";
 import BettingRecord from "./components/BettingRecord.vue";
 import RegistrationRecord from "./components/RegistrationRecord.vue";

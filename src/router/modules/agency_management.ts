@@ -86,7 +86,7 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                 children: [
                     {
                         path: "all",
-                        component: () => import('@/views/agency-management/list/index.vue'),
+                        component: () => import('@/views/agency-management/risk-control/index.vue'),
                         name: "AgencyRiskControl",
                         meta: {
                             title: "代理风控",
@@ -95,6 +95,7 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                             keepAlive: true
                         },
                     },
+                    
                 ]
                 
             },
