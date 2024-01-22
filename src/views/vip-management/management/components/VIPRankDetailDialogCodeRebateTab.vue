@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
-import {GetVIPManagementRankCodeRebateDetailData, rebateGameType} from '@/interface/vip'
 import useStore from "@/store";
 
 const { vip } = useStore();
 
-const vipItem = computed(() => {
-  return vip.getVIPManagementCodeRebateDetailData;
-});
+const vipItem = ref<any>();
 
+interface rebateGameType {
+  game_type: string;
+  rebate_amount: number;
+}
 const new_rebate_type = ref<rebateGameType>({
   game_type: "",
   rebate_amount: -1,
@@ -33,9 +34,8 @@ const is_disabled_rebate_order_time_amount = () => {
 };
 
 onMounted(async () => {
-  if (props.vip_level != undefined){
+  if (props.vip_level != undefined) {
     vipItem.value.vip_level = props.vip_level;
-    await vip.dispatchVIPManagementCodeRebateDetailData(props.vip_level);
   }
 });
 
@@ -43,24 +43,22 @@ const props = defineProps({
   vip_level: Number,
 });
 
-watch(props,async () => {
-  if (props.vip_level != undefined){
+watch(props, async () => {
+  if (props.vip_level != undefined) {
     vipItem.value.vip_level = props.vip_level;
-    await vip.dispatchVIPManagementCodeRebateDetailData(props.vip_level);
   }
 });
 
 const update_code_rebate_detail = () => {
-  if(add_new_rebate.value){
+  if (add_new_rebate.value) {
     add_new_rebate.value = false;
     vipItem.value.game_types.push(new_rebate_type.value);
   }
-  vip.dispatchUpdateVIPManagementCodeRebateDetailData();
-}
+};
 
 defineExpose({
-  update_code_rebate_detail
-})
+  update_code_rebate_detail,
+});
 </script>
 
 <template>
