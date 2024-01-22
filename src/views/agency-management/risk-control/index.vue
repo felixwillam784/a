@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import DateRangeSelector from "./components/DateRangeSelector.vue";
 import DetailDialog from "./components/detail.vue";
+import { useRouter } from "vue-router";
 
 const tab_index = ref(0);
 const select_tab = (index: number) => {
@@ -13,6 +14,16 @@ const temp_list = ref<Array<any>>([{}]);
 const DetailDialogRef = ref();
 const show_detail_dialog = () => {
   DetailDialogRef.value.set_dialog_show(true);
+};
+
+const is_show_release_dialog = ref(false);
+const show_release_dialog = () => {
+  is_show_release_dialog.value = true;
+};
+
+const router = useRouter();
+const add_new = () => {
+  router.push({ name: "NewAgencyRisk" });
 };
 </script>
 
@@ -54,7 +65,7 @@ const show_detail_dialog = () => {
       </el-form>
 
       <div>
-        <el-button>新增风控代理</el-button>
+        <el-button @click="add_new">新增风控代理</el-button>
         <el-button>代理风控设置</el-button>
       </div>
     </el-row>
@@ -91,7 +102,7 @@ const show_detail_dialog = () => {
         >代理风控白名单</el-button
       >
     </div>
-    <el-button>大量解除風控</el-button>
+    <el-button>批量解除风控</el-button>
   </el-row>
 
   <el-card>
@@ -118,13 +129,43 @@ const show_detail_dialog = () => {
       <el-table-column align="center" label="备注"></el-table-column>
       <el-table-column align="center" label="操作">
         <el-button type="primary" link @click="show_detail_dialog">详情</el-button>
-        <el-button type="primary" link>解除风控</el-button>
+        <el-button type="primary" link @click="show_release_dialog">解除风控</el-button>
         <el-button type="primary" link>日志</el-button>
       </el-table-column>
     </el-table>
   </el-card>
 
   <DetailDialog ref="DetailDialogRef" />
+
+  <el-dialog v-model="is_show_release_dialog">
+    <div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <p style="font-size: 20px; font-weight: bold">解除风控</p>
+      </div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <p style="font-size: 15px">解除风控后，代理将会被移入代理白名单</p>
+        <p style="font-size: 15px">确认解除风控？</p>
+      </div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <div style="width: 100%">
+          <p>备注</p>
+        </div>
+        <el-input type="textarea" :rows="6"></el-input>
+      </div>
+    </div>
+    <template #footer>
+      <div style="justify-content: center; display: flex">
+        <el-button type="primary">确认</el-button>
+        <el-button>取消</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <style lang="scss">
 .el-table thead th.el-table__cell {
