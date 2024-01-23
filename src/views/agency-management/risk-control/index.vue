@@ -1,29 +1,30 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import DateRangeSelector from "./components/DateRangeSelector.vue";
-import DetailDialog from "./components/detail.vue";
 import { useRouter } from "vue-router";
+
+import DateRangeSelector from "./components/DateRangeSelector.vue";
+
+import BlackListTable from "./components/BlackListTable.vue";
+import WhiteListTable from "./components/WhitelistTable.vue";
 
 const tab_index = ref(0);
 const select_tab = (index: number) => {
   tab_index.value = index;
 };
 
-const temp_list = ref<Array<any>>([{}]);
-
-const DetailDialogRef = ref();
-const show_detail_dialog = () => {
-  DetailDialogRef.value.set_dialog_show(true);
-};
-
-const is_show_release_dialog = ref(false);
-const show_release_dialog = () => {
-  is_show_release_dialog.value = true;
-};
-
 const router = useRouter();
 const add_new = () => {
   router.push({ name: "NewAgencyRisk" });
+};
+
+const is_show_group_release_dialog = ref(false);
+const show_group_release_dialog = () => {
+  is_show_group_release_dialog.value = true;
+};
+
+const is_show_group_remove_white_dialog = ref(false);
+const show_group_remove_white_dialog = () => {
+  is_show_group_remove_white_dialog.value = true;
 };
 </script>
 
@@ -92,7 +93,9 @@ const add_new = () => {
       </el-form>
     </el-row>
   </el-card>
+
   <DateRangeSelector />
+
   <el-row style="padding: 15px; display: flex; justify-content: space-between">
     <div>
       <el-button :type="tab_index == 0 ? 'warning' : ''" @click="select_tab(0)"
@@ -102,53 +105,59 @@ const add_new = () => {
         >代理风控白名单</el-button
       >
     </div>
-    <el-button>批量解除风控</el-button>
+    <el-button v-if="tab_index == 0" @click="show_group_release_dialog"
+      >批量解除风控</el-button
+    >
+    <el-button v-if="tab_index == 1" @click="show_group_remove_white_dialog"
+      >批量移除白名单</el-button
+    >
   </el-row>
 
   <el-card>
-    <el-table :data="temp_list">
-      <el-table-column align="center" label="UserID">
-        <template #header>
-          <el-checkbox />
-          UserID
-        </template>
-        <template #default>
-          <el-checkbox></el-checkbox>
-          User1001
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="用户标签"></el-table-column>
-      <el-table-column align="center" label="风控等级">
-        <template #default>
-          <el-select></el-select>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="风控行为"></el-table-column>
-      <el-table-column align="center" label="风控时间"></el-table-column>
-      <el-table-column align="center" label="操作人员"></el-table-column>
-      <el-table-column align="center" label="备注"></el-table-column>
-      <el-table-column align="center" label="操作">
-        <el-button type="primary" link @click="show_detail_dialog">详情</el-button>
-        <el-button type="primary" link @click="show_release_dialog">解除风控</el-button>
-        <el-button type="primary" link>日志</el-button>
-      </el-table-column>
-    </el-table>
+    <BlackListTable v-if="tab_index == 0" />
+    <WhiteListTable v-if="tab_index == 1" />
   </el-card>
 
-  <DetailDialog ref="DetailDialogRef" />
-
-  <el-dialog v-model="is_show_release_dialog">
+  <el-dialog v-model="is_show_group_release_dialog">
     <div>
       <div
         style="display: flex; flex-direction: column; align-items: center; width: 100%"
       >
-        <p style="font-size: 20px; font-weight: bold">解除风控</p>
+        <p style="font-size: 20px; font-weight: bold">批量删除风控</p>
       </div>
       <div
         style="display: flex; flex-direction: column; align-items: center; width: 100%"
       >
-        <p style="font-size: 15px">解除风控后，代理将会被移入代理白名单</p>
-        <p style="font-size: 15px">确认解除风控？</p>
+        <p style="font-size: 15px">确认后，选中的代理将会被解除风控</p>
+      </div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <div style="width: 100%">
+          <p>备注</p>
+        </div>
+        <el-input type="textarea" :rows="6"></el-input>
+      </div>
+    </div>
+    <template #footer>
+      <div style="justify-content: center; display: flex">
+        <el-button type="primary">确认</el-button>
+        <el-button>取消</el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+  <el-dialog v-model="is_show_group_remove_white_dialog">
+    <div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <p style="font-size: 20px; font-weight: bold">批量移除白名单</p>
+      </div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; width: 100%"
+      >
+        <p style="font-size: 15px">所有选中的代理将会被移除白名单</p>
       </div>
       <div
         style="display: flex; flex-direction: column; align-items: center; width: 100%"
