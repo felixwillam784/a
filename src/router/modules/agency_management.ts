@@ -106,6 +106,17 @@ const agencyManagementRoutes: RouteRecordRaw[] = [
                             keepAlive: true
                         },
                     },
+                    {
+                        path: "setting",
+                        component: () => import('@/views/agency-management/risk-control/setting.vue'),
+                        name: "AgencyRiskSetting",
+                        meta: {
+                            title: "代理风控设置",
+                            hidden: true,
+                            roles: ["ADMIN"],
+                            keepAlive: true
+                        },
+                    },
                     
                 ]
                 
