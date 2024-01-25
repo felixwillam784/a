@@ -16,6 +16,9 @@ const router = useRouter();
 const add_new = () => {
   router.push({ name: "NewAgencyRisk" });
 };
+const go_setting = () => {
+  router.push({ name: "AgencyRiskSetting" });
+};
 
 const is_show_group_release_dialog = ref(false);
 const show_group_release_dialog = () => {
@@ -67,7 +70,7 @@ const show_group_remove_white_dialog = () => {
 
       <div>
         <el-button @click="add_new">新增风控代理</el-button>
-        <el-button>代理风控设置</el-button>
+        <el-button @click="go_setting">代理风控设置</el-button>
       </div>
     </el-row>
     <el-row :gutter="20">
