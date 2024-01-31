@@ -5,7 +5,7 @@
       <el-input value="预警" style="width: 10%"></el-input>
     </div>
     <div class="dl_row" style="justify-content: space-between">
-      <el-checkbox-group v-model="checkList">
+      <el-checkbox-group>
         <el-checkbox label="禁止领取优惠" />
         <el-checkbox label="禁止参与存款活动" />
         <el-checkbox label="禁止进入游戏" />
@@ -19,7 +19,7 @@
       <el-input value="禁止提现" style="width: 10%"></el-input>
     </div>
     <div class="dl_row" style="justify-content: space-between">
-      <el-checkbox-group v-model="checkList">
+      <el-checkbox-group>
         <el-checkbox label="禁止领取优惠" />
         <el-checkbox label="禁止参与存款活动" />
         <el-checkbox label="禁止进入游戏" />
@@ -33,7 +33,7 @@
       <el-input value="禁止登录" style="width: 10%"></el-input>
     </div>
     <div class="dl_row" style="justify-content: space-between">
-      <el-checkbox-group v-model="checkList">
+      <el-checkbox-group>
         <el-checkbox label="禁止领取优惠" />
         <el-checkbox label="禁止参与存款活动" />
         <el-checkbox label="禁止进入游戏" />
@@ -47,7 +47,7 @@
       <el-input placeholder="请输入新增等级名称" style="width: 10%"></el-input>
     </div>
     <div class="dl_row" style="justify-content: space-between">
-      <el-checkbox-group v-model="checkList">
+      <el-checkbox-group>
         <el-checkbox label="禁止领取优惠" />
         <el-checkbox label="禁止参与存款活动" />
         <el-checkbox label="禁止进入游戏" />
