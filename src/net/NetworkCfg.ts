@@ -31,7 +31,10 @@ export namespace NETWORKCFG {
     static VIPRankStatistic_Table: string = '/vip/rank-count-list'
     static VIPLevelStatistic_Table: string = '/vip/level-count-list'
   }
+  export class Game {
 
+    static GAME_CONFIG: string = '/game/config'
+  }
   export class AGENT {
     // agent list api
     static AGENT_LIST: string = '/agent/list';
