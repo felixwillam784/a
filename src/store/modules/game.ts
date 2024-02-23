@@ -11,6 +11,10 @@ export const gameStore = defineStore({
       errMessage: '' as string,
   
       GameDatas: [] as Array<Game.GetGameData>,
+      GameManufactureList: [] as Array<Game.GameConfigData>,
+      GameMakerList: [] as Array<Game.GameConfigData>, 
+      GameGroupList: [] as Array<Game.GameConfigData>,
+      GameTabList: [] as Array<Game.GameConfigData>,
     }),
     
     getters: {
@@ -18,6 +22,10 @@ export const gameStore = defineStore({
       getErrMessage: (state) => state.errMessage,
         
       getGameDatas: (state) => state.GameDatas,
+      getGameManufactureList: (state) => state.GameManufactureList,
+      getGameMakerList: (state) => state.GameMakerList,
+      getGameGroupList: (state) => state.GameGroupList,
+      getGameTabList: (state) => state.GameTabList,
     },
   
     actions: {
@@ -30,6 +38,18 @@ export const gameStore = defineStore({
   
       setGameDatas(data:Array<Game.GetGameData>) {
         this.GameDatas = data;
+      },
+      setGameManufactureList(data:Array<Game.GameConfigData>) {
+        this.GameManufactureList = data;
+      },
+      setGameMakerList(data:Array<Game.GameConfigData>) {
+        this.GameMakerList = data;
+      },
+      setGameGroupList(data:Array<Game.GameConfigData>) {
+        this.GameGroupList = data;
+      },
+      setGameTabList(data:Array<Game.GameConfigData>) {
+        this.GameTabList = data;
       },
 
       async dispatchGameDatas(form_data:any) {
@@ -45,5 +65,74 @@ export const gameStore = defineStore({
         }
         await network.sendMsg(route, {params:form_data}, next, 1, 4);
       },
+
+      async dispatchGameGameManufactureList() {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_MANUFACTURE_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameConfigDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setGameManufactureList(response.data);
+          }
+        }
+        await network.sendMsg(route, {}, next, 1, 4);
+      },
+
+      async dispatchGameMakerList() {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_MAKER_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameConfigDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setGameMakerList(response.data);
+          }
+        }
+        await network.sendMsg(route, {}, next, 1, 4);
+      },
+
+      async dispatchGameGroupList() {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_GROUP_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameConfigDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setGameGroupList(response.data);
+          }
+        }
+        await network.sendMsg(route, {}, next, 1, 4);
+      },
+
+      async dispatchGameTabList() {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_TAB_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameConfigDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setGameTabList(response.data);
+          }
+        }
+        await network.sendMsg(route, {}, next, 1, 4);
+      },
+
+      async dispatchGameStatusChange(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_STATUS_CHANGE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameStatusChangeResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      }
     }
   })
