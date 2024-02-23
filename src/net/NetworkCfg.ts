@@ -34,6 +34,12 @@ export namespace NETWORKCFG {
   export class Game {
 
     static GAME_CONFIG: string = '/game/config'
+    static GAME_MANUFACTURE_LIST: string = '/game/manufacturer-list'
+    static GAME_MAKER_LIST: string = '/game/maker-list'
+    static GAME_GROUP_LIST: string = '/game/group-list'
+    static GAME_TAB_LIST: string = '/game/tag-list'
+
+    static GAME_STATUS_CHANGE: string = '/game/config/update'
   }
   export class AGENT {
     // agent list api

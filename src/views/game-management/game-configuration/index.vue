@@ -28,16 +28,30 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total = ref<number>(3);
-
 const groupTagColor = {
-  NEW: "#80cccc",
-  HOT: "#ffcc99",
-  PG: "#b3e6ff",
+  BBBGame: "#80cccc",
+  CCCGame: "#ffcc99",
+  DDDGame: "#b3e6ff",
 };
 
 const gameList = computed(() => {
   return game.getGameDatas;
+});
+
+const gameManufacturerList = computed(() => {
+  return game.getGameManufactureList;
+});
+
+const gameMakerList = computed(() => {
+  return game.getGameMakerList;
+});
+
+const gameGroupList = computed(() => {
+  return game.getGameGroupList;
+});
+
+const gameTabList = computed(() => {
+  return game.getGameTabList;
 });
 
 const handleQuery = async () => {
@@ -48,6 +62,10 @@ const resetQuery = () => {};
 
 onMounted(async () => {
   await game.dispatchGameDatas(formData.value);
+  await game.dispatchGameGameManufactureList();
+  await game.dispatchGameMakerList();
+  await game.dispatchGameGroupList();
+  await game.dispatchGameTabList();
 });
 
 const handleBatchAction = async (type: number) => {
@@ -66,6 +84,13 @@ const multipleSelection = ref<Game.GetGameData[]>([]);
 
 const handleSelectionChange = (val: Game.GetGameData[]) => {
   multipleSelection.value = val;
+};
+
+const gameStatusChange = async (data: Game.GetGameData) => {
+  await game.dispatchGameStatusChange({
+    game_id: data.game_id,
+    game_enabled: data.game_enabled,
+  });
 };
 </script>
 
@@ -89,8 +114,12 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                   placeholder="请选择供应商"
                   clearable
                 >
-                  <el-option label="选项1" value="0" />
-                  <el-option label="选项2" value="1" />
+                  <el-option
+                    v-for="(item, index) in gameManufacturerList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="游戏厂商" prop="game_maker">
@@ -99,8 +128,12 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                   placeholder="请选择游戏厂商"
                   clearable
                 >
-                  <el-option label="选项1" value="0" />
-                  <el-option label="选项2" value="1" />
+                  <el-option
+                    v-for="(item, index) in gameMakerList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="开启试玩" prop="start_trial">
@@ -138,8 +171,12 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                   placeholder="请选择游戏组"
                   clearable
                 >
-                  <el-option label="选项1" value="0" />
-                  <el-option label="选项2" value="1" />
+                  <el-option
+                    v-for="(item, index) in gameGroupList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="游戏标签" prop="game_tab">
@@ -148,8 +185,12 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                   placeholder="请选择游戏选项卡"
                   clearable
                 >
-                  <el-option label="选项1" value="0" />
-                  <el-option label="选项2" value="1" />
+                  <el-option
+                    v-for="(item, index) in gameTabList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -203,9 +244,11 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                     class="game-group"
                     v-for="(item, index) in scope.row.game_group"
                     :key="index"
-                    :style="{ 'background-color': groupTagColor[item] }"
+                    :style="{
+                      'background-color': groupTagColor[gameGroupList[item].name],
+                    }"
                   >
-                    {{ item }}
+                    {{ gameGroupList[item].name }}
                   </p>
                 </div>
               </template>
@@ -222,12 +265,12 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
               width="120"
             >
               <template #default="scope">
-                <p>{{ scope.row.game_provider }}</p>
+                <p>{{ gameManufacturerList[scope.row.game_provider].name }}</p>
               </template>
             </el-table-column>
             <el-table-column label="游戏厂商" align="left" prop="game_maker" width="120">
               <template #default="scope">
-                <p>{{ scope.row.game_maker }}</p>
+                <p>{{ gameMakerList[scope.row.game_maker].name }}</p>
               </template>
             </el-table-column>
             <el-table-column label="游戏状态" align="left" prop="game_status" width="120">
@@ -264,30 +307,24 @@ const handleSelectionChange = (val: Game.GetGameData[]) => {
                     v-for="(item, index) in scope.row.game_tab"
                     :key="index"
                   >
-                    {{ item }}
+                    {{ gameTabList[item].name }}
                   </p>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="left" width="120" fixed="right">
               <template #default="scope">
-                <el-switch v-model="scope.row.game_switch" style="margin-right: 10px" />
+                <el-switch
+                  v-model="scope.row.game_enabled"
+                  style="margin-right: 10px"
+                  @change="gameStatusChange(scope.row)"
+                />
                 <el-button type="danger" link @click="goGameDetailPage(scope.row.game_id)"
                   >修改</el-button
                 >
               </template>
             </el-table-column>
           </el-table>
-
-          <div style="float: right">
-            <pagination
-              v-if="total > 0"
-              :total="total"
-              v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize"
-              @pagination="handleQuery"
-            />
-          </div>
         </el-card>
       </el-col>
     </el-row>
