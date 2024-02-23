@@ -1,4 +1,4 @@
-export interface GetGameData {
+  export interface GetGameData {
     game_skin: string;
     game_id: number;
     game_name: string;
@@ -10,11 +10,27 @@ export interface GetGameData {
     maintenance_time: string;
     rtp_value: number;
     game_tab: Array<any>;
-    game_switch: boolean;
+    game_enabled: number;
   }
 
   export type GetGameDataResponse = {
     code: number | string
     data: Array<GetGameData>,
     message: string
+  }
+
+  export interface GameConfigData {
+    id:number,
+    name:string,
+  }
+
+  export type GameConfigDataResponse = {
+    code: number | string
+    data: Array<GameConfigData>,
+    message: string
+  }
+
+  export type GameStatusChangeResponse = {
+    code: number | string
+    message:string
   }
