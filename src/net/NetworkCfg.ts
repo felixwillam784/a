@@ -40,6 +40,9 @@ export namespace NETWORKCFG {
     static GAME_TAB_LIST: string = '/game/tag-list'
 
     static GAME_STATUS_CHANGE: string = '/game/config/update'
+    static GAME_CONFIG_BATCH_ACTiON: string = '/game/config/batch-action'
+
+    static GAME_DETAIL: string = '/game/config/detail'
   }
   export class AGENT {
     // agent list api
@@ -73,6 +76,9 @@ export namespace NETWORKCFG {
     static AGENT_ACHIEVEMENT_STAGE_STATISTIC_LIST = '/agent/achievement/stage-statistic-list';
   }
 
+  export class PLAYER{
+    static USERLIST:string = "/user/list"
+  }
   //Listening events sent actively
   export class UNSOLICITED {}
 }

@@ -11,10 +11,13 @@ export const gameStore = defineStore({
       errMessage: '' as string,
   
       GameDatas: [] as Array<Game.GetGameData>,
+
       GameManufactureList: [] as Array<Game.GameConfigData>,
       GameMakerList: [] as Array<Game.GameConfigData>, 
       GameGroupList: [] as Array<Game.GameConfigData>,
       GameTabList: [] as Array<Game.GameConfigData>,
+
+      GameDetailData: {} as Game.GetGameDetailData,
     }),
     
     getters: {
@@ -26,6 +29,8 @@ export const gameStore = defineStore({
       getGameMakerList: (state) => state.GameMakerList,
       getGameGroupList: (state) => state.GameGroupList,
       getGameTabList: (state) => state.GameTabList,
+
+      getGameDetailData: (state) => state.GameDetailData,
     },
   
     actions: {
@@ -50,6 +55,10 @@ export const gameStore = defineStore({
       },
       setGameTabList(data:Array<Game.GameConfigData>) {
         this.GameTabList = data;
+      },
+
+      setGameDetailData(data:Game.GetGameDetailData) {
+        this.GameDetailData = data;
       },
 
       async dispatchGameDatas(form_data:any) {
@@ -133,6 +142,33 @@ export const gameStore = defineStore({
           }
         }
         await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchBatchAction(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_CONFIG_BATCH_ACTiON;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GameBatchActionResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchGameDetail(game_id:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_DETAIL;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GetGameDetailDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setGameDetailData(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:{game_id:game_id}}, next, 1, 4);
       }
     }
   })

@@ -34,3 +34,35 @@
     code: number | string
     message:string
   }
+
+  export type GameBatchActionResponse = {
+    code: number | string
+    message:string
+  }
+
+  export interface GetGameDetailData {
+    game_id	:string
+    api_provider	:string
+    max_bet_limit	:number
+    limit_country	:Array<string>
+    game_group	:Array<string>
+    game_status	:number
+    cover_image	:string
+    game_tag	:Array<string>
+    game_name	:string
+    min_bet_limit	:number
+    trial_play	:number
+    next_maintanence_start_time	:number
+    next_maintanence_end_time	:number
+    game_hd_picture	:string
+    game_type	:string
+    rtp	:string    
+    max_magnification :number
+    trial_count :number
+  }
+
+  export type GetGameDetailDataResponse = {
+    code: number | string
+    data: GetGameDetailData
+    message:string
+  }
