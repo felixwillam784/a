@@ -8,6 +8,7 @@ import { dashboardStore } from './modules/dashboard';
 import { vipStore } from './modules/vip';
 import { agentStore } from './modules/agent';
 import { gameStore } from './modules/game';
+import { playerStore } from './modules/player';
 
 const useStore = () => ({
   auth: authStore(),
@@ -20,6 +21,7 @@ const useStore = () => ({
   vip: vipStore(),
   agent: agentStore(),
   game: gameStore(),
+  player: playerStore(),
 });
 
 

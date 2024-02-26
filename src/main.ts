@@ -23,7 +23,7 @@ import i18n from '@/lang/index';
 import '@/styles/index.scss';
 
 import './index.css'
-
+import ElTableInfiniteScroll from "el-table-infinite-scroll";
 const app = createApp(App);
 
 // 自定义指令
@@ -35,7 +35,7 @@ Object.keys(directive).forEach((key) => {
 
 // 全局方法
 app.config.globalProperties.$listDictItemsByTypeCode = listDictItemsByTypeCode;
-
+app.use(ElTableInfiniteScroll);
 // 注册全局组件
 app
   .component('Pagination', Pagination)
