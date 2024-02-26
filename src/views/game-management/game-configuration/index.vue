@@ -7,7 +7,6 @@ import { useRouter } from "vue-router";
 import axios, { AxiosPromise } from "axios";
 import type * as Game from "@/interface/game";
 
-import { getGameConfigList, doBatchAction } from "@/api/GameManagement";
 //import { watch } from "fs";
 
 const { game } = useStore();
@@ -73,7 +72,7 @@ const handleBatchAction = async (type: number) => {
   for (let i = 0; i < multipleSelection.value.length; i++) {
     game_ids.push(multipleSelection.value[i].game_id);
   }
-  let res = await doBatchAction(user.token, type, game_ids);
+  await game.dispatchBatchAction({ action_type: type, game_id_list: game_ids });
 };
 
 const goGameDetailPage = (game_id: any) => {
