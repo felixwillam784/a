@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import {
   ArrowLeft,
   CopyDocument,
@@ -15,6 +15,8 @@ import { getGameInfo } from "@/api/GameManagement";
 import useStore from "@/store";
 
 import * as _ from "lodash";
+import { nextTick } from "vue";
+import { ElInput } from "element-plus";
 
 //import { watch } from "fs";
 
@@ -28,28 +30,15 @@ const baseURL = import.meta.env.VITE_APP_BASE_API;
 const upLoadURL = baseURL + "/upload/image/game";
 
 const activeButton = ref<number>(0);
-const activeNames = ref(["1", "2", "3", "4"]);
-const subActiveNames = ref(["1", "2", "3", "4"]);
-const vipBonusHeight = ref(0);
-const vipBonusShow = ref<boolean>(false);
-
-const maintenanceDateRange = ref([
-  moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
-  moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
-]);
 
 const gameStateOptions = [
   {
-    value: 0,
+    value: 1,
     label: "启用",
   },
   {
-    value: 1,
-    label: "维护中",
-  },
-  {
     value: 2,
-    label: "下架",
+    label: "禁用",
   },
 ];
 
@@ -57,16 +46,16 @@ const coverFileList = ref<UploadUserFile[]>([]);
 
 const hdFileList = ref<UploadUserFile[]>([]);
 
-const dialogImageUrl = ref("");
-const dialogVisible = ref(false);
+const dialogCoverImageUrl = ref("");
+const dialogCoverVisible = ref(false);
 
-const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
+const handleCoverRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 };
 
-const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
-  dialogImageUrl.value = uploadFile.url!;
-  dialogVisible.value = true;
+const handleCoverPictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  dialogCoverImageUrl.value = uploadFile.url!;
+  dialogCoverVisible.value = true;
 };
 
 const dialogHdImageUrl = ref("");
@@ -83,115 +72,106 @@ const handleHdPictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 
 const isTabPanelShow = ref(true);
 
-const handleShowTab = () => {
+const handleShowTab = async () => {
   isTabPanelShow.value = !isTabPanelShow.value;
-};
 
-const tabList = ref<any>(["Classic", "EvoPlay", "Club"]);
+  if (isTabPanelShow.value == false) {
+    let tags: Array<string> = [];
+    for (let i = 0; i < tag_status.value.length; i++) {
+      if (tag_status.value[i] == true) tags.push(dynamicGameTags.value[i]);
+    }
+    await game.dispatchGameDetailUpdateGameTag({
+      game_id: route.params.id,
+      game_tag: tags,
+    });
 
-const groupTagColor = {
-  NEW: "#80cccc",
-  HOT: "#ffcc99",
-  PG: "#b3e6ff",
-};
-
-const isClassic = ref(true);
-const isEvoPlay = ref(true);
-const isClub = ref(true);
-const isAAA = ref(false);
-const isBBB = ref(false);
-const isCCC = ref(false);
-
-const handleSelectTab = (tabName: string) => {
-  switch (tabName) {
-    case "Classic":
-      isClassic.value = !isClassic.value;
-      break;
-    case "EvoPlay":
-      isEvoPlay.value = !isEvoPlay.value;
-      break;
-    case "Club":
-      isClub.value = !isClub.value;
-      break;
-    case "AAA":
-      isAAA.value = !isAAA.value;
-      break;
-    case "BBB":
-      isBBB.value = !isBBB.value;
-      break;
-    case "CCC":
-      isCCC.value = !isCCC.value;
-      break;
-    default:
-      break;
+    await game.dispatchGameDetail(route.params.id);
   }
 };
 
 const handleAddTab = () => {};
 
-const gameInformation = ref<any>({
-  game_id: "XXX111X2X3",
-  game_name: "BlackJack",
-  game_type: "Poker",
-  api_provier: "Fundist",
-  game_maker: "XXXGame",
-  rtp_value: 96.5,
-  max_bet: 1000000,
-  min_bet: 0.01,
-  max_odds: 100000,
-  restricted_country: ["美国", "墨西哥", "加拿大", "英国"],
-  game_group: [
-    { label: "HOT", color: "#ffcc99" },
-    { label: "NEW", color: "#80cccc" },
-    { label: "PG", color: "#b3e6ff" },
-  ],
-  game_trial_start: true,
-  game_trial_count: 10,
-  game_state: { value: 0, label: "启用" },
-  maintenance_date_range: [
-    moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
-    moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
-  ],
-
-  game_cover: "",
-  game_hd_img: "",
-  game_tab: ["Classic", "EvoPlay", "Club"],
+const gameInformation = computed(() => {
+  return game.getGameDetailData;
 });
+
+const maintenance_date_range = ref<Array<any>>([]);
 
 const goBack = () => {
   router.push({ name: "Channel Management" });
 };
 
 const handleButtonActive = (name: string) => {
-  router.push({ name: name });
+  router.push({ name: name, params: { id: route.params.id } });
 };
 
 onMounted(async () => {
   await game.dispatchGameDetail(route.params.id);
-  /*let res = await getGameInfo(user.token, route.params.id);
+  await game.dispatchGameTabList();
+  maintenance_date_range.value = [
+    new Date(gameInformation.value.next_maintanence_start_time * 1000)
+      .toISOString()
+      .split("T")[0],
+    new Date(gameInformation.value.next_maintanence_end_time * 1000)
+      .toISOString()
+      .split("T")[0],
+  ];
 
-  gameInformation.value = res.data.data;
-  gameInformation.value.maintenance_date_range[0] = res.data.data.maintenance_date_range[0].split(
-    "T"
-  )[0];
-  gameInformation.value.maintenance_date_range[1] = res.data.data.maintenance_date_range[1].split(
-    "T"
-  )[0];
-
-  gameInformation.value.game_cover.forEach((item: string) => {
-    coverFileList.value.push({
-      name: "item",
-      url: `http://45.32.120.156:8020/asset/image/game/${route.params.id}/cover/${item}`,
-    });
+  gameTabList.value.forEach((element) => {
+    dynamicGameTags.value.push(element.name);
   });
 
-  gameInformation.value.game_hd.forEach((item: string) => {
-    hdFileList.value.push({
-      name: "item",
-      url: `http://45.32.120.156:8020/asset/image/game/${route.params.id}/hd/${item}`,
-    });
-  });*/
+  gameInformation.value.game_tag.forEach((element) => {
+    let index = dynamicGameTags.value.findIndex((item) => item == element);
+    tag_status.value[index] = true;
+  });
 });
+
+const handlegameStatusChange = async () => {
+  await game.dispatchGameDetailChangeStatus({
+    game_id: route.params.id,
+    game_status: gameInformation.value.game_status,
+  });
+};
+
+const handleGameTrialStatusChange = async () => {
+  console.log(gameInformation.value.trial_play);
+  await game.dispatchGameDetailChangeTrialStatus({
+    game_id: route.params.id,
+    trial_play: gameInformation.value.trial_play,
+  });
+};
+
+const gameTabList = computed(() => {
+  return game.getGameTabList;
+});
+
+const inputGameTagValue = ref("");
+const dynamicGameTags = ref<Array<string>>([]);
+const inputGameTagVisible = ref(false);
+const inputGameTagRef = ref<InstanceType<typeof ElInput>>();
+
+const showInput = () => {
+  inputGameTagVisible.value = true;
+  nextTick(() => {
+    inputGameTagRef.value!.input!.focus();
+  });
+};
+
+const handleInputConfirm = () => {
+  if (inputGameTagValue.value) {
+    dynamicGameTags.value.push(inputGameTagValue.value);
+    tag_status.value.push(false);
+  }
+  inputGameTagVisible.value = false;
+  inputGameTagValue.value = "";
+};
+
+const tag_status = ref<Array<boolean>>([]);
+
+const handleGameTagSelectionChange = (index: number) => {
+  tag_status.value[index] = !tag_status.value[index];
+};
 </script>
 
 <template>
@@ -246,7 +226,7 @@ onMounted(async () => {
         <el-col :span="8">
           <el-form>
             <el-form-item label="API提供商:">
-              <el-text>{{ gameInformation.api_provier }}</el-text>
+              <el-text>{{ gameInformation.api_provider }}</el-text>
             </el-form-item>
           </el-form>
         </el-col>
@@ -257,7 +237,7 @@ onMounted(async () => {
         </el-col>
         <el-col :span="8">
           <el-form-item label="RTP:">
-            <el-text>{{ gameInformation.rtp_value }}%</el-text>
+            <el-text>{{ gameInformation.rtp }}%</el-text>
           </el-form-item>
         </el-col>
       </el-row>
@@ -265,18 +245,18 @@ onMounted(async () => {
         <el-col :span="8">
           <el-form>
             <el-form-item label="最大下注:">
-              <el-text>{{ gameInformation.max_bet }}</el-text>
+              <el-text>{{ gameInformation.max_bet_limit }}</el-text>
             </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="8">
           <el-form-item label="最小下注:">
-            <el-text>{{ gameInformation.min_bet }}</el-text>
+            <el-text>{{ gameInformation.min_bet_limit }}</el-text>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="最大赔率:">
-            <el-text>{{ gameInformation.max_odds }}</el-text>
+            <el-text>{{ gameInformation.max_magnification }}</el-text>
           </el-form-item>
         </el-col>
       </el-row>
@@ -285,7 +265,7 @@ onMounted(async () => {
           <el-form-item label="限制国家:">
             <el-text
               class="restricted-country"
-              v-for="(item, index) in gameInformation.restricted_country"
+              v-for="(item, index) in gameInformation.limit_country"
               :key="index"
               >{{ item }}</el-text
             >
@@ -301,8 +281,8 @@ onMounted(async () => {
                   class="game-group"
                   v-for="(item, index) in gameInformation.game_group"
                   :key="index"
-                  :style="{ 'background-color': groupTagColor[item] }"
-                  >{{ item }}</el-text
+                  :style="'background-color:' + item.color"
+                  >{{ item.name }}</el-text
                 >
               </div>
             </el-form-item>
@@ -311,14 +291,15 @@ onMounted(async () => {
         <el-col :span="8">
           <el-form-item label="开启试玩:">
             <el-switch
-              v-model="gameInformation.game_trial_start"
+              v-model="gameInformation.trial_play"
               style="margin-right: 10px"
+              @click="handleGameTrialStatusChange"
             />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="试玩次数:">
-            <el-text class="trial-count">{{ gameInformation.game_trial_count }}</el-text>
+            <el-text class="trial-count">{{ gameInformation.trial_count }}</el-text>
           </el-form-item>
         </el-col>
       </el-row>
@@ -327,10 +308,11 @@ onMounted(async () => {
           <el-form>
             <el-form-item label="游戏状态:">
               <el-select
-                v-model="gameInformation.game_state"
+                v-model="gameInformation.game_status"
                 class="m-2"
                 placeholder="Select"
                 size="large"
+                @change="handlegameStatusChange()"
               >
                 <el-option
                   v-for="item in gameStateOptions"
@@ -346,7 +328,7 @@ onMounted(async () => {
           <el-form-item label="下次维护时间:">
             <el-date-picker
               type="daterange"
-              v-model="gameInformation.maintenance_date_range"
+              v-model="maintenance_date_range"
               range-separator="至"
               value-format="YYYY-MM-DD"
             ></el-date-picker>
@@ -361,8 +343,8 @@ onMounted(async () => {
                 v-model:file-list="coverFileList"
                 :action="`${upLoadURL}?image_type=1&game_id=${route.params.id}`"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
+                :on-preview="handleCoverPictureCardPreview"
+                :on-remove="handleCoverRemove"
                 :headers="{ Authorization: user.token }"
               >
                 <div style="display: grid; justify-items: center">
@@ -372,8 +354,8 @@ onMounted(async () => {
                 </div>
               </el-upload>
 
-              <el-dialog v-model="dialogVisible">
-                <img w-full :src="dialogImageUrl" alt="Preview Image" />
+              <el-dialog v-model="dialogCoverVisible">
+                <img w-full :src="dialogCoverImageUrl" alt="Preview Image" />
               </el-dialog>
             </el-form-item>
           </el-form>
@@ -408,7 +390,7 @@ onMounted(async () => {
               <div style="display: flex">
                 <el-text
                   class="game-tab"
-                  v-for="(item, index) in gameInformation.game_tab"
+                  v-for="(item, index) in gameInformation.game_tag"
                   :key="index"
                   >{{ item }}</el-text
                 >
@@ -427,48 +409,36 @@ onMounted(async () => {
         <el-col>
           <div v-if="isTabPanelShow == true" class="tab-container">
             <div>
-              <el-button
-                class="tab-button"
-                :type="isClassic == true ? 'warning' : ''"
-                @click="handleSelectTab('Classic')"
-                style="margin-left: 20px"
-                >Classic</el-button
+              <el-check-tag
+                v-for="(tag, index) in dynamicGameTags"
+                :key="tag"
+                size="large"
+                style="margin-left: 15px"
+                :checked="tag_status[index]"
+                @change="handleGameTagSelectionChange(index)"
+                type="warning"
               >
+                {{ tag }}
+              </el-check-tag>
+              <el-input
+                v-if="inputGameTagVisible"
+                ref="inputGameTagRef"
+                v-model="inputGameTagValue"
+                class="w-20"
+                size="large"
+                @keyup.enter="handleInputConfirm"
+                @blur="handleInputConfirm"
+                style="margin-left: 15px"
+              />
               <el-button
-                class="tab-button"
-                :type="isEvoPlay == true ? 'warning' : ''"
-                @click="handleSelectTab('EvoPlay')"
-                style="margin-left: 20px"
-                >EvoPlay</el-button
+                v-else
+                class="button-new-tag"
+                size="small"
+                @click="showInput"
+                style="margin-left: 15px"
               >
-              <el-button
-                class="tab-button"
-                :type="isClub == true ? 'warning' : ''"
-                @click="handleSelectTab('Club')"
-                style="margin-left: 20px"
-                >Club</el-button
-              >
-              <el-button
-                class="tab-button"
-                :type="isAAA == true ? 'warning' : ''"
-                @click="handleSelectTab('AAA')"
-                style="margin-left: 20px"
-                >AAA</el-button
-              >
-              <el-button
-                class="tab-button"
-                :type="isBBB == true ? 'warning' : ''"
-                @click="handleSelectTab('BBB')"
-                style="margin-left: 20px"
-                >BBB</el-button
-              >
-              <el-button
-                class="tab-button"
-                :type="isCCC == true ? 'warning' : ''"
-                @click="handleSelectTab('CCC')"
-                style="margin-left: 20px"
-                >CCC</el-button
-              >
+                +
+              </el-button>
             </div>
             <div class="add-tag-btn">
               <el-button
