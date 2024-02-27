@@ -43,6 +43,9 @@ export namespace NETWORKCFG {
     static GAME_CONFIG_BATCH_ACTiON: string = '/game/config/batch-action'
 
     static GAME_DETAIL: string = '/game/config/detail'
+    static GAME_DETAIL_STATUS_CHANGE: string = '/game/config/update/game-status'
+    static GAME_DETAIL_TRIAL_STATUS_CHANGE: string = '/game/config/update/trial-play'
+    static GAME_DETAIL_GAME_TAG_UPDATE: string = '/game/config/update/game-tag'
   }
   export class AGENT {
     // agent list api

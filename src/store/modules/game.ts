@@ -169,6 +169,42 @@ export const gameStore = defineStore({
           }
         }
         await network.sendMsg(route, {params:{game_id:game_id}}, next, 1, 4);
-      }
+      },
+      async dispatchGameDetailChangeStatus(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_DETAIL_STATUS_CHANGE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GamePostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchGameDetailChangeTrialStatus(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_DETAIL_TRIAL_STATUS_CHANGE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GamePostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchGameDetailUpdateGameTag(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_DETAIL_GAME_TAG_UPDATE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GamePostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
     }
   })

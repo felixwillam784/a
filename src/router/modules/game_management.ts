@@ -62,7 +62,7 @@ const gameManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "game/sort",
+                        path: "game/sort/:id",
                         component: () => import('@/views/game-management/game-configuration/details/game-sort.vue'),
                         name: "Game Sort",
                         meta: {
