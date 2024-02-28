@@ -89,8 +89,6 @@ const handleShowTab = async () => {
   }
 };
 
-const handleAddTab = () => {};
-
 const gameInformation = computed(() => {
   return game.getGameDetailData;
 });
@@ -158,10 +156,12 @@ const showInput = () => {
   });
 };
 
-const handleInputConfirm = () => {
+const handleInputConfirm = async () => {
   if (inputGameTagValue.value) {
     dynamicGameTags.value.push(inputGameTagValue.value);
     tag_status.value.push(false);
+
+    await game.dispatchAddGameTag({ game_tag: inputGameTagValue.value });
   }
   inputGameTagVisible.value = false;
   inputGameTagValue.value = "";
@@ -430,21 +430,12 @@ const handleGameTagSelectionChange = (index: number) => {
                 @blur="handleInputConfirm"
                 style="margin-left: 15px"
               />
-              <el-button
-                v-else
-                class="button-new-tag"
-                size="small"
-                @click="showInput"
-                style="margin-left: 15px"
-              >
-                +
-              </el-button>
             </div>
             <div class="add-tag-btn">
               <el-button
                 class="tab-button"
                 :type="isTabPanelShow == true ? 'warning' : ''"
-                @click="handleAddTab()"
+                @click="showInput"
                 style="margin-left: 20px"
                 >添加标签</el-button
               >

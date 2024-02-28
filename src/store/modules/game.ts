@@ -206,5 +206,17 @@ export const gameStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
+      async dispatchAddGameTag(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.Game.GAME_TAG_ADD;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Game.GamePostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
     }
   })

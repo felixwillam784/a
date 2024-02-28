@@ -40,7 +40,11 @@ const { user } = useStore();
 onMounted(async () => {});
 
 const handleQuery = async () => {
-  await player.dispatchGetUserList(formData.value);
+  formData.page_num = 1;
+  data.value = [];
+  disabled.value = false;
+  page.value = 0;
+  await load();
 };
 
 const resetQuery = () => {
@@ -49,6 +53,14 @@ const resetQuery = () => {
       formData.value[property] = "";
     }
   }
+};
+
+const prohibitWithdrawal = async (id: number) => {
+  await player.dispatchProhibitWithdrawal({ user_id: id });
+};
+
+const addBlackList = async (id: number) => {
+  await player.dispatchAddBlackList({ user_id: id });
 };
 
 const goCustomerDetailPage = (id: string) => {
@@ -64,7 +76,8 @@ const load = async () => {
   page.value++;
   if (page.value <= total.value) {
     formData.value.page_num = page.value;
-    await handleQuery();
+    await player.dispatchGetUserList(formData.value);
+    console.log(customerList.value);
     data.value = data.value.concat(customerList.value);
   }
 
@@ -153,7 +166,7 @@ const load = async () => {
             v-el-table-infinite-scroll="load"
             :infinite-scroll-disabled="disabled"
             :data="data"
-            style="width: 100%"
+            style="width: 100%; height: 650px"
           >
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">
               <template #default="scope">
@@ -261,8 +274,12 @@ const load = async () => {
                 <el-button type="danger" link @click="goCustomerDetailPage(scope.row.id)"
                   >详情</el-button
                 >
-                <el-button type="danger" link>提现封禁</el-button>
-                <el-button type="danger" link>拉黑</el-button>
+                <el-button type="danger" link @click="prohibitWithdrawal(scope.row.id)"
+                  >提现封禁</el-button
+                >
+                <el-button type="danger" link @click="addBlackList(scope.row.id)"
+                  >拉黑</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
