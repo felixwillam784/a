@@ -46,6 +46,8 @@ export namespace NETWORKCFG {
     static GAME_DETAIL_STATUS_CHANGE: string = '/game/config/update/game-status'
     static GAME_DETAIL_TRIAL_STATUS_CHANGE: string = '/game/config/update/trial-play'
     static GAME_DETAIL_GAME_TAG_UPDATE: string = '/game/config/update/game-tag'
+
+    static GAME_TAG_ADD: string ='/game/tag'
   }
   export class AGENT {
     // agent list api
@@ -81,6 +83,10 @@ export namespace NETWORKCFG {
 
   export class PLAYER{
     static USERLIST:string = "/user/list"
+    static BASIC_DETAIL:string = "/user/base"
+
+    static SET_BLACKLIST: string = "/user/blacklist"
+    static PROHIBIT_WITHDRAWAL: string = "/user/withdraw-prohibit"
   }
   //Listening events sent actively
   export class UNSOLICITED {}

@@ -15,6 +15,7 @@ export const playerStore = defineStore({
       UserList: [] as Array<Player.GetUserData>,
       TotalNumber: 1 as number,
       
+      BasicDetail: {} as Player.GetBaseDetailData,
 
     }),
     
@@ -24,6 +25,8 @@ export const playerStore = defineStore({
 
       getUserList: (state) => state.UserList,
       getTotalNumber: (state) => state.TotalNumber,
+
+      getBasicDetail: (state) => state.BasicDetail,
         
     },
   
@@ -42,6 +45,10 @@ export const playerStore = defineStore({
         this.TotalNumber = data;
       },
 
+      setBasicDetail(data:Player.GetBaseDetailData) {
+        this.BasicDetail = data;
+      },
+
       async dispatchGetUserList(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.USERLIST;
@@ -52,6 +59,46 @@ export const playerStore = defineStore({
             this.setSuccess(true);
             this.setUserList(response.data.data_list);
             this.setTotalNumber(response.data.total_count);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+
+      async dispatchAddBlackList(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.SET_BLACKLIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchProhibitWithdrawal(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.PROHIBIT_WITHDRAWAL;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchPlayerBasicDetail(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.BASIC_DETAIL;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.GetBaseDetailDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setBasicDetail(response.data);
           }
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
