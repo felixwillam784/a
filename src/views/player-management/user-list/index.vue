@@ -72,7 +72,7 @@ const page = ref(0);
 const data = ref<Array<Player.GetUserData>>([]);
 const load = async () => {
   if (disabled.value) return;
-
+  loading.value = true;
   page.value++;
   if (page.value <= total.value) {
     formData.value.page_num = page.value;
@@ -84,6 +84,7 @@ const load = async () => {
   if (page.value === total.value) {
     disabled.value = true;
   }
+  loading.value = false;
 };
 </script>
 
@@ -167,6 +168,7 @@ const load = async () => {
             :infinite-scroll-disabled="disabled"
             :data="data"
             style="width: 100%; height: 650px"
+            v-loading="loading"
           >
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">
               <template #default="scope">
@@ -269,16 +271,26 @@ const load = async () => {
                 }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="200" fixed="right">
+            <el-table-column label="操作" align="center" width="250" fixed="right">
               <template #default="scope">
-                <el-button type="danger" link @click="goCustomerDetailPage(scope.row.id)"
+                <el-button type="primary" link @click="goCustomerDetailPage(scope.row.id)"
                   >详情</el-button
                 >
-                <el-button type="danger" link @click="prohibitWithdrawal(scope.row.id)"
-                  >提现封禁</el-button
+                <el-button
+                  :type="
+                    scope.row.account_withdrawal_prohibit == 1 ? 'danger' : 'success'
+                  "
+                  link
+                  @click="prohibitWithdrawal(scope.row.id)"
+                  >{{
+                    scope.row.account_withdrawal_prohibit == 1 ? "提现封禁" : "提现正常"
+                  }}</el-button
                 >
-                <el-button type="danger" link @click="addBlackList(scope.row.id)"
-                  >拉黑</el-button
+                <el-button
+                  :type="scope.row.user_status == 1 ? 'danger' : 'success'"
+                  link
+                  @click="addBlackList(scope.row.id)"
+                  >{{ scope.row.user_status == 1 ? "拉黑" : "取消拉黑" }}</el-button
                 >
               </template>
             </el-table-column>
