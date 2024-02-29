@@ -87,6 +87,9 @@ export namespace NETWORKCFG {
 
     static SET_BLACKLIST: string = "/user/blacklist"
     static PROHIBIT_WITHDRAWAL: string = "/user/withdraw-prohibit"
+
+    static UPDATE_PHONE: string = "/user/phone"
+    static UPDATE_MARK: string = "/user/mark"
   }
   //Listening events sent actively
   export class UNSOLICITED {}

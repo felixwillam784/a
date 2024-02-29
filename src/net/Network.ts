@@ -1,5 +1,5 @@
 import { EXITTYPE, NetworkData, SENDTYPE } from './NetworkData'
-import { io, Socket } from 'socket.io-client'
+//import { io, Socket } from 'socket.io-client'
 import request from '@/utils/request';
 
 /**
@@ -28,7 +28,7 @@ export class Network {
 
   private sendCount: { [key: number]: number } = {}
 
-  private socket: Socket = io()
+  //private socket: Socket = io()
 
   private service: any
 
@@ -111,7 +111,7 @@ export class Network {
 
   //send websocket
   public socketReq(route: string, msg: any, callBack?: Function) {
-    this.socket.emit(route, msg)
+    //this.socket.emit(route, msg)
   }
 
   /**
@@ -121,9 +121,9 @@ export class Network {
    * @param connectcb
    */
   public connect(connectFuc?: Function) {
-    this.socket.on('connection', () => {
+    // this.socket.on('connection', () => {
 
-    })
+    // })
   }
 
   /**
@@ -132,16 +132,16 @@ export class Network {
    * @param event
    */
   private connectConnector(event_type: string, event: MessageEvent | CloseEvent | Event | any) {
-    switch (event_type) {
-      case 'emit':
-        this.socket.emit(event)
-        break
-      case 'on':
-        this.socket.on(event, () => {
+    // switch (event_type) {
+    //   case 'emit':
+    //     this.socket.emit(event)
+    //     break
+    //   case 'on':
+    //     this.socket.on(event, () => {
 
-        })
-        break
-    }
+    //     })
+    //     break
+    // }
   }
 
   /**
@@ -149,9 +149,9 @@ export class Network {
    * @param event
    */
   private kicked() {
-    this.socket.on('disconnect', () => {
-      console.log('socket disconnected')
-    })
+    // this.socket.on('disconnect', () => {
+    //   console.log('socket disconnected')
+    // })
   }
 
   /**
@@ -163,7 +163,7 @@ export class Network {
    * websocket disconnect
    */
   public disconnect() {
-    this.socket.emit('forceDisconnect')
+    //this.socket.emit('forceDisconnect')
   }
 
   /**

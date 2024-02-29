@@ -10,6 +10,8 @@ import {
 } from "@/api/Players";
 import useStore from "@/store";
 import { useRoute } from "vue-router";
+import { nextTick } from "vue";
+import { ElInput } from "element-plus";
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -152,7 +154,8 @@ const moreVipBonusShow = () => {
 };
 
 onMounted(async () => {
-  await player.dispatchPlayerBasicDetail({ id: route.params.id });
+  let id: any = route.params.id;
+  await player.dispatchPlayerBasicDetail({ id: parseInt(id) });
   console.log(basicInformation.value);
 });
 
@@ -170,6 +173,52 @@ const getData = async () => {
   pixList.value = temp.data.data.pix_list;
   walletList.value = temp.data.data.wallet_list;
   mexList.value = temp.data.data.mex_list;
+};
+
+const inputPhoneTagValue = ref("");
+const inputPhoneTagVisible = ref(false);
+const inputPhoneTagRef = ref<InstanceType<typeof ElInput>>();
+
+const showPhoneInput = () => {
+  inputPhoneTagVisible.value = true;
+  nextTick(() => {
+    inputPhoneTagRef.value!.input!.focus();
+  });
+};
+
+const handlePhoneInputConfirm = async () => {
+  if (inputPhoneTagValue.value) {
+    let id: any = route.params.id;
+    await player.dispatchUpdatePhoneNumber({
+      id: parseInt(id),
+      phone: inputPhoneTagValue.value,
+    });
+  }
+  inputPhoneTagVisible.value = false;
+  inputPhoneTagValue.value = "";
+};
+
+const inputUserMarkValue = ref("");
+const inputUserMarkVisible = ref(false);
+const inputUserMarkRef = ref<InstanceType<typeof ElInput>>();
+
+const showUserMarkInput = () => {
+  inputUserMarkVisible.value = true;
+  nextTick(() => {
+    inputUserMarkRef.value!.input!.focus();
+  });
+};
+
+const handleUserMarkInputConfirm = async () => {
+  if (inputUserMarkValue.value) {
+    let id: any = route.params.id;
+    await player.dispatchUpdateMark({
+      id: parseInt(id),
+      mark: inputUserMarkValue.value,
+    });
+  }
+  inputUserMarkVisible.value = false;
+  inputUserMarkValue.value = "";
 };
 </script>
 
@@ -240,7 +289,7 @@ const getData = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="用户ID:">
-                  {{ basicInformation.user_account }}
+                  {{ basicInformation.id }}
                   <el-button link>
                     <el-icon>
                       <CopyDocument />
@@ -251,7 +300,7 @@ const getData = async () => {
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户昵称:">
-                {{ basicInformation.nick_name }}
+                {{ basicInformation.nickname }}
                 <el-button link>
                   <el-icon>
                     <CopyDocument />
@@ -261,7 +310,7 @@ const getData = async () => {
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户账号:">
-                {{ basicInformation.id }}
+                {{ basicInformation.uid }}
                 <el-button link>
                   <el-icon>
                     <CopyDocument />
@@ -279,20 +328,36 @@ const getData = async () => {
                     style="color: #3afefe; text-decoration-line: underline"
                     @click="router.push({ name: 'UserDetail' })"
                   >
-                    {{ basicInformation.belong_to_superior }}
+                    {{ basicInformation.sir_user_id }}
                   </el-link>
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户邀请码:">
-                {{ basicInformation.user_invitation_code }}
+                {{ basicInformation.invitation_code }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="手机号码:">
-                {{ basicInformation.phone_number }}
-                <el-button link type="primary" style="margin-left: 20px">
+                <div v-if="!inputPhoneTagVisible">{{ basicInformation.phone }}</div>
+                <el-input
+                  v-if="inputPhoneTagVisible"
+                  ref="inputPhoneTagRef"
+                  v-model="inputPhoneTagValue"
+                  class="w-20"
+                  size="large"
+                  @keyup.enter="handlePhoneInputConfirm"
+                  @blur="handlePhoneInputConfirm"
+                  style="margin-left: 15px"
+                />
+                <el-button
+                  link
+                  type="primary"
+                  style="margin-left: 20px"
+                  @click="showPhoneInput"
+                  v-if="!inputPhoneTagVisible"
+                >
                   修改
                 </el-button>
               </el-form-item>
@@ -302,13 +367,13 @@ const getData = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="注册时间:">
-                  {{ basicInformation.registration_time }}
+                  {{ basicInformation.created_at }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="最后登录时间:">
-                {{ basicInformation.recently_login_time }}
+                {{ basicInformation.updated_at }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -324,14 +389,36 @@ const getData = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="用户类型:">
-                  {{ basicInformation.customer_type }}
+                  {{
+                    basicInformation.user_type == 1
+                      ? "普通玩家"
+                      : basicInformation.user_type == 2
+                      ? "普通代理"
+                      : "KOL"
+                  }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户标记:">
-                {{ basicInformation.user_tag }}
-                <el-button link type="primary" style="margin-left: 20px">
+                <div v-if="!inputUserMarkVisible">{{ basicInformation.mark }}</div>
+                <el-input
+                  v-if="inputUserMarkVisible"
+                  ref="inputUserMarkRef"
+                  v-model="inputUserMarkValue"
+                  class="w-20"
+                  size="large"
+                  @keyup.enter="handleUserMarkInputConfirm"
+                  @blur="handleUserMarkInputConfirm"
+                  style="margin-left: 15px"
+                />
+                <el-button
+                  link
+                  type="primary"
+                  style="margin-left: 20px"
+                  @click="showUserMarkInput"
+                  v-if="!inputUserMarkVisible"
+                >
                   修改
                 </el-button>
               </el-form-item>
@@ -342,13 +429,19 @@ const getData = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="账号状态:">
-                  <font color="red">{{ basicInformation.account_status }}</font>
+                  <font color="red">{{
+                    basicInformation.user_status == 1
+                      ? "激活"
+                      : basicInformation.user_status == 2
+                      ? "禁用"
+                      : "删除"
+                  }}</font>
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="提现状态:">
-                {{ basicInformation.withdrawal_status }}
+                {{ basicInformation.withdraw_prohibit == 1 ? "提现正常" : "提现封禁" }}
                 <el-button link type="danger" style="margin-left: 20px">
                   封禁提现
                 </el-button>
@@ -356,7 +449,13 @@ const getData = async () => {
             </el-col>
             <el-col :span="8">
               <el-form-item label="冻结状态:">
-                {{ basicInformation.frozen_status }}
+                {{
+                  basicInformation.account_suspend == 1
+                    ? "正常"
+                    : basicInformation.account_suspend == 2
+                    ? "冻结"
+                    : "自我冻结"
+                }}
                 <el-button link type="danger" style="margin-left: 20px"> 拉黑 </el-button>
               </el-form-item>
             </el-col>
@@ -365,12 +464,13 @@ const getData = async () => {
             <el-col :span="24">
               <el-form label-width="200">
                 <el-form-item label="运营备注:">
-                  {{ basicInformation.operation_notes }}
+                  {{ basicInformation.notes }}
                 </el-form-item>
               </el-form>
             </el-col>
           </el-row>
         </el-collapse-item>
+
         <el-collapse-item title="账户信息" name="2">
           <template #title>
             <h2>账户信息</h2>
