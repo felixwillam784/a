@@ -17,6 +17,8 @@ export const playerStore = defineStore({
       
       BasicDetail: {} as Player.GetBaseDetailData,
 
+      TestAccountList: [] as Array<Player.GetTestUserData>,
+      TestUserBasicDetail: {} as Player.GetTestUserBasicDetailData,
     }),
     
     getters: {
@@ -27,6 +29,9 @@ export const playerStore = defineStore({
       getTotalNumber: (state) => state.TotalNumber,
 
       getBasicDetail: (state) => state.BasicDetail,
+      
+      getTestAccountList: (state) => state.TestAccountList,
+      getTestUserBasicDetail: (state) => state.TestUserBasicDetail,
         
     },
   
@@ -47,6 +52,16 @@ export const playerStore = defineStore({
 
       setBasicDetail(data:Player.GetBaseDetailData) {
         this.BasicDetail = data;
+      },
+
+      setTestAccountList(data:Array<Player.GetTestUserData>) {
+        this.TestAccountList = data;
+        this.TestAccountList.forEach(element => {
+          element.switch_value = element.account_prohibit == 1 ? false :true;
+        });
+      },
+      setTestUserBasicDetail(data:Player.GetTestUserBasicDetailData) {
+        this.TestUserBasicDetail = data;
       },
 
       async dispatchGetUserList(formData:any) {
@@ -128,6 +143,46 @@ export const playerStore = defineStore({
           }
         }
         await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchUpdateNote(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_NOTE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+
+      async dispatchGetTestUserList(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.TEST_USER_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.GetTestUserDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setTestAccountList(response.data.data_list);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+      async dispatchGetTestUserBasicDetail(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.TEST_USER_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.GetTestUserBasicDetailDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setTestUserBasicDetail(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
       },
     }
   })
