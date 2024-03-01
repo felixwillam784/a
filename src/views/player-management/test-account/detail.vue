@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { ArrowLeft } from "@element-plus/icons-vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import TestAccountDetail from "./components/TestAccountDetail.vue";
 import ParticipateGameSetting from "./components/UsageScope.vue";
 import FundDetail from "./components/FundDetail.vue";
 import BettingRecord from "./components/BettingRecord.vue";
 import RegistrationRecord from "./components/RegistrationRecord.vue";
 
+import useStore from "@/store";
 const router = useRouter();
+const route = useRoute();
+
+const { player } = useStore();
 
 const activeNames = ref(["1"]);
 const activeIndex = ref<number>(0);
 const handleBtnTab = (index: number) => {
   activeIndex.value = index;
 };
+
+onMounted(async () => {
+  await player.dispatchGetTestUserBasicDetail({ id: route.params.id });
+});
 </script>
 
 <template>

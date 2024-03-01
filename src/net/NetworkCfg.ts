@@ -90,6 +90,11 @@ export namespace NETWORKCFG {
 
     static UPDATE_PHONE: string = "/user/phone"
     static UPDATE_MARK: string = "/user/mark"
+    static UPDATE_NOTE: string = "/user/notes"
+
+
+    static TEST_USER_LIST:string = "/user/test/list"
+    static TEST_USER_BASIC_DETAIL:string = "/user/test/detail"
   }
   //Listening events sent actively
   export class UNSOLICITED {}

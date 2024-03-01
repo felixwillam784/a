@@ -154,8 +154,7 @@ const moreVipBonusShow = () => {
 };
 
 onMounted(async () => {
-  let id: any = route.params.id;
-  await player.dispatchPlayerBasicDetail({ id: parseInt(id) });
+  await player.dispatchPlayerBasicDetail({ id: route.params.id });
   console.log(basicInformation.value);
 });
 
@@ -188,9 +187,8 @@ const showPhoneInput = () => {
 
 const handlePhoneInputConfirm = async () => {
   if (inputPhoneTagValue.value) {
-    let id: any = route.params.id;
     await player.dispatchUpdatePhoneNumber({
-      id: parseInt(id),
+      id: route.params.id,
       phone: inputPhoneTagValue.value,
     });
   }
@@ -211,14 +209,23 @@ const showUserMarkInput = () => {
 
 const handleUserMarkInputConfirm = async () => {
   if (inputUserMarkValue.value) {
-    let id: any = route.params.id;
     await player.dispatchUpdateMark({
-      id: parseInt(id),
+      id: route.params.id,
       mark: inputUserMarkValue.value,
     });
   }
   inputUserMarkVisible.value = false;
   inputUserMarkValue.value = "";
+};
+
+const handleNoteInputConfirm = async () => {
+  let id: any = route.params.id;
+  if (basicInformation.value.notes) {
+    await player.dispatchUpdateNote({
+      id: route.params.id,
+      notes: basicInformation.value.notes,
+    });
+  }
 };
 </script>
 
@@ -380,7 +387,7 @@ const handleUserMarkInputConfirm = async () => {
               <el-form-item label="注册IP:">
                 {{ basicInformation.register_ip }}
                 <el-button link type="success" style="margin-left: 20px">
-                  巴西 圣保罗
+                  {{ basicInformation.ip_location }}
                 </el-button>
               </el-form-item>
             </el-col>
@@ -464,7 +471,14 @@ const handleUserMarkInputConfirm = async () => {
             <el-col :span="24">
               <el-form label-width="200">
                 <el-form-item label="运营备注:">
-                  {{ basicInformation.notes }}
+                  <el-input
+                    type="textarea"
+                    size="large"
+                    @keyup.enter="handleNoteInputConfirm"
+                    @blur="handleNoteInputConfirm"
+                    style="margin-left: 15px"
+                    v-model="basicInformation.notes"
+                  />
                 </el-form-item>
               </el-form>
             </el-col>
