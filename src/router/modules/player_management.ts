@@ -240,7 +240,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
                         },
                     },
                     {
-                        path: "detail",
+                        path: "detail/:id",
                         component: () => import('@/views/player-management/test-account/detail.vue'),
                         name: "TestAccountDetail",
                         meta: {

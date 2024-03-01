@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import BasicSetting from "./components/BasicSetting.vue";
 import GameSetting from "./components/UsageScope.vue";
+
+import useStore from "@/store";
+import { number } from "echarts";
+const { player } = useStore();
 
 const router = useRouter();
 
@@ -14,76 +18,54 @@ const dateRange = ref([
 ]);
 
 const formData = ref<any>({
-  pageNum: 1,
-  pageSize: 20,
+  id: 0,
+  operator_id: "",
+  account_amount: 0,
+  account_amount_op: 1,
+  real_amount: 0,
+  real_amount_op: 1,
+  bonus_amount: 0,
+  bonus_amount_op: 1,
+  bet_times: 0,
+  bet_times_op: 1,
+  vip_reward: 0,
+  vip_reward_op: 1,
+  bet_pnl: 0,
+  bet_pnl_op: 1,
+  start_time: 0,
+  end_time: 0,
+  page_num: 1,
+  page_size: 10,
 });
-
-const switch_value = ref<boolean>(false);
 
 const loading = ref<boolean>(false);
 
-const total_count = ref<number>(0);
-
 const activeIndex = ref<number>(0);
 
-const agencyTerminateDialogVisible = ref<boolean>(false);
-const addTestNumberDialogVisible = ref<boolean>(false);
+const deleteTestUserDialogVisible = ref<boolean>(false);
+
+const addTestUserDialogVisible = ref<boolean>(false);
 
 const comparatorOptions = ref<Array<any>>([
   {
     label: "≥",
-    value: "≥",
+    value: 1,
   },
   {
     label: "＞",
-    value: "＞",
+    value: 2,
   },
   {
     label: "≤",
-    value: "≤",
+    value: 3,
   },
   {
     label: "＜",
-    value: "＜",
+    value: 4,
   },
   {
     label: "＝",
-    value: "＝",
-  },
-]);
-
-const agencyList = ref<Array<any>>([
-  {
-    item_1: "User001",
-    item_2: 9999,
-    item_3: 9999,
-    item_4: 9999,
-    item_5: 9999,
-    item_6: 9999,
-    item_7: 9999,
-    item_8: 9999,
-    item_9: 9999,
-    item_10: 9999,
-    item_11: 9999,
-    item_12: 9999,
-    item_13: 9999,
-    item_14: 9999,
-    item_15: 9999,
-    item_16: 9999,
-    item_17: 9999,
-    item_18: 9999,
-    item_19: 9999,
-    item_20: 9999,
-    item_21: 9999,
-    item_22: 9999,
-    item_23: 9999,
-    item_24: 9999,
-    item_25: 9999,
-    item_26: 9999,
-    item_27: 9999,
-    item_28: 9999,
-    item_29: 9999,
-    item_30: 9999,
+    value: 5,
   },
 ]);
 
@@ -192,10 +174,6 @@ const handleDateRange = (date: string) => {
   }
 };
 
-const handlePagination = () => {
-  handleQuery();
-};
-
 const handleQuery = () => {
   loading.value = true;
 };
@@ -205,15 +183,22 @@ const resetQuery = () => {
 };
 
 const showAgencyTerminateDialog = () => {
-  agencyTerminateDialogVisible.value = true;
+  deleteTestUserDialogVisible.value = true;
 };
 
 const handleBtnTab = (index: number) => {
   activeIndex.value = index;
 };
 
-onMounted(() => {
+onMounted(async () => {
   handleDateRange("this week");
+  formData.value.start_time = new Date(dateRange.value[0]).getTime() / 1000;
+  formData.value.end_time = new Date(dateRange.value[1]).getTime() / 1000;
+  await player.dispatchGetTestUserList(formData.value);
+});
+
+const testUserList = computed(() => {
+  return player.getTestAccountList;
 });
 </script>
 
@@ -230,23 +215,26 @@ onMounted(() => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="User ID" prop="user_id">
+                <el-form-item label="User ID" prop="id">
                   <el-input
-                    v-model="formData.user_id"
+                    v-model="formData.id"
                     placeholder="请输入User ID"
-                    style="width: 252px"
-                  />
+                    style="min-width: 252px"
+                    :value="formData.id == 0 ? '' : formData.id"
+                  >
+                  </el-input>
                 </el-form-item>
-                <el-form-item label="操作人员" prop="email_address">
-                  <el-select
-                    v-model="formData.user_id"
+                <el-form-item label="操作人员" prop="operator_id">
+                  <el-input
+                    v-model="formData.id"
                     placeholder="请选择操作人员"
                     style="min-width: 252px"
+                    :value="formData.operator_id == 0 ? '' : formData.id"
                   >
-                  </el-select>
+                  </el-input>
                 </el-form-item>
                 <el-form-item style="float: right">
-                  <el-button @click="addTestNumberDialogVisible = true">
+                  <el-button @click="addTestUserDialogVisible = true">
                     新增测试号
                   </el-button>
                   <el-button type="primary" :icon="Search" @click="handleQuery">
@@ -261,17 +249,15 @@ onMounted(() => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="账户余额" prop="invitee_total_number">
+                <el-form-item label="账户余额" prop="account_amount">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.account_amount"
                     placeholder="请输入余额"
                     class="input-with-select"
+                    :value="formData.account_amount == 0 ? '' : formData.account_amount"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.account_amount_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -283,17 +269,15 @@ onMounted(() => {
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="真金余额" prop="invitee_total_number">
+                <el-form-item label="真金余额" prop="real_amount">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.real_amount"
                     placeholder="请输入金额"
                     class="input-with-select"
+                    :value="formData.real_amount == 0 ? '' : formData.real_amount"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.real_amount_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -305,17 +289,15 @@ onMounted(() => {
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="奖金余额" prop="invitee_total_number">
+                <el-form-item label="奖金余额" prop="bonus_amount">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.bonus_amount"
                     placeholder="请输入金额"
                     class="input-with-select"
+                    :value="formData.bonus_amount == 0 ? '' : formData.bonus_amount"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.bonus_amount_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -334,17 +316,15 @@ onMounted(() => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="投注次数" prop="invitee_total_number">
+                <el-form-item label="投注次数" prop="bet_times">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.bet_times"
                     placeholder="请输入次数"
                     class="input-with-select"
+                    :value="formData.bet_times == 0 ? '' : formData.bet_times"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.bet_times_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -356,17 +336,15 @@ onMounted(() => {
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="VIP返利" prop="invitee_total_number">
+                <el-form-item label="VIP返利" prop="vip_reward">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.vip_reward"
                     placeholder="请输入金额"
                     class="input-with-select"
+                    :value="formData.vip_reward == 0 ? '' : formData.vip_reward"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.vip_reward_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -378,17 +356,15 @@ onMounted(() => {
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="投注盈亏" prop="invitee_total_number">
+                <el-form-item label="投注盈亏" prop="bet_pnl">
                   <el-input
-                    v-model="formData.invitee_total_number"
+                    v-model="formData.bet_pnl"
                     placeholder="请输入金额"
                     class="input-with-select"
+                    :value="formData.bet_pnl == 0 ? '' : formData.bet_pnl"
                   >
                     <template #prepend>
-                      <el-select
-                        v-model="formData.invitee_comparator"
-                        style="width: 60px"
-                      >
+                      <el-select v-model="formData.bet_pnl_op" style="width: 60px">
                         <el-option
                           v-for="item in comparatorOptions"
                           :key="item.value"
@@ -501,153 +477,142 @@ onMounted(() => {
               <el-form-item label="测试号总奖金:">999999999999</el-form-item>
             </el-card>
           </div>
-          <el-table v-loading="loading" :data="agencyList" style="width: 100%">
-            <el-table-column label="UserID" align="center" prop="item_1" width="160">
+          <el-table v-loading="loading" :data="testUserList" style="width: 100%">
+            <el-table-column label="UserID" align="center" prop="id" width="160">
               <template #default="scope">
                 <el-link :underline="false" class="el-link-decoration">
-                  {{ scope.row.item_1 }}
+                  {{ scope.row.id }}
                 </el-link>
               </template>
             </el-table-column>
             <el-table-column
               label="VIP等级"
               align="center"
-              prop="item_2"
+              prop="vip_level"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_2 }}</p>
+                <p>{{ "VIP" + scope.row.vip_level }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="账户总余额"
               align="center"
-              prop="item_3"
+              prop="account_amount"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_3 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="真金余额"
               align="center"
-              prop="item_4"
+              prop="real_amount"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_4 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="奖金余额"
               align="center"
-              prop="item_5"
+              prop="bonus_amount"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_5 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="投注次数"
               align="center"
-              prop="item_6"
+              prop="bet_times"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_6 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="投注盈亏"
               align="center"
-              prop="item_7"
+              prop="bet_pnl"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_7 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="总打码量"
               align="center"
-              prop="item_8"
+              prop="wagering_amount"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_8 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="VIP返利"
               align="center"
-              prop="item_9"
+              prop="vip_reward"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_9 }}</p>
-              </template>
             </el-table-column>
             <el-table-column
               label="账号生成时间"
               align="center"
-              prop="item_10"
-              width="160"
+              prop="create_time"
+              width="170"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_10 }}</p>
+                <p>
+                  {{
+                    new Date(scope.row.create_time * 1000).toLocaleString("en-US", {
+                      timeZone: "UTC",
+                    })
+                  }}
+                </p>
               </template>
             </el-table-column>
+
             <el-table-column
               label="操作人员"
               align="center"
-              prop="item_11"
+              prop="operator_id"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_11 }}</p>
-              </template>
             </el-table-column>
+
             <el-table-column
               label="备注"
               align="center"
-              prop="item_11"
+              prop="notes"
               width="160"
               sortable
             >
-              <template #default="scope">
-                <p>{{ scope.row.item_11 }}</p>
-              </template>
             </el-table-column>
+
             <el-table-column
               label="账号状态"
               align="center"
-              prop="item_11"
+              prop="account_prohibit"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.item_11 }}</p>
+                <p :style="scope.row.account_prohibit == 2 ? 'color:red' : ''">
+                  {{ scope.row.account_prohibit == 1 ? "启用" : "停用" }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="200" fixed="right">
               <template #default="scope">
-                <el-switch v-model="switch_value" size="large" class="mr-2" />
+                <el-switch v-model="scope.row.switch_value" size="large" class="mr-2" />
                 <el-button
                   type="primary"
                   link
-                  @click="router.push({ name: 'TestAccountDetail' })"
+                  @click="
+                    router.push({
+                      name: 'TestAccountDetail',
+                      params: { id: scope.row.id },
+                    })
+                  "
                 >
                   详情
                 </el-button>
@@ -657,18 +622,11 @@ onMounted(() => {
               </template>
             </el-table-column>
           </el-table>
-          <div style="float: right">
-            <pagination
-              :total="total_count"
-              v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize"
-              @pagination="handlePagination"
-            />
-          </div>
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog title="新增测试号" v-model="addTestNumberDialogVisible">
+
+    <el-dialog title="新增测试号" v-model="addTestUserDialogVisible">
       <el-row v-if="activeIndex != 2 && activeIndex != 3">
         <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
           基本设置
@@ -728,11 +686,11 @@ onMounted(() => {
         >
           下一页
         </el-button>
-        <el-button @click="addTestNumberDialogVisible = false">取消添加</el-button>
+        <el-button @click="addTestUserDialogVisible = false">取消添加</el-button>
       </el-footer>
     </el-dialog>
 
-    <el-dialog title="解除代理关系" v-model="agencyTerminateDialogVisible">
+    <el-dialog title="解除代理关系" v-model="deleteTestUserDialogVisible">
       <h4 class="text-center">确认后将会解除代理与其上级的关系</h4>
       <h4 class="text-center">确认要解除代理关系？</h4>
       <el-form ref="ruleFormRef">
@@ -745,7 +703,7 @@ onMounted(() => {
       </el-form>
       <el-footer class="text-center">
         <el-button type="primary">确认</el-button>
-        <el-button @click="agencyTerminateDialogVisible = false">取消</el-button>
+        <el-button @click="deleteTestUserDialogVisible = false">取消</el-button>
       </el-footer>
     </el-dialog>
   </div>
