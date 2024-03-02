@@ -83,6 +83,8 @@ export type GetTestUserBasicDetailData = {
     last_login_ip: string	
     ip_location: string	
     notes: string
+
+    account_status: boolean
 }
 export interface GetTestUserBasicDetailDataResponse {
     code: number | string

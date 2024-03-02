@@ -62,6 +62,7 @@ export const playerStore = defineStore({
       },
       setTestUserBasicDetail(data:Player.GetTestUserBasicDetailData) {
         this.TestUserBasicDetail = data;
+        this.TestUserBasicDetail.account_status = this.TestUserBasicDetail.account_prohibit == 1 ? true : false;
       },
 
       async dispatchGetUserList(formData:any) {
@@ -78,7 +79,6 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
       },
-
       async dispatchAddBlackList(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.SET_BLACKLIST;
@@ -91,7 +91,6 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
-
       async dispatchProhibitWithdrawal(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.PROHIBIT_WITHDRAWAL;
@@ -104,7 +103,6 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
-
       async dispatchPlayerBasicDetail(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.BASIC_DETAIL;
@@ -118,7 +116,6 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
       },
-
       async dispatchUpdatePhoneNumber(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.UPDATE_PHONE;
@@ -131,7 +128,6 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
-
       async dispatchUpdateMark(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.UPDATE_MARK;
@@ -144,10 +140,21 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
-
       async dispatchUpdateNote(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.UPDATE_NOTE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchUpdateMail(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_MAIL;
         const network: Network = Network.getInstance();
         // response call back function
         const next = (response: Player.PlayerPostRequestResponse) => {
@@ -173,7 +180,7 @@ export const playerStore = defineStore({
       },
       async dispatchGetTestUserBasicDetail(formData: any) {
         this.setSuccess(false);
-        const route: string = NETWORKCFG.PLAYER.TEST_USER_LIST;
+        const route: string = NETWORKCFG.PLAYER.TEST_USER_BASIC_DETAIL;
         const network: Network = Network.getInstance();
         // response call back function
         const next = (response: Player.GetTestUserBasicDetailDataResponse) => {
@@ -183,6 +190,18 @@ export const playerStore = defineStore({
           }
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+      async dispatchUpdateTestUserStatus(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_NOTE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
       },
     }
   })

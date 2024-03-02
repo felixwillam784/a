@@ -9,6 +9,7 @@ import { vipStore } from './modules/vip';
 import { agentStore } from './modules/agent';
 import { gameStore } from './modules/game';
 import { playerStore } from './modules/player';
+import { withdrawalStore } from './modules/withdrawal';
 
 const useStore = () => ({
   auth: authStore(),
@@ -22,6 +23,7 @@ const useStore = () => ({
   agent: agentStore(),
   game: gameStore(),
   player: playerStore(),
+  withdrawal: withdrawalStore(),
 });
 
 
