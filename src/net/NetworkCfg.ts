@@ -91,10 +91,18 @@ export namespace NETWORKCFG {
     static UPDATE_PHONE: string = "/user/phone"
     static UPDATE_MARK: string = "/user/mark"
     static UPDATE_NOTE: string = "/user/notes"
+    static UPDATE_MAIL: string = "/user/email"
+
 
 
     static TEST_USER_LIST:string = "/user/test/list"
     static TEST_USER_BASIC_DETAIL:string = "/user/test/detail"
+    static TEST_USER_UPDATE_STATUS:string = "/user/test/status"
+  }
+
+  export class WITHDRAWAL{
+    static DEPOSITLIST:string = "/deposit-order/list"
+    static UPDATE_SUPPLIMENT:string = "/deposit/suppliment"
   }
   //Listening events sent actively
   export class UNSOLICITED {}

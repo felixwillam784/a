@@ -200,6 +200,8 @@ onMounted(async () => {
 const testUserList = computed(() => {
   return player.getTestAccountList;
 });
+
+const changeTestUserStatus = (id: string) => {};
 </script>
 
 <template>
@@ -603,7 +605,12 @@ const testUserList = computed(() => {
             </el-table-column>
             <el-table-column label="操作" align="center" width="200" fixed="right">
               <template #default="scope">
-                <el-switch v-model="scope.row.switch_value" size="large" class="mr-2" />
+                <el-switch
+                  v-model="scope.row.switch_value"
+                  size="large"
+                  class="mr-2"
+                  @change="changeTestUserStatus(scope.row.id)"
+                />
                 <el-button
                   type="primary"
                   link

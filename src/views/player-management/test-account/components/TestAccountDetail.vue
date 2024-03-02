@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { CopyDocument } from "@element-plus/icons-vue";
+import { useRouter, useRoute } from "vue-router";
+import useStore from "@/store";
+
+const { player } = useStore();
+const route = useRoute();
 
 const activeNames = ref(["1", "2"]);
 const account_status = ref<boolean>(true);
+
+onMounted(async () => {
+  await player.dispatchGetTestUserBasicDetail({ id: route.params.id });
+});
+
+const testDetail = computed(() => {
+  return player.getTestUserBasicDetail;
+});
 </script>
 
 <template>
@@ -13,26 +26,38 @@ const account_status = ref<boolean>(true);
         <el-row>
           <el-col :span="8">
             <el-form-item label="UserID: ">
-              12324234234
+              {{ testDetail.id }}
               <el-icon class="ms-2"><CopyDocument /></el-icon>
             </el-form-item>
           </el-col>
           <el-col :span="16">
             <el-form-item label="用户密码: ">
-              12324234234
+              {{ testDetail.password }}
               <el-icon class="ms-2"><CopyDocument /></el-icon>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="生成时间: "> 2020-02-02 19:00:00 </el-form-item>
+            <el-form-item label="生成时间: ">
+              {{
+                new Date(testDetail.create_time * 1000).toLocaleString("en-US", {
+                  timeZone: "UTC",
+                })
+              }}
+            </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="生成人员: "> User001 </el-form-item>
+            <el-form-item label="生成人员: "> {{ testDetail.operator_id }} </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="最后登录时间: "> 2020-02-02 19:00:00 </el-form-item>
+            <el-form-item label="最后登录时间: ">
+              {{
+                new Date(testDetail.update_time * 1000).toLocaleString("en-US", {
+                  timeZone: "UTC",
+                })
+              }}
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row>
@@ -40,7 +65,7 @@ const account_status = ref<boolean>(true);
             <el-form-item label="账号状态: " class="align-center">
               <el-switch
                 size="large"
-                v-model="account_status"
+                v-model="testDetail.account_prohibit"
                 inline-prompt
                 active-text="启用"
                 inactive-text="禁用"
@@ -49,14 +74,16 @@ const account_status = ref<boolean>(true);
           </el-col>
           <el-col :span="8">
             <el-form-item label="在线状态: ">
-              <span class="text-green-500">在线 &nbsp;</span> /
-              <span class="text-red-500">&nbsp;离线</span>
+              <span
+                :class="testDetail.online_status == 1 ? 'text-green-500' : 'text-red-500'"
+                >{{ testDetail.online_status == 1 ? "在线" : "离线" }}</span
+              >
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="最后登录IP: ">
-              123.123.12.1
-              <span class="text-green-500 ms-6">巴西圣保罗</span>
+              {{ testDetail.last_login_ip }}
+              <span class="text-green-500 ms-6">{{ testDetail.ip_location }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -68,6 +95,7 @@ const account_status = ref<boolean>(true);
                 type="textarea"
                 placeholder="给XX平台用的专用测试号"
                 class="w-4/5"
+                v-model="testDetail.notes"
               ></el-input>
             </el-form-item>
           </el-col>

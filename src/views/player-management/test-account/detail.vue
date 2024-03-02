@@ -20,9 +20,7 @@ const handleBtnTab = (index: number) => {
   activeIndex.value = index;
 };
 
-onMounted(async () => {
-  await player.dispatchGetTestUserBasicDetail({ id: route.params.id });
-});
+onMounted(async () => {});
 </script>
 
 <template>
