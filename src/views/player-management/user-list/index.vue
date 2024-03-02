@@ -77,7 +77,6 @@ const load = async () => {
   if (page.value <= total.value) {
     formData.value.page_num = page.value;
     await player.dispatchGetUserList(formData.value);
-    console.log(customerList.value);
     data.value = data.value.concat(customerList.value);
   }
 

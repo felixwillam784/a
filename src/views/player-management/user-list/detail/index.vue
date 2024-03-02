@@ -155,24 +155,7 @@ const moreVipBonusShow = () => {
 
 onMounted(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
-  console.log(basicInformation.value);
 });
-
-const getData = async () => {
-  let temp;
-
-  temp = await getUserDetailDepositWithdrawl(user.token, route.params.id);
-  depositAndWithdrawalData.value = temp.data.data;
-
-  temp = await getUserDetailAgent(user.token, route.params.id);
-  agentInformation.value = temp.data.data;
-
-  temp = await getUserDetailTable(user.token, route.params.id);
-  bankList.value = temp.data.data.bank_list;
-  pixList.value = temp.data.data.pix_list;
-  walletList.value = temp.data.data.wallet_list;
-  mexList.value = temp.data.data.mex_list;
-};
 
 const inputPhoneTagValue = ref("");
 const inputPhoneTagVisible = ref(false);
@@ -191,6 +174,7 @@ const handlePhoneInputConfirm = async () => {
       id: route.params.id,
       phone: inputPhoneTagValue.value,
     });
+    await player.dispatchPlayerBasicDetail({ id: route.params.id });
   }
   inputPhoneTagVisible.value = false;
   inputPhoneTagValue.value = "";
@@ -213,6 +197,7 @@ const handleUserMarkInputConfirm = async () => {
       id: route.params.id,
       mark: inputUserMarkValue.value,
     });
+    await player.dispatchPlayerBasicDetail({ id: route.params.id });
   }
   inputUserMarkVisible.value = false;
   inputUserMarkValue.value = "";
@@ -225,7 +210,31 @@ const handleNoteInputConfirm = async () => {
       id: route.params.id,
       notes: basicInformation.value.notes,
     });
+    await player.dispatchPlayerBasicDetail({ id: route.params.id });
   }
+};
+
+const inputMailTagValue = ref("");
+const inputMailTagVisible = ref(false);
+const inputMailTagRef = ref<InstanceType<typeof ElInput>>();
+
+const showMailInput = () => {
+  inputMailTagVisible.value = true;
+  nextTick(() => {
+    inputMailTagRef.value!.input!.focus();
+  });
+};
+
+const handleMailInputConfirm = async () => {
+  if (inputMailTagValue.value) {
+    await player.dispatchUpdateMail({
+      id: route.params.id,
+      email: inputMailTagValue.value,
+    });
+    await player.dispatchPlayerBasicDetail({ id: route.params.id });
+  }
+  inputMailTagVisible.value = false;
+  inputMailTagValue.value = "";
 };
 </script>
 
@@ -317,8 +326,27 @@ const handleNoteInputConfirm = async () => {
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户账号:">
-                {{ basicInformation.uid }}
-                <el-button link>
+                <span v-if="!inputMailTagVisible">{{ basicInformation.uid }}</span>
+                <el-input
+                  v-if="inputMailTagVisible"
+                  ref="inputMailTagRef"
+                  v-model="inputMailTagValue"
+                  class="w-20"
+                  size="large"
+                  @keyup.enter="handleMailInputConfirm"
+                  @blur="handleMailInputConfirm"
+                  style="margin-left: 15px"
+                />
+                <el-button
+                  link
+                  type="primary"
+                  style="margin-left: 20px"
+                  @click="showMailInput"
+                  v-if="!inputMailTagVisible"
+                >
+                  修改
+                </el-button>
+                <el-button link v-if="!inputMailTagVisible">
                   <el-icon>
                     <CopyDocument />
                   </el-icon>
