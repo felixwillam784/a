@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
@@ -17,22 +17,21 @@ const router = useRouter();
 
 const formData = ref<any>({
   user_account: "",
-  nick_name: "",
-  user_id: "",
-  submission_time: [],
-
-  order_update_time: [],
-
-  order_status: "",
-  order_number: "",
-  channel_order_number: "",
-  upstream_order_number: "",
   first_charge_status: "",
   upstream_channel: "",
+  platform_order_number: "",
+  upstream_order_number: "",
   gaia_order_number: "",
+  order_status: "",
+  submission_start: 0,
+  submission_end: 0,
+  order_update_start: "",
+  order_update_end: "",
   page_num: 1,
   page_size: 20,
 });
+const submission_time = ref<any>(["2020-12-31", new Date().toISOString().split("T")[0]]);
+const order_update = ref<any>([]);
 
 const loading = ref<boolean>(false);
 const depositOrderDialogVisible = ref<boolean>(false);
@@ -50,22 +49,22 @@ const depositOrderList = computed(() => {
   return withdrawal.getDepositList;
 });
 
-const depositOrderItem = ref<Withdrawal.GetDepositOrder>();
-
-const orderStatusOptions = ref<Array<any>>([
-  {
-    label: "待处理",
-    value: "待处理",
-  },
-]);
+const depositOrderItem = ref<Withdrawal.GetDepositOrder>(
+  {} as Withdrawal.GetDepositOrder
+);
 
 const handleQuery = async () => {
-  await withdrawal.dispatchDepositList({
-    page_num: formData.value.page_num,
-    page_size: formData.value.page_size,
-    submission_start: new Date(formData.value.submission_time[0]).getTime() / 1000,
-    submission_end: new Date(formData.value.submission_time[1]).getTime() / 1000,
-  });
+  data.value = [];
+  disabled.value = false;
+  page.value = 0;
+  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
+  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  if (order_update.value[0] && order_update.value[0]) {
+    formData.value.order_update_start = new Date(order_update.value[0]).getTime() / 1000;
+    formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
+  }
+  await withdrawal.dispatchDepositList(formData.value);
+  await load();
 };
 
 const detailManualPaymentDialog = (item: Withdrawal.GetDepositOrder) => {
@@ -83,8 +82,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       await withdrawal.dispatchUpdateSupply({
-        id: depositOrderItem.value.platform_order_number,
-        order_amount: parseInt(depositOrderItem.value.order_amount),
+        id: depositOrderItem.value?.platform_order_number,
+        order_amount: depositOrderItem.value?.order_amount,
       });
     } else {
     }
@@ -102,16 +101,13 @@ const makeOrder = (item: Withdrawal.GetDepositOrder) => {
 };
 
 onMounted(async () => {
-  let now = new Date();
-  formData.value.submission_time[0] = new Date("2020-12-31").toISOString().split("T")[0];
-  formData.value.submission_time[1] = now.toISOString().split("T")[0];
-
-  await withdrawal.dispatchDepositList({
-    page_num: formData.value.page_num,
-    page_size: formData.value.page_size,
-    submission_start: new Date(formData.value.submission_time[0]).getTime() / 1000,
-    submission_end: new Date(formData.value.submission_time[1]).getTime() / 1000,
-  });
+  formData.value.submission_start = Math.floor(
+    new Date(submission_time.value[0]).getTime() / 1000
+  );
+  formData.value.submission_end = Math.floor(
+    new Date(submission_time.value[1]).getTime() / 1000
+  );
+  await withdrawal.dispatchDepositList(formData.value);
 });
 
 const getFontStyle = (orderStatus: number) => {
@@ -124,35 +120,52 @@ const getFontStyle = (orderStatus: number) => {
   }
   return `color: ${color}; font-weight: bold;`;
 };
-
 const order_stats = [
-  "订单已关闭",
+  "订单已关",
   "支付失败",
   "订单生成",
   "支付中",
   "支付成功",
-  "业务处理完成",
+  "业务处理",
   "已退款",
 ];
-
 const total = computed(() => {
   return Math.ceil(withdrawal.getTotalNumber / 10);
 });
 const disabled = ref(false);
 const page = ref(0);
 const data = ref<Array<Withdrawal.GetDepositOrder>>([]);
+const changeStatusData = [
+  {
+    label: "是",
+    value: true,
+  },
+  {
+    label: "否",
+    value: false,
+  },
+];
+const orderStatusData = [
+  {
+    label: "支付成功",
+    value: 1,
+  },
+  {
+    label: "支付失败",
+    value: 2,
+  },
+  {
+    label: "支付中",
+    value: 3,
+  },
+];
 const load = async () => {
   if (disabled.value) return;
   loading.value = true;
   page.value++;
   if (page.value <= total.value) {
     formData.value.page_num = page.value;
-    await withdrawal.dispatchDepositList({
-      page_num: formData.value.page_num,
-      page_size: formData.value.page_size,
-      submission_start: new Date(formData.value.submission_time[0]).getTime() / 1000,
-      submission_end: new Date(formData.value.submission_time[1]).getTime() / 1000,
-    });
+    await withdrawal.dispatchDepositList(formData.value);
     data.value = data.value.concat(depositOrderList.value);
   }
 
@@ -184,12 +197,18 @@ const load = async () => {
                 placeholder="请选择是否首充"
                 class="width"
               >
+                <el-option
+                  v-for="item in changeStatusData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="订单状态" prop="order_status">
               <el-select v-model="formData.order_status" placeholder="选择订单状态">
                 <el-option
-                  v-for="(item, index) in orderStatusOptions"
+                  v-for="(item, index) in orderStatusData"
                   :label="item.label"
                   :value="item.value"
                   :key="index"
@@ -201,7 +220,7 @@ const load = async () => {
             <el-form-item label="订单提交时间" prop="submission_time">
               <el-date-picker
                 range-separator="到"
-                v-model="formData.submission_time"
+                v-model="submission_time"
                 type="daterange"
                 placeholder="选择提交时间"
                 format="YYYY-MM-DD"
@@ -212,7 +231,7 @@ const load = async () => {
             <el-form-item label="订单更新时间" prop="order_update_time">
               <el-date-picker
                 range-separator="到"
-                v-model="formData.order_update_time"
+                v-model="order_update"
                 type="daterange"
                 placeholder="选择更新时间"
                 format="YYYY-MM-DD"
@@ -222,8 +241,10 @@ const load = async () => {
             </el-form-item>
 
             <el-form-item label="上游通道" prop="upstream_channel">
-              <el-select v-model="formData.upstream_channel" placeholder="请选择上游通道">
-              </el-select>
+              <el-input
+                v-model="formData.upstream_channel"
+                placeholder="请选择上游通道"
+              />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :icon="Search" @click="handleQuery"
@@ -233,8 +254,11 @@ const load = async () => {
             </el-form-item>
           </el-form>
           <el-form :model="formData" :inline="true" label-width="100">
-            <el-form-item label="订单号" prop="order_number">
-              <el-input v-model="formData.order_number" placeholder="请输入订单号" />
+            <el-form-item label="订单号" prop="platform_order_number">
+              <el-input
+                v-model="formData.platform_order_number"
+                placeholder="请输入订单号"
+              />
             </el-form-item>
             <!-- <el-form-item label="通道订单号" prop="platform_order_number">
                             <el-input v-model="formData.platform_order_number" placeholder="请输入通道订单号" />
@@ -514,7 +538,7 @@ const load = async () => {
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单状态:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <Font color="green" v-if="depositOrderItem.order_status == '支付成功'">
+          <Font color="green" v-if="depositOrderItem.order_status == 2">
             {{ depositOrderItem.order_status }}
           </Font>
           <p v-else>{{ depositOrderItem.order_status }}</p>
