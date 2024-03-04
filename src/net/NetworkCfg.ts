@@ -30,6 +30,23 @@ export namespace NETWORKCFG {
     //StatisticDatas
     static VIPRankStatistic_Table: string = '/vip/rank-count-list'
     static VIPLevelStatistic_Table: string = '/vip/level-count-list'
+    static VIP_SIGNIN_LIST: string = '/vip/signinaward/list'  // VIP签到奖励列表  VIP sign-in reward list
+    static VIP_SIGNIN_DETAIL: string = '/vip/signinaward/detail' // VIP签到奖励详情  VIP sign-in reward details
+    static VIP_SIGNIN_UPDATE: string = '/vip/signinaward/update'  // VIP签到奖励更新  VIP sign-in reward update
+    static VIP_UPGRADE_BONUS_LIST: string = '/vip/upgradeaward/list'  // VIP升级奖励列表  VIP upgrade reward list
+    static VIP_UPGRADE_BONUS_DETAIL: string = '/vip/upgradeaward/detail'  // VIP升级奖励详情  VIP upgrade reward details
+    static VIP_UPGRADE_BONUS_UPDATE: string = '/vip/upgradeaward/update'  // VIP升级奖励更新  VIP upgrade reward update
+    static VIP_LEVEL_LIST: string = '/vip/level/list'  // VIP等级列表  VIP level list
+    static VIP_LEVEL_DETAIL: string = '/vip/level/detail'  // VIP等级详情  VIP level details
+    static VIP_LEVEL_ADD: string = '/vip/level/add'  // VIP等级新增  VIP level add
+    static VIP_LEVEL_UPDATE: string = '/vip/level/update'  // VIP等级更新  VIP level update
+    static VIP_LEVEL_DELETE: string = '/vip/level/delete'  // VIP等级删除  VIP level delete
+    static VIP_RANK_UPGRADEAWARD_LIST = '/vip/rank-upgradeaward/list'  // VIP升段奖励列表  VIP rank upgrade reward list
+    static VIP_RANK_UPGRADEAWARD_DETAIL = '/vip/rank-upgradeaward/detail'  // VIP升段奖励详情  VIP rank upgrade reward details
+    static VIP_RANK_UPGRADEAWARD_UPDATE = '/vip/rank-upgradeaward/update'  // VIP升段奖励更新  VIP rank upgrade reward update
+    static VIP_WEEKAWARD_LIST = '/vip/weekaward/list'  // 周奖励列表  Weekly reward list
+    static VIP_WEEKAWARD_DETAIL = '/vip/weekaward/detail'  // 周奖励详情  Weekly reward details
+    static VIP_WEEKAWARD_UPDATE = '/vip/weekaward/update'  // 周奖励更新  Weekly reward updates
   }
   export class Game {
 
@@ -84,4 +101,8 @@ export namespace NETWORKCFG {
   }
   //Listening events sent actively
   export class UNSOLICITED {}
+
+  export class WITHDRAWAL {
+    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/review'
+  }
 }
