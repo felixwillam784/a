@@ -398,7 +398,7 @@ onMounted(() => {
         <div class="search">
           <el-form :inline="true" label-width="120" class="right_position">
             <el-form-item>
-              <el-button @click="new_bonus_data()">新增升级奖励</el-button>
+              <!-- <el-button @click="new_bonus_data()">新增升级奖励</el-button> -->
               <el-button>模版导出</el-button>
               <el-button>Excel导入</el-button>
               <el-button>Excel导出</el-button>

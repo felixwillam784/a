@@ -120,7 +120,7 @@ export namespace NETWORKCFG {
   export class WITHDRAWAL{
     static DEPOSITLIST:string = "/deposit-order/list"
     static UPDATE_SUPPLIMENT:string = "/deposit/suppliment"
-    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/review'
+    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'
   }
   //Listening events sent actively
   export class UNSOLICITED {}
