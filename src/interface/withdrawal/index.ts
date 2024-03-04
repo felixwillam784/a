@@ -17,7 +17,7 @@ export interface GetDepositOrder {
     recharge_type: number
     order_number: string
     deposit_type: number
-    order_amount: number
+    order_amount: string
     first_charge_status:boolean
   }
 
