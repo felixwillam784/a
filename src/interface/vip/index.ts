@@ -124,7 +124,7 @@ export type GetVIPUpgradeRewardResponse = {
 }
 
 export interface GetVIPUpgradeRewardList {
-  list?: Array<GetVIPUpgradeRewardData>
+  list: Array<GetVIPUpgradeRewardData>
 }
 
 export type GetVIPRankUpgradeRewardResponse = {

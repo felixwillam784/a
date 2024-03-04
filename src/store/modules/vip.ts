@@ -71,11 +71,11 @@ export const vipStore = defineStore({
     setVIPSigninDetailsData(data: Array<VIP.GetVIPSigninData>) {
       this.VIPSigninDetailsData = data;
     },
-    setVIPUpgradeRewardData(data: Array<VIP.GetVIPUpgradeRewardData>) {
-      this.VIPUpgradeRewardData = data;
+    setVIPUpgradeRewardData(data: any) {
+      this.VIPUpgradeRewardData = data.list;
     },
-    setVIPRankUpgradeRewardData(data: Array<VIP.GetVIPUpgradeRewardData>) {
-      this.VIPRankUpgradeRewardData = data;
+    setVIPRankUpgradeRewardData(data: any) {
+      this.VIPRankUpgradeRewardData = data.list;
     },
     setVIPWeeklyRewardData(data: Array<VIP.GetVIPUpgradeRewardData>) {
       this.VIPWeeklyRewardData = data;
@@ -224,7 +224,7 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPUpgradeRewardResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setVIPUpgradeRewardData(response.data.list);
+          this.setVIPUpgradeRewardData(response.data);
         }
       }
       await network.sendMsg(route, { params: { page_num: 1, page_size: 99999 } }, next, 1, 4);
@@ -276,7 +276,7 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPUpgradeRewardResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setVIPRankUpgradeRewardData(response.data.list);
+          this.setVIPRankUpgradeRewardData(response.data);
         }
       }
       await network.sendMsg(route, { params: { page_num: 1, page_size: 99999 } }, next, 1, 4);
