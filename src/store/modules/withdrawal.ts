@@ -87,7 +87,40 @@ export const withdrawalStore = defineStore({
                 this.setWithdrawalReviewData(response.data);
             }
         }
-        await network.sendMsg(route, { params: form_data }, next, 1);
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+         * 提现审核锁定
+         * Withdrawal review lock
+         */
+      async dispatchWithdrawalReviewLock(form_data: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.WITHDRAWAL_REVIEW_LOCK;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetWithdrawalReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+         * 提现审核操作
+         * Withdrawal review operation
+         */
+      async dispatchWithdrawalReviewOperation(form_data: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.WITHDRAWAL_REVIEW_OPERATION;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetWithdrawalReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                ElMessage.success('操作成功');
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
       },
     }
   })

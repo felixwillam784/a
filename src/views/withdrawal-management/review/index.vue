@@ -47,28 +47,18 @@ interface RejectInterface {
 }
 
 const router = useRouter();
+const submission_time = ref(['', '']);
+const order_update_time = ref(['', ''])
 
 const formData = ref<any>({
-  user_account: "",
-  submission_start: "",
-  submission_end: "",
-  order_update_start: "",
-  order_update_end: "",
-  platform_order_number: "",
-  upstream_order_number: "",
-  order_status: 1,
-
-  submission_time: [],
-
-  order_update_time: [],
-  
+  submission_start: +(new Date("2020-12-31").getTime() / 1000).toFixed(0),
+  submission_end: +(new Date().getTime() / 1000).toFixed(0),
   page_num: 1,
   page_size: 20,
 });
 
 const loading = ref<boolean>(false);
 const withdrawalReviewDetailDialogVisible = ref<boolean>(false);
-const ruleFormRef = ref<FormInstance>();
 const passDialogVisible = ref<boolean>(false);
 const rejectDialogVisible = ref<boolean>(false);
 const rejectItem = ref<RejectInterface>({
@@ -81,14 +71,36 @@ const rules = ref<FormRules<RejectInterface>>({
   remark: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
+const rejectItemRemark = ref("")
+
 // const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([]);
 
 const withdrawalReviewItem = ref<GetWithdrawalReview>();
 
 const orderStatusOptions = ref<Array<any>>([
   {
-    label: "待处理",
+    label: '待处理',
+    value: 0
+  },
+  {
+    label: "处理中",
     value: 1,
+  },
+  {
+    label: "成功",
+    value: 2,
+  },
+  {
+    label: "失败",
+    value: 3,
+  },
+  {
+    label: "待人工处理",
+    value: 4,
+  },
+  {
+    label: "已退款",
+    value: 5,
   },
 ]);
 
@@ -112,16 +124,19 @@ const rejectOptions = ref<Array<any>>([
 //     });
 // };
 
+// 重置
 const resetQuery = () => {
-  (formData.value.user_account = ""),
-    (formData.value.invitation_code = ""),
-    (formData.value.order_update_time = []),
-    (formData.value.platform_order_number = ""),
-    (formData.value.upstream_order_number = ""),
-    (formData.value.order_status = 1);
-  let now = new Date();
-  formData.value.submission_time[0] = new Date("2020-12-31").toISOString().split("T")[0];
-  formData.value.submission_time[1] = now.toISOString().split("T")[0];
+  formData.value = {
+    submission_start: +(new Date("2020-12-31").getTime() / 1000).toFixed(0),
+    submission_end: +(new Date().getTime() / 1000).toFixed(0),
+    page_num: 1,
+    page_size: 20,
+  }
+  order_update_time.value = ['', ''];
+  delete formData.value.order_update_start;
+  delete formData.value.order_update_end;
+  initSubmissionTime();
+  handleQuery();
 };
 
 const detailWithdrawalReviewDialog = (item: GetWithdrawalReview) => {
@@ -133,16 +148,32 @@ const closeDialog = () => {
   withdrawalReviewDetailDialogVisible.value = false;
 };
 
-const passDialogShow = () => {
+const reviewParams = ref({
+  id: '',
+  operator: 0,
+  remark: ''
+})
+
+const passDialogShow = (row: any) => {
   passDialogVisible.value = true;
+  reviewParams.value = {
+    id: row.order_id,
+    operator: 1,
+    remark: ''
+  }
 };
 
 const closePassDialog = () => {
   passDialogVisible.value = false;
 };
 
-const rejectDialogShow = () => {
+const rejectDialogShow = (row: any) => {
   rejectDialogVisible.value = true;
+  reviewParams.value = {
+    id: row.order_id,
+    operator: 0,
+    remark: rejectItemRemark.value ? rejectItemRemark.value : ''
+  }
 };
 
 const closeRejectDialog = () => {
@@ -159,6 +190,15 @@ const rejectSubmit = async (formEl: FormInstance | undefined) => {
     }
   });
 };
+
+// 锁定
+const withdrawalLock = async (row: any) => {
+  const params = {
+    id: row.order_id
+  };
+  await withdrawal.dispatchWithdrawalReviewLock(params);
+  await handleQuery();
+}
 
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -180,29 +220,57 @@ const withdrawalReviewList = computed(() => {
 /**
  * 查询
  */
- const handleQuery = async () => {
-  let now = new Date();
-  const params = {
-    submission_start: new Date("2020-12-31").toISOString().split("T")[0],
-    submission_end: now.toISOString().split("T")[0],
-    page_num: 1,
-    page_size: 99
+const handleQuery = async () => {
+  if (!submission_time.value) {
+    initSubmissionTime();
   }
-  await withdrawal.dispatchWithdrawalReviewList(params);
+  if (order_update_time.value) {
+    if (order_update_time.value[0]) {
+      formData.value.order_update_start = new Date(order_update_time.value[0]).getTime() / 1000;
+      formData.value.order_update_end = new Date(order_update_time.value[1]).getTime() / 1000;
+    }
+  } else {
+    order_update_time.value = ['', ''];
+    delete formData.value.order_update_start;
+    delete formData.value.order_update_end;
+  }
+  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
+  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  console.log('submission_time1', submission_time.value)
+  await withdrawal.dispatchWithdrawalReviewList(formData.value);
+}
+
+/**
+ * 审核操作
+ */
+const withdrawalReviewOperation = async () => {
+  if (rejectItemRemark.value) {
+    reviewParams.value.remark = rejectItemRemark.value
+  }
+  await withdrawal.dispatchWithdrawalReviewOperation(reviewParams.value);
+  rejectItemRemark.value = '';
+  closeDialog();
+  closePassDialog();
+  closeRejectDialog();
+  await handleQuery();
+}
+
+const initSubmissionTime = () => {
+  submission_time.value = ['', ''];
+  submission_time.value[0] = new Date('2020-12-31').toISOString().split('T')[0];
+  submission_time.value[1] = new Date().toISOString().split('T')[0];
 }
 
 
 onMounted(() => {
-  let now = new Date();
-  formData.value.submission_time[0] = new Date("2020-12-31").toISOString().split("T")[0];
-  formData.value.submission_time[1] = now.toISOString().split("T")[0];
+  initSubmissionTime();
   handleQuery();
 });
 const getData = async () => {
   //let res = await getWithdrawlReviewList("Bearer" + auth.userInfo.token, formData.value);
 };
 
-const order_status = ["待处理", "已锁定", "已拒绝", "已打款", "启动代付", "已退款"];
+const order_status = ["待处理", "处理中", "成功", "失败", "待人工处理", "已退款"];
 
 const getFontStyle = (orderStatus: number) => {
   let color = "";
@@ -238,9 +306,10 @@ const lock = () => {};
                 <el-form-item label="订单提交时间" prop="submission_time">
                   <el-date-picker
                     range-separator="到"
-                    v-model="formData.submission_time"
+                    v-model="submission_time"
                     type="daterange"
                     start-placeholder="选择提交时间"
+                    end-placeholder="选择提交时间"
                     format="YYYY-MM-DD"
                     value-format="YYYY-MM-DD"
                   />
@@ -248,7 +317,7 @@ const lock = () => {};
                 <el-form-item label="订单更新时间" prop="order_update_time">
                   <el-date-picker
                     range-separator="到"
-                    v-model="formData.order_update_time"
+                    v-model="order_update_time"
                     type="daterange"
                     start-placeholder="选择更新时间"
                     end-placeholder="选择更新时间"
@@ -502,17 +571,21 @@ const lock = () => {};
                   @click="detailWithdrawalReviewDialog(scope.row)"
                   >详情</el-button
                 >
-                <el-button type="primary" link v-if="scope.row.order_status == 0"
-                  >鎖定</el-button
+                <el-button
+                  type="primary"
+                  link
+                  v-if="scope.row.order_status == 0"
+                  @click="withdrawalLock(scope.row)"
+                  >锁定</el-button
                 >
                 <el-button
                   type="success"
                   link
                   v-if="
                     scope.row.order_status == 1 &&
-                    parseInt(scope.row.operator_id) == auth.userInfo.id
+                    scope.row.operator_id == 1
                   "
-                  @click="operate(1)"
+                  @click="passDialogShow(scope.row)"
                   >同意</el-button
                 >
                 <el-button
@@ -520,9 +593,9 @@ const lock = () => {};
                   link
                   v-if="
                     scope.row.order_status == 1 &&
-                    parseInt(scope.row.operator_id) == auth.userInfo.id
+                    scope.row.operator_id == 1
                   "
-                  @click="operate(0)"
+                  @click="rejectDialogShow(scope.row)"
                   >拒绝</el-button
                 >
                 <el-button
@@ -530,7 +603,7 @@ const lock = () => {};
                   link
                   v-if="
                     scope.row.order_status == 1 &&
-                    parseInt(scope.row.operator_id) != auth.userInfo.id
+                    scope.row.operator_id == 1
                   "
                   @click="lock()"
                   >已锁定</el-button
@@ -552,63 +625,65 @@ const lock = () => {};
     </el-row>
 
     <el-dialog
+      v-model="passDialogVisible"
+      width="500px"
+      title="确认提现通过"
+      append-to-body
+      style="text-align: center; margin-top: 200px"
+    >
+      <p>订单审核提现通过，订单进入启动代付状态?</p>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="withdrawalReviewOperation">通过</el-button>
+          <el-button @click="closePassDialog">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="rejectDialogVisible"
+      width="500px"
+      title="确认拒绝提现"
+      append-to-body
+      style="text-align: center; margin-top: 200px"
+    >
+      <!-- <el-row>
+        <el-col :span="6" class="detail-item-left-bg">拒绝原因:</el-col>
+        <el-col :span="18" class="detail-item-right-bg">
+          <el-select v-model="rejectItem.reject_reason" placeholder="请选择拒绝原因">
+            <el-option
+              v-for="(item, index) in rejectOptions"
+              :label="item.label"
+              :value="item.value"
+              :key="index"
+            ></el-option>
+          </el-select>
+        </el-col>
+      </el-row> -->
+      <el-form>
+        <el-row style="align-items: center">
+          <!-- <Font color="red" style="font-size: 20px">*</Font> -->
+          <h3>备注</h3>
+        </el-row>
+        <el-form-item prop="remark">
+          <el-input type="textarea" :rows="4" v-model="rejectItemRemark" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="warning" @click="withdrawalReviewOperation">拒绝</el-button>
+          <el-button @click="closeRejectDialog">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog
       title="提现审核详情"
       v-model="withdrawalReviewDetailDialogVisible"
       width="600px"
       append-to-body
       @close="closeDialog"
     >
-      <el-dialog
-        v-model="passDialogVisible"
-        width="500px"
-        title="确认提现通过"
-        append-to-body
-        style="text-align: center; margin-top: 400px"
-      >
-        <p>订单审核提现通过，订单进入启动代付状态?</p>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button type="primary">通过</el-button>
-            <el-button @click="closePassDialog">取消</el-button>
-          </div>
-        </template>
-      </el-dialog>
-      <el-dialog
-        v-model="rejectDialogVisible"
-        width="500px"
-        title="确认拒绝提现"
-        append-to-body
-        style="text-align: center; margin-top: 400px"
-      >
-        <el-row>
-          <el-col :span="6" class="detail-item-left-bg">拒绝原因:</el-col>
-          <el-col :span="18" class="detail-item-right-bg">
-            <el-select v-model="rejectItem.reject_reason" placeholder="请选择拒绝原因">
-              <el-option
-                v-for="(item, index) in rejectOptions"
-                :label="item.label"
-                :value="item.value"
-                :key="index"
-              ></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-form ref="ruleFormRef" :rules="rules" :model="rejectItem">
-          <el-row style="align-items: center">
-            <Font color="red" style="font-size: 20px">*</Font>
-            <h3>备注</h3>
-          </el-row>
-          <el-form-item prop="remark">
-            <el-input type="textarea" :rows="4" v-model="rejectItem.remark" />
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button type="warning" @click="rejectSubmit(ruleFormRef)">拒绝</el-button>
-            <el-button @click="resetForm(ruleFormRef)">取消</el-button>
-          </div>
-        </template>
-      </el-dialog>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
@@ -715,9 +790,9 @@ const lock = () => {};
         </el-col>
       </el-row>
       <template #footer>
-        <div class="dialog-footer" v-if="withdrawalReviewItem?.review_status == 0">
-          <el-button type="primary" @click="passDialogShow">通过</el-button>
-          <el-button type="warning" @click="rejectDialogShow">拒绝</el-button>
+        <div class="dialog-footer" v-if="withdrawalReviewItem.order_status == 1 && withdrawalReviewItem.operator_id == 1">
+          <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
+          <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
           <el-button @click="closeDialog">取消</el-button>
         </div>
         <div class="dialog-footer" v-else>

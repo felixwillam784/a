@@ -120,7 +120,9 @@ export namespace NETWORKCFG {
   export class WITHDRAWAL{
     static DEPOSITLIST:string = "/deposit-order/list"
     static UPDATE_SUPPLIMENT:string = "/deposit/suppliment"
-    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'
+    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'   // 提现审核列表 Withdrawal review list
+    static WITHDRAWAL_REVIEW_LOCK = '/withdrawal/lock'  // 提现审核锁定  Withdrawal review lock
+    static WITHDRAWAL_REVIEW_OPERATION = '/withdrawal/operate'  // 提现审核操作  Withdrawal review operation
   }
   //Listening events sent actively
   export class UNSOLICITED {}
