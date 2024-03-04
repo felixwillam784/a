@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Search, Refresh, Upload, Plus } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import { fa } from "element-plus/es/locale";
 import { NumberFormatProps } from "vue-i18n";
+import useStore from "@/store";
+const { vip } = useStore();
 
 interface PropAndBUFFBonusData {
   id: string;
@@ -42,81 +44,86 @@ interface WeeklyBonusStatisticData {
   buff_quantity: number;
   buff_usage_quantity: number;
 }
-const weekly_bonus_list = ref<Array<WeeklyBonusData>>([
-  {
-    vip_level: 1,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [],
-    relation_bonus: [
-      {
-        id: "1001",
-        weight: 3000,
-      },
-    ],
-    real_bonus: [
-      {
-        amount: 1,
-        code_magnification: 0,
-        weight: 2000,
-      },
-    ],
-  },
-  {
-    vip_level: 2,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [
-      {
-        id: "1002",
-        amount: 2,
-        weight: 3000,
-      },
-      {
-        id: "1003",
-        amount: 4,
-        weight: 2000,
-      },
-    ],
-    relation_bonus: [],
-    real_bonus: [],
-  },
-  {
-    vip_level: 3,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [
-      {
-        id: "1002",
-        amount: 2,
-        weight: 3000,
-      },
-    ],
 
-    relation_bonus: [
-      {
-        id: "1001",
-        weight: 2000,
-      },
-    ],
-    real_bonus: [],
-  },
-]);
+const weekly_bonus_list = computed(() => {
+  return vip.getVIPWeeklyRewardData;
+});
+
+// const weekly_bonus_list = ref<Array<WeeklyBonusData>>([
+//   {
+//     vip_level: 1,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [],
+//     relation_bonus: [
+//       {
+//         id: "1001",
+//         weight: 3000,
+//       },
+//     ],
+//     real_bonus: [
+//       {
+//         amount: 1,
+//         code_magnification: 0,
+//         weight: 2000,
+//       },
+//     ],
+//   },
+//   {
+//     vip_level: 2,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [
+//       {
+//         id: "1002",
+//         amount: 2,
+//         weight: 3000,
+//       },
+//       {
+//         id: "1003",
+//         amount: 4,
+//         weight: 2000,
+//       },
+//     ],
+//     relation_bonus: [],
+//     real_bonus: [],
+//   },
+//   {
+//     vip_level: 3,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [
+//       {
+//         id: "1002",
+//         amount: 2,
+//         weight: 3000,
+//       },
+//     ],
+
+//     relation_bonus: [
+//       {
+//         id: "1001",
+//         weight: 2000,
+//       },
+//     ],
+//     real_bonus: [],
+//   },
+// ]);
 
 const vip_weekly_bonus_switch = ref(true);
 
@@ -156,14 +163,14 @@ const show_detail = (data: WeeklyBonusData) => {
 };
 
 const new_bonus_data = () => {
-  weekly_bonus_item.value = {
-    vip_level:
-      weekly_bonus_list.value[weekly_bonus_list.value.length - 1].vip_level + 1,
-    prop_bonus: [],
-    buff_bonus: [],
-    relation_bonus: [],
-    real_bonus: [],
-  };
+  // weekly_bonus_item.value = {
+  //   vip_level:
+  //     weekly_bonus_list.value[weekly_bonus_list.value.length - 1].vip_level + 1,
+  //   prop_bonus: [],
+  //   buff_bonus: [],
+  //   relation_bonus: [],
+  //   real_bonus: [],
+  // };
   show_dialog.value = true;
   dialog_title.value = "新增VIP每周奖励";
 };
@@ -368,6 +375,17 @@ const vip_ranks = ref<Array<string>>([
   "Diamond",
 ]);
 
+/**
+ * 查询
+ */
+ const handleQuery = async () => {
+  await vip.dispatchVIPWeeklyRewardList();
+}
+
+onMounted(() => {
+  handleQuery();
+})
+
 const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
 </script>
 
@@ -378,7 +396,7 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
         <div class="search">
           <el-form :inline="true" label-width="120" class="right_position">
             <el-form-item>
-              <el-button @click="new_bonus_data()">新增每周奖励</el-button>
+              <!-- <el-button @click="new_bonus_data()">新增每周奖励</el-button> -->
               <el-button>模版导出</el-button>
               <el-button>Excel导入</el-button>
               <el-button>Excel导出</el-button>
@@ -619,7 +637,7 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
 
     <el-card>
       <el-table v-if="tab_index == 0" style="width: 100%" :data="weekly_bonus_list">
-        <el-table-column label="VIP等级" align="center" width="160" prop="vip_level" />
+        <el-table-column label="VIP等级" align="center" width="160" prop="level" />
         <el-table-column label="关联道具及BUFF奖励ID" align="center">
           <template #header>
             <span class="yellow_t_header"> 关联道具及BUFF奖励ID </span>
@@ -631,7 +649,7 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
             <template #default="scope">
               <div style="display: flex; flex-direction: column">
                 <el-tooltip
-                  v-for="(item, index) in scope.row.prop_bonus"
+                  v-for="(item, index) in scope.row.week_award.buff"
                   :key="index"
                   :content="prop_buff_tooltip_html(item.id)"
                   raw-content
@@ -643,7 +661,7 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
                 </el-tooltip>
 
                 <el-tooltip
-                  v-for="(item, index) in scope.row.buff_bonus"
+                  v-for="(item, index) in scope.row.week_award.buff"
                   :key="index"
                   :content="prop_buff_tooltip_html(item.id)"
                   raw-content
@@ -661,10 +679,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="yellow_t_header"> 数量 </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.prop_bonus" :key="index">
+              <div v-for="(item, index) in scope.row.week_award.buff" :key="index">
                 {{ `${item.amount}` }}
               </div>
-              <div v-for="(item, index) in scope.row.buff_bonus" :key="index">
+              <div v-for="(item, index) in scope.row.week_award.buff" :key="index">
                 {{ `${item.amount}` }}
               </div>
             </template>
@@ -674,10 +692,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="yellow_t_header"> 权重（万分比） </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.prop_bonus" :key="index">
+              <div v-for="(item, index) in scope.row.week_award.buff" :key="index">
                 {{ `${item.weight}` }}
               </div>
-              <div v-for="(item, index) in scope.row.buff_bonus" :key="index">
+              <div v-for="(item, index) in scope.row.week_award.buff" :key="index">
                 {{ `${item.weight}` }}
               </div>
             </template>
@@ -693,8 +711,8 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
             </template>
             <template #default="scope">
               <div style="display: flex; flex-direction: column">
-                <el-tooltip
-                  v-for="(item, index) in scope.row.relation_bonus"
+                <!-- <el-tooltip
+                  v-for="(item, index) in scope.row.week_award.bonus"
                   :key="index"
                   :content="relation_tooltip_html(item.id)"
                   raw-content
@@ -702,6 +720,15 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
                   <template #content> </template>
                   <el-button type="text" class="underline-link">
                     {{ `${item.id}` }}
+                  </el-button>
+                </el-tooltip> -->
+                <el-tooltip
+                  :content="relation_tooltip_html(scope.row.week_award.bonus.id)"
+                  raw-content
+                >
+                  <template #content> </template>
+                  <el-button type="text" class="underline-link">
+                    {{ `${scope.row.week_award.bonus.id}` }}
                   </el-button>
                 </el-tooltip>
               </div>
@@ -712,9 +739,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="pink_t_header"> 权重（万分比） </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.relation_bonus" :key="index">
+              <!-- <div v-for="(item, index) in scope.row.week_award.bonus" :key="index">
                 {{ `${item.weight}` }}
-              </div>
+              </div> -->
+              <span>{{  scope.row.week_award.bonus.weight }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -727,9 +755,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="blue_t_header"> 金额 </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
+              <span>{{ scope.row.week_award.cash.award }}</span>
+              <!-- <div v-for="(item, index) in scope.row.real_bonus" :key="index">
                 {{ `${item.amount.toFixed(2)}` }}
-              </div>
+              </div> -->
             </template>
           </el-table-column>
           <el-table-column label="打码倍率" align="center">
@@ -737,9 +766,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="blue_t_header"> 打码倍率 </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
+              <!-- <div v-for="(item, index) in scope.row.real_bonus" :key="index">
                 {{ `${item.code_magnification.toFixed(2)}` }}
-              </div>
+              </div> -->
+              <span>{{ scope.row.week_award.cash.bet_rate }}</span>
             </template>
           </el-table-column>
           <el-table-column label="权重（万分比" align="center">
@@ -747,9 +777,10 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
               <span class="blue_t_header"> 权重（万分比） </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
+              <!-- <div v-for="(item, index) in scope.row.real_bonus" :key="index">
                 {{ `${item.weight}` }}
-              </div>
+              </div> -->
+              <span>{{ scope.row.week_award.cash.weight }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -758,7 +789,7 @@ const weekly_bonus_statistic_list = ref<Array<WeeklyBonusStatisticData>>();
             <el-button type="primary" link @click="show_detail(scope.row)"
               >详情</el-button
             >
-            <el-button type="danger" link>删除</el-button>
+            <!-- <el-button type="danger" link>删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>

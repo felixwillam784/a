@@ -97,3 +97,63 @@ export type ResponseData = {
   message: string
 }
 
+export type GetVIPSinginResponse = {
+  code: number | string
+  data: Array<GetVIPSigninData>,
+  message: string
+}
+
+export interface GetVIPSigninData {
+  level: number
+  rank_id: number
+  rank_name: string
+  signin_award: Array<GetSigninAwardData>
+}
+
+export interface GetSigninAwardData {
+  award: string
+  bet: string
+  bet_rate: string
+  pay: number
+}
+
+export type GetVIPUpgradeRewardResponse = {
+  code: number | string
+  data: Array<GetVIPUpgradeRewardList>,
+  message: string
+}
+
+export interface GetVIPUpgradeRewardList {
+  list: Array<GetVIPUpgradeRewardData>
+}
+
+export type GetVIPRankUpgradeRewardResponse = {
+  code: number | string
+  data: Array<GetVIPUpgradeRewardData>,
+  message: string
+}
+
+export interface GetVIPUpgradeRewardData {
+  level: number
+  rank_id: number
+  rank_name: string
+  upgrade_award: Array<GetUpgradeAwardData>
+}
+
+export interface GetUpgradeAwardData {
+  bonus: Array<GetUpgradeRewardBonus>
+  buff: object
+  cash: Array<GetUpgradeRewardCash>
+  prop: object
+}
+
+export interface GetUpgradeRewardBonus {
+  id: number
+  weight: string
+}
+
+export interface GetUpgradeRewardCash {
+  award: string
+  bet_rate: string
+  weight: string
+}

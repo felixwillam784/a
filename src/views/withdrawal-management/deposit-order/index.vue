@@ -82,8 +82,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       await withdrawal.dispatchUpdateSupply({
-        id: depositOrderItem.value.platform_order_number,
-        order_amount: parseInt(depositOrderItem.value.order_amount),
+        id: depositOrderItem.value?.platform_order_number,
+        order_amount: depositOrderItem.value?.order_amount,
       });
     } else {
     }

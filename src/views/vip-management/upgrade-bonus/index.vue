@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Search, Refresh, Upload, Plus } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import { fa } from "element-plus/es/locale";
 import { NumberFormatProps } from "vue-i18n";
+
+import useStore from "@/store";
+const { vip } = useStore();
 
 interface PropAndBUFFBonusData {
   id: string;
@@ -42,81 +45,87 @@ interface UpgradeBonusStatisticData {
   buff_quantity: number;
   buff_usage_quantity: number;
 }
-const upgrade_bonus_list = ref<Array<UpgradeBonusData>>([
-  {
-    vip_level: 1,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [],
-    relation_bonus: [
-      {
-        id: "1001",
-        weight: 3000,
-      },
-    ],
-    real_bonus: [
-      {
-        amount: 1,
-        code_magnification: 0,
-        weight: 2000,
-      },
-    ],
-  },
-  {
-    vip_level: 2,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [
-      {
-        id: "1002",
-        amount: 2,
-        weight: 3000,
-      },
-      {
-        id: "1003",
-        amount: 4,
-        weight: 2000,
-      },
-    ],
-    relation_bonus: [],
-    real_bonus: [],
-  },
-  {
-    vip_level: 3,
-    prop_bonus: [
-      {
-        id: "1001",
-        amount: 1,
-        weight: 5000,
-      },
-    ],
-    buff_bonus: [
-      {
-        id: "1002",
-        amount: 2,
-        weight: 3000,
-      },
-    ],
 
-    relation_bonus: [
-      {
-        id: "1001",
-        weight: 2000,
-      },
-    ],
-    real_bonus: [],
-  },
-]);
+const upgrade_bonus_list = computed(() => {
+  return vip.getVIPUpgradeRewardData;
+});
+
+
+// const upgrade_bonus_list = ref<Array<UpgradeBonusData>>([
+//   {
+//     vip_level: 1,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [],
+//     relation_bonus: [
+//       {
+//         id: "1001",
+//         weight: 3000,
+//       },
+//     ],
+//     real_bonus: [
+//       {
+//         amount: 1,
+//         code_magnification: 0,
+//         weight: 2000,
+//       },
+//     ],
+//   },
+//   {
+//     vip_level: 2,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [
+//       {
+//         id: "1002",
+//         amount: 2,
+//         weight: 3000,
+//       },
+//       {
+//         id: "1003",
+//         amount: 4,
+//         weight: 2000,
+//       },
+//     ],
+//     relation_bonus: [],
+//     real_bonus: [],
+//   },
+//   {
+//     vip_level: 3,
+//     prop_bonus: [
+//       {
+//         id: "1001",
+//         amount: 1,
+//         weight: 5000,
+//       },
+//     ],
+//     buff_bonus: [
+//       {
+//         id: "1002",
+//         amount: 2,
+//         weight: 3000,
+//       },
+//     ],
+
+//     relation_bonus: [
+//       {
+//         id: "1001",
+//         weight: 2000,
+//       },
+//     ],
+//     real_bonus: [],
+//   },
+// ]);
 
 const vip_upgrade_bonus_switch = ref(true);
 
@@ -156,14 +165,14 @@ const show_detail = (data: UpgradeBonusData) => {
 };
 
 const new_bonus_data = () => {
-  upgrade_bonus_item.value = {
-    vip_level:
-      upgrade_bonus_list.value[upgrade_bonus_list.value.length - 1].vip_level + 1,
-    prop_bonus: [],
-    buff_bonus: [],
-    relation_bonus: [],
-    real_bonus: [],
-  };
+  // upgrade_bonus_item.value = {
+  //   vip_level:
+  //     upgrade_bonus_list.value[upgrade_bonus_list.value.length - 1].vip_level + 1,
+  //   prop_bonus: [],
+  //   buff_bonus: [],
+  //   relation_bonus: [],
+  //   real_bonus: [],
+  // };
   show_dialog.value = true;
   dialog_title.value = "新增VIP升级奖励";
 };
@@ -369,6 +378,17 @@ const vip_ranks = ref<Array<string>>([
 ]);
 
 const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
+
+/**
+ * 查询
+ */
+const handleQuery = async () => {
+  await vip.dispatchVIPUpgradeReward();
+}
+
+onMounted(() => {
+  handleQuery();
+})
 </script>
 
 <template>
@@ -378,7 +398,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
         <div class="search">
           <el-form :inline="true" label-width="120" class="right_position">
             <el-form-item>
-              <el-button @click="new_bonus_data()">新增升级奖励</el-button>
+              <!-- <el-button @click="new_bonus_data()">新增升级奖励</el-button> -->
               <el-button>模版导出</el-button>
               <el-button>Excel导入</el-button>
               <el-button>Excel导出</el-button>
@@ -619,7 +639,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
 
     <el-card>
       <el-table v-if="tab_index == 0" style="width: 100%" :data="upgrade_bonus_list">
-        <el-table-column label="VIP等级" align="center" width="160" prop="vip_level" />
+        <el-table-column label="VIP等级" align="center" width="160" prop="level" />
         <el-table-column label="关联道具及BUFF奖励ID" align="center">
           <template #header>
             <span class="yellow_t_header"> 关联道具及BUFF奖励ID </span>
@@ -694,14 +714,12 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             <template #default="scope">
               <div style="display: flex; flex-direction: column">
                 <el-tooltip
-                  v-for="(item, index) in scope.row.relation_bonus"
-                  :key="index"
-                  :content="relation_tooltip_html(item.id)"
+                  :content="relation_tooltip_html(scope.row.upgrade_award.bonus.id)"
                   raw-content
                 >
                   <template #content> </template>
                   <el-button type="text" class="underline-link">
-                    {{ `${item.id}` }}
+                    {{ scope.row.upgrade_award.bonus.id }}
                   </el-button>
                 </el-tooltip>
               </div>
@@ -712,9 +730,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               <span class="pink_t_header"> 权重（万分比） </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.relation_bonus" :key="index">
-                {{ `${item.weight}` }}
-              </div>
+              <span>{{ scope.row.upgrade_award.bonus.weight }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -727,9 +743,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               <span class="blue_t_header"> 金额 </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
-                {{ `${item.amount.toFixed(2)}` }}
-              </div>
+              <span>{{ scope.row.upgrade_award.cash.award }}</span>
             </template>
           </el-table-column>
           <el-table-column label="打码倍率" align="center">
@@ -737,9 +751,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               <span class="blue_t_header"> 打码倍率 </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
-                {{ `${item.code_magnification.toFixed(2)}` }}
-              </div>
+              <span>{{ scope.row.upgrade_award.cash.bet_rate }}</span>
             </template>
           </el-table-column>
           <el-table-column label="权重（万分比" align="center">
@@ -747,9 +759,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
               <span class="blue_t_header"> 权重（万分比） </span>
             </template>
             <template #default="scope">
-              <div v-for="(item, index) in scope.row.real_bonus" :key="index">
-                {{ `${item.weight}` }}
-              </div>
+              <span>{{ scope.row.upgrade_award.cash.weight }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -758,7 +768,7 @@ const upgrade_bonus_statistic_list = ref<Array<UpgradeBonusStatisticData>>();
             <el-button type="primary" link @click="show_detail(scope.row)"
               >详情</el-button
             >
-            <el-button type="danger" link>删除</el-button>
+            <!-- <el-button type="danger" link>删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
