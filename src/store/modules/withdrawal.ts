@@ -101,6 +101,7 @@ export const withdrawalStore = defineStore({
         const next = (response: Withdrawal.GetWithdrawalReview) => {
             if (response.code == "00") {
                 this.setSuccess(true);
+                ElMessage.success('操作成功');
             }
         }
         await network.sendMsg(route, form_data, next, 1);
