@@ -163,14 +163,14 @@ const show_detail = (data: WeeklyBonusData) => {
 };
 
 const new_bonus_data = () => {
-  weekly_bonus_item.value = {
-    vip_level:
-      weekly_bonus_list.value[weekly_bonus_list.value.length - 1].vip_level + 1,
-    prop_bonus: [],
-    buff_bonus: [],
-    relation_bonus: [],
-    real_bonus: [],
-  };
+  // weekly_bonus_item.value = {
+  //   vip_level:
+  //     weekly_bonus_list.value[weekly_bonus_list.value.length - 1].vip_level + 1,
+  //   prop_bonus: [],
+  //   buff_bonus: [],
+  //   relation_bonus: [],
+  //   real_bonus: [],
+  // };
   show_dialog.value = true;
   dialog_title.value = "新增VIP每周奖励";
 };

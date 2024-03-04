@@ -165,14 +165,14 @@ const show_detail = (data: UpgradeBonusData) => {
 };
 
 const new_bonus_data = () => {
-  upgrade_bonus_item.value = {
-    vip_level:
-      upgrade_bonus_list.value[upgrade_bonus_list.value.length - 1].vip_level + 1,
-    prop_bonus: [],
-    buff_bonus: [],
-    relation_bonus: [],
-    real_bonus: [],
-  };
+  // upgrade_bonus_item.value = {
+  //   vip_level:
+  //     upgrade_bonus_list.value[upgrade_bonus_list.value.length - 1].vip_level + 1,
+  //   prop_bonus: [],
+  //   buff_bonus: [],
+  //   relation_bonus: [],
+  //   real_bonus: [],
+  // };
   show_dialog.value = true;
   dialog_title.value = "新增VIP升级奖励";
 };
