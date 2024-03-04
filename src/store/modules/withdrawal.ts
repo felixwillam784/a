@@ -5,6 +5,7 @@ import type * as Withdrawal from "@/interface/withdrawal";
 import { stringify } from 'querystring';
 import { number } from 'echarts';
 import { stat } from 'fs';
+import { ElMessage } from 'element-plus';
 
 export const withdrawalStore = defineStore({
     id: 'withdrawal',
@@ -14,6 +15,7 @@ export const withdrawalStore = defineStore({
 
       DepositList: [] as Array<Withdrawal.GetDepositOrder>,
       TotalNumber: 1 as number,
+      withdrawalReviewData: [] as Array<Withdrawal.GetWithdrawalReviewData>
     }),
     
     getters: {
@@ -22,6 +24,7 @@ export const withdrawalStore = defineStore({
 
       getDepositList: (state) => state.DepositList,
       getTotalNumber: (state) => state.TotalNumber,
+      getWithdrawalReviewData: (state) => state.withdrawalReviewData
     },
   
     actions: {
@@ -37,6 +40,9 @@ export const withdrawalStore = defineStore({
       },
       setTotalNumber(data:number) {
         this.TotalNumber = data;
+      },
+      setWithdrawalReviewData(data: Array<Withdrawal.GetWithdrawalReviewData>) {
+        this.withdrawalReviewData = data;
       },
 
       async dispatchDepositList(formData:any) {
@@ -65,6 +71,23 @@ export const withdrawalStore = defineStore({
           }
         }
         await network.sendMsg(route, formData, next, 1);
+      },
+      /**
+         * 提现审核列表
+         * Withdrawal review list
+         */
+      async dispatchWithdrawalReviewList(form_data: Withdrawal.WithdrawalForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.WITHDRAWAL_REVIEW_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetWithdrawalReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                this.setWithdrawalReviewData(response.data.order_list);
+            }
+        }
+        await network.sendMsg(route, { params: form_data }, next, 1);
       },
     }
   })

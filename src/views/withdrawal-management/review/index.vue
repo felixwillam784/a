@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
@@ -7,6 +7,7 @@ import type { FormInstance, FormRules } from "element-plus";
 
 import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
+const { withdrawal } = useStore();
 
 const { auth } = useStore();
 interface GetWithdrawalReview {
@@ -49,14 +50,18 @@ const router = useRouter();
 
 const formData = ref<any>({
   user_account: "",
-  invitation_code: "",
-  submission_time: [],
-
-  order_update_time: [],
-
+  submission_start: "",
+  submission_end: "",
+  order_update_start: "",
+  order_update_end: "",
   platform_order_number: "",
   upstream_order_number: "",
   order_status: 1,
+
+  submission_time: [],
+
+  order_update_time: [],
+  
   page_num: 1,
   page_size: 20,
 });
@@ -76,7 +81,7 @@ const rules = ref<FormRules<RejectInterface>>({
   remark: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
-const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([]);
+// const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([]);
 
 const withdrawalReviewItem = ref<GetWithdrawalReview>();
 
@@ -94,18 +99,18 @@ const rejectOptions = ref<Array<any>>([
   },
 ]);
 
-const handleQuery = () => {
-  loading.value = true;
-  getData()
-    .then(() => {
-      loading.value = false;
-    })
-    .catch(() => {
-      localStorage.clear();
-      router.push({ name: "Login" });
-      //user.token = '';
-    });
-};
+// const handleQuery = () => {
+//   loading.value = true;
+//   getData()
+//     .then(() => {
+//       loading.value = false;
+//     })
+//     .catch(() => {
+//       localStorage.clear();
+//       router.push({ name: "Login" });
+//       //user.token = '';
+//     });
+// };
 
 const resetQuery = () => {
   (formData.value.user_account = ""),
@@ -167,10 +172,24 @@ const goBulkPassPage = () => {
 const goBulkRejectPage = () => {
   router.push({ name: "Bulk Reject" });
 };
+
+const withdrawalReviewList = computed(() => {
+  return withdrawal.getWithdrawalReviewData;
+})
+
+/**
+ * 查询
+ */
+ const handleQuery = async () => {
+  await withdrawal.dispatchWithdrawalReviewList(formData.value);
+}
+
+
 onMounted(() => {
   let now = new Date();
   formData.value.submission_time[0] = new Date("2020-12-31").toISOString().split("T")[0];
   formData.value.submission_time[1] = now.toISOString().split("T")[0];
+  handleQuery();
 });
 const getData = async () => {
   //let res = await getWithdrawlReviewList("Bearer" + auth.userInfo.token, formData.value);
