@@ -41,8 +41,8 @@ export const withdrawalStore = defineStore({
       setTotalNumber(data:number) {
         this.TotalNumber = data;
       },
-      setWithdrawalReviewData(data: Array<Withdrawal.GetWithdrawalReviewData>) {
-        this.withdrawalReviewData = data;
+      setWithdrawalReviewData(data: any) {
+        this.withdrawalReviewData = data.order_list;
       },
 
       async dispatchDepositList(formData:any) {
@@ -84,7 +84,7 @@ export const withdrawalStore = defineStore({
         const next = (response: Withdrawal.GetWithdrawalReview) => {
             if (response.code == "00") {
                 this.setSuccess(true);
-                this.setWithdrawalReviewData(response.data.order_list);
+                this.setWithdrawalReviewData(response.data);
             }
         }
         await network.sendMsg(route, { params: form_data }, next, 1);
