@@ -6,7 +6,7 @@ import moment from "moment-timezone";
 import { fa } from "element-plus/es/locale";
 import { NumberFormatProps } from "vue-i18n";
 import { color } from "echarts";
-import { listSigninAward } from '@/api/vip/signin';
+// import { listSigninAward } from '@/api/vip/signin';
 import useStore from "@/store";
 
 const router = useRouter();

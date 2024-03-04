@@ -181,7 +181,14 @@ const withdrawalReviewList = computed(() => {
  * 查询
  */
  const handleQuery = async () => {
-  await withdrawal.dispatchWithdrawalReviewList(formData.value);
+  let now = new Date();
+  const params = {
+    submission_start: new Date("2020-12-31").toISOString().split("T")[0],
+    submission_end: now.toISOString().split("T")[0],
+    page_num: 1,
+    page_size: 99
+  }
+  await withdrawal.dispatchWithdrawalReviewList(params);
 }
 
 
