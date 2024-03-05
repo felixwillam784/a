@@ -2,12 +2,13 @@
 import { ref, computed, watch, onMounted, toRefs } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { type AgentInvitationRewardData } from "@/interface/agent";
+import useStore from "@/store";
 
 const props = defineProps<{
   invitationRewardDialog: boolean,
   invitationRewardCollectionDialog: boolean,
   loading: boolean,
-  agentInvitationRewardList: Array<AgentInvitationRewardData>
+  agentInvitationRewardList: Array<AgentInvitationRewardData>,
 }>();
 const { invitationRewardDialog, invitationRewardCollectionDialog, loading, agentInvitationRewardList } = toRefs(props);
 
@@ -20,6 +21,7 @@ const formData = ref<any>({
   pageNum: 1,
   pageSize: 20,
 });
+const { agent } = useStore();
 
 const invitationRewardDialogVisible = ref<boolean>(false);
 
@@ -28,12 +30,16 @@ const invitationRewardCollectionDialogVisible = ref<boolean>(false);
 const total_count = ref<number>(0);
 
 const dialogTitle = ref<string>("新增邀请奖励");
+const agentInvitationRewardDetail = computed(() => {
+  return agent.getAgentInvitaionRewardDetail;
+})
 
-const handlePagination = () => { };
-
-const showInvitationRewardDialog = () => {
+const showInvitationRewardDialog = async (id: number) => {
   dialogTitle.value = "增邀请奖励详情";
   invitationRewardDialogVisible.value = true;
+  await agent.dispatchAgentInvitationRewardDetail({
+    id: id
+  });
 };
 
 watch(invitationRewardDialog, (value) => {
@@ -91,7 +97,7 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
     </el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button type="primary" link @click="showInvitationRewardDialog">
+        <el-button type="primary" link @click="showInvitationRewardDialog(scope.row.id)">
           详情
         </el-button>
         <el-button type="danger" link> 删除 </el-button>
@@ -99,42 +105,59 @@ watch(invitationRewardCollectionDialogVisible, (value) => {
       </template>
     </el-table-column>
   </el-table>
-  <div style="float: right">
-    <pagination
-      :total="total_count"
-      v-model:page="formData.pageNum"
-      v-model:limit="formData.pageSize"
-      @pagination="handlePagination"
-    />
-  </div>
+
   <el-dialog :title="dialogTitle" v-model="invitationRewardDialogVisible">
     <el-form label-width="200">
       <el-row class="bg-neutral-200 invitation-reward-dialog">
         <el-form-item label="ID">
-          <el-input class="w-400" />
+          <el-input disabled :value="agentInvitationRewardDetail.id" class="w-400" />
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 invitation-reward-dialog">
         <el-form-item label="邀请人数条件">
-          <el-input class="w-200" placeholder="请输入邀请人数范围" />
+          <el-input
+            disabled
+            class="w-200"
+            :value="agentInvitationRewardDetail.minimum_invite_number"
+            placeholder="请输入邀请人数范围"
+          />
           &nbsp;&nbsp;&nbsp;&nbsp;━━━━&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-input class="w-200" placeholder="请输入邀请人数范围" />
+          <el-input
+            disabled
+            class="w-200"
+            :value="agentInvitationRewardDetail.maximum_invite_number"
+            placeholder="请输入邀请人数范围"
+          />
           人
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 invitation-reward-dialog">
         <el-form-item label="邀请奖励金额">
-          <el-input class="w-400" placeholder="请输入奖励邀请金额" />
+          <el-input
+            :value="agentInvitationRewardDetail.invite_reward_amount"
+            disabled
+            type="text"
+            class="w-400"
+            placeholder="请输入奖励邀请金额"
+          />
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 invitation-reward-dialog">
         <el-form-item label="需求打码倍率">
-          <el-input class="w-400" placeholder="请输入奖励邀请金额" />
+          <el-input
+            :value="agentInvitationRewardDetail.reqruied_code_magnification || '0'"
+            disabled
+            type="text"
+            class="w-400"
+            placeholder="请输入奖励邀请金额"
+          />
         </el-form-item>
       </el-row>
     </el-form>
     <el-footer class="text-center mt-6">
-      <el-button type="primary">确认</el-button>
+      <el-button @click="invitationRewardDialogVisible = false" type="primary"
+        >确认</el-button
+      >
       <el-button @click="invitationRewardDialogVisible = false">取消</el-button>
     </el-footer>
   </el-dialog>

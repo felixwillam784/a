@@ -88,7 +88,9 @@ export namespace NETWORKCFG {
     static AGENT_STATISTIC_REPORT_LIST = '/agent/statistic-report/list';
 
     // agent invitaion reward api
-    static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward-list';
+    static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward/list';
+    static AGENT_INVITAION_REWARD_DETAIL = '/agent/invitation/reward/detail';
+
     static AGENT_INVITAION_STATISTIC_LIST = '/agent/invitation/statistic-list';
 
     // agent achievement reward api

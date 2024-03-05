@@ -1,17 +1,34 @@
+export interface AgentListReqParameter {
+  user_id: string,
+  email_address: string,
+  identity_information: string,
+  agent_status: number | string,
+  risk_control_status: number | '',
+  total_invite_count: number | '',
+  total_invite_count_operator_type: number,
+  level1_paid_user_count: number | '',
+  level1_paid_user_count_operator_type: number,
+  agent_betting_rebate_amount: string | 0,
+  agent_betting_rebate_amount_operator_type: number,
+  start_date: number | '',
+  end_date: number | '',
+  page_num: 1,
+  page_size: 20,
+}
 export interface AgentListData {
-    user_id: number
-    total_recharge_amount: number
-    total_withdrawal_amount: number
+    user_id: string
+    total_recharge_amount: string
+    total_withdrawal_amount: string
     total_invite_count: number
-    level1_charge_withdraw_difference: number
-    level1_payment_amount: number
-    level1_withdrawal_amount: number
-    agent_betting_rebate_amount: number
+    level1_charge_withdraw_difference: string
+    level1_payment_amount: string
+    level1_withdrawal_amount: string
+    agent_betting_rebate_amount: string
     level1_paid_user_count: number
     risk_control_agent_count: number
     average_agent_recharge: number
-    agent_achievement_rewards: number
-    agent_invitation_rewards: number
+    agent_achievement_rewards: string
+    agent_invitation_rewards: string
     agent_status: number
     account_risk_countrol_status: number
 }
@@ -114,10 +131,10 @@ export interface AgentStatisticReportData {
 
 export interface AgentInvitationRewardData {
     id: number
-    invite_reward_amount: number
-    maximum_invite_number: number
     minimum_invite_number: number
-    required_code_magnification: number
+    maximum_invite_number: number
+    invite_reward_amount: string
+    reqruied_code_magnification: string
 }
 
 export type GetAgentInvitationRewardListResponse = {
@@ -125,7 +142,11 @@ export type GetAgentInvitationRewardListResponse = {
     data: Array<AgentInvitationRewardData>
     message: string
 }
-
+export type GetAgentInvitationRewardDetailResponse = {
+    code: number | string
+    data: AgentInvitationRewardData
+    message: string
+}
 export interface AgentInvitationStatisticData {
     condition_satisfaction_total_count: number
     id: number
@@ -224,7 +245,10 @@ export type GetAgentRebateStatisticsResponse = {
 
 export type GetAgentListDataResponse = {
     code: number | string
-    data: Array<AgentListData>
+    data: {
+        data_list: Array<AgentListData>
+        total_count: number
+    }
     message: string
 }
 

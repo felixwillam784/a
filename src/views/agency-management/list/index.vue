@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+import { AgentListReqParameter } from "@/interface/agent/index";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import useStore from "@/store";
@@ -13,10 +14,10 @@ const dateRange = ref([
   moment.tz("Asia/Hong_Kong").format("YYYY-MM-DD"),
 ]);
 
-const selectedAgentId = ref<number>();
+const selectedAgentId = ref<string>("");
 const remark = ref<string>("");
 
-const formData = ref<any>({
+const formData = ref<AgentListReqParameter>({
   user_id: "",
   email_address: "",
   identity_information: "",
@@ -26,17 +27,45 @@ const formData = ref<any>({
   total_invite_count_operator_type: 1,
   level1_paid_user_count: "",
   level1_paid_user_count_operator_type: 1,
-  agent_betting_rebate_amount: "",
+  agent_betting_rebate_amount: 0,
   agent_betting_rebate_amount_operator_type: 1,
   start_date: "",
   end_date: "",
-  pageNum: 1,
-  pageSize: 20,
+  page_num: 1,
+  page_size: 20,
 });
-
 const loading = ref<boolean>(false);
 
-const total_count = ref<number>(0);
+const disabled = ref(false);
+
+const agentStatusOptions = [
+  {
+    value: 0,
+    label: "正常",
+  },
+  {
+    value: 1,
+    label: "预警 ",
+  },
+  {
+    value: 2,
+    label: "停止",
+  },
+];
+const riskControlStatus = [
+  {
+    value: 0,
+    label: "正常",
+  },
+  {
+    value: 1,
+    label: "预警 ",
+  },
+  {
+    value: 2,
+    label: "停止",
+  },
+];
 
 const agencyTerminateDialogVisible = ref<boolean>(false);
 
@@ -66,7 +95,9 @@ const comparatorOptions = ref<Array<any>>([
 const agentList = computed(() => {
   return agent.agentList;
 });
-
+const total_count = computed(() => {
+  return Math.ceil(agent.getAentTotalNumber / 20);
+});
 const buttonIndex = ref<number>(1);
 
 const handleDateRange = (date: string) => {
@@ -177,9 +208,8 @@ const handlePagination = () => {
 };
 
 const handleQuery = async () => {
+  console.log(typeof formData.value.user_id);
   loading.value = true;
-  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
-  formData.value.end_date = moment(dateRange.value[0] + " 23:59:59").valueOf();
   await agent.dispatchAgentList(formData.value);
   loading.value = false;
 };
@@ -188,30 +218,36 @@ const resetQuery = () => {
   handleDateRange("this week");
 };
 
-const showAgencyTerminateDialog = (id: number) => {
+const showAgencyTerminateDialog = (id: string) => {
   agencyTerminateDialogVisible.value = true;
-  selectedAgentId.value = id;
+  selectedAgentId.value = String(id);
 };
 
 const terminateAgent = async () => {
+  if (!remark.value) return;
   await agent.dispatchTerminateAgent({
-    user_id: selectedAgentId.value,
+    user_id: selectedAgentId.value as string,
     remarK: remark.value,
   });
   agencyTerminateDialogVisible.value = false;
   loading.value = true;
   await agent.dispatchAgentList(formData.value);
   loading.value = false;
+  remark.value = "";
 };
-
+const load = async () => {
+  if (disabled.value) return;
+  if (formData.value.page_num < total_count.value) {
+    loading.value = true;
+    formData.value.page_num++;
+    await agent.dispatchOnLoad(formData.value);
+    loading.value = false;
+  }
+};
 onMounted(async () => {
-  formData.value.start_date = moment(dateRange.value[0] + " 00:00:00").valueOf();
-  formData.value.end_date = moment(dateRange.value[0] + " 23:59:59").valueOf();
-  formData.value.agent_betting_rebate_amount = Number(
-    formData.value.agent_betting_rebate_amount
-  );
-  loading.value = true;
   handleDateRange("this week");
+
+  loading.value = true;
   await agent.dispatchAgentList(formData.value);
   loading.value = false;
 });
@@ -235,6 +271,7 @@ onMounted(async () => {
                     v-model="formData.user_id"
                     placeholder="请输入User ID"
                     style="width: 252px"
+                    type="text"
                   />
                 </el-form-item>
                 <el-form-item label="邮箱账号" prop="email_address">
@@ -264,6 +301,12 @@ onMounted(async () => {
                     placeholder="请选择代理状态"
                     style="min-width: 252px"
                   >
+                    <el-option
+                      v-for="item in agentStatusOptions"
+                      :label="item.label"
+                      :key="item.value"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="风控状态" prop="risk_control_status">
@@ -272,6 +315,12 @@ onMounted(async () => {
                     placeholder="请选择风控状态"
                     style="width: 252px"
                   >
+                    <el-option
+                      v-for="item in riskControlStatus"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="总邀请人数" prop="total_invite_count">
@@ -440,7 +489,13 @@ onMounted(async () => {
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="agentList" style="width: 100%">
+          <el-table
+            v-el-table-infinite-scroll="load"
+            :infinite-scroll-disabled="disabled"
+            v-loading="loading"
+            :data="agentList"
+            style="width: 100%"
+          >
             <el-table-column label="UserID" align="center" prop="user_id" width="160">
               <template #default="scope">
                 <el-link :underline="false" class="el-link-decoration">
@@ -585,7 +640,13 @@ onMounted(async () => {
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_status }}</p>
+                <p>
+                  {{
+                    agentStatusOptions.find(
+                      (item) => item.value === scope.row.agent_status
+                    )?.label
+                  }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column
@@ -595,7 +656,13 @@ onMounted(async () => {
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.account_risk_countrol_status }}</p>
+                <p>
+                  {{
+                    riskControlStatus.find(
+                      (item) => item.value === scope.row.risk_control_agent_count
+                    )?.label
+                  }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="200" fixed="right">
@@ -622,14 +689,6 @@ onMounted(async () => {
               </template>
             </el-table-column>
           </el-table>
-          <div style="float: right">
-            <pagination
-              :total="total_count"
-              v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize"
-              @pagination="handlePagination"
-            />
-          </div>
         </el-card>
       </el-col>
     </el-row>
