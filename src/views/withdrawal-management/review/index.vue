@@ -378,16 +378,16 @@ const lock = () => {};
             <el-table-column
               label="用户账号"
               align="center"
-              prop="user_account"
+              prop="user_id"
               width="160"
             >
               <template #default="scope">
                 <el-link
                   :underline="false"
                   style="color: #3afefe; text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail' })"
+                  @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
                 >
-                  {{ scope.row.user_account }}
+                  {{ scope.row.user_id }}
                 </el-link>
               </template>
             </el-table-column>
@@ -456,12 +456,12 @@ const lock = () => {};
             <el-table-column
               label="订单号"
               align="center"
-              prop="order_number"
+              prop="order_id"
               width="220"
             >
               <template #default="scope">
                 <div style="display: flex; align-items: center">
-                  <p>{{ scope.row.order_number }}</p>
+                  <p>{{ scope.row.order_id }}</p>
                   <el-button link>
                     <el-icon>
                       <CopyDocument />
@@ -565,7 +565,7 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <p>{{ scope.row.submission_time }}</p>
+                <p>{{ moment(scope.row.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
               </template>
             </el-table-column>
             <el-table-column align="center" label="操作" fixed="right" width="200">
@@ -740,7 +740,7 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.submission_time }}</p>
+          <p>{{ moment(withdrawalReviewItem?.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
