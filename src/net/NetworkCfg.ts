@@ -88,7 +88,9 @@ export namespace NETWORKCFG {
     static AGENT_STATISTIC_REPORT_LIST = '/agent/statistic-report/list';
 
     // agent invitaion reward api
-    static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward-list';
+    static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward/list';
+    static AGENT_INVITAION_REWARD_DETAIL = '/agent/invitation/reward/detail';
+
     static AGENT_INVITAION_STATISTIC_LIST = '/agent/invitation/statistic-list';
 
     // agent achievement reward api
@@ -120,7 +122,9 @@ export namespace NETWORKCFG {
   export class WITHDRAWAL{
     static DEPOSITLIST:string = "/deposit-order/list"
     static UPDATE_SUPPLIMENT:string = "/deposit/suppliment"
-    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'
+    static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'   // 提现审核列表 Withdrawal review list
+    static WITHDRAWAL_REVIEW_LOCK = '/withdrawal/lock'  // 提现审核锁定  Withdrawal review lock
+    static WITHDRAWAL_REVIEW_OPERATION = '/withdrawal/operate'  // 提现审核操作  Withdrawal review operation
   }
   //Listening events sent actively
   export class UNSOLICITED {}

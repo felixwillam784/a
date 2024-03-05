@@ -40,8 +40,8 @@ export type GetWithdrawalReview = {
 
 export interface WithdrawalForm {
     user_account?: string
-    submission_start: string
-    submission_end: string
+    submission_start: number
+    submission_end: number
     order_update_start?: string
     order_update_end?: string
     platform_order_number?: string
