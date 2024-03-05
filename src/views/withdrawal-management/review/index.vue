@@ -55,6 +55,7 @@ const formData = ref<any>({
   submission_end: +(new Date().getTime() / 1000).toFixed(0),
   page_num: 1,
   page_size: 20,
+  order_status: -1
 });
 
 const loading = ref<boolean>(false);
@@ -78,6 +79,10 @@ const rejectItemRemark = ref("")
 const withdrawalReviewItem = ref<GetWithdrawalReview>();
 
 const orderStatusOptions = ref<Array<any>>([
+  {
+    label: '全部',
+    value: -1
+  },
   {
     label: '待处理',
     value: 0
@@ -131,6 +136,7 @@ const resetQuery = () => {
     submission_end: +(new Date().getTime() / 1000).toFixed(0),
     page_num: 1,
     page_size: 20,
+    order_status: -1
   }
   order_update_time.value = ['', ''];
   delete formData.value.order_update_start;
@@ -236,7 +242,6 @@ const handleQuery = async () => {
   }
   formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
   formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
-  console.log('submission_time1', submission_time.value)
   await withdrawal.dispatchWithdrawalReviewList(formData.value);
 }
 
@@ -361,8 +366,8 @@ const lock = () => {};
                     >搜索</el-button
                   >
                   <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-                  <el-button @click="goBulkPassPage">批量同意</el-button>
-                  <el-button @click="goBulkRejectPage">批量拒绝</el-button>
+                  <!-- <el-button @click="goBulkPassPage">批量同意</el-button> -->
+                  <!-- <el-button @click="goBulkRejectPage">批量拒绝</el-button> -->
                 </div>
               </el-form>
             </el-col>
