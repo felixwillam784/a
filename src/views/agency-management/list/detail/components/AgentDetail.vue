@@ -37,7 +37,11 @@ onMounted(async () => {
     <el-col :span="8" class="d-flex align-center justify-center">
       <el-form-item label="代理风控状态:">
         <span class="text-red-500">
-          {{ agentRiskControlStatusList.find((obj: any) => obj.id === agentDetailItem.account_risk_control_status)?.name }}
+          {{
+            agentRiskControlStatusList.find(
+              (obj) => obj.id === agentDetailItem.account_risk_control_status
+            )?.name
+          }}
         </span>
       </el-form-item>
     </el-col>
@@ -89,7 +93,13 @@ onMounted(async () => {
     </el-col>
     <el-col :span="8" class="d-flex align-center justify-center">
       <el-form-item label="代理状态:">
-        {{ agentDetailItem.agent_status == 1 ? "正常" : "非正常" }}
+        {{
+          agentDetailItem.agent_status == 0
+            ? "正常"
+            : agentDetailItem.agent_status == 1
+            ? "预警"
+            : "停止"
+        }}
       </el-form-item>
     </el-col>
   </el-row>
