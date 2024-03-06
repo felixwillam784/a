@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, toRefs } from "vue";
-import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+import { ref, computed, watch, toRefs } from "vue";
 import { type AgentAchievementRewardData } from "@/interface/agent";
+import useStore from "@/store";
+import type * as Agent from "@/interface/agent";
 
 const props = defineProps<{
   achievementRewardDialog: boolean
@@ -15,37 +16,51 @@ const emit = defineEmits<{
   (e: "closeAchievementRewardDialog"): void;
   (e: "closeAchievementRewardCollectionDialog"): void;
 }>();
+const { agent } = useStore();
 
-const formData = ref<any>({
-  pageNum: 1,
-  pageSize: 20,
+const formData = ref<Agent.AgentAchievementRewardData>({
+  id: 0,
+  code_magnification: '',
+  invite_number_condition: 0,
+  invite_reward_amount: 0
 });
 
 const achievementRewardDialogVisible = ref<boolean>(false);
 
 const achievementRewardCollectionDialogVisible = ref<boolean>(false);
 
-const total_count = ref<number>(0);
-
-const firstLevelAgentList = ref<Array<any>>([
-  {
-    item_1: 1,
-    item_2: 9999,
-    item_3: 9999,
-    item_4: 9999,
-  },
-]);
-
 const dialogTitle = ref<string>("代理成就详情");
-
-const handlePagination = () => {};
-
-const showAchievementRewardDialog = () => {
+const addNewItem = ref<boolean>(false);
+const showAchievementRewardDialog = async (id: number) => {
+  await agent.dispatchAgentAchievementRewardDetail({id});
+  formData.value = agent.getAgentAchievementRewardDetail;
   dialogTitle.value = "代理成就详情";
   achievementRewardDialogVisible.value = true;
 };
 
+const updateAchievementReward = async () => {
+  loading.value = true;
+  achievementRewardDialogVisible.value = true;
+  if (addNewItem.value) {
+    formData.value.invite_number_condition = Number(formData.value.invite_number_condition);
+    await agent.dispatchAgentAchievementRewardAdd(formData.value);
+  } else {
+    await agent.dispatchAgentAchievementRewardUpdate(formData.value);
+  }
+  achievementRewardDialogVisible.value = false;
+  await agent.dispatchAgentAchievementRewardList();
+  loading.value = false;
+};
+
+const deleteAchievementReward = async (id: number) => {
+  // await age
+}
 watch(achievementRewardDialog, (value) => {
+  addNewItem.value = true;
+  formData.value.id=0;
+  formData.value.invite_number_condition =  0;
+  formData.value.invite_reward_amount = 0;
+  formData.value.code_magnification = '';
   dialogTitle.value = "新增代理成就";
   achievementRewardDialogVisible.value = value;
 });
@@ -96,47 +111,53 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     </el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button type="primary" link @click="showAchievementRewardDialog">
+        <el-button type="primary" link @click="showAchievementRewardDialog(scope.row.id)">
           详情
         </el-button>
-        <el-button type="danger" link> 删除 </el-button>
-        <el-button type="primary" link> 日志 </el-button>
+        <el-button type="danger" @click="deleteAchievementReward(scope.row.id)" link>
+          删除
+        </el-button>
+        <!-- <el-button type="primary" link> 日志 </el-button> -->
       </template>
     </el-table-column>
   </el-table>
-  <div style="float: right">
-    <pagination
-      :total="total_count"
-      v-model:page="formData.pageNum"
-      v-model:limit="formData.pageSize"
-      @pagination="handlePagination"
-    />
-  </div>
   <el-dialog :title="dialogTitle" v-model="achievementRewardDialogVisible">
     <el-form label-width="200">
       <el-row class="bg-neutral-200 achievement-reward-dialog">
         <el-form-item label="ID">
-          <el-input class="w-400" />
+          <el-input :value="formData.id" disabled class="w-400" />
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 achievement-reward-dialog">
         <el-form-item label="邀请人数条件">
-          <el-input class="w-200" placeholder="请输入邀请人数条件" />
+          <el-input
+            class="w-200"
+            v-model="formData.invite_number_condition"
+            placeholder="请输入邀请人数条件"
+          />
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 achievement-reward-dialog">
         <el-form-item label="邀请奖励金额">
-          <el-input class="w-400" placeholder="请输入邀请奖励金额" />
+          <el-input
+            class="w-400"
+            placeholder="请输入邀请奖励金额"
+            v-model="formData.invite_reward_amount"
+          />
         </el-form-item>
       </el-row>
       <el-row class="bg-neutral-400 achievement-reward-dialog">
         <el-form-item label="需求打码倍率">
-          <el-input class="w-400" placeholder="请输入需求打码倍率" />
+          <el-input
+            class="w-400"
+            v-model="formData.code_magnification"
+            placeholder="请输入需求打码倍率"
+          />
         </el-form-item>
       </el-row>
     </el-form>
     <el-footer class="text-center mt-6">
-      <el-button type="primary">确认</el-button>
+      <el-button type="primary" @click="updateAchievementReward">确认</el-button>
       <el-button @click="achievementRewardDialogVisible = false">取消</el-button>
     </el-footer>
   </el-dialog>
