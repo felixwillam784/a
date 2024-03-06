@@ -185,14 +185,14 @@ const closeAchievementRewardCollectionDialog = () => {
 onMounted(async () => {
   loading.value = true;
   await agent.dispatchAgentAchievementRewardList();
-  await agent.dispatchAgentAchievementStatisticList({
-    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
-    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
-  });
-  await agent.dispatchAgentAchievementStageStatisticList({
-    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
-    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
-  });
+  // await agent.dispatchAgentAchievementStatisticList({
+  //   start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+  //   end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+  // });
+  // await agent.dispatchAgentAchievementStageStatisticList({
+  //   start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
+  //   end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
+  // });
   loading.value = false;
 });
 </script>

@@ -140,9 +140,25 @@ const handleDateRange = (date: string) => {
   }
 };
 
-const handleQuery = () => {};
+const handleQuery = async () => {
+  loading.value = true;
+  await agent.dispatchAgentInvitationStatistic({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf() / 1000,
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf() / 1000,
+  });
+  loading.value = false;
+};
 
-const resetQuery = () => {};
+const resetQuery = async () => {
+  loading.value = true;
+  await agent.dispatchAgentInvitationReward();
+
+  await agent.dispatchAgentInvitationStatistic({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf() / 1000,
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf() / 1000,
+  });
+  loading.value = false;
+};
 
 const invitationRewardDialogShow = () => {
   invitationRewardDialog.value = true;
@@ -163,11 +179,11 @@ const closeInvitationRewardCollectionDialog = () => {
 onMounted(async () => {
   loading.value = true;
   await agent.dispatchAgentInvitationReward();
-  //await agent.dispatchAgentInvitationStatistic({
-  //  start_date: moment(dateRange.value[0] + " 00:00:00").valueOf(),
-  //  end_date: moment(dateRange.value[1] + " 23:59:59").valueOf(),
-  //});
-  console.log(agentInvitationRewardList.value);
+
+  await agent.dispatchAgentInvitationStatistic({
+    start_date: moment(dateRange.value[0] + " 00:00:00").valueOf() / 1000,
+    end_date: moment(dateRange.value[1] + " 23:59:59").valueOf() / 1000,
+  });
   loading.value = false;
 });
 </script>

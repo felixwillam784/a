@@ -41,18 +41,25 @@ onMounted(async () => {});
 
 const handleQuery = async () => {
   formData.page_num = 1;
+  formData.page_size = 20;
   data.value = [];
   disabled.value = false;
   page.value = 0;
   await load();
 };
 
-const resetQuery = () => {
+const resetQuery = async () => {
   for (let property in formData.value) {
     if (formData.value.hasOwnProperty(property)) {
       formData.value[property] = "";
     }
   }
+  formData.value.vip_level = 0;
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
+  data.value = [];
+  await player.dispatchGetUserList(formData.value);
+  data.value = data.value.concat(customerList.value);
 };
 
 const prohibitWithdrawal = async (id: number) => {
@@ -74,7 +81,8 @@ const load = async () => {
   if (disabled.value) return;
   loading.value = true;
   page.value++;
-  if (page.value <= total.value) {
+  console.log(page.value);
+  if (page.value <= total.value || !total.value) {
     formData.value.page_num = page.value;
     await player.dispatchGetUserList(formData.value);
     data.value = data.value.concat(customerList.value);
@@ -85,8 +93,8 @@ const load = async () => {
   }
   loading.value = false;
 };
+// @click="router.push({ name: 'User Detail' })"
 </script>
-
 <template>
   <div class="app-container">
     <el-row :gutter="20">
@@ -110,30 +118,27 @@ const load = async () => {
                 clearable
               >
                 <el-option label="普通玩家" value="1" />
-                <el-option label="普通代理" value="2" />
-                <el-option label="KOL" value="3" />
+                <el-option label="测试账号" value="2" />
+                <el-option label="推广账号" value="3" />
+                <el-option label="KOL" value="4" />
               </el-select>
             </el-form-item>
           </el-form>
           <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-            <el-form-item label="邀请ID" prop="invitation_code">
+            <el-form-item label="邀请码" prop="invitation_code">
               <el-input
                 v-model="formData.invitation_code"
-                placeholder="请输入用户邀请ID"
+                placeholder="请输入用户邀请码"
                 clearable
               />
             </el-form-item>
             <el-form-item label="客户标签" prop="tags">
-              <el-input
-                v-model="formData.tags"
-                placeholder="请输入用户邀请ID"
-                clearable
-              />
+              <el-input v-model="formData.tags" placeholder="请输入客户标签" clearable />
             </el-form-item>
             <el-form-item label="VIP等级" prop="vip_level">
               <el-input
                 v-model="formData.vip_level"
-                placeholder="请输入用户邀请ID"
+                placeholder="请输入VIP等级"
                 clearable
                 :value="formData.vip_level == 0 ? '' : formData.vip_level"
               />
@@ -174,7 +179,6 @@ const load = async () => {
                 <el-link
                   :underline="false"
                   style="color: #5393e0; text-decoration-line: underline"
-                  @click="router.push({ name: 'User Detail' })"
                 >
                   {{ scope.row.nickname }}
                 </el-link>
@@ -184,8 +188,8 @@ const load = async () => {
               <template #default="scope">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
-                  @click="router.push({ name: 'User Detail' })"
+                  style="color: #5393e0; text-decoration-line: underline"
+                  @click="goCustomerDetailPage(scope.row.id)"
                 >
                   {{ scope.row.uid }}
                 </el-link>
@@ -195,8 +199,8 @@ const load = async () => {
               <template #default="scope">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
-                  @click="router.push({ name: 'User Detail' })"
+                  style="color: #5393e0; text-decoration-line: underline"
+                  @click="goCustomerDetailPage(scope.row.id)"
                 >
                   {{ scope.row.id }}
                 </el-link>

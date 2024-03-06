@@ -147,6 +147,10 @@ export type GetAgentInvitationRewardDetailResponse = {
     data: AgentInvitationRewardData
     message: string
 }
+export type GetAgentInvitationRewardUpdateResponse = {
+    code: number | string
+    message: string
+}
 export interface AgentInvitationStatisticData {
     condition_satisfaction_total_count: number
     id: number
@@ -162,7 +166,7 @@ export interface AgentInvitationStatisticList {
 }
 
 export interface AgentAchievementRewardData {
-    code_magnification: number
+    code_magnification: string
     id: number
     invite_number_condition: number
     invite_reward_amount: number
@@ -215,13 +219,21 @@ export type GetAgentAchievementStatisticListResponse = {
 
 export type GetAgentAchievementStageRewardResponse = {
     code: number | string
-    data: Array<AgentAchievementStageRewardData>
+    data: AgentAchievementStageRewardData
     message: string
 }
 
 export type GetAgentAchievementRewardListResponse = {
     code: number | string
-    data: Array<AgentAchievementRewardData>
+    data: {
+        data_list: Array<AgentAchievementRewardData>
+        total_count: number
+    }
+    message: string
+}
+export type GetAgentAchievementRewardDetailResponse = {
+    code: number | string
+    data: AgentAchievementRewardData
     message: string
 }
 
