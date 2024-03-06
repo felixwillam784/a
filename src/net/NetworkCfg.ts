@@ -90,11 +90,17 @@ export namespace NETWORKCFG {
     // agent invitaion reward api
     static AGENT_INVITAION_REWARD_LIST = '/agent/invitation/reward/list';
     static AGENT_INVITAION_REWARD_DETAIL = '/agent/invitation/reward/detail';
+    static AGENT_INVITAION_REWARD_DELETE = '/agent/invitation/reward/delete';
 
-    static AGENT_INVITAION_STATISTIC_LIST = '/agent/invitation/statistic-list';
+    static AGENT_INVITAION_STATISTIC_LIST = '/agent/invitation/statistic/list';
 
     // agent achievement reward api
-    static AGENT_ACHIEVEMENT_REWARD_LIST = '/agent/achievement/reward-list';
+    static AGENT_ACHIEVEMENT_REWARD_LIST = '/agent/achievement/reward/list';
+    static AGENT_ACHIEVEMENT_REWARD_DETAIL = '/agent/achievement/reward/detail';
+    static AGENT_ACHIEVEMENT_REWARD_DELETE = '/agent/achievement/reward/delete';
+    static AGENT_ACHIEVEMENT_REWARD_UPDATE = '/agent/achievement/reward/update';
+    static AGENT_ACHIEVEMENT_REWARD_ADD = '/agent/achievement/reward/add';
+    
     static AGENT_ACHIEVEMENT_STAGE_REWARD_LIST = '/agent/achievement/stage-reward-list';
     static AGENT_ACHIEVEMENT_STATISTIC_LIST = '/agent/achievement/statistic-list';
     static AGENT_ACHIEVEMENT_STAGE_STATISTIC_LIST = '/agent/achievement/stage-statistic-list';

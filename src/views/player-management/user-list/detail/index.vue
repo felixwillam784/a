@@ -12,6 +12,7 @@ import useStore from "@/store";
 import { useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { ElInput } from "element-plus";
+import dayjs from "dayjs";
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -183,7 +184,14 @@ const handlePhoneInputConfirm = async () => {
 const inputUserMarkValue = ref("");
 const inputUserMarkVisible = ref(false);
 const inputUserMarkRef = ref<InstanceType<typeof ElInput>>();
-
+const DateConvertoptions = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
 const showUserMarkInput = () => {
   inputUserMarkVisible.value = true;
   nextTick(() => {
@@ -213,7 +221,9 @@ const handleNoteInputConfirm = async () => {
     await player.dispatchPlayerBasicDetail({ id: route.params.id });
   }
 };
-
+const copyText = (str: string) => {
+  navigator.clipboard.writeText(str);
+};
 const inputMailTagValue = ref("");
 const inputMailTagVisible = ref(false);
 const inputMailTagRef = ref<InstanceType<typeof ElInput>>();
@@ -306,7 +316,7 @@ const handleMailInputConfirm = async () => {
               <el-form label-width="200">
                 <el-form-item label="用户ID:">
                   {{ basicInformation.id }}
-                  <el-button link>
+                  <el-button @click="copyText(basicInformation.id)" link>
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -317,7 +327,7 @@ const handleMailInputConfirm = async () => {
             <el-col :span="8">
               <el-form-item label="用户昵称:">
                 {{ basicInformation.nickname }}
-                <el-button link>
+                <el-button @click="copyText(basicInformation.nickname)" link>
                   <el-icon>
                     <CopyDocument />
                   </el-icon>
@@ -346,7 +356,11 @@ const handleMailInputConfirm = async () => {
                 >
                   修改
                 </el-button>
-                <el-button link v-if="!inputMailTagVisible">
+                <el-button
+                  @click="copyText(basicInformation.uid)"
+                  link
+                  v-if="!inputMailTagVisible"
+                >
                   <el-icon>
                     <CopyDocument />
                   </el-icon>
@@ -360,7 +374,7 @@ const handleMailInputConfirm = async () => {
                 <el-form-item label="归属上级:">
                   <el-link
                     :underline="false"
-                    style="color: #3afefe; text-decoration-line: underline"
+                    style="color: #5393e0; text-decoration-line: underline"
                     @click="router.push({ name: 'UserDetail' })"
                   >
                     {{ basicInformation.sir_user_id }}
@@ -402,13 +416,19 @@ const handleMailInputConfirm = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="注册时间:">
-                  {{ basicInformation.created_at }}
+                  {{
+                    dayjs(basicInformation.created_at * 1000).format(
+                      "YYYY-MM-DD hh:mm:ss"
+                    )
+                  }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="最后登录时间:">
-                {{ basicInformation.updated_at }}
+                {{
+                  dayjs(basicInformation.updated_at * 1000).format("YYYY-MM-DD hh:mm:ss")
+                }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -428,7 +448,9 @@ const handleMailInputConfirm = async () => {
                     basicInformation.user_type == 1
                       ? "普通玩家"
                       : basicInformation.user_type == 2
-                      ? "普通代理"
+                      ? "测试账号"
+                      : basicInformation.user_type == 3
+                      ? "推广账号"
                       : "KOL"
                   }}
                 </el-form-item>
