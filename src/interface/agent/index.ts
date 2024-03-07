@@ -219,7 +219,9 @@ export type GetAgentAchievementStatisticListResponse = {
 
 export type GetAgentAchievementStageRewardResponse = {
     code: number | string
-    data: AgentAchievementStageRewardData
+    data: {
+        data_list: Array<AgentAchievementStageRewardData>
+    }
     message: string
 }
 
