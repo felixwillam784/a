@@ -69,7 +69,6 @@ export const authStore = defineStore({
       const network: Network = Network.getInstance();
       // response call back function
       const next = (response: Auth.SignOutResponseData) => {
-        console.log(response);
         if (response.code == "00") {
           this.removeToken();
           this.setSuccess(true);
