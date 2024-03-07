@@ -253,6 +253,11 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 <p>${{ scope.row.amount }}</p>
               </template>
             </el-table-column>
+            <el-table-column label="货币类型" align="center" prop="amount_type">
+              <template #default="scope">
+                <p>{{ scope.row.amount_type }}</p>
+              </template>
+            </el-table-column>
             <el-table-column label="变动类型" align="center" prop="change_type">
               <template #default="scope">
                 <p>{{ changeTypeText(scope.row.change_type) }}</p>
@@ -382,6 +387,12 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         <el-col :span="6" class="detail-item-left-bg">用户类型:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <span>{{ manualPaymentItem.user_type }}</span>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6" class="detail-item-left-bg">货币类型:</el-col>
+        <el-col :span="18" class="detail-item-right-bg">
+          <span>{{ manualPaymentItem.amount_type }}</span>
         </el-col>
       </el-row>
       <el-row>
