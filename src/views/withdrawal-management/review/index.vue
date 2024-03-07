@@ -47,15 +47,15 @@ interface RejectInterface {
 }
 
 const router = useRouter();
-const submission_time = ref(['', '']);
-const order_update_time = ref(['', ''])
+const submission_time = ref(["", ""]);
+const order_update_time = ref(["", ""]);
 
 const formData = ref<any>({
   submission_start: +(new Date("2020-12-31").getTime() / 1000).toFixed(0),
   submission_end: +(new Date().getTime() / 1000).toFixed(0),
   page_num: 1,
   page_size: 20,
-  order_status: -1
+  order_status: -1,
 });
 
 const loading = ref<boolean>(false);
@@ -72,7 +72,7 @@ const rules = ref<FormRules<RejectInterface>>({
   remark: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
-const rejectItemRemark = ref("")
+const rejectItemRemark = ref("");
 
 // const withdrawalReviewList = ref<Array<GetWithdrawalReview>>([]);
 
@@ -80,12 +80,12 @@ const withdrawalReviewItem = ref<GetWithdrawalReview>();
 
 const orderStatusOptions = ref<Array<any>>([
   {
-    label: '全部',
-    value: -1
+    label: "全部",
+    value: -1,
   },
   {
-    label: '待处理',
-    value: 0
+    label: "待处理",
+    value: 0,
   },
   {
     label: "处理中",
@@ -136,9 +136,9 @@ const resetQuery = () => {
     submission_end: +(new Date().getTime() / 1000).toFixed(0),
     page_num: 1,
     page_size: 20,
-    order_status: -1
-  }
-  order_update_time.value = ['', ''];
+    order_status: -1,
+  };
+  order_update_time.value = ["", ""];
   delete formData.value.order_update_start;
   delete formData.value.order_update_end;
   initSubmissionTime();
@@ -155,18 +155,18 @@ const closeDialog = () => {
 };
 
 const reviewParams = ref({
-  id: '',
+  id: "",
   operator: 0,
-  remark: ''
-})
+  remark: "",
+});
 
 const passDialogShow = (row: any) => {
   passDialogVisible.value = true;
   reviewParams.value = {
     id: row.order_id,
     operator: 1,
-    remark: ''
-  }
+    remark: "",
+  };
 };
 
 const closePassDialog = () => {
@@ -178,8 +178,8 @@ const rejectDialogShow = (row: any) => {
   reviewParams.value = {
     id: row.order_id,
     operator: 0,
-    remark: rejectItemRemark.value ? rejectItemRemark.value : ''
-  }
+    remark: rejectItemRemark.value ? rejectItemRemark.value : "",
+  };
 };
 
 const closeRejectDialog = () => {
@@ -200,11 +200,11 @@ const rejectSubmit = async (formEl: FormInstance | undefined) => {
 // 锁定
 const withdrawalLock = async (row: any) => {
   const params = {
-    id: row.order_id
+    id: row.order_id,
   };
   await withdrawal.dispatchWithdrawalReviewLock(params);
   await handleQuery();
-}
+};
 
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -221,7 +221,7 @@ const goBulkRejectPage = () => {
 
 const withdrawalReviewList = computed(() => {
   return withdrawal.getWithdrawalReviewData;
-})
+});
 
 /**
  * 查询
@@ -232,40 +232,41 @@ const handleQuery = async () => {
   }
   if (order_update_time.value) {
     if (order_update_time.value[0]) {
-      formData.value.order_update_start = new Date(order_update_time.value[0]).getTime() / 1000;
-      formData.value.order_update_end = new Date(order_update_time.value[1]).getTime() / 1000;
+      formData.value.order_update_start =
+        new Date(order_update_time.value[0]).getTime() / 1000;
+      formData.value.order_update_end =
+        new Date(order_update_time.value[1]).getTime() / 1000;
     }
   } else {
-    order_update_time.value = ['', ''];
+    order_update_time.value = ["", ""];
     delete formData.value.order_update_start;
     delete formData.value.order_update_end;
   }
   formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
   formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
   await withdrawal.dispatchWithdrawalReviewList(formData.value);
-}
+};
 
 /**
  * 审核操作
  */
 const withdrawalReviewOperation = async () => {
   if (rejectItemRemark.value) {
-    reviewParams.value.remark = rejectItemRemark.value
+    reviewParams.value.remark = rejectItemRemark.value;
   }
   await withdrawal.dispatchWithdrawalReviewOperation(reviewParams.value);
-  rejectItemRemark.value = '';
+  rejectItemRemark.value = "";
   closeDialog();
   closePassDialog();
   closeRejectDialog();
   await handleQuery();
-}
+};
 
 const initSubmissionTime = () => {
-  submission_time.value = ['', ''];
-  submission_time.value[0] = new Date('2020-12-31').toISOString().split('T')[0];
-  submission_time.value[1] = new Date().toISOString().split('T')[0];
-}
-
+  submission_time.value = ["", ""];
+  submission_time.value[0] = new Date("2020-12-31").toISOString().split("T")[0];
+  submission_time.value[1] = new Date().toISOString().split("T")[0];
+};
 
 onMounted(() => {
   initSubmissionTime();
@@ -287,7 +288,9 @@ const getFontStyle = (orderStatus: number) => {
   }
   return `color: ${color}; font-weight: bold;`;
 };
-
+const copyText = (str: any) => {
+  navigator.clipboard.writeText(str);
+};
 const operate = (action: number) => {};
 const lock = () => {};
 </script>
@@ -375,17 +378,14 @@ const lock = () => {};
         </el-card>
         <el-card style="margin-top: 20px">
           <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%">
-            <el-table-column
-              label="用户账号"
-              align="center"
-              prop="user_id"
-              width="160"
-            >
+            <el-table-column label="用户账号" align="center" prop="user_id" width="160">
               <template #default="scope">
                 <el-link
                   :underline="false"
                   style="color: #3afefe; text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
+                  @click="
+                    router.push({ name: 'UserDetail', params: { id: scope.row.id } })
+                  "
                 >
                   {{ scope.row.user_id }}
                 </el-link>
@@ -453,16 +453,11 @@ const lock = () => {};
                 <Font v-else>{{ scope.row.risk_control_hint }}</Font>
               </template>
             </el-table-column>
-            <el-table-column
-              label="订单号"
-              align="center"
-              prop="order_id"
-              width="220"
-            >
+            <el-table-column label="订单号" align="center" prop="order_id" width="220">
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.order_id }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.order_id)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -479,7 +474,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.gaia_order_number }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.gaia_order_number)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -496,7 +491,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_order_number }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.upstream_order_number)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -513,7 +508,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_channel }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.upstream_channel)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -565,7 +560,11 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <p>{{ moment(scope.row.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
+                <p>
+                  {{
+                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                  }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column align="center" label="操作" fixed="right" width="200">
@@ -586,30 +585,21 @@ const lock = () => {};
                 <el-button
                   type="success"
                   link
-                  v-if="
-                    scope.row.order_status == 1 &&
-                    scope.row.operator_id == 1
-                  "
+                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
                   @click="passDialogShow(scope.row)"
                   >同意</el-button
                 >
                 <el-button
                   type="danger"
                   link
-                  v-if="
-                    scope.row.order_status == 1 &&
-                    scope.row.operator_id == 1
-                  "
+                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
                   @click="rejectDialogShow(scope.row)"
                   >拒绝</el-button
                 >
                 <el-button
                   type="danger"
                   link
-                  v-if="
-                    scope.row.order_status == 1 &&
-                    scope.row.operator_id == 1
-                  "
+                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
                   @click="lock()"
                   >已锁定</el-button
                 >
@@ -740,7 +730,13 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ moment(withdrawalReviewItem?.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
+          <p>
+            {{
+              moment(withdrawalReviewItem?.submission_time * 1000).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            }}
+          </p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -795,9 +791,19 @@ const lock = () => {};
         </el-col>
       </el-row>
       <template #footer>
-        <div class="dialog-footer" v-if="withdrawalReviewItem.order_status == 1 && withdrawalReviewItem.operator_id == 1">
-          <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
-          <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
+        <div
+          class="dialog-footer"
+          v-if="
+            withdrawalReviewItem.order_status == 1 &&
+            withdrawalReviewItem.operator_id == 1
+          "
+        >
+          <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)"
+            >通过</el-button
+          >
+          <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)"
+            >拒绝</el-button
+          >
           <el-button @click="closeDialog">取消</el-button>
         </div>
         <div class="dialog-footer" v-else>

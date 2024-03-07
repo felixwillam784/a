@@ -174,6 +174,10 @@ const load = async () => {
   }
   loading.value = false;
 };
+
+const copyText = (str: any) => {
+  navigator.clipboard.writeText(str);
+};
 </script>
 
 <template>
@@ -315,7 +319,7 @@ const load = async () => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.platform_order_number }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.platform_order_number)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -332,7 +336,7 @@ const load = async () => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.gaia_order_number }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.gaia_order_number)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -349,7 +353,7 @@ const load = async () => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_channel }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.upstream_channel)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -366,7 +370,7 @@ const load = async () => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_order_number }}</p>
-                  <el-button link>
+                  <el-button link @click="copyText(scope.row.upstream_order_number)">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>

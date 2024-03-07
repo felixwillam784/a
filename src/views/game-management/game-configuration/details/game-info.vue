@@ -172,6 +172,9 @@ const tag_status = ref<Array<boolean>>([]);
 const handleGameTagSelectionChange = (index: number) => {
   tag_status.value[index] = !tag_status.value[index];
 };
+const copyText = (str: any) => {
+  navigator.clipboard.writeText(str);
+};
 </script>
 
 <template>
@@ -198,7 +201,7 @@ const handleGameTagSelectionChange = (index: number) => {
           <el-form>
             <el-form-item label="游戏ID:">
               <el-text>{{ gameInformation.game_id }}</el-text>
-              <el-button link>
+              <el-button link @click="copyText(gameInformation.game_id)">
                 <el-icon>
                   <CopyDocument />
                 </el-icon>
@@ -209,7 +212,7 @@ const handleGameTagSelectionChange = (index: number) => {
         <el-col :span="8">
           <el-form-item label="游戏名字:">
             <el-text>{{ gameInformation.game_name }}</el-text>
-            <el-button link>
+            <el-button link @click="copyText(gameInformation.game_name)">
               <el-icon>
                 <CopyDocument />
               </el-icon>
