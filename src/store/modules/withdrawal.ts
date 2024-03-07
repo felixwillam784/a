@@ -17,7 +17,8 @@ export const withdrawalStore = defineStore({
       TotalNumber: 1 as number,
       withdrawalReviewData: [] as Array<Withdrawal.GetWithdrawalReviewList>,
       manualAddListData: [] as Array<Withdrawal.GetManualAddListOrder>,
-      withdrawalReviewNumber: 0
+      withdrawalReviewNumber: 0,
+      manualReduceListData: [] as Array<Withdrawal.GetManualAddListOrder>,
     }),
     
     getters: {
@@ -28,7 +29,8 @@ export const withdrawalStore = defineStore({
       getTotalNumber: (state) => state.TotalNumber,
       getWithdrawalReviewData: (state) => state.withdrawalReviewData,
       getManualAddListData: (state) => state.manualAddListData,
-      getWithdrawalReviewNumber: (state) => state.withdrawalReviewNumber
+      getWithdrawalReviewNumber: (state) => state.withdrawalReviewNumber,
+      getManualReduceListData: (state) => state.manualReduceListData
     },
   
     actions: {
@@ -53,6 +55,9 @@ export const withdrawalStore = defineStore({
       },
       setManualAddListData(data: Array<Withdrawal.GetManualAddListOrder>) {
         this.manualAddListData = data;
+      }, 
+      setManualReduceListData(data: Array<Withdrawal.GetManualAddListOrder>) {
+        this.manualReduceListData = data;
       },
 
       async dispatchDepositList(formData:any) {
@@ -147,6 +152,23 @@ export const withdrawalStore = defineStore({
             if (response.code == "00") {
                 this.setSuccess(true);
                 this.setManualAddListData(response.data.order_list);
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+         * 人工扣款列表
+         * Manual deposit list
+         */
+      async dispatchManualReduceList(form_data: Withdrawal.ManualAddListForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.MANUAL_REDUCE_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetManualAddListReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                this.setManualReduceListData(response.data.order_list);
             }
         }
         await network.sendMsg(route, form_data, next, 1);

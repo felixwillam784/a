@@ -8,6 +8,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
 import { copyText } from '@/utils/copy';
+import { formatDate } from '@/utils/index';
 const { withdrawal } = useStore();
 
 const { auth } = useStore();
@@ -573,7 +574,7 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <p>{{ moment(scope.row.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
+                <p>{{ formatDate(scope.row.submission_time) }}</p>
               </template>
             </el-table-column>
             <el-table-column align="center" label="操作" fixed="right" width="260">
@@ -718,7 +719,7 @@ const lock = () => {};
       <el-row style="margin-top: 20px">
         <el-col :span="6" class="detail-item-left-bg">订单号:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.order_number }}</p>
+          <p>{{ withdrawalReviewItem?.order_id }}</p>
         </el-col>
       </el-row>
       <el-row>
@@ -754,7 +755,7 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ moment(withdrawalReviewItem?.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
+          <p>{{ formatDate(withdrawalReviewItem?.submission_time) }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -847,6 +848,7 @@ const lock = () => {};
   align-items: center;
   padding: 0px 20px;
   height: 36px;
+  padding-left: 10px !important;
 }
 
 .remark-form {
@@ -861,5 +863,9 @@ const lock = () => {};
 
 .red {
   color: red;
+}
+
+.app-container .el-form-item__label {
+  font-weight: 700;
 }
 </style>

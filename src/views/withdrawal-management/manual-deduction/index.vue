@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Search, Refresh, Upload, Plus } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import moment from "moment-timezone";
 import type { FormInstance, FormRules } from "element-plus";
 import { getManualPaymentList, addManualPayment } from "@/api/withdraw-management";
 import useStore from "@/store";
-import axios, { AxiosPromise } from "axios";
+import { formatDate } from '@/utils/index';
+import { copyText } from '@/utils/copy';
+const { withdrawal } = useStore();
 
 const { user } = useStore();
 
@@ -50,20 +51,20 @@ const rules = ref<FormRules<GetManualPayment>>({
   remark: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
-const manualPaymentList = ref<Array<GetManualPayment>>([
-  {
-    nick_name: "UserName10001",
-    user_account: "test77@gmail.com",
-    order_amount: "999",
-    change_type: "平台内链",
-    code_ratio: "1倍",
-    operator: "UserName",
-    invitation_code: "SJSHdkdk012",
-    user_type: "KOL用户",
-    submission_time: "2023-6-30 13:00:00",
-    remark: "desc desc desc",
-  },
-]);
+// const manualPaymentList = ref<Array<GetManualPayment>>([
+//   {
+//     nick_name: "UserName10001",
+//     user_account: "test77@gmail.com",
+//     order_amount: "999",
+//     change_type: "平台内链",
+//     code_ratio: "1倍",
+//     operator: "UserName",
+//     invitation_code: "SJSHdkdk012",
+//     user_type: "KOL用户",
+//     submission_time: "2023-6-30 13:00:00",
+//     remark: "desc desc desc",
+//   },
+// ]);
 
 const manualPaymentItem = ref<GetManualPayment>({
   nick_name: "",
@@ -85,9 +86,42 @@ const typeOptions = ref<Array<any>>([
   },
 ]);
 
-const handleQuery = () => {};
+// 变动类型
+const changeTypeOptions = ref<Array<any>>([
+  {
+    id: 1,
+    value: '人工扣款'
+  },
+  {
+    id: 2,
+    value: '异常扣金'
+  },
+])
 
-onMounted(() => {});
+// 变动类型匹配
+const changeTypeText = (value: number) => {
+  return changeTypeOptions.value.filter((item: any) => item.id == value)[0].value;
+}
+
+// 人工扣款列表
+const manualPaymentList = computed(() => {
+  return withdrawal.getManualReduceListData;
+})
+
+// 查询
+const handleQuery = async () => {
+  const params = {
+    "order_time_start": 1705680000,
+    "order_time_end": 1709660105,
+    "page_num": 1,
+    "page_size": 10
+  }
+  await withdrawal.dispatchManualReduceList(params);
+};
+
+onMounted(() => {
+  handleQuery();
+});
 
 const getData = async () => {
   //let res = await getManualPaymentList(user.token, formData.value);
@@ -182,7 +216,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
 
         <el-card>
           <el-table v-loading="loading" :data="manualPaymentList" style="width: 100%">
-            <el-table-column label="用户昵称" align="center" prop="nick_name">
+            <!-- <el-table-column label="用户昵称" align="center" prop="nick_name">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -191,40 +225,40 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                   >{{ scope.row.nick_name }}</el-link
                 >
               </template>
-            </el-table-column>
-            <el-table-column label="用户账号" align="center" prop="user_account">
+            </el-table-column> -->
+            <el-table-column label="用户账号" align="center" prop="user_id">
               <template #default="scope">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
-                  @click="router.push({ name: 'User Detail' })"
-                  >{{ scope.row.user_account }}</el-link
+                  style="color: #5393e0; text-decoration-line: underline"
+                  @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
+                  >{{ scope.row.user_id }}</el-link
                 >
               </template>
             </el-table-column>
-            <el-table-column label="订单金额" align="center" prop="order_amount">
+            <el-table-column label="订单金额" align="center" prop="amount">
               <template #default="scope">
-                <p>${{ scope.row.order_amount }}</p>
+                <p>${{ scope.row.amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label="变动类型" align="center" prop="change_type">
               <template #default="scope">
-                <p>{{ scope.row.change_type }}</p>
+                <p>{{ changeTypeText(scope.row.change_type) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="打码倍率" align="center" prop="code_ratio">
+            <el-table-column label="打码倍率" align="center" prop="bet_rate">
               <template #default="scope">
-                <p>{{ scope.row.code_ratio }}</p>
+                <p>{{ scope.row.bet_rate }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="操作人员" align="center" prop="operator">
+            <el-table-column label="操作人员" align="center" prop="operator_id">
               <template #default="scope">
-                <p>{{ scope.row.operator }}</p>
+                <p>{{ scope.row.operator_id }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="订单提交时间" align="center" prop="submission_time">
+            <el-table-column label="订单提交时间" align="center" prop="order_time">
               <template #default="scope">
-                <p>{{ scope.row.submission_time }}</p>
+                <p>{{ formatDate(scope.row.order_time )}}</p>
               </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" width="120">
@@ -306,7 +340,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
     </el-dialog>
 
     <el-dialog
-      title="用户信息修改"
+      title="人工入款详情"
       v-model="manualPaymentDetailDialogVisible"
       width="600px"
       append-to-body
@@ -315,11 +349,11 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.user_account"></el-input>
-          <el-button type="primary" link style="margin-left: auto">复制</el-button>
+          <span>{{ manualPaymentItem.user_id }}</span>
+          <el-button type="primary" link style="margin-left: auto" @click="copyText(manualPaymentItem.user_id)">复制</el-button>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户名:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <el-input v-model="manualPaymentItem.nick_name"></el-input>
@@ -331,56 +365,52 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         <el-col :span="18" class="detail-item-right-bg">
           <el-input v-model="manualPaymentItem.invitation_code" />
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户类型:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.user_type"></el-input>
+          <span>{{ manualPaymentItem.user_type }}</span>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px">
+      <el-row>
         <el-col :span="6" class="detail-item-left-bg">打款金额:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input
-            v-model="manualPaymentItem.order_amount"
-            :formatter="number_formatter"
-            :parser="number_parser"
-          />
+          <span>{{ manualPaymentItem.amount }}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">打款类型:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.change_type"></el-input>
+          <span>{{ changeTypeText(manualPaymentItem.change_type) }}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">打码倍率:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.code_ratio" />
+          <span>{{ manualPaymentItem.bet_rate }}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">打款时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.submission_time"></el-input>
+          {{ formatDate(manualPaymentItem.order_time) }}
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.operator"></el-input>
+          <span>{{ manualPaymentItem.operator_id }}</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">备注:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <el-input v-model="manualPaymentItem.remark" />
+          <span>{{ manualPaymentItem.notes }}</span>
         </el-col>
       </el-row>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="closeDialog">关闭详情</el-button>
+          <el-button @click="closeDialog">确认</el-button>
         </div>
       </template>
     </el-dialog>
@@ -412,6 +442,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
   align-items: center;
   padding: 0px 0px;
   height: 36px;
+  padding-left: 10px !important;
 }
 
 .remark-form {
