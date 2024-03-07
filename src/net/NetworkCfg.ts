@@ -109,6 +109,8 @@ export namespace NETWORKCFG {
   export class PLAYER{
     static USERLIST:string = "/user/list"
     static BASIC_DETAIL:string = "/user/base"
+    static DEPOSIT_WITHDRAWAL:string = "/user/detail/deposit-withdrawal"
+    static WITHDRAWAL_DETAIL:string = "/user/withdrawal-detail"
 
     static SET_BLACKLIST: string = "/user/blacklist"
     static PROHIBIT_WITHDRAWAL: string = "/user/withdraw-prohibit"

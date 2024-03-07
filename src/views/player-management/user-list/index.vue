@@ -64,10 +64,22 @@ const resetQuery = async () => {
 
 const prohibitWithdrawal = async (id: number) => {
   await player.dispatchProhibitWithdrawal({ user_id: id });
+  formData.value.vip_level = 0;
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
+  data.value = [];
+  await player.dispatchGetUserList(formData.value);
+  data.value = data.value.concat(customerList.value);
 };
 
 const addBlackList = async (id: number) => {
   await player.dispatchAddBlackList({ user_id: id });
+  formData.value.vip_level = 0;
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
+  data.value = [];
+  await player.dispatchGetUserList(formData.value);
+  data.value = data.value.concat(customerList.value);
 };
 
 const goCustomerDetailPage = (id: string) => {
@@ -209,10 +221,12 @@ const load = async () => {
             <el-table-column label="用户类型" width="100" align="center" prop="user_type">
               <template #default="scope">
                 {{
-                  scope.row.vip_level == 1
+                  scope.row.user_type == 1
                     ? "普通玩家"
-                    : scope.row.vip_level == 2
-                    ? "普通代理"
+                    : scope.row.user_type == 2
+                    ? "测试账号"
+                    : scope.row.user_type === 3
+                    ? "推广账号"
                     : "KOL"
                 }}
               </template>

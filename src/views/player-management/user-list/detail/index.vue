@@ -30,38 +30,8 @@ const basicInformation = computed(() => {
   return player.getBasicDetail;
 });
 
-const depositAndWithdrawalData = ref({
-  account_balance: 999999.99,
-  withdraw_amount: 888888.88,
-  frozen_balance: 111111.11,
-  principal_balance: 9999.99,
-  bonus_balance: 9999.99,
-  bonus_amount: 8900.66,
-  total_recharge: 9999.99,
-  total_withdrawal: 9999.999,
-  charge_withdrawal_difference: 9999.99,
-  bet_amount: 9999.99,
-  profit_and_loss: 100000,
-  activity_bonus: 10000,
-  vip_level: "vip999",
-  vip_rebate: 10000,
-  vip_no_handling_fee: "9999.99 / 10000.00",
-  vip_upgrade_rewards: 10000,
-  vip_deposit_progress: "2344.00 / 10000.00",
-  vip_betting_progress: "2344.00 / 10000.00",
-  total_vip_bonus: 9999.99,
-  vip_weekly_rewards: 9999.99,
-  vip_monthly_rewards: 9999.99,
-  vip_day_rewards: 99999.99,
-  vip_sign_rewards: 9999.99,
-  vip_spinner_rewards: 10000,
-  vip_task_rewards: 10000,
-  recharge_rebate: 10000,
-  vip_event_bonus: 1000,
-
-  recharge_amount: 10000,
-  deduction_amount: 10000,
-  bet_count: 1543,
+const depositAndWithdrawalData = computed(() => {
+  return player.getDepositWithrawDetail;
 });
 
 const agentInformation = ref({
@@ -100,41 +70,10 @@ const agentInformation = ref({
   second_level_betting_rebate: 10000,
   third_level_betting_rebate: 10000,
 });
-const bankList = ref([
-  {
-    payee: "Salvation A",
-    beneficiary_bank: "GCASH",
-    account: "09266467987",
-  },
-]);
 
-const pixList = ref([
-  {
-    mail: "Salvation A",
-    name: "GCASH",
-    phone_number: "09266467987",
-    pix: "09266467987",
-  },
-]);
-
-const walletList = ref([
-  {
-    account: "Salvation A",
-    beneficiary_bank: "GCASH",
-    payee: "09266467987",
-  },
-]);
-
-const mexList = ref([
-  {
-    bank_card_number: "Salvation A",
-    bank_code: "GCASH",
-    curp_type: "09266467987",
-    payee: "09266467987",
-    rfc_curp: "09266467987",
-    withdrawal_method: "09266467987",
-  },
-]);
+const WithdrawalDetailData = computed(() => {
+  return player.getWithdrawalDetailData;
+});
 
 const loading = ref<boolean>(false);
 
@@ -156,6 +95,12 @@ const moreVipBonusShow = () => {
 
 onMounted(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
+  await player.dispatchDepositWithrawDetailData({
+    user_id: basicInformation.value.sir_user_id,
+  });
+  await player.dispatchWithdrawalDetailData({
+    user_id: basicInformation.value.sir_user_id,
+  });
 });
 
 const inputPhoneTagValue = ref("");
@@ -184,14 +129,7 @@ const handlePhoneInputConfirm = async () => {
 const inputUserMarkValue = ref("");
 const inputUserMarkVisible = ref(false);
 const inputUserMarkRef = ref<InstanceType<typeof ElInput>>();
-const DateConvertoptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-};
+
 const showUserMarkInput = () => {
   inputUserMarkVisible.value = true;
   nextTick(() => {
@@ -221,7 +159,7 @@ const handleNoteInputConfirm = async () => {
     await player.dispatchPlayerBasicDetail({ id: route.params.id });
   }
 };
-const copyText = (str: string) => {
+const copyText = (str: any) => {
   navigator.clipboard.writeText(str);
 };
 const inputMailTagValue = ref("");
@@ -245,6 +183,15 @@ const handleMailInputConfirm = async () => {
   }
   inputMailTagVisible.value = false;
   inputMailTagValue.value = "";
+};
+const addblackList = async () => {
+  await player.dispatchAddBlackList({ user_id: basicInformation.value.id });
+  await player.dispatchPlayerBasicDetail({ id: route.params.id });
+};
+
+const suspenseWithdraw = async () => {
+  await player.dispatchProhibitWithdrawal({ user_id: basicInformation.value.id });
+  await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 </script>
 
@@ -499,7 +446,12 @@ const handleMailInputConfirm = async () => {
             <el-col :span="8">
               <el-form-item label="提现状态:">
                 {{ basicInformation.withdraw_prohibit == 1 ? "提现正常" : "提现封禁" }}
-                <el-button link type="danger" style="margin-left: 20px">
+                <el-button
+                  @click="suspenseWithdraw"
+                  link
+                  type="danger"
+                  style="margin-left: 20px"
+                >
                   封禁提现
                 </el-button>
               </el-form-item>
@@ -513,7 +465,14 @@ const handleMailInputConfirm = async () => {
                     ? "冻结"
                     : "自我冻结"
                 }}
-                <el-button link type="danger" style="margin-left: 20px"> 拉黑 </el-button>
+                <el-button
+                  @click="addblackList"
+                  link
+                  type="danger"
+                  style="margin-left: 20px"
+                >
+                  拉黑
+                </el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -978,7 +937,11 @@ const handleMailInputConfirm = async () => {
                 <template #title>
                   <h3>BANK</h3>
                 </template>
-                <el-table v-loading="loading" :data="bankList" style="width: 100%">
+                <el-table
+                  v-loading="loading"
+                  :data="WithdrawalDetailData.bank_list"
+                  style="width: 100%"
+                >
                   <el-table-column label="收款人" align="center" prop="payee" />
                   <el-table-column
                     label="收款银行"
@@ -1002,7 +965,11 @@ const handleMailInputConfirm = async () => {
                 <template #title>
                   <h3>PIX</h3>
                 </template>
-                <el-table v-loading="loading" :data="pixList" style="width: 100%">
+                <el-table
+                  v-loading="loading"
+                  :data="WithdrawalDetailData.pix_list"
+                  style="width: 100%"
+                >
                   <el-table-column label="名称" align="center" prop="name">
                     <template #default="scope">
                       <p>{{ scope.row.mail }}</p>
@@ -1035,7 +1002,11 @@ const handleMailInputConfirm = async () => {
                 <template #title>
                   <h3>Electronic Wallet</h3>
                 </template>
-                <el-table v-loading="loading" :data="walletList" style="width: 100%">
+                <el-table
+                  v-loading="loading"
+                  :data="WithdrawalDetailData.electronic_wallet"
+                  style="width: 100%"
+                >
                   <el-table-column label="收款人" align="center" prop="payee" />
                   <el-table-column
                     label="收款银行"
@@ -1056,7 +1027,11 @@ const handleMailInputConfirm = async () => {
                 <template #title>
                   <h3>Mex</h3>
                 </template>
-                <el-table v-loading="loading" :data="mexList" style="width: 100%">
+                <el-table
+                  v-loading="loading"
+                  :data="WithdrawalDetailData.mex_list"
+                  style="width: 100%"
+                >
                   <el-table-column label="收款人" align="center" prop="payee" />
                   <el-table-column label="银行代码" align="center" prop="bank_code" />
                   <el-table-column
