@@ -345,7 +345,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
     </el-dialog>
 
     <el-dialog
-      title="人工入款详情"
+      title="人工扣款详情"
       v-model="manualPaymentDetailDialogVisible"
       width="600px"
       append-to-body
