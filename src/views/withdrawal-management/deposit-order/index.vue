@@ -9,6 +9,7 @@ import { getDepositeOrderList, setDepositeAmount } from "@/api/withdraw-manageme
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
+import { copyText } from '@/utils/copy';
 
 const { withdrawal } = useStore();
 const { user } = useStore();
@@ -300,7 +301,7 @@ const load = async () => {
                 <el-link
                   :underline="false"
                   style="color: rgb(83, 147, 224); text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail' })"
+                  @click="router.push({ name: 'UserDetail', params: { id: scope.row.user_id } })"
                 >
                   {{ scope.row.user_account }}
                 </el-link>
@@ -316,7 +317,7 @@ const load = async () => {
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.platform_order_number }}</p>
                   <el-button link>
-                    <el-icon>
+                    <el-icon @click="copyText(scope.row.platform_order_number)">
                       <CopyDocument />
                     </el-icon>
                   </el-button>
@@ -333,7 +334,7 @@ const load = async () => {
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.gaia_order_number }}</p>
                   <el-button link>
-                    <el-icon>
+                    <el-icon @click="copyText(scope.row.gaia_order_number)">
                       <CopyDocument />
                     </el-icon>
                   </el-button>
@@ -350,7 +351,7 @@ const load = async () => {
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_channel }}</p>
                   <el-button link>
-                    <el-icon>
+                    <el-icon @click="copyText(scope.row.upstream_channel)">
                       <CopyDocument />
                     </el-icon>
                   </el-button>
@@ -367,7 +368,7 @@ const load = async () => {
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_order_number }}</p>
                   <el-button link>
-                    <el-icon>
+                    <el-icon @click="copyText(scope.row.upstream_order_number)">
                       <CopyDocument />
                     </el-icon>
                   </el-button>
@@ -415,7 +416,7 @@ const load = async () => {
               width="200"
             >
               <template #default="scope">
-                <p>{{ scope.row.submission_time }}</p>
+                <p>{{ moment(scope.row.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" fixed="right" width="180">
@@ -565,13 +566,13 @@ const load = async () => {
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.submission_time }}</p>
+          <p>{{ moment(depositOrderItem.submission_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.order_update_time }}</p>
+          <p>{{ moment(depositOrderItem.order_update_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</p>
         </el-col>
       </el-row>
       <el-row>

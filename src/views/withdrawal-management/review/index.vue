@@ -382,7 +382,7 @@ const lock = () => {};
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%; height: 400px">
+          <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%; height: 600px">
             <el-table-column
               label="用户账号"
               align="center"
@@ -392,7 +392,7 @@ const lock = () => {};
               <template #default="scope">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
+                  style="color: #5393e0; text-decoration-line: underline"
                   @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
                 >
                   {{ scope.row.user_id }}
