@@ -1,3 +1,5 @@
+import { string } from "vue-types"
+
 export interface GetDepositOrder {
     id: string
     user_account: string
@@ -34,7 +36,11 @@ export interface GetDepositOrder {
   
 export type GetWithdrawalReview = {
     code: number | string
-    data: Array<GetWithdrawalReviewData>,
+    data: {
+      total_page: number,
+      order_list:Array<GetWithdrawalReviewList>,
+      total_num: number
+    },
     message: string
 }
 
@@ -49,10 +55,6 @@ export interface WithdrawalForm {
     order_status?: string
     page_num: number
     page_size: number
-}
-
-export type GetWithdrawalReviewData = {
-    order_list: Array<GetWithdrawalReviewList>
 }
 
 export interface GetWithdrawalReviewList {
@@ -80,4 +82,35 @@ export interface GetWithdrawalReviewList {
     withdrawal_method: string
     operator_id: string
     submission_time: number
+    lock: boolean,
+    user_id: number | string
+}
+
+export interface ManualAddListForm {
+  id?: string | number
+  uid?: string
+  order_time_start: number
+  order_time_end: number
+  change_type?: number
+  operator_id?: string
+  page_num: number
+  page_size: number
+}
+
+export type GetManualAddListReview = {
+  code: number | string
+  data: {total_page: number, order_list:Array<GetManualAddListOrder>}
+  message: string
+}
+
+export interface GetManualAddListOrder {
+  id: number | string
+  user_id: string
+  amount: string
+  amount_type: string
+  change_type: number
+  order_time: string
+  bet_rate: string
+  operator_id: string
+  notes: string
 }

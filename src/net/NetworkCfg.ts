@@ -133,6 +133,10 @@ export namespace NETWORKCFG {
     static WITHDRAWAL_REVIEW_LIST = '/withdrawal/list'   // 提现审核列表 Withdrawal review list
     static WITHDRAWAL_REVIEW_LOCK = '/withdrawal/lock'  // 提现审核锁定  Withdrawal review lock
     static WITHDRAWAL_REVIEW_OPERATION = '/withdrawal/operate'  // 提现审核操作  Withdrawal review operation
+    static MANUAL_ADD_LIST = '/manual/add/list'  // 人工入款列表  Manual deposit list
+    static MANUAL_ADD_CREATE = 'manual/add/create'  // 人工入款新增  Manual deposit added
+    static MANUAL_REDUCE_LIST = '/manual/reduce/list'  // 人工扣款列表  Manual deduction list
+    static MANUAL_REDUCE_CREATE = '/manual/reduce/create'  // 人工扣款新增  Manual deduction added
   }
   //Listening events sent actively
   export class UNSOLICITED {}

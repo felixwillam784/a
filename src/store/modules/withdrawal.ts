@@ -15,7 +15,9 @@ export const withdrawalStore = defineStore({
 
       DepositList: [] as Array<Withdrawal.GetDepositOrder>,
       TotalNumber: 1 as number,
-      withdrawalReviewData: [] as Array<Withdrawal.GetWithdrawalReviewData>
+      withdrawalReviewData: [] as Array<Withdrawal.GetWithdrawalReviewList>,
+      manualAddListData: [] as Array<Withdrawal.GetManualAddListOrder>,
+      withdrawalReviewNumber: 0
     }),
     
     getters: {
@@ -24,7 +26,9 @@ export const withdrawalStore = defineStore({
 
       getDepositList: (state) => state.DepositList,
       getTotalNumber: (state) => state.TotalNumber,
-      getWithdrawalReviewData: (state) => state.withdrawalReviewData
+      getWithdrawalReviewData: (state) => state.withdrawalReviewData,
+      getManualAddListData: (state) => state.manualAddListData,
+      getWithdrawalReviewNumber: (state) => state.withdrawalReviewNumber
     },
   
     actions: {
@@ -41,8 +45,14 @@ export const withdrawalStore = defineStore({
       setTotalNumber(data:number) {
         this.TotalNumber = data;
       },
-      setWithdrawalReviewData(data: any) {
-        this.withdrawalReviewData = data.order_list;
+      setWithdrawalReviewData(data: Array<Withdrawal.GetWithdrawalReviewList>) {
+        this.withdrawalReviewData = data;
+      },
+      setWithdrawalReviewNumber(value: number) {
+        this.withdrawalReviewNumber = value;
+      },
+      setManualAddListData(data: Array<Withdrawal.GetManualAddListOrder>) {
+        this.manualAddListData = data;
       },
 
       async dispatchDepositList(formData:any) {
@@ -84,7 +94,8 @@ export const withdrawalStore = defineStore({
         const next = (response: Withdrawal.GetWithdrawalReview) => {
             if (response.code == "00") {
                 this.setSuccess(true);
-                this.setWithdrawalReviewData(response.data);
+                this.setWithdrawalReviewData(response.data.order_list);
+                this.setWithdrawalReviewNumber(response.data.total_num);
             }
         }
         await network.sendMsg(route, form_data, next, 1);
@@ -119,6 +130,23 @@ export const withdrawalStore = defineStore({
             if (response.code == "00") {
                 this.setSuccess(true);
                 ElMessage.success('操作成功');
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+         * 人工入款列表
+         * Manual deposit list
+         */
+      async dispatchManualAddList(form_data: Withdrawal.ManualAddListForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.MANUAL_ADD_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetManualAddListReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                this.setManualAddListData(response.data.order_list);
             }
         }
         await network.sendMsg(route, form_data, next, 1);

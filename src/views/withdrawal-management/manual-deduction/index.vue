@@ -7,7 +7,6 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getManualPaymentList, addManualPayment } from "@/api/withdraw-management";
 import useStore from "@/store";
 import axios, { AxiosPromise } from "axios";
-const { withdrawal } = useStore();
 
 const { user } = useStore();
 
@@ -86,20 +85,9 @@ const typeOptions = ref<Array<any>>([
   },
 ]);
 
-// 查询
-const handleQuery = async () => {
-  const params = {
-    "order_time_start": 1705680000,
-    "order_time_end": 1709660105,
-    "page_num": 1,
-    "page_size": 10
-  }
-  await withdrawal.dispatchManualAddList(params);
-};
+const handleQuery = () => {};
 
-onMounted(() => {
-  handleQuery();
-});
+onMounted(() => {});
 
 const getData = async () => {
   //let res = await getManualPaymentList(user.token, formData.value);
@@ -194,7 +182,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
 
         <el-card>
           <el-table v-loading="loading" :data="manualPaymentList" style="width: 100%">
-            <!-- <el-table-column label="用户昵称" align="center" prop="nick_name">
+            <el-table-column label="用户昵称" align="center" prop="nick_name">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -203,7 +191,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                   >{{ scope.row.nick_name }}</el-link
                 >
               </template>
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column label="用户账号" align="center" prop="user_account">
               <template #default="scope">
                 <el-link
