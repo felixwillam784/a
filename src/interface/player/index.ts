@@ -18,7 +18,7 @@ export type GetUserDataResponse = {
 }
 
 export interface GetBaseDetailData{
-    id: Number
+    id: number
     uid: string
     nickname: string
     created_at: number
@@ -38,6 +38,82 @@ export interface GetBaseDetailData{
     notes: string
 }
 
+export interface DepositWithrawDetailData {
+    account_balance: string,
+    withdraw_amount: string,
+    frozen_balance: string,
+    principal_balance: string,
+    bonus_balance: string,
+    bonus_amount: string,
+    total_recharge: string,
+    total_withdrawal: string,
+    charge_withdrawal_difference: string,
+    bet_amount: string,
+    profit_and_loss: string,
+    activity_bonus: string,
+    vip_level: string,
+    vip_rebate: number,
+    vip_no_handling_fee: number,
+    vip_upgrade_rewards: number,
+    vip_deposit_progress: string,
+    vip_betting_progress: string,
+    total_vip_bonus: string,
+    vip_weekly_rewards: string,
+    vip_monthly_rewards: string,
+    vip_day_rewards: string,
+    vip_sign_rewards: string,
+    vip_spinner_rewards: string,
+    vip_task_rewards: string,
+    recharge_rebate: string,
+    vip_event_bonus: string,
+  
+    recharge_amount: string,
+    deduction_amount: string,
+    bet_count: string,   
+}
+export interface BankData {
+    payee: string
+    beneficiary_bank: string
+    account: string
+}
+
+export interface PixData {
+    name: string
+    mail: string
+    phone_number: string
+    pix: string
+}
+
+export interface ElectronicWallet {
+    payee: string
+    beneficiary_bank: string
+    account: string
+}
+
+export interface MexData {
+    payee: string
+    bank_code: string,
+    withdrawal_method: string
+    bank_card_number: string
+    curp_type: string
+    rfc_curp: string
+}
+export interface WithdrawalDetailData {
+    bank_list: Array<BankData>
+    pix_list: Array<PixData>
+    electronic_wallet: Array<ElectronicWallet>
+    mex_list: Array<MexData>
+}
+export type GetDepositWithrawDetailDataResponse = {
+    code: number | string
+    data: DepositWithrawDetailData
+    message: string
+}
+export type GetDepositWithdrawalDetailDataResponse = {
+    code: number | string
+    data: WithdrawalDetailData
+    message: string
+}
 export type GetBaseDetailDataResponse = {
     code: number | string
     data: GetBaseDetailData

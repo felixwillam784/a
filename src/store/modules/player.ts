@@ -16,7 +16,8 @@ export const playerStore = defineStore({
       TotalNumber: 1 as number,
       
       BasicDetail: {} as Player.GetBaseDetailData,
-
+      DepositWithrawDetail: {} as Player.DepositWithrawDetailData,
+      WithdrawalDetailData: {} as Player.WithdrawalDetailData,
       TestAccountList: [] as Array<Player.GetTestUserData>,
       TestUserBasicDetail: {} as Player.GetTestUserBasicDetailData,
     }),
@@ -29,7 +30,8 @@ export const playerStore = defineStore({
       getTotalNumber: (state) => state.TotalNumber,
 
       getBasicDetail: (state) => state.BasicDetail,
-      
+      getDepositWithrawDetail: (state) => state.DepositWithrawDetail,
+      getWithdrawalDetailData: (state) => state.WithdrawalDetailData,
       getTestAccountList: (state) => state.TestAccountList,
       getTestUserBasicDetail: (state) => state.TestUserBasicDetail,
         
@@ -53,7 +55,12 @@ export const playerStore = defineStore({
       setBasicDetail(data:Player.GetBaseDetailData) {
         this.BasicDetail = data;
       },
-
+      setDepositWithrawDetail(data: Player.DepositWithrawDetailData) {
+        this.DepositWithrawDetail = data;
+      },
+      setWithdrawalDetailData(data: Player.WithdrawalDetailData) {
+        this.WithdrawalDetailData = data; 
+      },
       setTestAccountList(data:Array<Player.GetTestUserData>) {
         this.TestAccountList = data;
         this.TestAccountList.forEach(element => {
@@ -112,6 +119,32 @@ export const playerStore = defineStore({
           if (response.code == "00") {
             this.setSuccess(true);
             this.setBasicDetail(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+      async dispatchDepositWithrawDetailData(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.DEPOSIT_WITHDRAWAL;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.GetDepositWithrawDetailDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setDepositWithrawDetail(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+      async dispatchWithdrawalDetailData(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.WITHDRAWAL_DETAIL;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.GetDepositWithdrawalDetailDataResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setWithdrawalDetailData(response.data);
           }
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
