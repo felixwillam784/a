@@ -24,6 +24,7 @@ interface SignInBonusData {
   requried_charge_amount: number | string;
   required_code_amount: number | string;
 }
+
 const auto_signin_popup = ref(true);
 const signin_function_switch = ref(true);
 
@@ -129,6 +130,7 @@ const showDetail = async (level: number) => {
   dialog_title.value = "VIP签到详情";
 };
 
+// vip签到更新
 const vipSigninSubmit = () => {
   showDetailDialog.value = false;
   vip.dispatchVIPSigninUpdate(signin_bonous_item.value);

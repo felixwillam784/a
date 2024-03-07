@@ -20,8 +20,8 @@ const passwordRef = ref(ElInput);
 const state = reactive({
   redirect: "",
   loginForm: {
-    name: "test123",
-    password: "password",
+    name: "",
+    password: "",
   } as SigninRequestData,
   loginRules: {
     name: [{ required: true, trigger: "blur" }],

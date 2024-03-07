@@ -28,6 +28,17 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
+                path: "manual/deduction",
+                component: () => import('@/views/withdrawal-management/manual-deduction/index.vue'),
+                name: "Manual Deduction",
+                meta: {
+                    title: "人工扣款",
+                    hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                }
+            },
+            {
                 path: "review",
                 redirect: "list",
                 component: ChildrenLayout,
