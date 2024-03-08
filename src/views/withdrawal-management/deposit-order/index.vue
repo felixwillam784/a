@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from "vue";
-import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import moment from "moment-timezone";
 import type { FormInstance, FormRules } from "element-plus";
-import { getDepositeOrderList, setDepositeAmount } from "@/api/withdraw-management";
+import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from "@element-plus/icons-vue";
+import { Search, Refresh } from "@element-plus/icons-vue";
 
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
 
 const { withdrawal } = useStore();
-const { user } = useStore();
 
 const router = useRouter();
 
@@ -41,6 +40,40 @@ const ruleFormRef = ref<FormInstance>();
 const submitBtnText = ref<string>("确定");
 const closeBtnText = ref<string>("取消");
 
+const order_stats = [
+  "订单已关闭",
+  "支付失败",
+  "订单生成",
+  "支付中",
+  "支付成功",
+  "业务处理完成",
+  "已退款",
+];
+const page = ref(0);
+const changeStatusData = [
+  {
+    label: "是",
+    value: true,
+  },
+  {
+    label: "否",
+    value: false,
+  },
+];
+const orderStatusData = [
+  {
+    label: "支付成功",
+    value: 2,
+  },
+  {
+    label: "支付失败",
+    value: -1,
+  },
+  {
+    label: "支付中",
+    value: 1,
+  },
+];
 const rules = ref<FormRules<Withdrawal.GetDepositOrder>>({
   order_amount: [{ required: true, message: "请输入补单金额。", trigger: "blur" }],
 });
@@ -53,10 +86,16 @@ const depositOrderItem = ref<Withdrawal.GetDepositOrder>(
   {} as Withdrawal.GetDepositOrder
 );
 
-const handleQuery = async () => {
-  data.value = [];
-  disabled.value = false;
+const resetQuery = async () => {
   page.value = 0;
+  loading.value = true;
+  for (let property in formData.value) {
+    if (formData.value.hasOwnProperty(property)) {
+      formData.value[property] = "";
+    }
+  }
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
   formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
   formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
   if (order_update.value[0] && order_update.value[0]) {
@@ -64,9 +103,20 @@ const handleQuery = async () => {
     formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
   }
   await withdrawal.dispatchDepositList(formData.value);
-  await load();
+  loading.value = false;
 };
 
+const handleQuery = async () => {
+  loading.value = true;
+  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
+  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  if (order_update.value[0] && order_update.value[0]) {
+    formData.value.order_update_start = new Date(order_update.value[0]).getTime() / 1000;
+    formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
+  }
+  await withdrawal.dispatchDepositList(formData.value);
+  loading.value = false;
+};
 const detailManualPaymentDialog = (item: Withdrawal.GetDepositOrder) => {
   depositOrderItem.value = item;
   depositOrderDetailDialogVisible.value = true;
@@ -81,18 +131,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      await withdrawal.dispatchUpdateSupply({
-        id: depositOrderItem.value?.platform_order_number,
-        order_amount: depositOrderItem.value?.order_amount,
-      });
+      await withdrawal
+        .dispatchUpdateSupply({
+          id: depositOrderItem.value?.platform_order_number,
+          order_amount: depositOrderItem.value?.order_amount,
+        })
+        .then(() => {
+          closeDialog();
+        });
     } else {
     }
   });
-};
-
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
 };
 
 const makeOrder = (item: Withdrawal.GetDepositOrder) => {
@@ -101,6 +150,7 @@ const makeOrder = (item: Withdrawal.GetDepositOrder) => {
 };
 
 onMounted(async () => {
+  loading.value = true;
   formData.value.submission_start = Math.floor(
     new Date(submission_time.value[0]).getTime() / 1000
   );
@@ -108,6 +158,7 @@ onMounted(async () => {
     new Date(submission_time.value[1]).getTime() / 1000
   );
   await withdrawal.dispatchDepositList(formData.value);
+  loading.value = false;
 });
 
 const getFontStyle = (orderStatus: number) => {
@@ -120,58 +171,12 @@ const getFontStyle = (orderStatus: number) => {
   }
   return `color: ${color}; font-weight: bold;`;
 };
-const order_stats = [
-  "订单已关",
-  "支付失败",
-  "订单生成",
-  "支付中",
-  "支付成功",
-  "业务处理",
-  "已退款",
-];
-const total = computed(() => {
-  return Math.ceil(withdrawal.getTotalNumber / 10);
-});
-const disabled = ref(false);
-const page = ref(0);
-const data = ref<Array<Withdrawal.GetDepositOrder>>([]);
-const changeStatusData = [
-  {
-    label: "是",
-    value: true,
-  },
-  {
-    label: "否",
-    value: false,
-  },
-];
-const orderStatusData = [
-  {
-    label: "支付成功",
-    value: 1,
-  },
-  {
-    label: "支付失败",
-    value: 2,
-  },
-  {
-    label: "支付中",
-    value: 3,
-  },
-];
-const load = async () => {
-  if (disabled.value) return;
-  loading.value = true;
-  page.value++;
-  if (page.value <= total.value) {
-    formData.value.page_num = page.value;
-    await withdrawal.dispatchDepositList(formData.value);
-    data.value = data.value.concat(depositOrderList.value);
-  }
 
-  if (page.value === total.value) {
-    disabled.value = true;
-  }
+const handleSizeChange = async ({ page, limit }: any) => {
+  formData.value.page_num = page;
+  formData.value.page_size = limit;
+  loading.value = true;
+  await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;
 };
 
@@ -254,7 +259,7 @@ const copyText = (str: any) => {
               <el-button type="primary" :icon="Search" @click="handleQuery"
                 >搜索</el-button
               >
-              <el-button :icon="Refresh" @click="handleQuery">重置</el-button>
+              <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
             </el-form-item>
           </el-form>
           <el-form :model="formData" :inline="true" label-width="100">
@@ -280,20 +285,7 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table
-            v-el-table-infinite-scroll="load"
-            :infinite-scroll-disabled="disabled"
-            :data="data"
-            style="width: 100%; height: 650px"
-            v-loading="loading"
-          >
-            <!-- <el-table-column label="用户昵称" align="center" prop="nick_name" width="160">
-                            <template #default="scope">
-                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({ name: 'UserDetail' })">
-                                    {{ scope.row.nick_name }}
-                                </el-link>
-                            </template>
-                        </el-table-column> -->
+          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading">
             <el-table-column
               label="用户账号"
               align="center"
@@ -304,7 +296,9 @@ const copyText = (str: any) => {
                 <el-link
                   :underline="false"
                   style="color: rgb(83, 147, 224); text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail' })"
+                  @click="
+                    router.push({ name: 'UserDetail', params: { id: scope.row.user_id } })
+                  "
                 >
                   {{ scope.row.user_account }}
                 </el-link>
@@ -419,7 +413,11 @@ const copyText = (str: any) => {
               width="200"
             >
               <template #default="scope">
-                <p>{{ scope.row.submission_time }}</p>
+                <p>
+                  {{
+                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                  }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" fixed="right" width="180">
@@ -447,6 +445,14 @@ const copyText = (str: any) => {
               </template>
             </el-table-column>
           </el-table>
+          <div style="float: right">
+            <pagination
+              v-model:total="withdrawal.getTotalNumber"
+              v-model:page="formData.pageNum"
+              v-model:limit="formData.pageSize"
+              @pagination="handleSizeChange"
+            />
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -473,7 +479,7 @@ const copyText = (str: any) => {
           <el-button type="primary" @click="submitForm(ruleFormRef)">{{
             submitBtnText
           }}</el-button>
-          <el-button @click="resetForm(ruleFormRef)">{{ closeBtnText }}</el-button>
+          <el-button @click="closeDialog">{{ closeBtnText }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -569,13 +575,17 @@ const copyText = (str: any) => {
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.submission_time }}</p>
+          <p>
+            {{ moment(depositOrderItem.submission_time).format("YYYY-MM-DD HH:mm:ss") }}
+          </p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.order_update_time }}</p>
+          <p>
+            {{ moment(depositOrderItem.order_update_time).format("YYYY-MM-DD HH:mm:ss") }}
+          </p>
         </el-col>
       </el-row>
       <el-row>
