@@ -151,6 +151,11 @@ const manualPaymentList = computed(() => {
   return withdrawal.getManualAddListData;
 })
 
+// 总条数
+const totalNumber = computed(() => {
+  return withdrawal.getManualAddListNumber;
+});
+
 // 查询
 const handleQuery = async () => {
   if (formData.value.id && formData.value.id.length < 3) {
@@ -366,8 +371,8 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
           </el-table>
           <div style="float: right">
             <pagination
-              v-if="total > 0"
-              :total="total"
+              v-if="totalNumber > 0"
+              :total="totalNumber"
               v-model:page="formData.page_num"
               v-model:limit="formData.page_size"
               @pagination="handleQuery"

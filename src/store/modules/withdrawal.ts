@@ -19,6 +19,8 @@ export const withdrawalStore = defineStore({
       manualAddListData: [] as Array<Withdrawal.GetManualAddListOrder>,
       withdrawalReviewNumber: 0,
       manualReduceListData: [] as Array<Withdrawal.GetManualAddListOrder>,
+      manualAddListNumber: 0,
+      manualReduceListNumber: 0
     }),
     
     getters: {
@@ -30,7 +32,9 @@ export const withdrawalStore = defineStore({
       getWithdrawalReviewData: (state) => state.withdrawalReviewData,
       getManualAddListData: (state) => state.manualAddListData,
       getWithdrawalReviewNumber: (state) => state.withdrawalReviewNumber,
-      getManualReduceListData: (state) => state.manualReduceListData
+      getManualReduceListData: (state) => state.manualReduceListData,
+      getManualAddListNumber: (state) => state.manualAddListNumber,
+      getManualReduceListNumber: (state) => state.manualReduceListNumber
     },
   
     actions: {
@@ -58,6 +62,12 @@ export const withdrawalStore = defineStore({
       }, 
       setManualReduceListData(data: Array<Withdrawal.GetManualAddListOrder>) {
         this.manualReduceListData = data;
+      },
+      setManualAddListNumber(value: number) {
+        this.manualAddListNumber = value;
+      },
+      setManualReduceListNumber(value: number) {
+        this.manualReduceListNumber = value;
       },
 
       async dispatchDepositList(formData:any) {
@@ -151,6 +161,7 @@ export const withdrawalStore = defineStore({
             if (response.code == "00") {
                 this.setSuccess(true);
                 this.setManualAddListData(response.data.order_list);
+                this.setManualAddListNumber(response.data.total_num);
             }
         }
         await network.sendMsg(route, form_data, next, 1);
@@ -185,6 +196,7 @@ export const withdrawalStore = defineStore({
             if (response.code == "00") {
                 this.setSuccess(true);
                 this.setManualReduceListData(response.data.order_list);
+                this.setManualReduceListNumber(response.data.total_num);
             }
         }
         await network.sendMsg(route, form_data, next, 1);

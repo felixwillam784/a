@@ -99,7 +99,11 @@ export interface ManualAddListForm {
 
 export type GetManualAddListReview = {
   code: number | string
-  data: {total_page: number, order_list:Array<GetManualAddListOrder>}
+  data: {
+    total_page: number,
+    order_list:Array<GetManualAddListOrder>,
+    total_num: number
+  }
   message: string
 }
 
