@@ -157,6 +157,23 @@ export const withdrawalStore = defineStore({
         await network.sendMsg(route, form_data, next, 1);
       },
       /**
+       * 人工入款新增
+       * deposit added
+       */
+      async dispatchManualAddCreate(form_data: Withdrawal.ManualAddCreateForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.MANUAL_ADD_CREATE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.PostRequestResponse) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                ElMessage.success('新增成功');
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
          * 人工扣款列表
          * Manual deposit list
          */
@@ -169,6 +186,23 @@ export const withdrawalStore = defineStore({
             if (response.code == "00") {
                 this.setSuccess(true);
                 this.setManualReduceListData(response.data.order_list);
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+       * 人工扣款新增
+       * Manual deduction added
+       */
+      async dispatchManualReduceCreate(form_data: Withdrawal.ManualAddCreateForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.MANUAL_REDUCE_CREATE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.PostRequestResponse) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                ElMessage.success('新增成功');
             }
         }
         await network.sendMsg(route, form_data, next, 1);
