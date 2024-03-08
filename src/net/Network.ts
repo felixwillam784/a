@@ -90,7 +90,6 @@ export class Network {
       method: 'POST',
       data,
     }).then((response: any) => {
-      console.log(response);
       next(response);
     })
   }
@@ -106,8 +105,7 @@ export class Network {
       method: 'GET',
       data
     }).then((response: any) => {
-      console.log(response);
-      next(response);
+        next(response);
     })
   }
 

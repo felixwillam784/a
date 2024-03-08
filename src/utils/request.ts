@@ -6,6 +6,7 @@ import useStore from '@/store';
 import { useRoute, useRouter } from "vue-router";
 import { isEmpty } from 'lodash'
 import qs from 'qs'
+import router from '@/router';
 
 // 创建 axios 实例
 const service = axios.create({
@@ -72,14 +73,10 @@ service.interceptors.response.use(
   (error: any) => {
     if (error.response.data) {
       const { code, msg } = error.response.data;
-      // token 过期,重新登录
       if (code === '06') {
         const networkData = NetworkData.getInstance()
         networkData.resetData();
-        const route = useRoute();
-        const router = useRouter();
-        router.push(`/login?redirect=${route.fullPath}`);
-        router.go(0);
+        router.push(`/login`);
       } else {
         ElMessage({
           message: msg || '系统出错',

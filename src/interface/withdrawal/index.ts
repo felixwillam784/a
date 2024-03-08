@@ -11,8 +11,8 @@ export interface GetDepositOrder {
     amount_type: string
     recharge_amount: number
     actual_amount: number
-    submission_time: string
-    order_update_time: string
+    submission_time: number
+    order_update_time: number
     recharge_method: string
     tax_number: string
     payment_channel: string
