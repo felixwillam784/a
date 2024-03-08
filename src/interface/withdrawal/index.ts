@@ -114,3 +114,12 @@ export interface GetManualAddListOrder {
   operator_id: string
   notes: string
 }
+
+export interface ManualAddCreateForm {
+  id: string
+  amount: number | string
+  amount_type: number | string
+  change_type: number | string
+  bet_rate: string
+  notes: string
+}
