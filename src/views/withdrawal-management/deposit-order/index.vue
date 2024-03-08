@@ -9,6 +9,7 @@ import { getDepositeOrderList, setDepositeAmount } from "@/api/withdraw-manageme
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
+import { copyText } from "@/utils/copy";
 
 const { withdrawal } = useStore();
 const { user } = useStore();
@@ -304,7 +305,9 @@ const copyText = (str: any) => {
                 <el-link
                   :underline="false"
                   style="color: rgb(83, 147, 224); text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail' })"
+                  @click="
+                    router.push({ name: 'UserDetail', params: { id: scope.row.user_id } })
+                  "
                 >
                   {{ scope.row.user_account }}
                 </el-link>
@@ -419,7 +422,11 @@ const copyText = (str: any) => {
               width="200"
             >
               <template #default="scope">
-                <p>{{ scope.row.submission_time }}</p>
+                <p>
+                  {{
+                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                  }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" fixed="right" width="180">
@@ -569,13 +576,25 @@ const copyText = (str: any) => {
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.submission_time }}</p>
+          <p>
+            {{
+              moment(depositOrderItem.submission_time * 1000).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            }}
+          </p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.order_update_time }}</p>
+          <p>
+            {{
+              moment(depositOrderItem.order_update_time * 1000).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            }}
+          </p>
         </el-col>
       </el-row>
       <el-row>

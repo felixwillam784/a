@@ -90,24 +90,12 @@ const typeOptions = ref<Array<any>>([
 const changeTypeOptions = ref<Array<any>>([
   {
     id: 1,
-    value: '人工充值'
+    value: '人工扣款'
   },
   {
     id: 2,
-    value: '主播加金'
+    value: '异常扣金'
   },
-  {
-    id: 3,
-    value: '异常补金'
-  },
-  {
-    id: 4,
-    value: '手动赠金'
-  },
-  {
-    id: 5,
-    value: '虚拟账号加金'
-  }
 ])
 
 // 变动类型匹配
@@ -115,9 +103,9 @@ const changeTypeText = (value: number) => {
   return changeTypeOptions.value.filter((item: any) => item.id == value)[0].value;
 }
 
-// 人工入款列表
+// 人工扣款列表
 const manualPaymentList = computed(() => {
-  return withdrawal.getManualAddListData;
+  return withdrawal.getManualReduceListData;
 })
 
 // 查询
@@ -128,7 +116,7 @@ const handleQuery = async () => {
     "page_num": 1,
     "page_size": 10
   }
-  await withdrawal.dispatchManualAddList(params);
+  await withdrawal.dispatchManualReduceList(params);
 };
 
 onMounted(() => {
@@ -357,7 +345,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
     </el-dialog>
 
     <el-dialog
-      title="人工入款详情"
+      title="人工扣款详情"
       v-model="manualPaymentDetailDialogVisible"
       width="600px"
       append-to-body

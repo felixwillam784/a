@@ -7,6 +7,7 @@ import type { FormInstance, FormRules } from "element-plus";
 
 import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
+import { formatDate } from "@/utils/index";
 const { withdrawal } = useStore();
 
 const { auth } = useStore();
@@ -27,7 +28,7 @@ interface GetWithdrawalReview {
   upstream_order_number: string;
   upstream_channel: string;
   handling_fee: number | string;
-  free_charge: number | string;
+  fee: number | string;
   total_recharge: number | string;
   total_withdrawal: number | string;
   withdrawal_channel: string;
@@ -39,6 +40,8 @@ interface GetWithdrawalReview {
   submission_time: string;
 
   order_update_time: string;
+  user_id: number | string;
+  lock: boolean;
 }
 
 interface RejectInterface {
@@ -223,6 +226,11 @@ const withdrawalReviewList = computed(() => {
   return withdrawal.getWithdrawalReviewData;
 });
 
+// 总条数
+const totalNumber = computed(() => {
+  return withdrawal.getWithdrawalReviewNumber;
+});
+
 /**
  * 查询
  */
@@ -351,16 +359,16 @@ const lock = () => {};
                 style="display: flex; justify-content: space-between"
               >
                 <div>
-                  <el-form-item label="平台订单号" prop="platform_order_number">
+                  <el-form-item label="平台订单号" prop="order_id">
                     <el-input
-                      v-model="formData.platform_order_number"
+                      v-model="formData.order_id"
                       placeholder="请输入平台订单号"
                     />
                   </el-form-item>
-                  <el-form-item label="上游订单号" prop="upstream_order_number">
+                  <el-form-item label="Gaia订单号" prop="gaia_order_number">
                     <el-input
-                      v-model="formData.upstream_order_number"
-                      placeholder="请输入上游订单号"
+                      v-model="formData.gaia_order_number"
+                      placeholder="请输入Gaia订单号"
                     />
                   </el-form-item>
                 </div>
@@ -377,12 +385,16 @@ const lock = () => {};
           </el-row>
         </el-card>
         <el-card style="margin-top: 20px">
-          <el-table v-loading="loading" :data="withdrawalReviewList" style="width: 100%">
+          <el-table
+            v-loading="loading"
+            :data="withdrawalReviewList"
+            style="width: 100%; height: 600px"
+          >
             <el-table-column label="用户账号" align="center" prop="user_id" width="160">
               <template #default="scope">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
+                  style="color: #5393e0; text-decoration-line: underline"
                   @click="
                     router.push({ name: 'UserDetail', params: { id: scope.row.id } })
                   "
@@ -411,14 +423,9 @@ const lock = () => {};
                 <p>${{ scope.row.actual_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column
-              label="免手续费"
-              align="center"
-              prop="free_charge"
-              width="120"
-            >
+            <el-table-column label="免手续费" align="center" prop="fee" width="120">
               <template #default="scope">
-                <p>${{ scope.row.free_charge }}</p>
+                <p>${{ scope.row.fee }}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -469,7 +476,7 @@ const lock = () => {};
               label="Gaia订单号"
               align="center"
               prop="gaia_order_number"
-              width="220"
+              width="240"
             >
               <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -560,14 +567,10 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <p>
-                  {{
-                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
-                  }}
-                </p>
+                <p>{{ formatDate(scope.row.submission_time) }}</p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" fixed="right" width="200">
+            <el-table-column align="center" label="操作" fixed="right" width="260">
               <template #default="scope">
                 <el-button
                   type="danger"
@@ -578,28 +581,47 @@ const lock = () => {};
                 <el-button
                   type="primary"
                   link
-                  v-if="scope.row.order_status == 0"
+                  v-if="
+                    scope.row.order_status !== 1 &&
+                    scope.row.order_status == 0 &&
+                    scope.row.lock == false
+                  "
                   @click="withdrawalLock(scope.row)"
                   >锁定</el-button
                 >
                 <el-button
                   type="success"
                   link
-                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
+                  v-if="
+                    scope.row.order_status !== 1 &&
+                    scope.row.order_status == 0 &&
+                    scope.row.operator_id == 1 &&
+                    scope.row.lock == true
+                  "
                   @click="passDialogShow(scope.row)"
                   >同意</el-button
                 >
                 <el-button
                   type="danger"
                   link
-                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
+                  v-if="
+                    scope.row.order_status !== 1 &&
+                    scope.row.order_status == 0 &&
+                    scope.row.operator_id == 1 &&
+                    scope.row.lock == true
+                  "
                   @click="rejectDialogShow(scope.row)"
                   >拒绝</el-button
                 >
                 <el-button
                   type="danger"
                   link
-                  v-if="scope.row.order_status == 1 && scope.row.operator_id == 1"
+                  v-if="
+                    scope.row.order_status !== 1 &&
+                    scope.row.order_status == 0 &&
+                    scope.row.operator_id == 1 &&
+                    scope.row.lock == true
+                  "
                   @click="lock()"
                   >已锁定</el-button
                 >
@@ -608,8 +630,8 @@ const lock = () => {};
           </el-table>
           <div style="float: right">
             <pagination
-              v-if="total > 0"
-              :total="total"
+              v-if="totalNumber > 0"
+              :total="totalNumber"
               v-model:page="formData.page_num"
               v-model:limit="formData.page_size"
               @pagination="handleQuery"
@@ -682,7 +704,7 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.user_account }}</p>
+          <p>{{ withdrawalReviewItem?.user_id }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -694,7 +716,7 @@ const lock = () => {};
       <el-row style="margin-top: 20px">
         <el-col :span="6" class="detail-item-left-bg">订单号:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.order_number }}</p>
+          <p>{{ withdrawalReviewItem?.order_id }}</p>
         </el-col>
       </el-row>
       <el-row>
@@ -724,19 +746,13 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.free_charge) }}</p>
+          <p>${{ Number(withdrawalReviewItem?.fee) }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>
-            {{
-              moment(withdrawalReviewItem?.submission_time * 1000).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )
-            }}
-          </p>
+          <p>{{ formatDate(withdrawalReviewItem?.submission_time) }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -794,8 +810,10 @@ const lock = () => {};
         <div
           class="dialog-footer"
           v-if="
-            withdrawalReviewItem.order_status == 1 &&
-            withdrawalReviewItem.operator_id == 1
+            withdrawalReviewItem.order_status !== 1 &&
+            withdrawalReviewItem.order_status == 0 &&
+            withdrawalReviewItem.operator_id == 1 &&
+            withdrawalReviewItem.lock == true
           "
         >
           <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)"
@@ -839,6 +857,7 @@ const lock = () => {};
   align-items: center;
   padding: 0px 20px;
   height: 36px;
+  padding-left: 10px !important;
 }
 
 .remark-form {
@@ -853,5 +872,9 @@ const lock = () => {};
 
 .red {
   color: red;
+}
+
+.app-container .el-form-item__label {
+  font-weight: 700;
 }
 </style>
