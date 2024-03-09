@@ -11,13 +11,34 @@ import type * as Player from "@/interface/player";
 const router = useRouter();
 const { player } = useStore();
 
+const userList = computed(() => {
+  return player.getUserList;
+});
+const UserTypeOptions = [
+  {
+    label: "普通玩家",
+    value: 1,
+  },
+  {
+    label: "测试账号",
+    value: 2,
+  },
+  {
+    label: "推广账号",
+    value: 3,
+  },
+  {
+    label: "KOL",
+    value: 4,
+  },
+];
 const formData = ref<any>({
   uid: "",
   nickname: "",
   user_type: "",
   invitation_code: "",
   tags: "",
-  vip_level: 0,
+  vip_level: "",
   phone: "",
   cpf: "",
   account_number: "",
@@ -27,25 +48,20 @@ const formData = ref<any>({
 
 const loading = ref<boolean>(false);
 
-const total = computed(() => {
-  return Math.ceil(player.getTotalNumber / 10);
+onMounted(async () => {
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
+  loading.value = true;
+  await player.dispatchGetUserList(formData.value);
+  loading.value = false;
 });
-
-const customerList = computed(() => {
-  return player.getUserList;
-});
-
-const { user } = useStore();
-
-onMounted(async () => {});
 
 const handleQuery = async () => {
+  loading.value = true;
   formData.page_num = 1;
   formData.page_size = 20;
-  data.value = [];
-  disabled.value = false;
-  page.value = 0;
-  await load();
+  await player.dispatchGetUserList(formData.value);
+  loading.value = false;
 };
 
 const resetQuery = async () => {
@@ -54,58 +70,38 @@ const resetQuery = async () => {
       formData.value[property] = "";
     }
   }
-  formData.value.vip_level = 0;
+  loading.value = true;
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  data.value = [];
   await player.dispatchGetUserList(formData.value);
-  data.value = data.value.concat(customerList.value);
+  loading.value = false;
 };
 
 const prohibitWithdrawal = async (id: number) => {
   await player.dispatchProhibitWithdrawal({ user_id: id });
-  formData.value.vip_level = 0;
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  data.value = [];
   await player.dispatchGetUserList(formData.value);
-  data.value = data.value.concat(customerList.value);
 };
 
 const addBlackList = async (id: number) => {
   await player.dispatchAddBlackList({ user_id: id });
-  formData.value.vip_level = 0;
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  data.value = [];
   await player.dispatchGetUserList(formData.value);
-  data.value = data.value.concat(customerList.value);
 };
 
 const goCustomerDetailPage = (id: string) => {
   router.push({ name: "UserDetail", params: { id: id } });
 };
 
-const disabled = ref(false);
-const page = ref(0);
-const data = ref<Array<Player.GetUserData>>([]);
-const load = async () => {
-  if (disabled.value) return;
+const handleSizeChange = async ({ page, limit }: any) => {
+  formData.value.page_num = page;
+  formData.value.page_size = limit;
   loading.value = true;
-  page.value++;
-  console.log(page.value);
-  if (page.value <= total.value || !total.value) {
-    formData.value.page_num = page.value;
-    await player.dispatchGetUserList(formData.value);
-    data.value = data.value.concat(customerList.value);
-  }
-
-  if (page.value === total.value) {
-    disabled.value = true;
-  }
+  await player.dispatchGetUserList(formData.value);
   loading.value = false;
 };
-// @click="router.push({ name: 'User Detail' })"
 </script>
 <template>
   <div class="app-container">
@@ -129,10 +125,12 @@ const load = async () => {
                 placeholder="请选择客户类型"
                 clearable
               >
-                <el-option label="普通玩家" value="1" />
-                <el-option label="测试账号" value="2" />
-                <el-option label="推广账号" value="3" />
-                <el-option label="KOL" value="4" />
+                <el-option
+                  v-for="item in UserTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-form>
@@ -180,9 +178,7 @@ const load = async () => {
         </div>
         <el-card>
           <el-table
-            v-el-table-infinite-scroll="load"
-            :infinite-scroll-disabled="disabled"
-            :data="data"
+            :data="userList"
             style="width: 100%; height: 650px"
             v-loading="loading"
           >
@@ -221,13 +217,8 @@ const load = async () => {
             <el-table-column label="用户类型" width="100" align="center" prop="user_type">
               <template #default="scope">
                 {{
-                  scope.row.user_type == 1
-                    ? "普通玩家"
-                    : scope.row.user_type == 2
-                    ? "测试账号"
-                    : scope.row.user_type === 3
-                    ? "推广账号"
-                    : "KOL"
+                  UserTypeOptions.find((item) => item.value === scope.row.user_type)
+                    ?.label
                 }}
               </template>
             </el-table-column>
@@ -312,6 +303,14 @@ const load = async () => {
               </template>
             </el-table-column>
           </el-table>
+          <div style="float: right">
+            <pagination
+              v-model:total="player.getTotalNumber"
+              v-model:page="formData.pageNum"
+              v-model:limit="formData.pageSize"
+              @pagination="handleSizeChange"
+            />
+          </div>
         </el-card>
       </el-col>
     </el-row>

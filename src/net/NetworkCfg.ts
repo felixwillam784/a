@@ -119,8 +119,10 @@ export namespace NETWORKCFG {
     static UPDATE_MARK: string = "/user/mark"
     static UPDATE_NOTE: string = "/user/notes"
     static UPDATE_MAIL: string = "/user/email"
-
-
+    static UPDATE_BANK: string = "/user/withdraw/update/bank"
+    static UPDATE_PIX: string = "/user/withdraw/update/pix"
+    static UPDATE_MEX: string = "/user/withdraw/update/mex"
+    static UPDATE_WALLET: string = "/user/withdraw/update/wallet"
 
     static TEST_USER_LIST:string = "/user/test/list"
     static TEST_USER_BASIC_DETAIL:string = "/user/test/detail"

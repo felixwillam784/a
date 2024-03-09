@@ -138,6 +138,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         })
         .then(() => {
           closeDialog();
+        })
+        .catch(() => {
+          closeDialog();
         });
     } else {
     }
@@ -145,7 +148,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const makeOrder = (item: Withdrawal.GetDepositOrder) => {
-  depositOrderItem.value = item;
+  depositOrderItem.value = Object.assign({}, item);
   depositOrderDialogVisible.value = true;
 };
 
