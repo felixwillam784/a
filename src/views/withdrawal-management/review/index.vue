@@ -8,6 +8,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
 import { formatDate } from "@/utils/index";
+import { ElMessage } from 'element-plus';
 const { withdrawal } = useStore();
 
 const { auth } = useStore();
@@ -16,7 +17,7 @@ interface GetWithdrawalReview {
   user_account: string;
   withdrawal_amount: number | string;
   actual_amount: number | string;
-  order_status: string;
+  order_status: number;
   risk_control_hint: string;
   order_number: string;
   gaia_order_number: string;
@@ -33,12 +34,11 @@ interface GetWithdrawalReview {
   total_withdrawal: number | string;
   withdrawal_channel: string;
   withdrawal_method: string;
-
+  order_id: string | number;
   review_status: number;
   operator_id: string;
   operator_name: string;
   submission_time: string;
-
   order_update_time: string;
   user_id: number | string;
   lock: boolean;
@@ -50,8 +50,12 @@ interface RejectInterface {
 }
 
 const router = useRouter();
-const submission_time = ref(["", ""]);
-const order_update_time = ref(["", ""]);
+const submission_time = ref(['', '']);
+const order_update_time = ref(['', '']);
+const defaultTime: [Date: any, Date: any] = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+]
 
 const formData = ref<any>({
   submission_start: +(new Date("2020-12-31").getTime() / 1000).toFixed(0),
@@ -235,23 +239,34 @@ const totalNumber = computed(() => {
  * 查询
  */
 const handleQuery = async () => {
+  if (formData.value.user_account && formData.value.user_account.length < 3) {
+    return ElMessage.warning('查询不得少于3个字符串');
+  }
   if (!submission_time.value) {
     initSubmissionTime();
   }
   if (order_update_time.value) {
     if (order_update_time.value[0]) {
-      formData.value.order_update_start =
-        new Date(order_update_time.value[0]).getTime() / 1000;
-      formData.value.order_update_end =
-        new Date(order_update_time.value[1]).getTime() / 1000;
+      let updateStart = new Date(order_update_time.value[0]);
+      let updateEnd = new Date(order_update_time.value[1]);
+      updateStart.setHours(0, 0, 0, 0);
+      updateEnd.setDate(updateEnd.getDate() + 1);
+      updateEnd.setHours(0, 0, 0, 0);
+      formData.value.order_update_start = updateStart.getTime() / 1000;
+      formData.value.order_update_end = updateEnd.getTime() / 1000;
     }
   } else {
     order_update_time.value = ["", ""];
     delete formData.value.order_update_start;
     delete formData.value.order_update_end;
   }
-  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
-  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  let submissionStart = new Date(submission_time.value[0]);
+  let submissionEnd = new Date(submission_time.value[1]);
+  submissionStart.setHours(0, 0, 0, 0);
+  submissionEnd.setDate(submissionEnd.getDate() + 1);
+  submissionEnd.setHours(0, 0, 0, 0);
+  formData.value.submission_start = submissionStart.getTime() / 1000;
+  formData.value.submission_end = submissionEnd.getTime() / 1000;
   await withdrawal.dispatchWithdrawalReviewList(formData.value);
 };
 
@@ -271,10 +286,11 @@ const withdrawalReviewOperation = async () => {
 };
 
 const initSubmissionTime = () => {
-  submission_time.value = ["", ""];
-  submission_time.value[0] = new Date("2020-12-31").toISOString().split("T")[0];
-  submission_time.value[1] = new Date().toISOString().split("T")[0];
-};
+  submission_time.value = ['', ''];
+  submission_time.value[0] = new Date('2020-12-31 00:00:00').toISOString().split('T')[0];
+  submission_time.value[1] = new Date().toISOString().split('T')[0];
+}
+
 
 onMounted(() => {
   initSubmissionTime();
@@ -328,6 +344,7 @@ const lock = () => {};
                     end-placeholder="选择提交时间"
                     format="YYYY-MM-DD"
                     value-format="YYYY-MM-DD"
+                    :default-time="defaultTime"
                   />
                 </el-form-item>
                 <el-form-item label="订单更新时间" prop="order_update_time">
@@ -338,7 +355,8 @@ const lock = () => {};
                     start-placeholder="选择更新时间"
                     end-placeholder="选择更新时间"
                     format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                    :default-time="defaultTime"
                   />
                 </el-form-item>
                 <el-form-item label="订单状态" prop="order_status">
@@ -526,22 +544,22 @@ const lock = () => {};
             <el-table-column
               label="成功充值次数"
               align="center"
-              prop="successful_recharge_times"
+              prop="success_recharge_times"
               width="120"
             >
               <template #default="scope">
-                <p>{{ scope.row.successful_recharge_times }}</p>
+                <p>{{ scope.row.success_recharge_times }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="是否首次提现"
               align="center"
-              prop="withdrawal_status"
+              prop="first_withdrawal_status"
               width="120"
             >
               <template #default="scope">
-                <p :class="scope.row.withdrawal_status == '是' ? 'red' : ''">
-                  {{ scope.row.withdrawal_status }}
+                <p :class="scope.row.first_withdrawal_status == false ? 'red' : 'green'">
+                  {{ scope.row.first_withdrawal_status == false ? '否' : '是' }}
                 </p>
               </template>
             </el-table-column>
@@ -557,7 +575,9 @@ const lock = () => {};
             </el-table-column>
             <el-table-column label="KOL用户" align="center" prop="kol_user" width="120">
               <template #default="scope">
-                <p>{{ scope.row.kol_user }}</p>
+                <p :class="scope.row.kol_user == false ? 'red' : 'green'">
+                  {{ scope.row.kol_user == false ? '否' : '是' }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column
@@ -807,21 +827,13 @@ const lock = () => {};
         </el-col>
       </el-row>
       <template #footer>
-        <div
-          class="dialog-footer"
-          v-if="
-            withdrawalReviewItem.order_status !== 1 &&
-            withdrawalReviewItem.order_status == 0 &&
-            withdrawalReviewItem.operator_id == 1 &&
-            withdrawalReviewItem.lock == true
-          "
-        >
-          <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)"
-            >通过</el-button
-          >
-          <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)"
-            >拒绝</el-button
-          >
+        <div class="dialog-footer"
+             v-if="withdrawalReviewItem?.order_status !== 1 &&
+             withdrawalReviewItem?.order_status == 0 &&
+             withdrawalReviewItem?.operator_id == 1 &&
+             withdrawalReviewItem?.lock == true">
+          <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
+          <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
           <el-button @click="closeDialog">取消</el-button>
         </div>
         <div class="dialog-footer" v-else>

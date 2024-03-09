@@ -7,31 +7,44 @@ import { getManualPaymentList, addManualPayment } from "@/api/withdraw-managemen
 import useStore from "@/store";
 import { formatDate } from '@/utils/index';
 import { copyText } from '@/utils/copy';
-const { withdrawal } = useStore();
+import { ElMessage } from 'element-plus';
 
 const { user } = useStore();
+
+const { withdrawal } = useStore();
 
 interface GetManualPayment {
   nick_name: string;
   user_account: string;
   order_amount: number | string;
-  change_type: string;
+  change_type: number;
   code_ratio: string;
   operator: string;
   invitation_code: string;
   user_type: string;
   submission_time: string;
   remark: string;
+  amount_type: string | number;
+  user_id: string | number;
+  amount: string | number;
+  bet_rate: string;
+  order_time: string;
+  operator_id: string;
+  notes: string;
+  id: string;
 }
 
 const router = useRouter();
 
 const formData = ref<any>({
-  user_account: "",
-  nick_name: "",
-  invitation_code: "",
-  pageNum: 1,
-  pageSize: 20,
+  // id: "",
+  // uid: "",
+  order_time_start: "",
+  order_time_end: "",
+  // change_type: 2,
+  // operator_id: "",
+  page_num: 1,
+  page_size: 20,
 });
 
 const loading = ref<boolean>(false);
@@ -44,11 +57,12 @@ const closeBtnText = ref<string>("");
 const ruleFormRef = ref<FormInstance>();
 
 const rules = ref<FormRules<GetManualPayment>>({
-  user_account: [{ required: true, message: "请输入用户账号。", trigger: "blur" }],
-  order_amount: [{ required: true, message: "请输入订单金额。", trigger: "blur" }],
-  change_type: [{ required: true, message: "请输入变动类型。", trigger: "blur" }],
-  code_ratio: [{ required: true, message: "请输入打码倍率。", trigger: "blur" }],
-  remark: [{ required: true, message: "请输入备注。", trigger: "blur" }],
+  id: [{ required: true, message: "请输入用户账号。", trigger: "blur" }],
+  amount: [{ required: true, message: "请输入订单金额。", trigger: "blur" }],
+  change_type: [{ required: true, message: "请选择变动类型。", trigger: "blur" }],
+  bet_rate: [{ required: true, message: "请输入打码倍率。", trigger: "blur" }],
+  amount_type: [{ required: true, message: "请选择货币类型。", trigger: "blur" }],
+  notes: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
 // const manualPaymentList = ref<Array<GetManualPayment>>([
@@ -66,17 +80,27 @@ const rules = ref<FormRules<GetManualPayment>>({
 //   },
 // ]);
 
+const orderTime = ref(['', '']);
+
 const manualPaymentItem = ref<GetManualPayment>({
-  nick_name: "",
-  user_account: "",
-  order_amount: "",
-  change_type: "平台内链",
-  code_ratio: "",
-  operator: "",
-  invitation_code: "",
-  user_type: "",
-  submission_time: "",
-  remark: "",
+    nick_name: "",
+    user_account: "",
+    order_amount: "",
+    change_type: 1,
+    code_ratio: "",
+    operator: "",
+    invitation_code: "",
+    user_type: "",
+    submission_time: "",
+    remark: "",
+    amount_type: 'MXN',
+    user_id: "",
+    amount: "",
+    bet_rate: "",
+    order_time: "",
+    operator_id: "",
+    notes: "",
+    id: ""
 });
 
 const typeOptions = ref<Array<any>>([
@@ -110,9 +134,17 @@ const changeTypeOptions = ref<Array<any>>([
   }
 ])
 
+// 货币类型
+const amountTypeOption = ref<Array<any>>([
+  {
+    id: 1,
+    value: 'MXN'
+  }
+])
+
 // 变动类型匹配
 const changeTypeText = (value: number) => {
-  return changeTypeOptions.value.filter((item: any) => item.id == value)[0].value;
+  return changeTypeOptions.value.filter((item: any) => item.id == value)[0]?.value;
 }
 
 // 人工入款列表
@@ -120,18 +152,41 @@ const manualPaymentList = computed(() => {
   return withdrawal.getManualAddListData;
 })
 
+// 总条数
+const totalNumber = computed(() => {
+  return withdrawal.getManualAddListNumber;
+});
+
 // 查询
 const handleQuery = async () => {
-  const params = {
-    "order_time_start": 1705680000,
-    "order_time_end": 1709660105,
-    "page_num": 1,
-    "page_size": 10
+  if (formData.value.id && formData.value.id.length < 3) {
+    return ElMessage.warning('查询不得少于3个字符串');
   }
-  await withdrawal.dispatchManualAddList(params);
+  if (!orderTime.value) {
+    initSubmissionTime();
+  }
+  let submissionStart = new Date(orderTime.value[0]);
+  let submissionEnd = new Date(orderTime.value[1]);
+  submissionStart.setHours(0, 0, 0, 0);
+  submissionEnd.setDate(submissionEnd.getDate() + 1);
+  submissionEnd.setHours(0, 0, 0, 0);
+  formData.value.order_time_start = submissionStart.getTime() / 1000;
+  formData.value.order_time_end = submissionEnd.getTime() / 1000;
+  await withdrawal.dispatchManualAddList(formData.value);
 };
 
+const initSubmissionTime = () => {
+  orderTime.value = ['', ''];
+  let orderTimeStart = new Date();
+  let orderTimeEnd = new Date();
+  orderTimeStart.setDate(orderTimeStart.getDate() - 7);
+  orderTimeEnd.setDate(orderTimeEnd.getDate() + 1);
+  orderTime.value[0] = new Date(orderTimeStart).toISOString().split('T')[0];
+  orderTime.value[1] = new Date(orderTimeEnd).toISOString().split('T')[0];
+}
+
 onMounted(() => {
+  initSubmissionTime();
   handleQuery();
 });
 
@@ -142,21 +197,29 @@ const getData = async () => {
 
 const addManualPaymentDialog = () => {
   manualPaymentItem.value = {
-    nick_name: "",
-    user_account: "",
-    order_amount: "",
-    change_type: "平台内链",
-    code_ratio: "",
-    operator: "",
-    invitation_code: "",
-    user_type: "",
-    submission_time: "",
-    remark: "",
+      nick_name: "",
+      user_account: "",
+      order_amount: "",
+      change_type: 1,
+      code_ratio: "",
+      operator: "",
+      invitation_code: "",
+      user_type: "",
+      submission_time: "",
+      remark: "",
+      amount_type: 'MXN',
+      user_id: "",
+      amount: "",
+      bet_rate: "",
+      order_time: "",
+      operator_id: "",
+      notes: "",
+      id: ""
   };
   manualDialogVisible.value = true;
   manualDialogTitle.value = "添加订单";
-  submitBtnText.value = "确认添加";
-  closeBtnText.value = "取消添加";
+  submitBtnText.value = "确认";
+  closeBtnText.value = "取消";
 };
 
 const detailManualPaymentDialog = (item: GetManualPayment) => {
@@ -169,15 +232,22 @@ const closeDialog = () => {
   manualPaymentDetailDialogVisible.value = false;
 };
 
+// 新增提交
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      let res = await addManualPayment(user.token, manualPaymentItem);
-
-      if (res.data.code === "00") console.log("success");
-      else console.log("failed");
+      let params = {
+        id: manualPaymentItem.value.id,
+        amount: manualPaymentItem.value.amount,
+        amount_type: manualPaymentItem.value.amount_type + '',
+        change_type: manualPaymentItem.value.change_type,
+        bet_rate: manualPaymentItem.value.bet_rate,
+        notes: manualPaymentItem.value.notes
+      }
+      await withdrawal.dispatchManualAddCreate(params);
       manualDialogVisible.value = false;
+      handleQuery();
     } else {
       console.log("error submit!", fields);
     }
@@ -207,15 +277,26 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             style="display: flex; justify-content: space-between"
           >
             <div>
-              <el-form-item label="用户账户" prop="user_account">
-                <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
+              <el-form-item label="用户账户" prop="id">
+                <el-input v-model="formData.id" placeholder="请输入用户账户" />
               </el-form-item>
-              <el-form-item label="客户昵称" prop="nick_name">
+              <el-form-item label="订单提交时间" prop="orderTime">
+                <el-date-picker
+                  range-separator="到"
+                  v-model="orderTime"
+                  type="daterange"
+                  start-placeholder="订单提交时间"
+                  end-placeholder="订单提交时间"
+                  format="YYYY-MM-DD"
+                  value-format="YYYY-MM-DD"
+                />
+              </el-form-item>
+              <!-- <el-form-item label="客户昵称" prop="nick_name">
                 <el-input v-model="formData.nick_name" placeholder="请输入客户昵称" />
               </el-form-item>
               <el-form-item label="邀请码" prop="invitation_code">
                 <el-input v-model="formData.invitation_code" placeholder="请输入邀请码" />
-              </el-form-item>
+              </el-form-item> -->
             </div>
             <el-form-item>
               <el-button type="primary" :icon="Search" @click="handleQuery"
@@ -291,10 +372,10 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
           </el-table>
           <div style="float: right">
             <pagination
-              v-if="total > 0"
-              :total="total"
-              v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize"
+              v-if="totalNumber > 0"
+              :total="totalNumber"
+              v-model:page="formData.page_num"
+              v-model:limit="formData.page_size"
               @pagination="handleQuery"
             />
           </div>
@@ -310,17 +391,18 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       @close="closeDialog"
     >
       <el-form
-        label-width="160px"
+        label-width="auto"
         ref="ruleFormRef"
         :rules="rules"
         :model="manualPaymentItem"
+        class="manual-payment-form"
       >
-        <el-form-item label="用户账号:" prop="user_account">
-          <el-input v-model="manualPaymentItem.user_account" />
+        <el-form-item label="用户账号:" prop="id">
+          <el-input v-model="manualPaymentItem.id" />
         </el-form-item>
-        <el-form-item label="打款金额:" prop="order_amount">
+        <el-form-item label="打款金额:" prop="amount">
           <el-input
-            v-model="manualPaymentItem.order_amount"
+            v-model="manualPaymentItem.amount"
             :formatter="number_formatter"
             :parser="number_parser"
           />
@@ -328,22 +410,32 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         <el-form-item label="打款类型:" prop="change_type">
           <el-select v-model="manualPaymentItem.change_type">
             <el-option
-              v-for="(item, index) in typeOptions"
-              :label="item.label"
+              v-for="(item, index) in changeTypeOptions"
+              :label="item.value"
+              :value="item.id"
+              :key="index"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="货币类型:" prop="amount_type">
+          <el-select v-model="manualPaymentItem.amount_type">
+            <el-option
+              v-for="(item, index) in amountTypeOption"
+              :label="item.value"
               :value="item.value"
               :key="index"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="打码倍率:" prop="code_ratio">
-          <el-input v-model="manualPaymentItem.code_ratio" />
+        <el-form-item label="打码倍率:" prop="bet_rate">
+          <el-input v-model="manualPaymentItem.bet_rate" />
         </el-form-item>
-        <el-row style="align-items: center">
+        <!-- <el-row style="align-items: center">
           <Font color="red" style="font-size: 20px">*</Font>
           <h3>备注</h3>
-        </el-row>
-        <el-form-item prop="remark" class="remark-form">
-          <el-input type="textarea" :rows="6" v-model="manualPaymentItem.remark" />
+        </el-row> -->
+        <el-form-item label="备注:" prop="notes" class="remark-form">
+          <el-input type="textarea" :rows="6" v-model="manualPaymentItem.notes" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -472,5 +564,11 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
   .el-form-item__content {
     margin-left: 0px !important;
   }
+}
+.manual-payment-form .el-select {
+  width: 100%;
+}
+.app-container .el-form-item__label {
+  font-weight: 700;
 }
 </style>

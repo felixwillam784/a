@@ -99,7 +99,11 @@ export interface ManualAddListForm {
 
 export type GetManualAddListReview = {
   code: number | string
-  data: {total_page: number, order_list:Array<GetManualAddListOrder>}
+  data: {
+    total_page: number,
+    order_list:Array<GetManualAddListOrder>,
+    total_num: number
+  }
   message: string
 }
 
@@ -112,5 +116,14 @@ export interface GetManualAddListOrder {
   order_time: string
   bet_rate: string
   operator_id: string
+  notes: string
+}
+
+export interface ManualAddCreateForm {
+  id: string
+  amount: number | string
+  amount_type: number | string
+  change_type: number | string
+  bet_rate: string
   notes: string
 }
