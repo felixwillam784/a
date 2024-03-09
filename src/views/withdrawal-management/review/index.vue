@@ -8,8 +8,8 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
 import { formatDate } from "@/utils/index";
-const { withdrawal } = useStore();
 import { ElMessage } from 'element-plus';
+const { withdrawal } = useStore();
 
 const { auth } = useStore();
 interface GetWithdrawalReview {

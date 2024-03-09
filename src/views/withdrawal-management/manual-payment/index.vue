@@ -7,10 +7,11 @@ import { getManualPaymentList, addManualPayment } from "@/api/withdraw-managemen
 import useStore from "@/store";
 import { formatDate } from '@/utils/index';
 import { copyText } from '@/utils/copy';
-const { withdrawal } = useStore();
 import { ElMessage } from 'element-plus';
 
 const { user } = useStore();
+
+const { withdrawal } = useStore();
 
 interface GetManualPayment {
   nick_name: string;
