@@ -211,6 +211,54 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
       },
+      async dispatchUpdatebankData(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_BANK;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchUpdatewalletData(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_WALLET;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchUpdatePixData(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_PIX;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
+      async dispatchUpdateMexData(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.UPDATE_MEX;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
       async dispatchGetTestUserBasicDetail(formData: any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.TEST_USER_BASIC_DETAIL;
