@@ -444,7 +444,7 @@ const lock = () => {};
             </el-table-column>
             <el-table-column label="免手续费" align="center" prop="fee" width="120">
               <template #default="scope">
-                <p>${{ scope.row.fee }}</p>
+                <p>${{ scope.row.handling_fee }}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -761,13 +761,13 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">手续费:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.handling_fee) }}</p>
+          <p>${{ Number(withdrawalReviewItem?.fee) }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.fee) }}</p>
+          <p>${{ Number(withdrawalReviewItem?.handling_fee) }}</p>
         </el-col>
       </el-row>
       <el-row>

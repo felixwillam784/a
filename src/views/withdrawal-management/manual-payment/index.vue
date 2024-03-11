@@ -32,6 +32,7 @@ interface GetManualPayment {
   operator_id: string;
   notes: string;
   id: string;
+  operator_name: string
 }
 
 const router = useRouter();
@@ -100,7 +101,8 @@ const manualPaymentItem = ref<GetManualPayment>({
     order_time: "",
     operator_id: "",
     notes: "",
-    id: ""
+    id: "",
+    operator_name: ""
 });
 
 const typeOptions = ref<Array<any>>([
@@ -214,7 +216,8 @@ const addManualPaymentDialog = () => {
       order_time: "",
       operator_id: "",
       notes: "",
-      id: ""
+      id: "",
+      operator_name: ""
   };
   manualDialogVisible.value = true;
   manualDialogTitle.value = "添加订单";
@@ -349,9 +352,9 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 <p>{{ scope.row.bet_rate }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="操作人员" align="center" prop="operator_id">
+            <el-table-column label="操作人员" align="center" prop="operator_name">
               <template #default="scope">
-                <p>{{ scope.row.operator_id }}</p>
+                <p>{{ scope.row.operator_name }}</p>
               </template>
             </el-table-column>
             <el-table-column label="订单提交时间" align="center" prop="order_time">
@@ -514,7 +517,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <span>{{ manualPaymentItem.operator_id }}</span>
+          <span>{{ manualPaymentItem.operator_name }}</span>
         </el-col>
       </el-row>
       <el-row>
