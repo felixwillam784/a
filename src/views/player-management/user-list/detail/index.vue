@@ -174,7 +174,7 @@ const showUserMarkInput = () => {
   });
 };
 const goCustomerDetailPage = async (id: string) => {
-  if (id) router.push({ name: "UserDetail", params: { id: id } });
+  if (id !== "0") router.push({ name: "UserDetail", params: { id: id } });
 };
 const handleUserMarkInputConfirm = async () => {
   if (inputUserMarkValue.value) {

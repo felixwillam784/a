@@ -25,7 +25,7 @@ export interface GetDepositOrder {
 
   export type GetDepositOrderResponse = {
     code: number | string
-    data: {total_page: number, order_list:Array<GetDepositOrder>}
+    data: {total_page: number, order_list:Array<GetDepositOrder>, total_num: number}
     message: string
   }
   export type PostRequestResponse = {

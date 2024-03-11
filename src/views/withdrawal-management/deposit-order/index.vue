@@ -74,6 +74,22 @@ const orderStatusData = [
     label: "支付中",
     value: 1,
   },
+  {
+    label: "订单生成",
+    value: 0,
+  },
+  {
+    label: "业务处理完成",
+    value: 3,
+  },
+  {
+    label: "已退款",
+    value: 4,
+  },
+  {
+    label: "订单已关闭",
+    value: -2,
+  },
 ];
 const rules = ref<FormRules<Withdrawal.GetDepositOrder>>({
   order_amount: [{ required: true, message: "请输入补单金额。", trigger: "blur" }],
@@ -139,6 +155,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         })
         .then(() => {
           closeDialog();
+          handleQuery();
         })
         .catch(() => {
           closeDialog();
