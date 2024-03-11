@@ -4,6 +4,7 @@ import { Search, Refresh } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 
 import useStore from "@/store";
+import moment from "moment-timezone";
 
 import { onMounted } from "vue";
 import type * as Player from "@/interface/player";
@@ -77,15 +78,27 @@ const resetQuery = async () => {
   loading.value = false;
 };
 
-const prohibitWithdrawal = async (id: number) => {
-  await player.dispatchProhibitWithdrawal({ user_id: id });
+const prohibitWithdrawal = async (id: number, account_withdrawal_prohibit: number) => {
+  if (account_withdrawal_prohibit === 1)
+    await player.dispatchProhibitWithdrawal({
+      user_id: id,
+      account_withdrawal_prohibit: 2,
+    });
+  else
+    await player.dispatchProhibitWithdrawal({
+      user_id: id,
+      account_withdrawal_prohibit: 1,
+    });
+
   formData.value.page_num = 1;
   formData.value.page_size = 20;
   await player.dispatchGetUserList(formData.value);
 };
 
-const addBlackList = async (id: number) => {
-  await player.dispatchAddBlackList({ user_id: id });
+const addBlackList = async (id: number, account_prohibit: number) => {
+  if (account_prohibit === 1)
+    await player.dispatchAddBlackList({ user_id: id, account_prohibit: 2 });
+  else await player.dispatchAddBlackList({ user_id: id, account_prohibit: 1 });
   formData.value.page_num = 1;
   formData.value.page_size = 20;
   await player.dispatchGetUserList(formData.value);
@@ -177,11 +190,7 @@ const handleSizeChange = async ({ page, limit }: any) => {
           </el-form>
         </div>
         <el-card>
-          <el-table
-            :data="userList"
-            style="width: 100%; height: 560px"
-            v-loading="loading"
-          >
+          <el-table :data="userList" style="width: 100%" v-loading="loading">
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">
               <template #default="scope">
                 <el-link
@@ -272,10 +281,10 @@ const handleSizeChange = async ({ page, limit }: any) => {
             >
               <template #default="scope">
                 {{
-                  new Date(scope.row.created_at * 1000)
-                    .toISOString()
-                    .replace(/T/, " ")
-                    .replace(/\..+/, "")
+                  moment(scope.row.created_at * 1000)
+                    .clone()
+                    .tz("UTC")
+                    .format("YYYY-MM-DD HH:mm:ss")
                 }}
               </template>
             </el-table-column>
@@ -289,16 +298,21 @@ const handleSizeChange = async ({ page, limit }: any) => {
                     scope.row.account_withdrawal_prohibit == 1 ? 'danger' : 'success'
                   "
                   link
-                  @click="prohibitWithdrawal(scope.row.uid)"
+                  @click="
+                    prohibitWithdrawal(
+                      scope.row.id,
+                      scope.row.account_withdrawal_prohibit
+                    )
+                  "
                   >{{
-                    scope.row.account_withdrawal_prohibit == 1 ? "提现封禁" : "提现正常"
+                    scope.row.account_withdrawal_prohibit == 1 ? "封禁提现" : "解除封禁"
                   }}</el-button
                 >
                 <el-button
                   :type="scope.row.user_status == 1 ? 'danger' : 'success'"
                   link
-                  @click="addBlackList(scope.row.uid)"
-                  >{{ scope.row.user_status == 1 ? "拉黑" : "取消拉黑" }}</el-button
+                  @click="addBlackList(scope.row.id, scope.row.user_status)"
+                  >{{ scope.row.user_status == 1 ? "拉黑" : "解除拉黑" }}</el-button
                 >
               </template>
             </el-table-column>

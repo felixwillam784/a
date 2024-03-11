@@ -223,6 +223,18 @@ export const playerStore = defineStore({
         }
         await network.sendMsg(route, formData, next, 1);
       },
+      async dispatchDeletebankData(formData:any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.DLELETE_BANK;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.PlayerPostRequestResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+          }
+        }
+        await network.sendMsg(route, formData, next, 1);
+      },
       async dispatchUpdatewalletData(formData:any) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.PLAYER.UPDATE_WALLET;

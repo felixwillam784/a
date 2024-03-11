@@ -110,19 +110,22 @@ export namespace NETWORKCFG {
     static USERLIST:string = "/user/list"
     static BASIC_DETAIL:string = "/user/base"
     static DEPOSIT_WITHDRAWAL:string = "/user/detail/deposit-withdrawal"
-    static WITHDRAWAL_DETAIL:string = "/user/withdrawal-detail"
+    static WITHDRAWAL_DETAIL:string = "/user/bank"
 
-    static SET_BLACKLIST: string = "/user/blacklist"
-    static PROHIBIT_WITHDRAWAL: string = "/user/withdraw-prohibit"
+    static SET_BLACKLIST: string = "/user/status"
+    static PROHIBIT_WITHDRAWAL: string = "/user/withdraw-status"
 
     static UPDATE_PHONE: string = "/user/phone"
     static UPDATE_MARK: string = "/user/mark"
     static UPDATE_NOTE: string = "/user/notes"
     static UPDATE_MAIL: string = "/user/email"
-    static UPDATE_BANK: string = "/user/withdraw/update/bank"
+    static UPDATE_BANK: string = "/user/bank"
+
     static UPDATE_PIX: string = "/user/withdraw/update/pix"
     static UPDATE_MEX: string = "/user/withdraw/update/mex"
     static UPDATE_WALLET: string = "/user/withdraw/update/wallet"
+    
+    static DLELETE_BANK: string = "/user/bank/delete"
 
     static TEST_USER_LIST:string = "/user/test/list"
     static TEST_USER_BASIC_DETAIL:string = "/user/test/detail"
