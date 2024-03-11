@@ -13,6 +13,8 @@ import { useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { ElInput, ElMessage } from "element-plus";
 import dayjs from "dayjs";
+import moment from "moment-timezone";
+
 //import { watch } from "fs";
 
 const route = useRoute();
@@ -96,19 +98,19 @@ const moreVipBonusShow = () => {
 onMounted(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
   await player.dispatchDepositWithrawDetailData({
-    user_id: basicInformation.value.sir_user_id,
+    user_id: route.params.id,
   });
   await player.dispatchWithdrawalDetailData({
-    user_id: basicInformation.value.sir_user_id,
+    id: route.params.id,
   });
 });
 onUpdated(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
   await player.dispatchDepositWithrawDetailData({
-    user_id: basicInformation.value.sir_user_id,
+    user_id: route.params.id,
   });
   await player.dispatchWithdrawalDetailData({
-    user_id: basicInformation.value.sir_user_id,
+    user_id: route.params.id,
   });
 });
 const inputPhoneTagValue = ref("");
@@ -229,10 +231,18 @@ const handleEditBankData = (row: any) => {
   BankData.value.index = row.$index;
 };
 const handleSaveBankData = async () => {
-  BankData.value.user_id = basicInformation.value.id;
+  BankData.value.user_id = route.params.id;
   loading.value = true;
   await player.dispatchUpdatebankData(BankData.value);
   BankData.value.index = -1;
+  loading.value = false;
+};
+const handleDeleteBanKData = async (row: any) => {
+  loading.value = true;
+  await player.dispatchDeletebankData({
+    user_id: route.params.id,
+    bank_id: row.row.account,
+  });
   loading.value = false;
 };
 const handleEditPixData = (row: any) => {
@@ -240,7 +250,7 @@ const handleEditPixData = (row: any) => {
   PixData.value.index = row.$index;
 };
 const handleSavePixData = async () => {
-  PixData.value.user_id = basicInformation.value.id;
+  PixData.value.user_id = route.params.id;
   loading.value = true;
   await player.dispatchUpdatePixData(PixData.value);
   PixData.value.index = -1;
@@ -251,7 +261,7 @@ const handleEditMexData = (row: any) => {
   MexData.value.index = row.$index;
 };
 const handleSaveMexData = async () => {
-  MexData.value.user_id = basicInformation.value.id;
+  MexData.value.user_id = route.params.id;
   loading.value = true;
   await player.dispatchUpdateMexData(MexData.value);
   MexData.value.index = -1;
@@ -263,19 +273,19 @@ const handleEditWalletData = (row: any) => {
   WalletData.value.index = row.$index;
 };
 const handleSaveWalletData = async () => {
-  WalletData.value.user_id = basicInformation.value.id;
+  WalletData.value.user_id = route.params.id;
   loading.value = true;
   await player.dispatchUpdatebankData(WalletData.value);
   WalletData.value.index = -1;
   loading.value = false;
 };
 const addblackList = async () => {
-  await player.dispatchAddBlackList({ user_id: basicInformation.value.uid });
+  await player.dispatchAddBlackList({ user_id: route.params.id });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 
 const suspenseWithdraw = async () => {
-  await player.dispatchProhibitWithdrawal({ user_id: basicInformation.value.uid });
+  await player.dispatchProhibitWithdrawal({ user_id: route.params.id });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 </script>
@@ -457,9 +467,10 @@ const suspenseWithdraw = async () => {
               <el-form label-width="200">
                 <el-form-item label="注册时间:">
                   {{
-                    dayjs(basicInformation.created_at * 1000).format(
-                      "YYYY-MM-DD hh:mm:ss"
-                    )
+                    moment(basicInformation.created_at * 1000)
+                      .clone()
+                      .tz("UTC")
+                      .format("YYYY-MM-DD HH:mm:ss")
                   }}
                 </el-form-item>
               </el-form>
@@ -467,7 +478,10 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form-item label="最后登录时间:">
                 {{
-                  dayjs(basicInformation.updated_at * 1000).format("YYYY-MM-DD hh:mm:ss")
+                  moment(basicInformation.updated_at * 1000)
+                    .clone()
+                    .tz("UTC")
+                    .format("YYYY-MM-DD HH:mm:ss")
                 }}
               </el-form-item>
             </el-col>
@@ -545,26 +559,20 @@ const suspenseWithdraw = async () => {
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  封禁提现
+                  {{ basicInformation.withdraw_prohibit == 1 ? " 封禁提现" : "解除封禁" }}
                 </el-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="冻结状态:">
-                {{
-                  basicInformation.account_suspend == 1
-                    ? "正常"
-                    : basicInformation.account_suspend == 2
-                    ? "冻结"
-                    : "自我冻结"
-                }}
+                {{ basicInformation.account_suspend == 1 ? "正常" : "黑名单" }}
                 <el-button
                   @click="addblackList"
                   link
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  拉黑
+                  {{ basicInformation.account_suspend == 1 ? "拉黑" : "解除拉黑" }}
                 </el-button>
               </el-form-item>
             </el-col>
@@ -1090,7 +1098,9 @@ const suspenseWithdraw = async () => {
                         <el-button type="primary" @click="handleEditBankData(scope)" link
                           >修改</el-button
                         >
-                        <el-button type="danger" link>删除</el-button>
+                        <el-button type="danger" @click="handleDeleteBanKData(scope)" link
+                          >删除</el-button
+                        >
                       </template>
                       <template v-else>
                         <el-button type="primary" @click="handleSaveBankData" link
