@@ -9,6 +9,7 @@ import { Search, Refresh } from "@element-plus/icons-vue";
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
+import { formatDate } from "@/utils/index";
 
 const { withdrawal } = useStore();
 
@@ -285,7 +286,7 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading">
+          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading" v-horizontal-scroll>
             <el-table-column
               label="用户账号"
               align="center"
@@ -415,7 +416,7 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <p>
                   {{
-                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                    formatDate(scope.row.submission_time)
                   }}
                 </p>
               </template>
@@ -576,7 +577,7 @@ const copyText = (str: any) => {
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>
-            {{ moment(depositOrderItem.submission_time).format("YYYY-MM-DD HH:mm:ss") }}
+            {{ formatDate(depositOrderItem.submission_time) }}
           </p>
         </el-col>
       </el-row>
@@ -584,7 +585,7 @@ const copyText = (str: any) => {
         <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>
-            {{ moment(depositOrderItem.order_update_time).format("YYYY-MM-DD HH:mm:ss") }}
+            {{ formatDate(depositOrderItem.order_update_time) }}
           </p>
         </el-col>
       </el-row>
