@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUpdated } from "vue";
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import {
@@ -11,7 +11,7 @@ import {
 import useStore from "@/store";
 import { useRoute } from "vue-router";
 import { nextTick } from "vue";
-import { ElInput } from "element-plus";
+import { ElInput, ElMessage } from "element-plus";
 import dayjs from "dayjs";
 //import { watch } from "fs";
 
@@ -21,7 +21,7 @@ const { player } = useStore();
 const router = useRouter();
 
 const activeButton = ref<number>(0);
-const activeNames = ref(["1", "2", "3", "4"]);
+const activeNames = ref(["1", "4"]);
 const subActiveNames = ref(["1", "2", "3", "4"]);
 const vipBonusHeight = ref(0);
 const vipBonusShow = ref<boolean>(false);
@@ -102,7 +102,15 @@ onMounted(async () => {
     user_id: basicInformation.value.sir_user_id,
   });
 });
-
+onUpdated(async () => {
+  await player.dispatchPlayerBasicDetail({ id: route.params.id });
+  await player.dispatchDepositWithrawDetailData({
+    user_id: basicInformation.value.sir_user_id,
+  });
+  await player.dispatchWithdrawalDetailData({
+    user_id: basicInformation.value.sir_user_id,
+  });
+});
 const inputPhoneTagValue = ref("");
 const inputPhoneTagVisible = ref(false);
 const inputPhoneTagRef = ref<InstanceType<typeof ElInput>>();
@@ -165,7 +173,9 @@ const showUserMarkInput = () => {
     inputUserMarkRef.value!.input!.focus();
   });
 };
-
+const goCustomerDetailPage = async (id: string) => {
+  if (id) router.push({ name: "UserDetail", params: { id: id } });
+};
 const handleUserMarkInputConfirm = async () => {
   if (inputUserMarkValue.value) {
     await player.dispatchUpdateMark({
@@ -190,6 +200,7 @@ const handleNoteInputConfirm = async () => {
 };
 const copyText = (str: any) => {
   navigator.clipboard.writeText(str);
+  ElMessage.success("复制成功");
 };
 const inputMailTagValue = ref("");
 const inputMailTagVisible = ref(false);
@@ -259,12 +270,12 @@ const handleSaveWalletData = async () => {
   loading.value = false;
 };
 const addblackList = async () => {
-  await player.dispatchAddBlackList({ user_id: basicInformation.value.id });
+  await player.dispatchAddBlackList({ user_id: basicInformation.value.uid });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 
 const suspenseWithdraw = async () => {
-  await player.dispatchProhibitWithdrawal({ user_id: basicInformation.value.id });
+  await player.dispatchProhibitWithdrawal({ user_id: basicInformation.value.uid });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 </script>
@@ -337,7 +348,11 @@ const suspenseWithdraw = async () => {
               <el-form label-width="200">
                 <el-form-item label="用户ID:">
                   {{ basicInformation.id }}
-                  <el-button @click="copyText(basicInformation.id)" link>
+                  <el-button
+                    v-if="basicInformation.id"
+                    @click="copyText(basicInformation.id)"
+                    link
+                  >
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -348,7 +363,11 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form-item label="用户昵称:">
                 {{ basicInformation.nickname }}
-                <el-button @click="copyText(basicInformation.nickname)" link>
+                <el-button
+                  v-if="basicInformation.nickname"
+                  @click="copyText(basicInformation.nickname)"
+                  link
+                >
                   <el-icon>
                     <CopyDocument />
                   </el-icon>
@@ -380,7 +399,7 @@ const suspenseWithdraw = async () => {
                 <el-button
                   @click="copyText(basicInformation.uid)"
                   link
-                  v-if="!inputMailTagVisible"
+                  v-if="!inputMailTagVisible && basicInformation.uid"
                 >
                   <el-icon>
                     <CopyDocument />
@@ -396,7 +415,7 @@ const suspenseWithdraw = async () => {
                   <el-link
                     :underline="false"
                     style="color: #5393e0; text-decoration-line: underline"
-                    @click="router.push({ name: 'UserDetail' })"
+                    @click="goCustomerDetailPage(basicInformation.sir_user_id)"
                   >
                     {{ basicInformation.sir_user_id }}
                   </el-link>
