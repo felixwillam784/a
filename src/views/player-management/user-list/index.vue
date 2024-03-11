@@ -179,7 +179,7 @@ const handleSizeChange = async ({ page, limit }: any) => {
         <el-card>
           <el-table
             :data="userList"
-            style="width: 100%; height: 650px"
+            style="width: 100%; height: 560px"
             v-loading="loading"
           >
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">

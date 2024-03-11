@@ -10,6 +10,7 @@ import { ElMessage } from "element-plus";
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
+import { formatDate } from "@/utils/index";
 
 const { withdrawal } = useStore();
 
@@ -73,6 +74,22 @@ const orderStatusData = [
   {
     label: "支付中",
     value: 1,
+  },
+  {
+    label: "订单生成",
+    value: 0,
+  },
+  {
+    label: "业务处理完成",
+    value: 3,
+  },
+  {
+    label: "已退款",
+    value: 4,
+  },
+  {
+    label: "订单已关闭",
+    value: -2,
   },
 ];
 const rules = ref<FormRules<Withdrawal.GetDepositOrder>>({
@@ -139,6 +156,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         })
         .then(() => {
           closeDialog();
+          handleQuery();
         })
         .catch(() => {
           closeDialog();
@@ -290,11 +308,7 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table
-            :data="depositOrderList"
-            style="width: 100%; height: 530px"
-            v-loading="loading"
-          >
+          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading" v-horizontal-scroll>
             <el-table-column
               label="用户账号"
               align="center"
@@ -440,7 +454,7 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <p>
                   {{
-                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                    formatDate(scope.row.submission_time)
                   }}
                 </p>
               </template>

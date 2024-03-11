@@ -79,7 +79,7 @@ export const withdrawalStore = defineStore({
           if (response.code == "00") {
             this.setSuccess(true);
             this.setDepositList(response.data.order_list);
-            this.setTotalNumber(response.data.total_page);
+            this.setTotalNumber(response.data.total_num);
           }
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
