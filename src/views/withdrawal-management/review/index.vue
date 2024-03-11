@@ -406,7 +406,8 @@ const lock = () => {};
           <el-table
             v-loading="loading"
             :data="withdrawalReviewList"
-            style="width: 100%; height: 600px"
+            style="width: 100%;"
+            v-horizontal-scroll
           >
             <el-table-column label="用户账号" align="center" prop="user_id" width="160">
               <template #default="scope">

@@ -10,6 +10,7 @@ import Pagination from '@/components/Pagination/index.vue';
 import '@/permission';
 // 根据字典编码获取字典列表全局方法
 import { listDictItemsByTypeCode } from '@/api/system/dict';
+import horizontalScroll from 'el-table-horizontal-scroll';
 
 import 'default-passive-events';
 
@@ -36,11 +37,13 @@ Object.keys(directive).forEach((key) => {
 // 全局方法
 app.config.globalProperties.$listDictItemsByTypeCode = listDictItemsByTypeCode;
 app.use(ElTableInfiniteScroll);
+
 // 注册全局组件
 app
   .component('Pagination', Pagination)
   .use(createPinia())
   .use(router)
   .use(ElementPlus)
+  .use(horizontalScroll)
   .use(i18n)
   .mount('#app');
