@@ -289,7 +289,7 @@ const handleSizeChange = async ({ page, limit }: any) => {
                     scope.row.account_withdrawal_prohibit == 1 ? 'danger' : 'success'
                   "
                   link
-                  @click="prohibitWithdrawal(scope.row.id)"
+                  @click="prohibitWithdrawal(scope.row.uid)"
                   >{{
                     scope.row.account_withdrawal_prohibit == 1 ? "提现封禁" : "提现正常"
                   }}</el-button
@@ -297,7 +297,7 @@ const handleSizeChange = async ({ page, limit }: any) => {
                 <el-button
                   :type="scope.row.user_status == 1 ? 'danger' : 'success'"
                   link
-                  @click="addBlackList(scope.row.id)"
+                  @click="addBlackList(scope.row.uid)"
                   >{{ scope.row.user_status == 1 ? "拉黑" : "取消拉黑" }}</el-button
                 >
               </template>

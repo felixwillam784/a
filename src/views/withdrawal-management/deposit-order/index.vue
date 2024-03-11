@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 import type { FormInstance, FormRules } from "element-plus";
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from "@element-plus/icons-vue";
 import { Search, Refresh } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
 
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
@@ -185,6 +186,7 @@ const handleSizeChange = async ({ page, limit }: any) => {
 
 const copyText = (str: any) => {
   navigator.clipboard.writeText(str);
+  ElMessage.success("复制成功");
 };
 </script>
 
@@ -288,7 +290,11 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading">
+          <el-table
+            :data="depositOrderList"
+            style="width: 100%; height: 530px"
+            v-loading="loading"
+          >
             <el-table-column
               label="用户账号"
               align="center"
@@ -316,7 +322,11 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.platform_order_number }}</p>
-                  <el-button link @click="copyText(scope.row.platform_order_number)">
+                  <el-button
+                    link
+                    v-if="scope.row.platform_order_number"
+                    @click="copyText(scope.row.platform_order_number)"
+                  >
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -333,7 +343,11 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.gaia_order_number }}</p>
-                  <el-button link @click="copyText(scope.row.gaia_order_number)">
+                  <el-button
+                    v-if="scope.row.gaia_order_number"
+                    link
+                    @click="copyText(scope.row.gaia_order_number)"
+                  >
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -350,7 +364,11 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_channel }}</p>
-                  <el-button link @click="copyText(scope.row.upstream_channel)">
+                  <el-button
+                    v-if="scope.row.upstream_channel"
+                    link
+                    @click="copyText(scope.row.upstream_channel)"
+                  >
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -367,7 +385,11 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_order_number }}</p>
-                  <el-button link @click="copyText(scope.row.upstream_order_number)">
+                  <el-button
+                    v-if="scope.row.upstream_order_number"
+                    link
+                    @click="copyText(scope.row.upstream_order_number)"
+                  >
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -431,7 +453,15 @@ const copyText = (str: any) => {
                   @click="detailManualPaymentDialog(scope.row)"
                   >详情</el-button
                 >
-                <el-button type="success" link @click="makeOrder(scope.row)"
+                <el-button
+                  v-if="
+                    scope.row.deposit_type !== 2 &&
+                    scope.row.order_status !== 2 &&
+                    scope.row.order_status !== 3
+                  "
+                  type="success"
+                  link
+                  @click="makeOrder(scope.row)"
                   >补单</el-button
                 >
                 <el-button
@@ -579,7 +609,11 @@ const copyText = (str: any) => {
         <el-col :span="6" class="detail-item-left-bg">订单提交时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>
-            {{ moment(depositOrderItem.submission_time).format("YYYY-MM-DD HH:mm:ss") }}
+            {{
+              moment(depositOrderItem.submission_time * 1000).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            }}
           </p>
         </el-col>
       </el-row>
@@ -587,7 +621,11 @@ const copyText = (str: any) => {
         <el-col :span="6" class="detail-item-left-bg">订单更新时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>
-            {{ moment(depositOrderItem.order_update_time).format("YYYY-MM-DD HH:mm:ss") }}
+            {{
+              moment(depositOrderItem.order_update_time * 1000).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            }}
           </p>
         </el-col>
       </el-row>
