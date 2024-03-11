@@ -10,6 +10,7 @@ import { ElMessage } from "element-plus";
 import useStore from "@/store";
 import WithdrawalRecord from "@/views/player-management/user-list/WithdrawalRecord.vue";
 import type * as Withdrawal from "@/interface/withdrawal";
+import { formatDate } from "@/utils/index";
 
 const { withdrawal } = useStore();
 
@@ -307,11 +308,7 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table
-            :data="depositOrderList"
-            style="width: 100%; height: 530px"
-            v-loading="loading"
-          >
+          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading" v-horizontal-scroll>
             <el-table-column
               label="用户账号"
               align="center"
@@ -457,7 +454,7 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <p>
                   {{
-                    moment(scope.row.submission_time * 1000).format("YYYY-MM-DD HH:mm:ss")
+                    formatDate(scope.row.submission_time)
                   }}
                 </p>
               </template>

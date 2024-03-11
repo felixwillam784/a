@@ -159,7 +159,7 @@ const totalNumber = computed(() => {
 
 // 查询
 const handleQuery = async () => {
-  if (formData.value.id && formData.value.id.length < 3) {
+  if (formData.value.uid && formData.value.uid.length < 3) {
     return ElMessage.warning('查询不得少于3个字符串');
   }
   if (!orderTime.value) {
@@ -277,8 +277,8 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             style="display: flex; justify-content: space-between"
           >
             <div>
-              <el-form-item label="用户账户" prop="id">
-                <el-input v-model="formData.id" placeholder="请输入用户账户" />
+              <el-form-item label="用户账户" prop="uid">
+                <el-input v-model="formData.uid" placeholder="请输入用户账户" />
               </el-form-item>
               <el-form-item label="订单提交时间" prop="orderTime">
                 <el-date-picker
@@ -308,7 +308,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         </div>
 
         <el-card>
-          <el-table v-loading="loading" :data="manualPaymentList" style="width: 100%">
+          <el-table v-loading="loading" :data="manualPaymentList" style="width: 100%" v-horizontal-scroll>
             <!-- <el-table-column label="用户昵称" align="center" prop="nick_name">
               <template #default="scope">
                 <el-link
