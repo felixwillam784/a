@@ -31,6 +31,7 @@ interface GetManualPayment {
   operator_id: string;
   notes: string;
   id: string;
+  operator_name: string
 }
 
 const router = useRouter();
@@ -99,7 +100,8 @@ const manualPaymentItem = ref<GetManualPayment>({
   order_time: "",
   operator_id: "",
   notes: "",
-  id: ""
+  id: "",
+  operator_name: ""
 });
 
 const typeOptions = ref<Array<any>>([
@@ -201,7 +203,8 @@ const addManualPaymentDialog = () => {
     order_time: "",
     operator_id: "",
     notes: "",
-    id: ""
+    id: "",
+    operator_name: ""
   };
   manualDialogVisible.value = true;
   manualDialogTitle.value = "添加订单";
@@ -229,7 +232,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         amount: manualPaymentItem.value.amount,
         amount_type: manualPaymentItem.value.amount_type + '',
         change_type: manualPaymentItem.value.change_type,
-        bet_rate: manualPaymentItem.value.bet_rate,
+        bet_rate: '0',
         notes: manualPaymentItem.value.notes
       }
       await withdrawal.dispatchManualReduceCreate(params);
@@ -331,14 +334,14 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 <p>{{ changeTypeText(scope.row.change_type) }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="打码倍率" align="center" prop="bet_rate">
+            <!-- <el-table-column label="打码倍率" align="center" prop="bet_rate">
               <template #default="scope">
                 <p>{{ scope.row.bet_rate }}</p>
               </template>
-            </el-table-column>
-            <el-table-column label="操作人员" align="center" prop="operator_id">
+            </el-table-column> -->
+            <el-table-column label="操作人员" align="center" prop="operator_name">
               <template #default="scope">
-                <p>{{ scope.row.operator_id }}</p>
+                <p>{{ scope.row.operator_name }}</p>
               </template>
             </el-table-column>
             <el-table-column label="订单提交时间" align="center" prop="order_time">
@@ -414,9 +417,9 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="打码倍率:" prop="bet_rate">
+        <!-- <el-form-item label="打码倍率:" prop="bet_rate">
           <el-input v-model="manualPaymentItem.bet_rate" />
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-row style="align-items: center">
           <Font color="red" style="font-size: 20px">*</Font>
           <h3>备注</h3>
@@ -486,12 +489,12 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
           <span>{{ changeTypeText(manualPaymentItem.change_type) }}</span>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col :span="6" class="detail-item-left-bg">打码倍率:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <span>{{ manualPaymentItem.bet_rate }}</span>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">扣款时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
@@ -501,7 +504,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">操作人员:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <span>{{ manualPaymentItem.operator_id }}</span>
+          <span>{{ manualPaymentItem.operator_name }}</span>
         </el-col>
       </el-row>
       <el-row>
