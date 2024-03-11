@@ -92,6 +92,7 @@ const orderStatusData = [
     value: -2,
   },
 ];
+const depositTypesData = ["正常存款", "补单存款", "备用订单"];
 const rules = ref<FormRules<Withdrawal.GetDepositOrder>>({
   order_amount: [{ required: true, message: "请输入补单金额。", trigger: "blur" }],
 });
@@ -308,7 +309,12 @@ const copyText = (str: any) => {
         </el-card>
 
         <el-card style="margin-top: 10px">
-          <el-table :data="depositOrderList" style="width: 100%" v-loading="loading" v-horizontal-scroll>
+          <el-table
+            :data="depositOrderList"
+            style="width: 100%"
+            v-loading="loading"
+            v-horizontal-scroll
+          >
             <el-table-column
               label="用户账号"
               align="center"
@@ -454,7 +460,10 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <p>
                   {{
-                    formatDate(scope.row.submission_time)
+                    moment(scope.row.submission_time * 1000)
+                      .clone()
+                      .tz("UTC")
+                      .format("YYYY-MM-DD HH:mm:ss")
                   }}
                 </p>
               </template>
@@ -596,9 +605,17 @@ const copyText = (str: any) => {
         <el-col :span="6" class="detail-item-left-bg">订单状态:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <Font color="green" v-if="depositOrderItem.order_status == 2">
-            {{ depositOrderItem.order_status }}
+            {{
+              orderStatusData.find((item) => item.value === depositOrderItem.order_status)
+                ?.label
+            }}
           </Font>
-          <p v-else>{{ depositOrderItem.order_status }}</p>
+          <p v-else>
+            {{
+              orderStatusData.find((item) => item.value === depositOrderItem.order_status)
+                ?.label
+            }}
+          </p>
         </el-col>
       </el-row>
       <el-row>
@@ -624,9 +641,10 @@ const copyText = (str: any) => {
         <el-col :span="18" class="detail-item-right-bg">
           <p>
             {{
-              moment(depositOrderItem.submission_time * 1000).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )
+              moment(depositOrderItem.submission_time * 1000)
+                .clone()
+                .tz("UTC")
+                .format("YYYY-MM-DD HH:mm:ss")
             }}
           </p>
         </el-col>
@@ -636,9 +654,10 @@ const copyText = (str: any) => {
         <el-col :span="18" class="detail-item-right-bg">
           <p>
             {{
-              moment(depositOrderItem.order_update_time * 1000).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )
+              moment(depositOrderItem.order_update_time * 1000)
+                .clone()
+                .tz("UTC")
+                .format("YYYY-MM-DD HH:mm:ss")
             }}
           </p>
         </el-col>
@@ -664,7 +683,7 @@ const copyText = (str: any) => {
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">充值类型:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.recharge_type }}</p>
+          <p>{{ depositTypesData[depositOrderItem.recharge_type] }}</p>
         </el-col>
       </el-row>
       <template #footer>

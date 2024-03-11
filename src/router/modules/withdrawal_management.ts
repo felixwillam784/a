@@ -122,18 +122,18 @@ const withdrawalManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 }
             },
-            {
-                path: "payment/list",
-                component: () => ChildrenLayout,
-                name: "Payment List",
-                meta: {
-                    title: "支付订单列表",
-                    hidden: false,
-                    // alwaysShow: false,
-                    roles: ["ADMIN"],
-                    keepAlive: true
-                }
-            },
+            // {
+            //     path: "payment/list",
+            //     component: () => ChildrenLayout,
+            //     name: "Payment List",
+            //     meta: {
+            //         title: "支付订单列表",
+            //         hidden: false,
+            //         // alwaysShow: false,
+            //         roles: ["ADMIN"],
+            //         keepAlive: true
+            //     }
+            // },
             {
                 path: "payment/configuration",
                 component: () => import('@/views/withdrawal-management/deposit-order/index.vue'),
