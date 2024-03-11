@@ -84,6 +84,7 @@ export interface GetWithdrawalReviewList {
     submission_time: number
     lock: boolean,
     user_id: number | string
+    operator_name: string
 }
 
 export interface ManualAddListForm {
@@ -117,6 +118,7 @@ export interface GetManualAddListOrder {
   bet_rate: string
   operator_id: string
   notes: string
+  operator_name: string
 }
 
 export interface ManualAddCreateForm {
