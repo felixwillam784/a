@@ -24,7 +24,10 @@ const formData = ref<any>({
   upstream_order_number: "",
   gaia_order_number: "",
   order_status: "",
-  submission_time: ["", ""],
+  submission_time: [
+    moment(new Date().getTime() - 30 * 24 * 60 * 60 * 1000).format("YYYY-MM-DD HH:mm:ss"),
+    moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
+  ],
   order_update_time: ["", ""],
   page_num: 1,
   page_size: 20,
@@ -107,6 +110,13 @@ const resetQuery = async () => {
       formData.value[property] = "";
     }
   }
+  formData.value.submission_time = [];
+  formData.value.submission_time[0] = moment(
+    new Date().getTime() - 30 * 24 * 60 * 60 * 1000
+  ).format("YYYY-MM-DD HH:mm:ss");
+  formData.value.submission_time[1] = moment(new Date().getTime()).format(
+    "YYYY-MM-DD HH:mm:ss"
+  );
   formData.value.page_num = 1;
   formData.value.page_size = 20;
   await withdrawal.dispatchDepositList(formData.value);
