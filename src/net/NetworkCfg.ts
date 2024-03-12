@@ -139,6 +139,9 @@ export namespace NETWORKCFG {
     static MANUAL_ADD_CREATE = 'manual/add/create'  // 人工入款新增  Manual deposit added
     static MANUAL_REDUCE_LIST = '/manual/reduce/list'  // 人工扣款列表  Manual deduction list
     static MANUAL_REDUCE_CREATE = '/manual/reduce/create'  // 人工扣款新增  Manual deduction added
+    static FUNDSPROHIBIT_LIST = '/fundsprohibit/list'  // 提现封禁列表  Withdrawal ban list
+    static FUNDSPROHIBIT_CREATE = '/fundsprohibit/create'  // 提现封禁新增  Withdrawal ban added
+    static FUNDSPROHIBIT_LIFT = '/fundsprohibit/lift'  // 提现封禁解除  Withdrawal ban lifted
   }
   //Listening events sent actively
   export class UNSOLICITED {}

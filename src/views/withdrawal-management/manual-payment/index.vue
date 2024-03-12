@@ -280,8 +280,8 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             style="display: flex; justify-content: space-between"
           >
             <div>
-              <el-form-item label="用户账户" prop="uid">
-                <el-input v-model="formData.uid" placeholder="请输入用户账户" />
+              <el-form-item label="ID" prop="uid">
+                <el-input v-model="formData.uid" placeholder="请输入ID" />
               </el-form-item>
               <el-form-item label="订单提交时间" prop="orderTime">
                 <el-date-picker
@@ -322,7 +322,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 >
               </template>
             </el-table-column> -->
-            <el-table-column label="用户账号" align="center" prop="user_id">
+            <el-table-column label="ID" align="center" prop="user_id">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -400,7 +400,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         :model="manualPaymentItem"
         class="manual-payment-form"
       >
-        <el-form-item label="用户账号:" prop="id">
+        <el-form-item label="ID:" prop="id">
           <el-input v-model="manualPaymentItem.id" />
         </el-form-item>
         <el-form-item label="打款金额:" prop="amount">
@@ -459,7 +459,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       @close="closeDialog"
     >
       <el-row>
-        <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
+        <el-col :span="6" class="detail-item-left-bg">ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <span>{{ manualPaymentItem.user_id }}</span>
           <el-button type="primary" link style="margin-left: auto" @click="copyText(manualPaymentItem.user_id)">复制</el-button>

@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Search, Refresh, Upload, Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
-
 import useStore from '@/store';
-import {getWithDrawalBanList, addBanList, updateBan} from '@/api/withdraw-management'
+import { formatDate } from '@/utils/index';
 //import { watch } from "fs";
-
-const { user } = useStore();
+const { withdrawal } = useStore();
 
 interface GetBan {
-    id: string,
-    user_account: string
-    nick_name: string
-    withdrawal_account: string
-    creation_time: string
-    ban_reason: string
-    operator: string
-    ban_remark: string
-    unblock_remark: string
+    prohibit_id: string
+    id: string
+    user_id: string
+    id_number: string
+    origin: string
+    notes: string
+    operator_name: string
+    created_at: number | string
 }
 
 const router = useRouter();
@@ -43,73 +40,51 @@ const closeBtnText = ref<string>("");
 const ruleFormRef = ref<FormInstance>()
 
 const rules = ref<FormRules<GetBan>>({
-    unblock_remark: [
-        { required: true, message: '请输入解封备注。', trigger: 'blur' },
-    ],
+    // unblock_remark: [
+    //     { required: true, message: '请输入解封备注。', trigger: 'blur' },
+    // ],
 });
 
-const banList = ref<Array<GetBan>>([
-    {
-        id: "8e8fd8fsdfd8fe8f8df8ef",
-        user_account: "test777@gmail.com",
-        nick_name: "UserName10001",
-        withdrawal_account: "XXXXXXXXXXXXXXXXXX",
-        creation_time: "2023-07-10 19:00:00",
-        ban_reason: "违规行为XXX",
-        operator: "UserName",
-        ban_remark: "",
-        unblock_remark: ""
-    },
-])
-
 const banItem = ref<GetBan>({
-    id: "8e8fd8fsdfd8fe8f8df8ef",
-    user_account: "test777@gmail.com",
-    nick_name: "UserName10001",
-    withdrawal_account: "XXXXXXXXXXXXXXXXXX",
-    creation_time: "2023-07-10 19:00:00",
-    ban_reason: "违规行为XXX",
-    operator: "UserName",
-    ban_remark: "",
-    unblock_remark: ""
+    prohibit_id: "",
+    id: "",
+    user_id: "",
+    id_number: "",
+    origin: "",
+    notes: "",
+    operator_name: "",
+    created_at: ""
 })
 
-const handleQuery = () => {
-    loading.value = true;
-    getData().then(()=>{
-        loading.value = false;
-    }).catch(()=>{
-        localStorage.clear();
-        router.push({ name: "Login" });
-        user.token = '';
-    });
+
+// 提现封禁列表
+const fundsprohibitList = computed(() => {
+  return withdrawal.getFundsprohibitListData;
+})
+
+// 查询
+const handleQuery = async () => {
+    const params = {
+        page_num: 1,
+        page_size: 20
+    }
+    await withdrawal.dispatchFundsprohibitList(params);
 }
+
 onMounted (()=>{
-    loading.value = true;
-    getData().then(()=>{
-        loading.value = false;
-    }).catch(()=>{
-        localStorage.clear();
-        router.push({ name: "Login" });
-        user.token = '';
-    });
+    handleQuery();
 })
 
-const getData = async () => {
-    let res = await getWithDrawalBanList(user.token, formData.value);
-    banList.value = res.data.data;
-}
 const addBanDialog = () => {
     banItem.value = {
+        prohibit_id: "",
         id: "",
-        user_account: "test777@gmail.com",
-        nick_name: "UserName10001",
-        withdrawal_account: "XXXXXXXXXXXXXXXXXX",
-        creation_time: "2023-07-10 19:00:00",
-        ban_reason: "违规行为XXX",
-        operator: "UserName",
-        ban_remark: "",
-        unblock_remark: ""
+        user_id: "",
+        id_number: "",
+        origin: "",
+        notes: "",
+        operator_name: "",
+        created_at: ""
     }
     banDialogVisible.value = true;
     banDialogTitle.value = "新增封禁";
@@ -139,19 +114,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate(async (valid, fields) => {
         if (valid) {
-            let res;
-            if(banItem.value.id == '' || banItem.value.id == null)
-                res = await addBanList(user.token, banItem.value);
-            else
-                res = await updateBan(user.token, banItem.value);
-
-            if(res.data.code === "00")
-                console.log("success");
-            else
-                console.log("failed");
+            const params = {
+                user_id: banItem.value.user_id,
+                id_number: banItem.value.id_number,
+                origin: banItem.value.origin,
+                notes: banItem.value.notes
+            }
+            await withdrawal.dispatchFundsprohibitCreate(params);
+            handleQuery();
             banDialogVisible.value = false;
-
-            
         } else {
             console.log('error submit!', fields)
         }
@@ -188,35 +159,35 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 </div>
 
                 <el-card>
-                    <el-table v-loading="loading" :data="banList" style="width: 100%;">
-                        <el-table-column label="用户昵称" align="center" prop="nick_name">
+                    <el-table v-loading="loading" :data="fundsprohibitList" style="width: 100%;">
+                        <!-- <el-table-column label="用户昵称" align="center" prop="nick_name">
                             <template #default="scope">
                                 <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">{{ scope.row.nick_name }}</el-link>
                             </template>
-                        </el-table-column>
-                        <el-table-column label="用户账号" align="center" prop="user_account">
+                        </el-table-column> -->
+                        <el-table-column label="用户账号" align="center" prop="user_id">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #3afefe; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">{{ scope.row.user_account }}</el-link>
+                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })">{{ scope.row.user_id }}</el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column label="提款账号" align="center" prop="withdrawal_account">
+                        <el-table-column label="提款账号" align="center" prop="prohibit_id">
                             <template #default="scope">
-                                <p>{{ scope.row.withdrawal_account }}</p>
+                                <p>{{ scope.row.prohibit_id }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="创建时间" align="center" prop="creation_time">
+                        <el-table-column label="创建时间" align="center" prop="created_at">
                             <template #default="scope">
-                                <p>{{ scope.row.creation_time }}</p>
+                                <p>{{ formatDate(scope.row.created_at) }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="创建原因" align="center" prop="ban_reason">
+                        <el-table-column label="封禁原因" align="center" prop="origin">
                             <template #default="scope">
-                                <p>{{ scope.row.ban_reason }}</p>
+                                <p>{{ scope.row.origin }}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人员" align="center" prop="operator">
+                        <el-table-column label="操作人员" align="center" prop="operator_name">
                             <template #default="scope">
-                                <p>{{ scope.row.operator }}</p>
+                                <p>{{ scope.row.operator_name }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column align="center" fixed="right" width="160">
@@ -237,25 +208,25 @@ const resetForm = (formEl: FormInstance | undefined) => {
         <el-dialog :title="banDialogTitle" v-model="banDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-form label-width="160px">
                 <el-form-item label="客户账号:">
-                    <el-input v-model="banItem.user_account" />
+                    <el-input v-model="banItem.user_id" />
                     <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
                 </el-form-item>
-                <el-form-item label="客户昵称:">
+                <!-- <el-form-item label="客户昵称:">
                     <el-input v-model="banItem.nick_name" />
                     <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="客户提款账号:">
-                    <el-input v-model="banItem.withdrawal_account" />
+                    <el-input v-model="banItem.id_number" />
                     <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
                 </el-form-item>
                 <el-form-item label="封禁原因:">
-                    <el-input v-model="banItem.ban_reason" />
+                    <el-input v-model="banItem.origin" />
                 </el-form-item>
                 <el-form-item label="封禁人员:" v-if="banItem.id != '' && banItem.id != null">
-                    <el-input v-model="banItem.operator" />
+                    <el-input v-model="banItem.operator_name" />
                 </el-form-item>
                 <el-form-item label="封禁时间:" v-if="banItem.id != '' && banItem.id != null">
-                    <el-input v-model="banItem.creation_time" />
+                    <el-input v-model="banItem.created_at" />
                 </el-form-item>
             </el-form>
             <el-form v-if="banItem.id != '' && banItem.id != null">
@@ -263,7 +234,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                     <p style="font-weight: bold;">封禁备注</p>
                 </el-row>
                 <el-form-item>
-                    <el-input type="textarea" :rows="6" v-model="banItem.ban_remark" />
+                    <el-input type="textarea" :rows="6" v-model="banItem.notes" />
                 </el-form-item>
             </el-form>
             <el-form ref="ruleFormRef" :rules="rules" :model="banItem">
@@ -271,8 +242,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
                     <p style="font-size: 20px; color: red;">*</p>
                     <h3>备注</h3>
                 </el-row>
-                <el-form-item prop="unblock_remark">
-                    <el-input type="textarea" :rows="6" v-model="banItem.unblock_remark" />
+                <el-form-item prop="notes">
+                    <el-input type="textarea" :rows="6" v-model="banItem.notes" />
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -287,40 +258,40 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">客户账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.user_account }}</p>
+                    <p>{{ banItem.user_id }}</p>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
-            <el-row>
+            <!-- <el-row>
                 <el-col :span="6" class="detail-item-left-bg">客户昵称:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ banItem.nick_name }}</p>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">客户提款账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.withdrawal_account }}</p>
+                    <p>{{ banItem.id_number }}</p>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">封禁原因:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.ban_reason }}</p>
+                    <p>{{ banItem.origin }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">封禁人员:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.operator }}</p>
+                    <p>{{ banItem.operator_name }}</p>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">封禁时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.creation_time }}</p>
+                    <p>{{ formatDate(banItem.created_at) }}</p>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 30px;">
@@ -328,7 +299,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-row>
             <el-row>
                 <el-col :span="24" class="detail-item-right-bg" style="height: 120px;">
-                    <el-input v-model="banItem.ban_remark" type="textarea" :row="10"/>
+                    <el-input v-model="banItem.notes" type="textarea" :row="10"/>
                 </el-col>
             </el-row>
             <template #footer>
