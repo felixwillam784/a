@@ -1,3 +1,4 @@
+import { start } from 'nprogress';
 import { defineStore } from 'pinia'
 import { NETWORKCFG } from '@/net/NetworkCfg';
 import { Network } from "@/net/Network";
@@ -6,6 +7,7 @@ import { stringify } from 'querystring';
 import { number } from 'echarts';
 import { stat } from 'fs';
 import { ElMessage } from 'element-plus';
+import moment from 'moment-timezone';
 
 export const withdrawalStore = defineStore({
     id: 'withdrawal',
@@ -80,6 +82,34 @@ export const withdrawalStore = defineStore({
         const route: string = NETWORKCFG.WITHDRAWAL.DEPOSITLIST;
         const network: Network = Network.getInstance();
         // response call back function
+        const ref: any = {};
+        Object.assign(ref, formData);
+        delete ref.submission_time;
+        delete ref.order_update_time;
+        let tmp;
+        if (formData.submission_time && formData.submission_time[0]) {
+          tmp = formData.submission_time[0];
+          ref.submission_start = new Date(formData.submission_time[0]).getTime() / 1000;
+        } else {
+          ref.submission_start = 0;
+        }
+
+        if (formData.submission_time && formData.submission_time[1]) {
+          ref.submission_end = new Date(formData.submission_time[1]).getTime() / 1000;
+        } else {
+          ref.submission_end = Math.floor(new Date().getTime() / 1000);
+        }
+
+        if (formData.order_update_time && formData.order_update_time[0]) {
+          ref.order_update_start = new Date(formData.order_update_time[0]).getTime() / 1000;
+        } else {
+          ref.order_update_start = 0;
+        }
+        if (formData.order_update_time && formData.order_update_time[1]) {
+          ref.order_update_end = new Date(formData.order_update_time[1]).getTime() / 1000;
+        } else {
+          ref.order_update_end = Math.floor(new Date().getTime() / 1000);
+        }
         const next = (response: Withdrawal.GetDepositOrderResponse) => {
           if (response.code == "00") {
             this.setSuccess(true);
@@ -87,7 +117,7 @@ export const withdrawalStore = defineStore({
             this.setTotalNumber(response.data.total_num);
           }
         }
-        await network.sendMsg(route, {params:formData}, next, 1, 4);
+        await network.sendMsg(route, {params: ref}, next, 1, 4);
       },
       async dispatchUpdateSupply(formData:any) {
         this.setSuccess(false);
