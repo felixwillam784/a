@@ -490,7 +490,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.order_id }}</p>
-                  <el-button link @click="copyText(scope.row.order_id)">
+                  <el-button link @click="copyText(scope.row.order_id)" v-if="scope.row.order_id">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -507,7 +507,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.gaia_order_number }}</p>
-                  <el-button link @click="copyText(scope.row.gaia_order_number)">
+                  <el-button link @click="copyText(scope.row.gaia_order_number)" v-if="scope.row.gaia_order_number">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -524,7 +524,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_order_number }}</p>
-                  <el-button link @click="copyText(scope.row.upstream_order_number)">
+                  <el-button link @click="copyText(scope.row.upstream_order_number)" v-if="scope.row.upstream_order_number">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
@@ -541,7 +541,7 @@ const lock = () => {};
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <p>{{ scope.row.upstream_channel }}</p>
-                  <el-button link @click="copyText(scope.row.upstream_channel)">
+                  <el-button link @click="copyText(scope.row.upstream_channel)" v-if="scope.row.upstream_channel">
                     <el-icon>
                       <CopyDocument />
                     </el-icon>
