@@ -292,6 +292,12 @@ const initSubmissionTime = () => {
   submission_time.value[1] = new Date().toISOString().split('T')[0];
 }
 
+const sessionStorageId = (id: string) => {
+  if (sessionStorage.getItem('id') == id) {
+    return true;
+  }
+  return false;
+}
 
 onMounted(() => {
   initSubmissionTime();
@@ -617,6 +623,7 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
+                    sessionStorageId(scope.row.operator_id) &&
                     scope.row.lock == true
                   "
                   @click="passDialogShow(scope.row)"
@@ -628,6 +635,7 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
+                    sessionStorageId(scope.row.operator_id) &&
                     scope.row.lock == true
                   "
                   @click="rejectDialogShow(scope.row)"
@@ -639,6 +647,7 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
+                    sessionStorageId(scope.row.operator_id) &&
                     scope.row.lock == true
                   "
                   @click="lock()"
@@ -829,6 +838,7 @@ const lock = () => {};
         <div class="dialog-footer"
              v-if="withdrawalReviewItem?.order_status !== 1 &&
              withdrawalReviewItem?.order_status == 0 &&
+             sessionStorageId(withdrawalReviewItem?.operator_id) &&
              withdrawalReviewItem?.lock == true">
           <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
           <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
