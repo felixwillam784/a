@@ -24,15 +24,11 @@ const formData = ref<any>({
   upstream_order_number: "",
   gaia_order_number: "",
   order_status: "",
-  submission_start: 0,
-  submission_end: 0,
-  order_update_start: 0,
-  order_update_end: 0,
+  submission_time: ["", ""],
+  order_update_time: ["", ""],
   page_num: 1,
   page_size: 20,
 });
-const submission_time = ref<any>(["2020-12-31", new Date().toISOString().split("T")[0]]);
-const order_update = ref<any>([]);
 
 const loading = ref<boolean>(false);
 const depositOrderDialogVisible = ref<boolean>(false);
@@ -51,7 +47,6 @@ const order_stats = [
   "业务处理完成",
   "已退款",
 ];
-const page = ref(0);
 const changeStatusData = [
   {
     label: "是",
@@ -106,7 +101,6 @@ const depositOrderItem = ref<Withdrawal.GetDepositOrder>(
 );
 
 const resetQuery = async () => {
-  page.value = 0;
   loading.value = true;
   for (let property in formData.value) {
     if (formData.value.hasOwnProperty(property)) {
@@ -115,36 +109,14 @@ const resetQuery = async () => {
   }
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  if (submission_time.value) {
-    formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
-    formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
-  } else {
-    formData.value.submission_start = 0;
-    formData.value.submission_end = 0;
-  }
-  order_update.value[0] = 0;
-  order_update.value[1] = 0;
   await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;
 };
 
 const handleQuery = async () => {
   loading.value = true;
-  if (submission_time.value) {
-    formData.value.submission_start =
-      new Date(submission_time?.value[0]).getTime() / 1000;
-    formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
-  } else {
-    formData.value.submission_start = 0;
-    formData.value.submission_end = 0;
-  }
-  if (order_update.value[0] && order_update.value[0]) {
-    formData.value.order_update_start = new Date(order_update.value[0]).getTime() / 1000;
-    formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
-  } else {
-    formData.value.order_update_start = 0;
-    formData.value.order_update_end = 0;
-  }
+  formData.value.page_num = 1;
+  formData.value.page_size = 20;
   await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;
 };
@@ -186,12 +158,6 @@ const makeOrder = (item: Withdrawal.GetDepositOrder) => {
 
 onMounted(async () => {
   loading.value = true;
-  formData.value.submission_start = Math.floor(
-    new Date(submission_time.value[0]).getTime() / 1000
-  );
-  formData.value.submission_end = Math.floor(
-    new Date(submission_time.value[1]).getTime() / 1000
-  );
   await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;
 });
@@ -265,7 +231,7 @@ const copyText = (str: any) => {
             <el-form-item label="订单提交时间" prop="submission_time">
               <el-date-picker
                 range-separator="到"
-                v-model="submission_time"
+                v-model="formData.submission_time"
                 type="daterange"
                 placeholder="选择提交时间"
                 format="YYYY-MM-DD"
@@ -276,7 +242,7 @@ const copyText = (str: any) => {
             <el-form-item label="订单更新时间" prop="order_update_time">
               <el-date-picker
                 range-separator="到"
-                v-model="order_update"
+                v-model="formData.order_update_time"
                 type="daterange"
                 placeholder="选择更新时间"
                 format="YYYY-MM-DD"
