@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span style="margin-right: 10px;">今天：{{utcYear}}年{{Number(utcMonth)+1}}月{{utcDate}}日 UTC时间：{{ utcHour }}:{{ utcMinute }}:{{ utcSecond }}</span>
+    <span style="margin-right: 10px;">今天：{{ utcYear }}年{{ utcMonthFormatted }}月{{ utcDate }}日 UTC时间：{{ utcHourFormatted }}:{{ utcMinuteFormatted }}:{{ utcSecondFormatted }}</span>
     <svg-icon
       :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
       @click="toggle"
@@ -9,30 +9,47 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onUnmounted, computed } from 'vue';
 import { useFullscreen } from '@vueuse/core';
-import { ref, watchEffect } from 'vue';
 import SvgIcon from '@/components/SvgIcon/index.vue';
+
+const now = new Date();
+
+const utcYear = ref(now.getUTCFullYear());
+const utcDate = ref(now.getUTCDate());
+const utcMonth = ref(now.getUTCMonth());
+const utcHour = ref(now.getUTCHours());
+const utcMinute = ref(now.getUTCMinutes());
+const utcSecond = ref(now.getUTCSeconds());
+
+// 确保 formatTimeUnit 能够处理 undefined 的情况
+const formatTimeUnit = (unit: number | undefined): string => {
+  if (typeof unit === 'undefined') {
+    return '00'; // 当单位未定义时，返回 '00'
+  }
+  return unit < 10 ? `0${unit}` : unit.toString();
+};
+
+const utcMonthFormatted = computed(() => formatTimeUnit(utcMonth.value + 1));
+const utcHourFormatted = computed(() => formatTimeUnit(utcHour.value));
+const utcMinuteFormatted = computed(() => formatTimeUnit(utcMinute.value));
+const utcSecondFormatted = computed(() => formatTimeUnit(utcSecond.value));
 
 const { isFullscreen, toggle } = useFullscreen();
 
-const utcYear = ref<number>();
-const utcDate = ref<number>();
-const utcMonth = ref<number>();
-const utcHour = ref<number>();
-const utcMinute = ref<number>();
-const utcSecond = ref<number>();
+const updateUTCTime = () => {
+  const d = new Date();
+  utcYear.value = d.getUTCFullYear();
+  utcDate.value = d.getUTCDate();
+  utcMonth.value = d.getUTCMonth();
+  utcHour.value = d.getUTCHours();
+  utcMinute.value = d.getUTCMinutes();
+  utcSecond.value = d.getUTCSeconds();
+};
 
-setInterval(function(){
-  const d3 = new Date();
-  d3.toUTCString();
+const intervalId = setInterval(updateUTCTime, 1000);
 
-  const d4 = new Date( d3.getUTCFullYear(), d3.getUTCMonth(), d3.getUTCDate(), d3.getUTCHours(), d3.getUTCMinutes(), d3.getUTCSeconds() );
-
-  utcYear.value =  d4.getUTCFullYear()
-  utcDate.value =  d4.getUTCDate()
-  utcMonth.value =  d4.getUTCMonth()
-  utcHour.value =  d4.getUTCHours()
-  utcMinute.value =  d4.getUTCMinutes()
-  utcSecond.value =  d4.getUTCSeconds()
-}.bind(this), 1000)
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 </script>
