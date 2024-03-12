@@ -52,17 +52,17 @@ export function stringtoDate(dateString:string) {
   return formattedDate;
 }
 // 时间戳转日期格式
-export function formatDate(value: string | number) {
+export function formatDate(value: string | number, text?: number) {
   let time = value;
   if (String(time).length === 10) {
     time = +time * 1000;
   }
   const date = new Date(time);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  const seconds = date.getSeconds().toString().padStart(2, '0');
+  const year = text ? date.getUTCFullYear : date.getFullYear();
+  const month = text ? (date.getUTCMonth() + 1).toString().padStart(2, '0') : (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = text ? date.getUTCDate().toString().padStart(2, '0') : date.getDate().toString().padStart(2, '0');
+  const hours = text ? date.getUTCHours().toString().padStart(2, '0') : date.getHours().toString().padStart(2, '0');
+  const minutes = text ? date.getUTCMinutes().toString().padStart(2, '0') : date.getMinutes().toString().padStart(2, '0');
+  const seconds = text ? date.getUTCSeconds().toString().padStart(2, '0') : date.getSeconds().toString().padStart(2, '0');
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }

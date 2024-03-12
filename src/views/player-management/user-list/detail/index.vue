@@ -2,23 +2,13 @@
 import { ref, onMounted, computed, onUpdated } from "vue";
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import {
-  getUserDetailTable,
-  getUserDetailApi,
-  getUserDetailDepositWithdrawl,
-  getUserDetailAgent,
-} from "@/api/Players";
 import useStore from "@/store";
 import { useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { ElInput, ElMessage } from "element-plus";
-import dayjs from "dayjs";
 import moment from "moment-timezone";
 
-//import { watch } from "fs";
-
 const route = useRoute();
-const { user } = useStore();
 const { player } = useStore();
 const router = useRouter();
 
@@ -104,13 +94,14 @@ onMounted(async () => {
     id: route.params.id,
   });
 });
+
 onUpdated(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
   await player.dispatchDepositWithrawDetailData({
     user_id: route.params.id,
   });
   await player.dispatchWithdrawalDetailData({
-    user_id: route.params.id,
+    id: route.params.id,
   });
 });
 const inputPhoneTagValue = ref("");
@@ -140,35 +131,14 @@ const inputUserMarkValue = ref("");
 const inputUserMarkVisible = ref(false);
 const inputUserMarkRef = ref<InstanceType<typeof ElInput>>();
 const BankData = ref<any>({
-  user_id: "",
-  payee: "",
-  beneficiary_bank: "",
-  account: "",
-  index: -1,
+  user_id: route.params.id,
+  bank_id: "",
+  email: "",
+  phone: "",
+  bank_number: "",
+  id_number: "",
 });
-const PixData = ref<any>({
-  user_id: "",
-  name: "",
-  mail: "",
-  account: "",
-  index: -1,
-});
-const WalletData = ref<any>({
-  user_id: "",
-  payee: "",
-  beneficiary_bank: "",
-  phone_number: "",
-  pix: "",
-  index: -1,
-});
-const MexData = ref<any>({
-  bank_code: "",
-  withdrawal_method: "",
-  bank_card_number: "",
-  curp_type: "",
-  rfc_curp: "",
-  index: -1,
-});
+
 const showUserMarkInput = () => {
   inputUserMarkVisible.value = true;
   nextTick(() => {
@@ -204,6 +174,7 @@ const copyText = (str: any) => {
   navigator.clipboard.writeText(str);
   ElMessage.success("复制成功");
 };
+
 const inputMailTagValue = ref("");
 const inputMailTagVisible = ref(false);
 const inputMailTagRef = ref<InstanceType<typeof ElInput>>();
@@ -227,65 +198,61 @@ const handleMailInputConfirm = async () => {
   inputMailTagValue.value = "";
 };
 const handleEditBankData = (row: any) => {
-  BankData.value = row.row;
-  BankData.value.index = row.$index;
+  BankData.value = row;
+  if (row.rfc) {
+    BankData.value.id_number = row.rfc;
+    delete BankData.value.rfc;
+  }
+  if (row.cpf) {
+    BankData.value.id_number = row.cpf;
+    delete BankData.value.cpf;
+  }
+  BankData.value.user_id = route.params.id;
 };
 const handleSaveBankData = async () => {
-  BankData.value.user_id = route.params.id;
-  loading.value = true;
   await player.dispatchUpdatebankData(BankData.value);
-  BankData.value.index = -1;
-  loading.value = false;
+  BankData.value.bank_id = "";
+  await player.dispatchWithdrawalDetailData({
+    id: route.params.id,
+  });
 };
 const handleDeleteBanKData = async (row: any) => {
   loading.value = true;
   await player.dispatchDeletebankData({
     user_id: route.params.id,
-    bank_id: row.row.account,
+    bank_id: row.bank_id,
+  });
+  await player.dispatchWithdrawalDetailData({
+    id: route.params.id,
   });
   loading.value = false;
 };
-const handleEditPixData = (row: any) => {
-  PixData.value = row.row;
-  PixData.value.index = row.$index;
-};
-const handleSavePixData = async () => {
-  PixData.value.user_id = route.params.id;
-  loading.value = true;
-  await player.dispatchUpdatePixData(PixData.value);
-  PixData.value.index = -1;
-  loading.value = false;
-};
-const handleEditMexData = (row: any) => {
-  MexData.value = row.row;
-  MexData.value.index = row.$index;
-};
-const handleSaveMexData = async () => {
-  MexData.value.user_id = route.params.id;
-  loading.value = true;
-  await player.dispatchUpdateMexData(MexData.value);
-  MexData.value.index = -1;
-  loading.value = false;
-};
 
-const handleEditWalletData = (row: any) => {
-  WalletData.value = row.row;
-  WalletData.value.index = row.$index;
-};
-const handleSaveWalletData = async () => {
-  WalletData.value.user_id = route.params.id;
-  loading.value = true;
-  await player.dispatchUpdatebankData(WalletData.value);
-  WalletData.value.index = -1;
-  loading.value = false;
-};
 const addblackList = async () => {
-  await player.dispatchAddBlackList({ user_id: route.params.id });
+  if (basicInformation.value.account_prohibit === 1)
+    await player.dispatchAddBlackList({
+      id: route.params.id,
+      account_prohibit: 2,
+    });
+  else
+    await player.dispatchAddBlackList({
+      id: route.params.id,
+      account_prohibit: 1,
+    });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 
 const suspenseWithdraw = async () => {
-  await player.dispatchProhibitWithdrawal({ user_id: route.params.id });
+  if (basicInformation.value.account_withdrawal_prohibit === 1)
+    await player.dispatchProhibitWithdrawal({
+      id: route.params.id,
+      account_withdrawal_prohibit: 2,
+    });
+  else
+    await player.dispatchProhibitWithdrawal({
+      id: route.params.id,
+      account_withdrawal_prohibit: 1,
+    });
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
 };
 </script>
@@ -541,38 +508,46 @@ const suspenseWithdraw = async () => {
               <el-form label-width="200">
                 <el-form-item label="账号状态:">
                   <font color="red">{{
-                    basicInformation.user_status == 1
-                      ? "激活"
-                      : basicInformation.user_status == 2
-                      ? "禁用"
-                      : "删除"
+                    basicInformation.user_status == 0
+                      ? "無效參數"
+                      : basicInformation.user_status == 1
+                      ? "正常用戶"
+                      : "流失用戶"
                   }}</font>
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="提现状态:">
-                {{ basicInformation.withdraw_prohibit == 1 ? "提现正常" : "提现封禁" }}
+                {{
+                  basicInformation.account_withdrawal_prohibit == 1
+                    ? "提现正常"
+                    : "提现封禁"
+                }}
                 <el-button
                   @click="suspenseWithdraw"
                   link
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  {{ basicInformation.withdraw_prohibit == 1 ? " 封禁提现" : "解除封禁" }}
+                  {{
+                    basicInformation.account_withdrawal_prohibit == 1
+                      ? " 封禁提现"
+                      : "解除封禁"
+                  }}
                 </el-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="冻结状态:">
-                {{ basicInformation.account_suspend == 1 ? "正常" : "黑名单" }}
+                {{ basicInformation.account_prohibit == 1 ? "正常" : "黑名单" }}
                 <el-button
                   @click="addblackList"
                   link
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  {{ basicInformation.account_suspend == 1 ? "拉黑" : "解除拉黑" }}
+                  {{ basicInformation.account_prohibit == 1 ? "拉黑" : "解除拉黑" }}
                 </el-button>
               </el-form-item>
             </el-col>
@@ -1034,71 +1009,73 @@ const suspenseWithdraw = async () => {
           </template>
           <div style="width: 90%; margin: auto">
             <el-collapse v-model="subActiveNames">
-              <el-collapse-item title="BANK" name="1">
+              <el-collapse-item title="PIX" name="1">
                 <template #title>
-                  <h3>BANK</h3>
+                  <h3>PIX</h3>
                 </template>
                 <el-table
                   v-loading="loading"
-                  :data="WithdrawalDetailData.bank_list"
+                  :data="WithdrawalDetailData.pix_list"
                   style="width: 100%"
                 >
-                  <el-table-column label="收款人" align="center" prop="payee">
+                  <el-table-column label="收款人" align="center" prop="username">
                     <template #default="scope">
-                      <template v-if="scope.$index !== BankData.index">
-                        <p>{{ scope.row.payee }}</p>
+                      <p>{{ scope.row.username }}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="邮箱" align="center" prop="email">
+                    <template #default="scope">
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.email }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="BankData.payee"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.email" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="收款银行"
-                    align="center"
-                    prop="beneficiary_bank"
-                  >
+                  <el-table-column label="手机号" align="center" prop="phone">
                     <template #default="scope">
-                      <template v-if="scope.$index !== BankData.index">
-                        <p>{{ scope.row.beneficiary_bank }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.phone }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="BankData.beneficiary_bank"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.phone" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="账号" align="center" prop="account">
+                  <el-table-column label="银行卡号" align="center" prop="bank_number">
                     <template #default="scope">
-                      <template v-if="scope.$index !== BankData.index">
-                        <p>{{ scope.row.account }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.bank_number }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="BankData.account"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.bank_number" clearable />
+                      </template>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="CPF" align="center" prop="cpf">
+                    <template #default="scope">
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.cpf }}</p>
+                      </template>
+                      <template v-else>
+                        <el-input v-model="BankData.id_number" clearable />
                       </template>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作" align="center" width="160" fixed="right">
                     <template #default="scope">
-                      <template v-if="scope.$index !== BankData.index">
-                        <el-button type="primary" @click="handleEditBankData(scope)" link
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <el-button
+                          type="primary"
+                          @click="handleEditBankData(scope.row)"
+                          link
                           >修改</el-button
                         >
-                        <el-button type="danger" @click="handleDeleteBanKData(scope)" link
+                        <el-button
+                          type="danger"
+                          @click="handleDeleteBanKData(scope.row)"
+                          link
                           >删除</el-button
                         >
                       </template>
@@ -1111,163 +1088,78 @@ const suspenseWithdraw = async () => {
                   </el-table-column>
                 </el-table>
               </el-collapse-item>
-              <el-collapse-item title="PIX" name="2">
+              <el-collapse-item title="SPEI" name="2">
                 <template #title>
-                  <h3>PIX</h3>
+                  <h3>SPEI</h3>
                 </template>
                 <el-table
                   v-loading="loading"
-                  :data="WithdrawalDetailData.pix_list"
+                  :data="WithdrawalDetailData.spei_list"
                   style="width: 100%"
                 >
-                  <el-table-column label="名称" align="center" prop="name">
+                  <el-table-column label="收款人" align="center" prop="username">
                     <template #default="scope">
-                      <template v-if="scope.$index !== PixData.index">
-                        <p>{{ scope.row.mail }}</p>
+                      <p>{{ scope.row.username }}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="邮箱" align="center" prop="email">
+                    <template #default="scope">
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.email }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="PixData.mail"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.email" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="邮箱" align="center" prop="mail">
+                  <el-table-column label="手机号" align="center" prop="phone">
                     <template #default="scope">
-                      <template v-if="scope.$index !== PixData.index">
-                        <p>{{ scope.row.name }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.phone }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="PixData.name"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.phone" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="手机号" align="center" prop="phone_number">
+                  <el-table-column label="银行卡号" align="center" prop="bank_number">
                     <template #default="scope">
-                      <template v-if="scope.$index !== PixData.index">
-                        <p>{{ scope.row.phone_number }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.bank_number }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="PixData.phone_number"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.bank_number" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="Pix" align="center" prop="pix">
+                  <el-table-column label="RFC" align="center" prop="rfc">
                     <template #default="scope">
-                      <template v-if="scope.$index !== PixData.index">
-                        <p>{{ scope.row.pix }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.rfc }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="PixData.pix"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.id_number" clearable />
                       </template>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作" align="center" width="160" fixed="right">
                     <template #default="scope">
-                      <template v-if="scope.$index !== PixData.index">
-                        <el-button type="primary" @click="handleEditPixData(scope)" link
-                          >修改</el-button
-                        >
-                        <el-button type="danger" link>删除</el-button>
-                      </template>
-                      <template v-else>
-                        <el-button type="primary" @click="handleSavePixData" link
-                          >保存</el-button
-                        >
-                      </template>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-collapse-item>
-              <el-collapse-item title="Electronic Wallet" name="3">
-                <template #title>
-                  <h3>Electronic Wallet</h3>
-                </template>
-                <el-table
-                  v-loading="loading"
-                  :data="WithdrawalDetailData.electronic_wallet"
-                  style="width: 100%"
-                >
-                  <el-table-column label="收款人" align="center" prop="payee">
-                    <template #default="scope">
-                      <template v-if="scope.$index !== WalletData.index">
-                        <p>{{ scope.row.payee }}</p>
-                      </template>
-                      <template v-else>
-                        <el-input
-                          v-model="WalletData.payee"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="收款银行"
-                    align="center"
-                    prop="beneficiary_bank"
-                  >
-                    <template #default="scope">
-                      <template v-if="scope.$index !== WalletData.index">
-                        <p>{{ scope.row.beneficiary_bank }}</p>
-                      </template>
-                      <template v-else>
-                        <el-input
-                          v-model="WalletData.beneficiary_bank"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="账号" align="center" prop="account">
-                    <template #default="scope">
-                      <template v-if="scope.$index !== WalletData.index">
-                        <p>{{ scope.row.account }}</p>
-                      </template>
-                      <template v-else>
-                        <el-input
-                          v-model="WalletData.account"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="操作" align="center" width="160" fixed="right">
-                    <template #default="scope">
-                      <template v-if="scope.$index !== WalletData.index">
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
                         <el-button
                           type="primary"
-                          @click="handleEditWalletData(scope)"
+                          @click="handleEditBankData(scope.row)"
                           link
                           >修改</el-button
                         >
-                        <el-button type="danger" link>删除</el-button>
+                        <el-button
+                          type="danger"
+                          @click="handleDeleteBanKData(scope.row)"
+                          link
+                          >删除</el-button
+                        >
                       </template>
                       <template v-else>
-                        <el-button type="primary" @click="handleSaveWalletData" link
+                        <el-button type="primary" @click="handleSaveBankData" link
                           >保存</el-button
                         >
                       </template>
@@ -1275,108 +1167,68 @@ const suspenseWithdraw = async () => {
                   </el-table-column>
                 </el-table>
               </el-collapse-item>
-              <el-collapse-item title="Mex" name="4">
+              <el-collapse-item title="Paypal" name="3">
                 <template #title>
-                  <h3>Mex</h3>
+                  <h3>Paypal</h3>
                 </template>
                 <el-table
                   v-loading="loading"
-                  :data="WithdrawalDetailData.mex_list"
+                  :data="WithdrawalDetailData.paypal_list"
                   style="width: 100%"
                 >
-                  <el-table-column label="收款人" align="center" prop="payee">
+                  <el-table-column label="收款人" align="center" prop="username">
                     <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <p>{{ scope.row.payee }}</p>
+                      <p>{{ scope.row.username }}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="邮箱" align="center" prop="email">
+                    <template #default="scope">
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.email }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="MexData.payee"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.email" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="银行代码" align="center" prop="bank_code">
+                  <el-table-column label="手机号" align="center" prop="phone">
                     <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <p>{{ scope.row.bank_code }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.phone }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="MexData.bank_code"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.phone" clearable />
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="提款方式"
-                    align="center"
-                    prop="withdrawal_method"
-                  >
+                  <el-table-column label="PayPal账号" align="center" prop="bank_number">
                     <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <p>{{ scope.row.withdrawal_method }}</p>
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <p>{{ scope.row.bank_number }}</p>
                       </template>
                       <template v-else>
-                        <el-input
-                          v-model="MexData.withdrawal_method"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="银行卡号"
-                    align="center"
-                    prop="bank_card_number"
-                  >
-                    <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <p>{{ scope.row.bank_card_number }}</p>
-                      </template>
-                      <template v-else>
-                        <el-input
-                          v-model="MexData.bank_card_number"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="RFC/CURP类型" align="center" prop="curp_type">
-                    <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <p>{{ scope.row.curp_type }}</p>
-                      </template>
-                      <template v-else>
-                        <el-input
-                          v-model="MexData.curp_type"
-                          class="w-40"
-                          size="large"
-                          style="margin-left: 15px"
-                        />
+                        <el-input v-model="BankData.bank_number" clearable />
                       </template>
                     </template>
                   </el-table-column>
                   <el-table-column label="操作" align="center" width="160" fixed="right">
                     <template #default="scope">
-                      <template v-if="scope.$index !== MexData.index">
-                        <el-button type="primary" @click="handleEditMexData(scope)" link
+                      <template v-if="scope.row.bank_id !== BankData.bank_id">
+                        <el-button
+                          type="primary"
+                          @click="handleEditBankData(scope.row)"
+                          link
                           >修改</el-button
                         >
-                        <el-button type="danger" link>删除</el-button>
+                        <el-button
+                          type="danger"
+                          @click="handleDeleteBanKData(scope.row)"
+                          link
+                          >删除</el-button
+                        >
                       </template>
                       <template v-else>
-                        <el-button type="primary" @click="handleSaveMexData" link
+                        <el-button type="primary" @click="handleSaveBankData" link
                           >保存</el-button
                         >
                       </template>

@@ -20,7 +20,8 @@ export const withdrawalStore = defineStore({
       withdrawalReviewNumber: 0,
       manualReduceListData: [] as Array<Withdrawal.GetManualAddListOrder>,
       manualAddListNumber: 0,
-      manualReduceListNumber: 0
+      manualReduceListNumber: 0,
+      fundsprohibitListData: [] as Array<Withdrawal.GetFundsprohibitListOrder>
     }),
     
     getters: {
@@ -34,7 +35,8 @@ export const withdrawalStore = defineStore({
       getWithdrawalReviewNumber: (state) => state.withdrawalReviewNumber,
       getManualReduceListData: (state) => state.manualReduceListData,
       getManualAddListNumber: (state) => state.manualAddListNumber,
-      getManualReduceListNumber: (state) => state.manualReduceListNumber
+      getManualReduceListNumber: (state) => state.manualReduceListNumber,
+      getFundsprohibitListData: (state) => state.fundsprohibitListData
     },
   
     actions: {
@@ -68,6 +70,9 @@ export const withdrawalStore = defineStore({
       },
       setManualReduceListNumber(value: number) {
         this.manualReduceListNumber = value;
+      },
+      setFundsprohibitListData(data: Array<Withdrawal.GetFundsprohibitListOrder>) {
+        this.fundsprohibitListData = data;
       },
 
       async dispatchDepositList(formData:any) {
@@ -208,6 +213,40 @@ export const withdrawalStore = defineStore({
       async dispatchManualReduceCreate(form_data: Withdrawal.ManualAddCreateForm) {
         this.setSuccess(false);
         const route: string = NETWORKCFG.WITHDRAWAL.MANUAL_REDUCE_CREATE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.PostRequestResponse) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                ElMessage.success('新增成功');
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+         * 提现封禁列表
+         * Withdrawal ban list
+         */
+      async dispatchFundsprohibitList(form_data: Withdrawal.FundsprohibitListForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.FUNDSPROHIBIT_LIST;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.GetFundsprohibitListReview) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                this.setFundsprohibitListData(response.data.user_list);
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
+      /**
+       * 提现封禁新增
+       * Withdrawal ban added
+       */
+      async dispatchFundsprohibitCreate(form_data: Withdrawal.FundsprohibitCreateForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.FUNDSPROHIBIT_CREATE;
         const network: Network = Network.getInstance();
         // response call back function
         const next = (response: Withdrawal.PostRequestResponse) => {
