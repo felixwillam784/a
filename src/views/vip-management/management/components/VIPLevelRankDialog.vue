@@ -40,7 +40,7 @@ const ok_btn_clicked = () => {
 
   let param_data: Array<VIP.GetVIPRanksData> = [];
   for (let i = 0; i < vip_ranks.value.length; i++) {
-    param_data.push({ id: i + 1, name: vip_ranks.value[i] });
+    param_data.push({ id: i, name: vip_ranks.value[i] });
   }
   vip.setVIPRanks(param_data);
   vip.dispatchUpdateVIPRanks();
