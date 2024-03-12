@@ -190,6 +190,7 @@ const rejectDialogShow = (row: any) => {
 };
 
 const closeRejectDialog = () => {
+  rejectItemRemark.value = "";
   rejectDialogVisible.value = false;
 };
 
@@ -616,7 +617,6 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
-                    scope.row.operator_id == 1 &&
                     scope.row.lock == true
                   "
                   @click="passDialogShow(scope.row)"
@@ -628,7 +628,6 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
-                    scope.row.operator_id == 1 &&
                     scope.row.lock == true
                   "
                   @click="rejectDialogShow(scope.row)"
@@ -640,7 +639,6 @@ const lock = () => {};
                   v-if="
                     scope.row.order_status !== 1 &&
                     scope.row.order_status == 0 &&
-                    scope.row.operator_id == 1 &&
                     scope.row.lock == true
                   "
                   @click="lock()"
@@ -831,7 +829,6 @@ const lock = () => {};
         <div class="dialog-footer"
              v-if="withdrawalReviewItem?.order_status !== 1 &&
              withdrawalReviewItem?.order_status == 0 &&
-             withdrawalReviewItem?.operator_id == 1 &&
              withdrawalReviewItem?.lock == true">
           <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
           <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
