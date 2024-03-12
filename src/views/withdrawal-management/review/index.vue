@@ -386,7 +386,7 @@ const lock = () => {};
                 <div>
                   <el-form-item label="平台订单号" prop="order_id">
                     <el-input
-                      v-model="formData.order_id"
+                      v-model="formData.platform_order_number"
                       placeholder="请输入平台订单号"
                     />
                   </el-form-item>
