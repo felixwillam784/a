@@ -43,6 +43,7 @@ export const authStore = defineStore({
     setUserInfo(userInfo: Auth.SigninResponseData) {
       //this.userInfo = userInfo;
       this.userInfo.id = userInfo.id;
+      sessionStorage.setItem("id", String(userInfo.id));
       this.userInfo.name = userInfo.name;
       this.userInfo.role_id = userInfo.role_id;
       this.userInfo.token = userInfo.token;
