@@ -129,3 +129,37 @@ export interface ManualAddCreateForm {
   bet_rate: string
   notes: string
 }
+
+export interface FundsprohibitListForm {
+  user_id?: string
+  id_number?: string
+  page_num: number
+  page_size: number
+}
+
+export type GetFundsprohibitListReview = {
+  code: number | string
+  data: {
+    total_page: number,
+    user_list:Array<GetFundsprohibitListOrder>
+  }
+  message: string
+}
+
+export interface GetFundsprohibitListOrder {
+  prohibit_id: string
+  id: string
+  user_id: string
+  id_number: string
+  origin: string
+  notes: string
+  operator_name: string
+  created_at: number | string
+}
+
+export interface FundsprohibitCreateForm {
+  user_id: string
+  id_number: string
+  origin: string
+  notes: string
+}
