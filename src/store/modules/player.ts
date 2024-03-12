@@ -2,9 +2,6 @@ import { defineStore } from 'pinia'
 import { NETWORKCFG } from '@/net/NetworkCfg';
 import { Network } from "@/net/Network";
 import type * as Player from "@/interface/player";
-import { stringify } from 'querystring';
-import { number } from 'echarts';
-import { stat } from 'fs';
 
 export const playerStore = defineStore({
     id: 'player',
@@ -77,14 +74,22 @@ export const playerStore = defineStore({
         const route: string = NETWORKCFG.PLAYER.USERLIST;
         const network: Network = Network.getInstance();
         // response call back function
+        const ref: any = {};
+        Object.assign(ref, formData);
+        if (ref.user_type === '') {
+          ref.user_type = 0;
+        }
+        if (ref.vip_level === '') {
+          ref.vip_level = -1;
+        }
         const next = (response: Player.GetUserDataResponse) => {
           if (response.code == "00") {
             this.setSuccess(true);
-            this.setUserList(response.data.data_list);
-            this.setTotalNumber(response.data.total_count);
+            this.setUserList(response.data.list);
+            this.setTotalNumber(response.data.total);
           }
         }
-        await network.sendMsg(route, {params:formData}, next, 1, 4);
+        await network.sendMsg(route, {params: ref}, next, 1, 4);
       },
       async dispatchAddBlackList(formData:any) {
         this.setSuccess(false);

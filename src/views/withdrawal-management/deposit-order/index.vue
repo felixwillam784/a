@@ -26,8 +26,8 @@ const formData = ref<any>({
   order_status: "",
   submission_start: 0,
   submission_end: 0,
-  order_update_start: "",
-  order_update_end: "",
+  order_update_start: 0,
+  order_update_end: 0,
   page_num: 1,
   page_size: 20,
 });
@@ -115,23 +115,35 @@ const resetQuery = async () => {
   }
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
-  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
-  if (order_update.value[0] && order_update.value[0]) {
-    formData.value.order_update_start = new Date(order_update.value[0]).getTime() / 1000;
-    formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
+  if (submission_time.value) {
+    formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
+    formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  } else {
+    formData.value.submission_start = 0;
+    formData.value.submission_end = 0;
   }
+  order_update.value[0] = 0;
+  order_update.value[1] = 0;
   await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;
 };
 
 const handleQuery = async () => {
   loading.value = true;
-  formData.value.submission_start = new Date(submission_time.value[0]).getTime() / 1000;
-  formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  if (submission_time.value) {
+    formData.value.submission_start =
+      new Date(submission_time?.value[0]).getTime() / 1000;
+    formData.value.submission_end = new Date(submission_time.value[1]).getTime() / 1000;
+  } else {
+    formData.value.submission_start = 0;
+    formData.value.submission_end = 0;
+  }
   if (order_update.value[0] && order_update.value[0]) {
     formData.value.order_update_start = new Date(order_update.value[0]).getTime() / 1000;
     formData.value.order_update_end = new Date(order_update.value[1]).getTime() / 1000;
+  } else {
+    formData.value.order_update_start = 0;
+    formData.value.order_update_end = 0;
   }
   await withdrawal.dispatchDepositList(formData.value);
   loading.value = false;

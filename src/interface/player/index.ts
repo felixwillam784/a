@@ -1,24 +1,43 @@
 export interface GetUserData{
-    nickname:	string
-    uid:	string
     id:	string
+    uid:	string
+    nickname:	string
+    created_at:	number
     user_type:	number
     vip_level:	number
     user_status:	number
     account_withdrawal_prohibit: number
-    idnumber_withdrawal_prohibit: number
+    account_suspend: number
+    account_prohibit: number
     mark:	string
-    created_at:	number
+}
+export interface GetUserDataReq{
+    uid:	string
+    nickname:	string
+    user_type:	number
+    invitation_code:	string
+    tags: string
+    vip_level:	number
+    phone:	string
+    cpf:	number
+    account_number: string
+    create_start: number
+    create_end: number
+    page_num:	number
+    page_size: number
 }
 
 export type GetUserDataResponse = {
     code: number | string
-    data: {total_count:number, data_list:Array<GetUserData>}
+    data: {
+        total:number, 
+        list:Array<GetUserData>
+    }
     message:string
 }
 
 export interface GetBaseDetailData{
-    id: number
+    id: string
     uid: string
     nickname: string
     created_at: number
@@ -32,9 +51,9 @@ export interface GetBaseDetailData{
     user_type: number
     mark: string
     user_status: number
-    withdraw_prohibit: number
-    idnumber_withdrawal_prohibit: number
+    account_withdrawal_prohibit: number
     account_suspend: number
+    account_prohibit: number
     notes: string
 }
 
@@ -71,38 +90,35 @@ export interface DepositWithrawDetailData {
     deduction_amount: string,
     bet_count: string,   
 }
-export interface BankData {
-    payee: string
-    beneficiary_bank: string
-    account: string
+export interface PaypalData {
+    bank_id: string
+    username: string
+    email: string
+    phone: string
+    bank_number: string
 }
 
 export interface PixData {
-    name: string
-    mail: string
-    phone_number: string
-    pix: string
+    bank_id: string
+    username: string
+    email: string
+    phone: string
+    bank_number: string
+    cpf: string
 }
 
-export interface ElectronicWallet {
-    payee: string
-    beneficiary_bank: string
-    account: string
-}
-
-export interface MexData {
-    payee: string
-    bank_code: string,
-    withdrawal_method: string
-    bank_card_number: string
-    curp_type: string
-    rfc_curp: string
+export interface SPEIData {
+    bank_id: string
+    username: string,
+    email: string
+    phone: string
+    bank_number: string
+    rfc: string
 }
 export interface WithdrawalDetailData {
-    bank_list: Array<BankData>
+    paypal_list: Array<PaypalData>
     pix_list: Array<PixData>
-    electronic_wallet: Array<ElectronicWallet>
-    mex_list: Array<MexData>
+    spei_list: Array<SPEIData>
 }
 export type GetDepositWithrawDetailDataResponse = {
     code: number | string

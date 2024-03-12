@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import { Search, Refresh } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 
@@ -11,10 +11,29 @@ import type * as Player from "@/interface/player";
 
 const router = useRouter();
 const { player } = useStore();
+//ref
+const loading = ref<boolean>(false);
 
+const formData = reactive<any>({
+  uid: "",
+  nickname: "",
+  user_type: "",
+  invitation_code: "",
+  tags: "",
+  vip_level: "",
+  phone: "",
+  cpf: "",
+  account_number: "",
+  create_start: "",
+  create_end: "",
+  page_num: 1,
+  page_size: 20,
+});
+//computed
 const userList = computed(() => {
   return player.getUserList;
 });
+
 const UserTypeOptions = [
   {
     label: "普通玩家",
@@ -33,75 +52,48 @@ const UserTypeOptions = [
     value: 4,
   },
 ];
-const formData = ref<any>({
-  uid: "",
-  nickname: "",
-  user_type: "",
-  invitation_code: "",
-  tags: "",
-  vip_level: "",
-  phone: "",
-  cpf: "",
-  account_number: "",
-  page_num: 1,
-  page_size: 10,
-});
-
-const loading = ref<boolean>(false);
-
-onMounted(async () => {
-  formData.value.page_num = 1;
-  formData.value.page_size = 20;
-  loading.value = true;
-  await player.dispatchGetUserList(formData.value);
-  loading.value = false;
-});
 
 const handleQuery = async () => {
   loading.value = true;
   formData.page_num = 1;
   formData.page_size = 20;
-  await player.dispatchGetUserList(formData.value);
+  await player.dispatchGetUserList(formData);
   loading.value = false;
 };
 
 const resetQuery = async () => {
-  for (let property in formData.value) {
-    if (formData.value.hasOwnProperty(property)) {
-      formData.value[property] = "";
+  loading.value = true;
+  for (let property in formData) {
+    if (formData.hasOwnProperty(property)) {
+      formData[property] = "";
     }
   }
-  loading.value = true;
-  formData.value.page_num = 1;
-  formData.value.page_size = 20;
-  await player.dispatchGetUserList(formData.value);
+  formData.page_num = 1;
+  formData.page_size = 20;
+  await player.dispatchGetUserList(formData);
   loading.value = false;
 };
 
 const prohibitWithdrawal = async (id: number, account_withdrawal_prohibit: number) => {
   if (account_withdrawal_prohibit === 1)
     await player.dispatchProhibitWithdrawal({
-      user_id: id,
+      id: id,
       account_withdrawal_prohibit: 2,
     });
   else
     await player.dispatchProhibitWithdrawal({
-      user_id: id,
+      id: id,
       account_withdrawal_prohibit: 1,
     });
 
-  formData.value.page_num = 1;
-  formData.value.page_size = 20;
-  await player.dispatchGetUserList(formData.value);
+  await player.dispatchGetUserList(formData);
 };
 
 const addBlackList = async (id: number, account_prohibit: number) => {
   if (account_prohibit === 1)
-    await player.dispatchAddBlackList({ user_id: id, account_prohibit: 2 });
-  else await player.dispatchAddBlackList({ user_id: id, account_prohibit: 1 });
-  formData.value.page_num = 1;
-  formData.value.page_size = 20;
-  await player.dispatchGetUserList(formData.value);
+    await player.dispatchAddBlackList({ id, account_prohibit: 2 });
+  else await player.dispatchAddBlackList({ id: id, account_prohibit: 1 });
+  await player.dispatchGetUserList(formData);
 };
 
 const goCustomerDetailPage = (id: string) => {
@@ -109,12 +101,18 @@ const goCustomerDetailPage = (id: string) => {
 };
 
 const handleSizeChange = async ({ page, limit }: any) => {
-  formData.value.page_num = page;
-  formData.value.page_size = limit;
+  formData.page_num = page;
+  formData.page_size = limit;
   loading.value = true;
-  await player.dispatchGetUserList(formData.value);
+  await player.dispatchGetUserList(formData);
   loading.value = false;
 };
+
+onMounted(async () => {
+  loading.value = true;
+  await player.dispatchGetUserList(formData);
+  loading.value = false;
+});
 </script>
 <template>
   <div class="app-container">
@@ -239,10 +237,10 @@ const handleSizeChange = async ({ page, limit }: any) => {
             <el-table-column label="账号状态" align="center" prop="user_status">
               <template #default="scope">
                 {{
-                  scope.row.user_status == 1
+                  scope.row.account_prohibit == 1
                     ? "激活"
-                    : scope.row.user_status == 2
-                    ? " 禁用"
+                    : scope.row.account_prohibit == 2
+                    ? "禁用"
                     : "删除"
                 }}
               </template>
@@ -309,10 +307,10 @@ const handleSizeChange = async ({ page, limit }: any) => {
                   }}</el-button
                 >
                 <el-button
-                  :type="scope.row.user_status == 1 ? 'danger' : 'success'"
+                  :type="scope.row.account_prohibit == 1 ? 'danger' : 'success'"
                   link
-                  @click="addBlackList(scope.row.id, scope.row.user_status)"
-                  >{{ scope.row.user_status == 1 ? "拉黑" : "解除拉黑" }}</el-button
+                  @click="addBlackList(scope.row.id, scope.row.account_prohibit)"
+                  >{{ scope.row.account_prohibit == 1 ? "拉黑" : "解除拉黑" }}</el-button
                 >
               </template>
             </el-table-column>
@@ -320,8 +318,8 @@ const handleSizeChange = async ({ page, limit }: any) => {
           <div style="float: right">
             <pagination
               v-model:total="player.getTotalNumber"
-              v-model:page="formData.pageNum"
-              v-model:limit="formData.pageSize"
+              v-model:page="formData.page_num"
+              v-model:limit="formData.page_size"
               @pagination="handleSizeChange"
             />
           </div>
