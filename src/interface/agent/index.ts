@@ -1,3 +1,4 @@
+import { number } from 'echarts';
 export interface AgentListReqParameter {
   user_id: string,
   email_address: string,
@@ -16,21 +17,21 @@ export interface AgentListReqParameter {
   page_size: 20,
 }
 export interface AgentListData {
-    user_id: string
-    total_recharge_amount: string
-    total_withdrawal_amount: string
-    total_invite_count: number
-    level1_charge_withdraw_difference: string
-    level1_payment_amount: string
-    level1_withdrawal_amount: string
-    agent_betting_rebate_amount: string
-    level1_paid_user_count: number
-    risk_control_agent_count: number
-    average_agent_recharge: number
-    agent_achievement_rewards: string
-    agent_invitation_rewards: string
-    agent_status: number
-    account_risk_countrol_status: number
+    id: number
+    total_deposit: number
+    total_withdraw: number
+    total_invited_friends: number
+    one_gold: number
+    one_pay_num: number
+    one_diamond: number
+    bet_reward: number
+    one_pay_role: number
+    risk_invite_role: number
+    invite_average_deposit: number
+    invite_achieve_award: number
+    invite_award: number
+    invite_status: number
+    risk_level: number
 }
 
 export interface AgentDetailData {
@@ -260,8 +261,8 @@ export type GetAgentRebateStatisticsResponse = {
 export type GetAgentListDataResponse = {
     code: number | string
     data: {
-        data_list: Array<AgentListData>
-        total_count: number
+        invite_list: Array<AgentListData>
+        total: number
     }
     message: string
 }

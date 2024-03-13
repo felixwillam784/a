@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { NETWORKCFG } from '@/net/NetworkCfg';
 import { Network } from "@/net/Network";
 import type * as Agent from "@/interface/agent";
+import { object } from 'vue-types';
 
 export const agentStore = defineStore({
   id: 'agent',
@@ -93,33 +94,35 @@ export const agentStore = defineStore({
       this.agentAchievementStageStatisticList = agentAchievementStageStatisticList
     },
     // get agent list data
-    async dispatchAgentList(formData: Agent.AgentListReqParameter) {
+    async dispatchAgentList(formData: any) {
       this.setSuccess(false);
       const route: string = NETWORKCFG.AGENT.AGENT_LIST;
       const network: Network = Network.getInstance();
       // response call back function
+      const ref: any = {};
+      Object.assign(ref, formData);
+      if (!ref.id)
+        ref.id = 0;
+      if (!ref.total_invited_friends_op)
+        ref.total_invited_friends_op = 0;
+      if (!ref.one_pay_role_op)
+        ref.one_pay_role_op = 0;
+      if (!ref.bet_reward_op)
+        ref.bet_reward_op = 0;
+      if (!ref.bet_reward)
+      ref.bet_reward = 0;
+      if (!ref.one_pay_role)
+      ref.one_pay_role = 0;
+      if (!ref.total_invited_friends)
+      ref.total_invited_friends = 0;
       const next = (response: Agent.GetAgentListDataResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setAgentList(response.data.data_list);
-          this.setAgentTotalNumber(response.data.total_count);
+          this.setAgentList(response.data.invite_list);
+          this.setAgentTotalNumber(response.data.total);
         }
       }
-      await network.sendMsg(route, {params: formData}, next, 1, 4);
-    },
-    async dispatchOnLoad(formData: Agent.AgentListReqParameter) {
-      this.setSuccess(false);
-      const route: string = NETWORKCFG.AGENT.AGENT_LIST;
-      const network: Network = Network.getInstance();
-      // response call back function
-      const next = (response: Agent.GetAgentListDataResponse) => {
-        if (response.code == "00") {
-          this.setSuccess(true);
-          this.setAgentList(this.agentList.concat(response.data.data_list));
-          this.setAgentTotalNumber(response.data.total_count);
-        }
-      }
-      await network.sendMsg(route, {params: formData}, next, 1, 4);
+      await network.sendMsg(route, ref, next, 1);
     },
     // terminate agent
     async dispatchTerminateAgent(formData: any) {

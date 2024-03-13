@@ -17,26 +17,25 @@ const dateRange = ref([
 const selectedAgentId = ref<string>("");
 const remark = ref<string>("");
 
-const formData = ref<AgentListReqParameter>({
-  user_id: "",
-  email_address: "",
-  identity_information: "",
-  agent_status: "",
-  risk_control_status: "",
-  total_invite_count: "",
-  total_invite_count_operator_type: 1,
-  level1_paid_user_count: "",
-  level1_paid_user_count_operator_type: 1,
-  agent_betting_rebate_amount: 0,
-  agent_betting_rebate_amount_operator_type: 1,
-  start_date: "",
-  end_date: "",
-  page_num: 1,
+const formData = ref<any>({
+  id: "",
+  email: "",
+  id_number: "",
+  invite_status: 0,
+  invite_risk_status: 0,
+  total_invited_friends: "",
+  total_invited_friends_op: "",
+  one_pay_role: "",
+  one_pay_role_op: "",
+  bet_reward: "",
+  bet_reward_op: "",
+  start_time: 0,
+  end_time: 0,
+  start: 0,
   page_size: 20,
+  page_num: 1,
 });
 const loading = ref<boolean>(false);
-
-const disabled = ref(false);
 
 const agentStatusOptions = [
   {
@@ -72,23 +71,23 @@ const agencyTerminateDialogVisible = ref<boolean>(false);
 const comparatorOptions = ref<Array<any>>([
   {
     label: "≥",
-    value: 1,
+    value: "1",
   },
   {
     label: "＞",
-    value: 2,
+    value: "3",
   },
   {
     label: "≤",
-    value: 3,
+    value: "2",
   },
   {
     label: "＜",
-    value: 4,
+    value: "4",
   },
   {
     label: "＝",
-    value: 5,
+    value: "5",
   },
 ]);
 
@@ -100,7 +99,7 @@ const total_count = computed(() => {
 });
 const buttonIndex = ref<number>(1);
 
-const handleDateRange = (date: string) => {
+const handleDateRange = async (date: string) => {
   switch (date) {
     case "before yesterday":
       dateRange.value[0] = moment().subtract(2, "day").format("YYYY-MM-DD");
@@ -201,14 +200,25 @@ const handleDateRange = (date: string) => {
       dateRange.value[1] = moment(date2).subtract(-1, "day").format("YYYY-MM-DD");
       break;
   }
-};
-
-const handlePagination = () => {
-  handleQuery();
+  if (dateRange.value) {
+    formData.value.start_time = moment(dateRange.value[0]).valueOf() / 1000;
+    formData.value.end_time = moment(dateRange.value[1]).valueOf() / 1000;
+  }
+  loading.value = true;
+  await agent.dispatchAgentList(formData.value);
+  loading.value = false;
 };
 
 const handleQuery = async () => {
   console.log(typeof formData.value.user_id);
+  loading.value = true;
+  await agent.dispatchAgentList(formData.value);
+  loading.value = false;
+};
+
+const handleSizeChange = async ({ page, limit }: any) => {
+  formData.value.page_num = page;
+  formData.value.page_size = limit;
   loading.value = true;
   await agent.dispatchAgentList(formData.value);
   loading.value = false;
@@ -235,21 +245,9 @@ const terminateAgent = async () => {
   loading.value = false;
   remark.value = "";
 };
-const load = async () => {
-  if (disabled.value) return;
-  if (formData.value.page_num < total_count.value) {
-    loading.value = true;
-    formData.value.page_num++;
-    await agent.dispatchOnLoad(formData.value);
-    loading.value = false;
-  }
-};
+
 onMounted(async () => {
   handleDateRange("this week");
-
-  loading.value = true;
-  await agent.dispatchAgentList(formData.value);
-  loading.value = false;
 });
 </script>
 
@@ -268,7 +266,7 @@ onMounted(async () => {
               >
                 <el-form-item label="User ID" prop="user_id">
                   <el-input
-                    v-model="formData.user_id"
+                    v-model="formData.id"
                     placeholder="请输入User ID"
                     style="width: 252px"
                     type="text"
@@ -276,14 +274,14 @@ onMounted(async () => {
                 </el-form-item>
                 <el-form-item label="邮箱账号" prop="email_address">
                   <el-input
-                    v-model="formData.email_address"
+                    v-model="formData.email"
                     placeholder="请输入邮箱账号"
                     style="width: 252px"
                   />
                 </el-form-item>
                 <el-form-item label="身份信息" prop="identity_information">
                   <el-input
-                    v-model="formData.identity_information"
+                    v-model="formData.id_number"
                     placeholder="请输入身份信息号"
                     style="width: 252px"
                   />
@@ -295,9 +293,9 @@ onMounted(async () => {
                 label-width="100"
                 label-position="left"
               >
-                <el-form-item label="代理状态" prop="agent_status">
+                <el-form-item label="代理状态" prop="invite_status">
                   <el-select
-                    v-model="formData.agent_status"
+                    v-model="formData.invite_status"
                     placeholder="请选择代理状态"
                     style="min-width: 252px"
                   >
@@ -309,9 +307,9 @@ onMounted(async () => {
                     />
                   </el-select>
                 </el-form-item>
-                <el-form-item label="风控状态" prop="risk_control_status">
+                <el-form-item label="风控状态" prop="invite_risk_status">
                   <el-select
-                    v-model="formData.risk_control_status"
+                    v-model="formData.invite_risk_status"
                     placeholder="请选择风控状态"
                     style="width: 252px"
                   >
@@ -323,16 +321,17 @@ onMounted(async () => {
                     />
                   </el-select>
                 </el-form-item>
-                <el-form-item label="总邀请人数" prop="total_invite_count">
+                <el-form-item label="总邀请人数" prop="total_invited_friends">
                   <el-input
-                    v-model="formData.total_invite_count"
+                    v-model="formData.total_invited_friends"
                     placeholder="请输入总邀请人数"
                     class="input-with-select"
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.total_invite_count_operator_type"
+                        v-model="formData.total_invited_friends_op"
                         style="width: 60px"
+                        placeholder=" "
                       >
                         <el-option
                           v-for="item in comparatorOptions"
@@ -360,14 +359,15 @@ onMounted(async () => {
               >
                 <el-form-item label="一级付费人数" prop="level1_paid_user_count">
                   <el-input
-                    v-model="formData.level1_paid_user_count"
+                    v-model="formData.one_pay_role"
                     placeholder="亲输入人数"
                     class="input-with-select"
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.level1_paid_user_count_operator_type"
+                        v-model="formData.one_pay_role_op"
                         style="width: 60px"
+                        placeholder=" "
                       >
                         <el-option
                           v-for="item in comparatorOptions"
@@ -382,13 +382,14 @@ onMounted(async () => {
                 </el-form-item>
                 <el-form-item label="投注返佣金额" prop="agent_betting_rebate_amount">
                   <el-input
-                    v-model="formData.agent_betting_rebate_amount"
+                    v-model="formData.bet_reward"
                     placeholder="请输入金额"
                     class="input-with-select"
                   >
                     <template #prepend>
                       <el-select
-                        v-model="formData.agent_betting_rebate_amount_operator_type"
+                        placeholder=" "
+                        v-model="formData.bet_reward_op"
                         style="width: 60px"
                       >
                         <el-option
@@ -490,147 +491,135 @@ onMounted(async () => {
         </el-card>
         <el-card style="margin-top: 20px">
           <el-table
-            v-el-table-infinite-scroll="load"
-            :infinite-scroll-disabled="disabled"
             v-loading="loading"
+            v-horizontal-scroll
             :data="agentList"
             style="width: 100%"
           >
             <el-table-column label="UserID" align="center" prop="user_id" width="160">
               <template #default="scope">
                 <el-link :underline="false" class="el-link-decoration">
-                  {{ scope.row.user_id }}
+                  {{ scope.row.id }}
                 </el-link>
               </template>
             </el-table-column>
             <el-table-column
               label="总充值金额"
               align="center"
-              prop="total_recharge_amount"
+              prop="total_deposit"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.total_recharge_amount }}</p>
+                <p>{{ scope.row.total_deposit }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总提现金额"
               align="center"
-              prop="total_withdrawal_amount"
+              prop="total_withdraw"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.total_withdrawal_amount }}</p>
+                <p>{{ scope.row.total_withdraw }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="总邀请人数"
               align="center"
-              prop="total_invite_count"
+              prop="total_invited_friends"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.total_invite_count }}</p>
+                <p>{{ scope.row.total_invited_friends }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级充提差"
               align="center"
-              prop="level1_charge_withdraw_difference"
+              prop="one_gold"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.level1_charge_withdraw_difference }}</p>
+                <p>{{ scope.row.one_gold }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费金额"
               align="center"
-              prop="level1_payment_amount"
+              prop="one_pay_num"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.level1_payment_amount }}</p>
+                <p>{{ scope.row.one_pay_num }}</p>
               </template>
             </el-table-column>
             <el-table-column
-              label="总邀请人数"
+              label="投注返佣金额"
               align="center"
-              prop="level1_withdrawal_amount"
+              prop="one_diamond"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.level1_withdrawal_amount }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="总邀请人数-操作符类型"
-              align="center"
-              prop="agent_betting_rebate_amount"
-              width="160"
-              sortable
-            >
-              <template #default="scope">
-                <p>{{ scope.row.agent_betting_rebate_amount }}</p>
+                <p>{{ scope.row.one_diamond }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="一级付费人数"
               align="center"
-              prop="level1_paid_user_count"
+              prop="one_pay_role"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.level1_paid_user_count }}</p>
+                <p>{{ scope.row.one_pay_role }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="风控代理人数"
               align="center"
-              prop="risk_control_agent_count"
+              prop="risk_invite_role"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.risk_control_agent_count }}</p>
+                <p>{{ scope.row.risk_invite_role }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="代理平均充值"
               align="center"
-              prop="average_agent_recharge"
+              prop="invite_average_deposit"
               width="160"
               sortable
             >
               <template #default="scope">
-                <p>{{ scope.row.average_agent_recharge }}</p>
+                <p>{{ scope.row.invite_average_deposit }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="代理成就奖励"
               align="center"
-              prop="agent_achievement_rewards"
+              prop="invite_achieve_award"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_achievement_rewards }}</p>
+                <p>{{ scope.row.invite_achieve_award }}</p>
               </template>
             </el-table-column>
             <el-table-column
               label="代理邀请奖励"
               align="center"
-              prop="agent_invitation_rewards"
+              prop="invite_award"
               width="160"
             >
               <template #default="scope">
-                <p>{{ scope.row.agent_invitation_rewards }}%</p>
+                <p>{{ scope.row.invite_award }}%</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -643,7 +632,7 @@ onMounted(async () => {
                 <p>
                   {{
                     agentStatusOptions.find(
-                      (item) => item.value === scope.row.agent_status
+                      (item) => item.value === scope.row.invite_status
                     )?.label
                   }}
                 </p>
@@ -658,9 +647,8 @@ onMounted(async () => {
               <template #default="scope">
                 <p>
                   {{
-                    riskControlStatus.find(
-                      (item) => item.value === scope.row.risk_control_agent_count
-                    )?.label
+                    riskControlStatus.find((item) => item.value === scope.row.risk_level)
+                      ?.label
                   }}
                 </p>
               </template>
@@ -689,6 +677,14 @@ onMounted(async () => {
               </template>
             </el-table-column>
           </el-table>
+          <div style="float: right">
+            <pagination
+              v-model:total="agent.getAentTotalNumber"
+              v-model:page="formData.page_num"
+              v-model:limit="formData.page_size"
+              @pagination="handleSizeChange"
+            />
+          </div>
         </el-card>
       </el-col>
     </el-row>
