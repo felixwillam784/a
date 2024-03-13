@@ -334,10 +334,10 @@ const lock = () => {};
           <el-row style="align-items: center">
             <el-col>
               <el-form :model="formData" :inline="true" label-width="100">
-                <el-form-item label="用户账号" prop="user_account">
+                <el-form-item label="用户ID" prop="id">
                   <el-input
-                    v-model="formData.user_account"
-                    placeholder="请输入用户账号"
+                    v-model="formData.id"
+                    placeholder="请输入用户ID"
                   />
                 </el-form-item>
               </el-form>
@@ -416,7 +416,7 @@ const lock = () => {};
             style="width: 100%;"
             v-horizontal-scroll
           >
-            <el-table-column label="用户账号" align="center" prop="user_id" width="160">
+            <el-table-column label="用户ID" align="center" prop="id" width="160">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -425,7 +425,7 @@ const lock = () => {};
                     router.push({ name: 'UserDetail', params: { id: scope.row.id } })
                   "
                 >
-                  {{ scope.row.user_id }}
+                  {{ scope.row.id }}
                 </el-link>
               </template>
             </el-table-column>
@@ -730,7 +730,7 @@ const lock = () => {};
       @close="closeDialog"
     >
       <el-row>
-        <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
+        <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>{{ withdrawalReviewItem?.user_id }}</p>
         </el-col>
