@@ -4,6 +4,9 @@
  * @param {string} cls
  * @returns {boolean}
  */
+import * as moment from 'moment';
+import 'moment-timezone';
+
 export function hasClass(ele: HTMLElement, cls: string) {
   return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
 }
@@ -65,4 +68,15 @@ export function formatDate(value: string | number, text?: number) {
   const minutes = text ? date.getUTCMinutes().toString().padStart(2, '0') : date.getMinutes().toString().padStart(2, '0');
   const seconds = text ? date.getUTCSeconds().toString().padStart(2, '0') : date.getSeconds().toString().padStart(2, '0');
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+
+export function formatTimestampWithTimezone(timestamp: string | number, timezoneOffset = 0): string {
+  if (String(timestamp).length === 10) {
+      timestamp = +timestamp * 1000;
+  }
+
+  // 使用Moment.js来处理日期和时区
+  const formattedDate = moment(timestamp).utcOffset(timezoneOffset).format('YYYY-MM-DD HH:mm:ss');
+  return formattedDate;
 }
