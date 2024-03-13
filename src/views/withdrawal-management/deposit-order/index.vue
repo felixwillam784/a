@@ -206,8 +206,8 @@ const copyText = (str: any) => {
             <!-- <el-form-item label="用户昵称" prop="nick_name">
                             <el-input v-model="formData.nick_name" placeholder="请输入用户昵称" />
                         </el-form-item> -->
-            <el-form-item label="用户账号" prop="user_id">
-              <el-input v-model="formData.id" placeholder="请输入用户账号" />
+            <el-form-item label="用户ID" prop="user_id">
+              <el-input v-model="formData.id" placeholder="请输入用户ID" />
             </el-form-item>
             <!-- <el-form-item label="用户ID" prop="user_id">
                             <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
@@ -304,7 +304,7 @@ const copyText = (str: any) => {
             v-horizontal-scroll
           >
             <el-table-column
-              label="用户账号"
+              label="用户ID"
               align="center"
               prop="user_account"
               width="160"
@@ -542,9 +542,9 @@ const copyText = (str: any) => {
                 </el-col>
             </el-row> -->
       <el-row>
-        <el-col :span="6" class="detail-item-left-bg">用户账号:</el-col>
+        <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ depositOrderItem.user_account }}</p>
+          <p>{{ depositOrderItem.user_id }}</p>
         </el-col>
       </el-row>
       <!-- <el-row>
