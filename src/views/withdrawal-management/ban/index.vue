@@ -23,11 +23,10 @@ interface GetBan {
 const router = useRouter();
 
 const formData = ref<any>({
-    user_account: "",
-    nick_name: "",
-    withdrawal_account: "",
-    pageNum: 1,
-    pageSize: 20,
+    // id: "",
+    // id_number: "",
+    page_num: 1,
+    page_size: 20,
 })
 
 const loading = ref<boolean>(false);
@@ -64,11 +63,11 @@ const fundsprohibitList = computed(() => {
 
 // 查询
 const handleQuery = async () => {
-    const params = {
-        page_num: 1,
-        page_size: 20
-    }
-    await withdrawal.dispatchFundsprohibitList(params);
+    // const params = {
+    //     page_num: 1,
+    //     page_size: 20
+    // }
+    await withdrawal.dispatchFundsprohibitList(formData.value);
 }
 
 onMounted (()=>{
@@ -142,14 +141,14 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
                 <div class="search">
                     <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-                        <el-form-item label="用户账号" prop="user_account">
-                            <el-input v-model="formData.user_cpf" placeholder="请输入用户账号" />
+                        <el-form-item label="用户ID" prop="id">
+                            <el-input v-model="formData.id" placeholder="请输入用户ID" />
                         </el-form-item>
-                        <el-form-item label="客户昵称" prop="nick_name">
+                        <!-- <el-form-item label="客户昵称" prop="nick_name">
                             <el-input v-model="formData.user_cpf" placeholder="请输入客户昵称" />
-                        </el-form-item>
-                        <el-form-item label="提款账号" prop="withdrawal_account">
-                            <el-input v-model="formData.user_cpf" placeholder="请输入提款账号" />
+                        </el-form-item> -->
+                        <el-form-item label="提款账号" prop="id_number">
+                            <el-input v-model="formData.id_number" placeholder="请输入提款账号" />
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
@@ -165,14 +164,14 @@ const resetForm = (formEl: FormInstance | undefined) => {
                                 <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({name: 'User Detail'})">{{ scope.row.nick_name }}</el-link>
                             </template>
                         </el-table-column> -->
-                        <el-table-column label="用户账号" align="center" prop="user_id">
+                        <el-table-column label="用户ID" align="center" prop="id">
                             <template #default="scope">
-                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })">{{ scope.row.user_id }}</el-link>
+                                <el-link :underline="false" style="color: #5393e0; text-decoration-line: underline;" @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })">{{ scope.row.id }}</el-link>
                             </template>
                         </el-table-column>
-                        <el-table-column label="提款账号" align="center" prop="prohibit_id">
+                        <el-table-column label="提款账号" align="center" prop="id_number">
                             <template #default="scope">
-                                <p>{{ scope.row.prohibit_id }}</p>
+                                <p>{{ scope.row.id_number }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="创建时间" align="center" prop="created_at">
@@ -207,7 +206,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
         <el-dialog :title="banDialogTitle" v-model="banDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-form label-width="160px">
-                <el-form-item label="客户账号:">
+                <el-form-item label="客户ID:">
                     <el-input v-model="banItem.user_id" />
                     <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
                 </el-form-item>
@@ -256,9 +255,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
         <el-dialog title="封禁详情" v-model="banDetailDialogVisible" width="600px" append-to-body @close="closeDialog">
             <el-row>
-                <el-col :span="6" class="detail-item-left-bg">客户账号:</el-col>
+                <el-col :span="6" class="detail-item-left-bg">客户ID:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ banItem.user_id }}</p>
+                    <p>{{ banItem.id }}</p>
                     <el-button type="primary" link style="margin-left: auto;">复制</el-button>
                 </el-col>
             </el-row>
