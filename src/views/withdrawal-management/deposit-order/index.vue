@@ -17,7 +17,7 @@ const { withdrawal } = useStore();
 const router = useRouter();
 
 const formData = ref<any>({
-  user_account: "",
+  id: "",
   first_charge_status: "",
   upstream_channel: "",
   platform_order_number: "",
@@ -206,8 +206,8 @@ const copyText = (str: any) => {
             <!-- <el-form-item label="用户昵称" prop="nick_name">
                             <el-input v-model="formData.nick_name" placeholder="请输入用户昵称" />
                         </el-form-item> -->
-            <el-form-item label="用户账户" prop="user_account">
-              <el-input v-model="formData.user_account" placeholder="请输入用户账户" />
+            <el-form-item label="用户账号" prop="user_id">
+              <el-input v-model="formData.id" placeholder="请输入用户账号" />
             </el-form-item>
             <!-- <el-form-item label="用户ID" prop="user_id">
                             <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
@@ -317,7 +317,7 @@ const copyText = (str: any) => {
                     router.push({ name: 'UserDetail', params: { id: scope.row.user_id } })
                   "
                 >
-                  {{ scope.row.user_account }}
+                  {{ scope.row.user_id }}
                 </el-link>
               </template>
             </el-table-column>
@@ -668,12 +668,12 @@ const copyText = (str: any) => {
           <p>{{ depositOrderItem.payment_channel }}</p>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col :span="6" class="detail-item-left-bg">充值类型:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
           <p>{{ depositTypesData[depositOrderItem.recharge_type] }}</p>
         </el-col>
-      </el-row>
+      </el-row> -->
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="closeDialog">确认</el-button>
