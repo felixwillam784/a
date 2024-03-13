@@ -320,14 +320,14 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 >
               </template>
             </el-table-column>
-            <el-table-column label="扣款金额" align="center" prop="amount">
-              <template #default="scope">
-                <p>${{ scope.row.amount }}</p>
-              </template>
-            </el-table-column>
             <el-table-column label="货币类型" align="center" prop="amount_type">
               <template #default="scope">
                 <p>{{ scope.row.amount_type }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="扣款金额" align="center" prop="amount">
+              <template #default="scope">
+                <p>{{ scope.row.amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label="扣款类型" align="center" prop="change_type">
@@ -356,6 +356,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                   type="danger"
                   link
                   @click="detailManualPaymentDialog(scope.row)"
+                  style="color: blue;"
                   >详情</el-button
                 >
               </template>

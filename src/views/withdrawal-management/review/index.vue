@@ -312,10 +312,12 @@ const order_status = ["待处理", "处理中", "成功", "失败", "待人工�
 const getFontStyle = (orderStatus: number) => {
   let color = "";
   // Determine the color based on the order status value
-  if (orderStatus !== 3) {
+  if (orderStatus === 2) {
     color = "green";
-  } else {
+  } else if (orderStatus === 3) {
     color = "red";
+  } else {
+    color = "black";
   }
   return `color: ${color}; font-weight: bold;`;
 };
@@ -488,7 +490,7 @@ const lock = () => {};
             </el-table-column>
             <el-table-column label="订单号" align="center" prop="order_id" width="220">
               <template #default="scope">
-                <div style="display: flex; align-items: center">
+                <div style="display: flex; align-items: center; justify-content: center;">
                   <p>{{ scope.row.order_id }}</p>
                   <el-button link @click="copyText(scope.row.order_id)" v-if="scope.row.order_id">
                     <el-icon>
@@ -505,7 +507,7 @@ const lock = () => {};
               width="240"
             >
               <template #default="scope">
-                <div style="display: flex; align-items: center">
+                <div style="display: flex; align-items: center; justify-content: center;">
                   <p>{{ scope.row.gaia_order_number }}</p>
                   <el-button link @click="copyText(scope.row.gaia_order_number)" v-if="scope.row.gaia_order_number">
                     <el-icon>
@@ -522,7 +524,7 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <div style="display: flex; align-items: center">
+                <div style="display: flex; align-items: center; justify-content: center;">
                   <p>{{ scope.row.upstream_order_number }}</p>
                   <el-button link @click="copyText(scope.row.upstream_order_number)" v-if="scope.row.upstream_order_number">
                     <el-icon>
@@ -539,7 +541,7 @@ const lock = () => {};
               width="220"
             >
               <template #default="scope">
-                <div style="display: flex; align-items: center">
+                <div style="display: flex; align-items: center; justify-content: center;">
                   <p>{{ scope.row.upstream_channel }}</p>
                   <el-button link @click="copyText(scope.row.upstream_channel)" v-if="scope.row.upstream_channel">
                     <el-icon>
@@ -604,6 +606,7 @@ const lock = () => {};
                   type="danger"
                   link
                   @click="detailWithdrawalReviewDialog(scope.row)"
+                  style="color: blue;"
                   >详情</el-button
                 >
                 <el-button
@@ -614,6 +617,7 @@ const lock = () => {};
                     scope.row.order_status == 0 &&
                     scope.row.lock == false
                   "
+                  style="color: blue;"
                   @click="withdrawalLock(scope.row)"
                   >锁定</el-button
                 >
@@ -627,6 +631,7 @@ const lock = () => {};
                     scope.row.lock == true
                   "
                   @click="passDialogShow(scope.row)"
+                  style="color: green;"
                   >同意</el-button
                 >
                 <el-button
@@ -639,6 +644,7 @@ const lock = () => {};
                     scope.row.lock == true
                   "
                   @click="rejectDialogShow(scope.row)"
+                  style="color: red;"
                   >拒绝</el-button
                 >
                 <el-button
@@ -651,6 +657,7 @@ const lock = () => {};
                     scope.row.lock == true
                   "
                   @click="lock()"
+                  style="color: black;"
                   >已锁定</el-button
                 >
               </template>

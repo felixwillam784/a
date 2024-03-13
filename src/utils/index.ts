@@ -54,8 +54,8 @@ export function stringtoDate(dateString:string) {
   return formattedDate;
 }
 // 时间戳转日期格式
-export function formatDate(value: string | number, text?: number) {
-  let time = value;
+export function formatDate(value: string | number | undefined, text?: number) {
+  let time = value || 0;
   if (String(time).length === 10) {
     time = +time * 1000;
   }
