@@ -4,8 +4,7 @@
  * @param {string} cls
  * @returns {boolean}
  */
-import * as moment from 'moment';
-import 'moment-timezone';
+import moment from "moment-timezone";
 
 export function hasClass(ele: HTMLElement, cls: string) {
   return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
