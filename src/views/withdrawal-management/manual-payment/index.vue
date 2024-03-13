@@ -6,6 +6,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getManualPaymentList, addManualPayment } from "@/api/withdraw-management";
 import useStore from "@/store";
 import { formatDate } from '@/utils/index';
+import { formatTimestampWithTimezone } from '@/utils/index';
 import { copyText } from '@/utils/copy';
 import { ElMessage } from 'element-plus';
 
@@ -280,8 +281,8 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             style="display: flex; justify-content: space-between"
           >
             <div>
-              <el-form-item label="ID" prop="uid">
-                <el-input v-model="formData.uid" placeholder="请输入ID" />
+              <el-form-item label="用户ID" prop="id">
+                <el-input v-model="formData.id" placeholder="请输入用户ID" />
               </el-form-item>
               <el-form-item label="订单提交时间" prop="orderTime">
                 <el-date-picker
@@ -322,13 +323,13 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 >
               </template>
             </el-table-column> -->
-            <el-table-column label="ID" align="center" prop="user_id">
+            <el-table-column label="用户ID" align="center" prop="id">
               <template #default="scope">
                 <el-link
                   :underline="false"
                   style="color: #5393e0; text-decoration-line: underline"
                   @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
-                  >{{ scope.row.user_id }}</el-link
+                  >{{ scope.row.id }}</el-link
                 >
               </template>
             </el-table-column>
@@ -359,7 +360,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
             </el-table-column>
             <el-table-column label="订单提交时间" align="center" prop="order_time">
               <template #default="scope">
-                <p>{{ formatDate(scope.row.order_time )}}</p>
+                <p>{{ formatTimestampWithTimezone(scope.row.order_time )}}</p>
               </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" width="120">
@@ -400,7 +401,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
         :model="manualPaymentItem"
         class="manual-payment-form"
       >
-        <el-form-item label="ID:" prop="id">
+        <el-form-item label="用户ID:" prop="id">
           <el-input v-model="manualPaymentItem.id" />
         </el-form-item>
         <el-form-item label="打款金额:" prop="amount">
@@ -459,10 +460,10 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       @close="closeDialog"
     >
       <el-row>
-        <el-col :span="6" class="detail-item-left-bg">ID:</el-col>
+        <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <span>{{ manualPaymentItem.user_id }}</span>
-          <el-button type="primary" link style="margin-left: auto" @click="copyText(manualPaymentItem.user_id)">复制</el-button>
+          <span>{{ manualPaymentItem.id }}</span>
+          <el-button type="primary" link style="margin-left: auto" @click="copyText(manualPaymentItem.id)">复制</el-button>
         </el-col>
       </el-row>
       <!-- <el-row>
@@ -511,7 +512,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">打款时间:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          {{ formatDate(manualPaymentItem.order_time) }}
+          {{ formatTimestampWithTimezone(manualPaymentItem.order_time) }}
         </el-col>
       </el-row>
       <el-row>
