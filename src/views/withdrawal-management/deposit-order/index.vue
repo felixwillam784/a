@@ -18,6 +18,7 @@ const router = useRouter();
 
 const formData = ref<any>({
   id: "",
+  user_id: "",
   first_charge_status: "",
   upstream_channel: "",
   platform_order_number: "",

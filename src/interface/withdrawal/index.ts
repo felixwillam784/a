@@ -2,6 +2,7 @@ import { string } from "vue-types"
 
 export interface GetDepositOrder {
     id: string
+    user_id: string
     user_account: string
     platform_order_number: string
     gaia_order_number: string
