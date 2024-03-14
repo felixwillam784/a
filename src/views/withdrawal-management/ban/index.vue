@@ -6,6 +6,9 @@ import moment from 'moment-timezone';
 import type { FormInstance, FormRules } from 'element-plus'
 import useStore from '@/store';
 import { formatDate } from '@/utils/index';
+import { formatTimestampWithTimezone } from '@/utils/index';
+import { ElMessage } from 'element-plus';
+import { copyText } from '@/utils/copy';
 //import { watch } from "fs";
 const { withdrawal } = useStore();
 
@@ -74,7 +77,9 @@ onMounted (()=>{
     handleQuery();
 })
 
+const operationType = ref('add'); // 'add' 表示新增封禁, 'lift' 表示解除封禁
 const addBanDialog = () => {
+    operationType.value = 'add';
     banItem.value = {
         prohibit_id: "",
         id: "",
@@ -92,6 +97,7 @@ const addBanDialog = () => {
 }
 
 const editBanDialog = (item: GetBan) => {
+    operationType.value = 'lift';
     banItem.value = item;
     banDialogVisible.value = true;
     banDialogTitle.value = "解除封禁";
@@ -110,23 +116,45 @@ const closeDialog = () => {
 }
 
 const submitForm = async (formEl: FormInstance | undefined) => {
-    if (!formEl) return
+    if (!formEl) return;
     await formEl.validate(async (valid, fields) => {
         if (valid) {
-            const params = {
-                user_id: banItem.value.user_id,
-                id_number: banItem.value.id_number,
-                origin: banItem.value.origin,
-                notes: banItem.value.notes
+            if (operationType.value === 'add') {
+                const params = {
+                    user_id: banItem.value.user_id,
+                    id_number: banItem.value.id_number,
+                    origin: banItem.value.origin,
+                    notes: banItem.value.notes,
+                };
+                // 判断params中的user_id和id_number不能全部为空 提示用户
+                if (!params.user_id && !params.id_number) {
+                    ElMessage.error('客户ID和提款账号不能同时为空');
+                    return;
+                }
+                // 封禁原因不能为空
+                if (!params.origin) {
+                    ElMessage.error('封禁原因不能为空');
+                    return;
+                }
+                await withdrawal.dispatchFundsprohibitCreate(params);
+            } else if (operationType.value === 'lift') {
+                const params = {
+                    id: banItem.value.prohibit_id
+                };
+                if (!params.id) {
+                    ElMessage.error('封禁ID不能为空');
+                    return;
+                }
+                await withdrawal.dispatchFundsprohibitLift(params);
             }
-            await withdrawal.dispatchFundsprohibitCreate(params);
             handleQuery();
             banDialogVisible.value = false;
         } else {
-            console.log('error submit!', fields)
+            console.log('error submit!', fields);
         }
-    })
+    });
 }
+
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
@@ -176,7 +204,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                         </el-table-column>
                         <el-table-column label="创建时间" align="center" prop="created_at">
                             <template #default="scope">
-                                <p>{{ formatDate(scope.row.created_at) }}</p>
+                                <p>{{ formatTimestampWithTimezone(scope.row.created_at) }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="封禁原因" align="center" prop="origin">
@@ -205,46 +233,36 @@ const resetForm = (formEl: FormInstance | undefined) => {
         </el-row>
 
         <el-dialog :title="banDialogTitle" v-model="banDialogVisible" width="600px" append-to-body @close="closeDialog">
-            <el-form label-width="160px">
+            <el-alert
+            title="请注意填写规则: 用户ID和提款账号只能选其一, 封禁原因不能为空。"
+            type="warning"
+            :closable="false"
+            show-icon
+            v-if="operationType !== 'lift'">
+            </el-alert>
+            <br>
+            <el-form ref="ruleFormRef" label-width="160px" :model="banItem" :rules="rules">
                 <el-form-item label="客户ID:">
-                    <el-input v-model="banItem.user_id" />
-                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
+                    <el-input v-model="banItem.id" :disabled="operationType === 'lift' || banItem.id_number !== ''"/>
+                    <el-button type="primary" link style="position: absolute; right: 10px;" @click="() => copyText(banItem.id)" v-if="banItem.id">{{'复制'}}</el-button>
                 </el-form-item>
-                <!-- <el-form-item label="客户昵称:">
-                    <el-input v-model="banItem.nick_name" />
-                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
-                </el-form-item> -->
                 <el-form-item label="客户提款账号:">
-                    <el-input v-model="banItem.id_number" />
-                    <el-button type="primary" link style="position: absolute; right: 10px;">复制</el-button>
+                    <el-input v-model="banItem.id_number" :disabled="operationType === 'lift' || banItem.id !== ''"/>
+                    <el-button type="primary" link style="position: absolute; right: 10px;" @click="() => copyText(banItem.id_number)" v-if="banItem.id_number">{{'复制'}}</el-button>
                 </el-form-item>
                 <el-form-item label="封禁原因:">
-                    <el-input v-model="banItem.origin" />
+                    <el-input v-model="banItem.origin" :disabled="operationType === 'lift'"/>
                 </el-form-item>
-                <el-form-item label="封禁人员:" v-if="banItem.id != '' && banItem.id != null">
-                    <el-input v-model="banItem.operator_name" />
+                <el-form-item label="封禁时间:" v-if="operationType === 'lift'">
+                    <el-input :value="formatTimestampWithTimezone(banItem.created_at)" disabled />
                 </el-form-item>
-                <el-form-item label="封禁时间:" v-if="banItem.id != '' && banItem.id != null">
-                    <el-input v-model="banItem.created_at" />
-                </el-form-item>
-            </el-form>
-            <el-form v-if="banItem.id != '' && banItem.id != null">
                 <el-row style="align-items: center;">
-                    <p style="font-weight: bold;">封禁备注</p>
-                </el-row>
-                <el-form-item>
-                    <el-input type="textarea" :rows="6" v-model="banItem.notes" />
-                </el-form-item>
-            </el-form>
-            <el-form ref="ruleFormRef" :rules="rules" :model="banItem">
-                <el-row style="align-items: center;">
-                    <p style="font-size: 20px; color: red;">*</p>
-                    <h3>备注</h3>
+                    <p style="font-weight: bold;">备注</p>
                 </el-row>
                 <el-form-item prop="notes">
-                    <el-input type="textarea" :rows="6" v-model="banItem.notes" />
+                    <el-input type="textarea" :rows="4" v-model="banItem.notes" :disabled="operationType === 'lift'"/>
                 </el-form-item>
-            </el-form>
+            </el-form>  
             <template #footer>
                 <div class="dialog-footer">
                     <el-button type="primary" @click="submitForm(ruleFormRef)">{{ submitBtnText }}</el-button>
@@ -272,7 +290,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 <el-col :span="6" class="detail-item-left-bg">客户提款账号:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
                     <p>{{ banItem.id_number }}</p>
-                    <el-button type="primary" link style="margin-left: auto;">复制</el-button>
+                    <el-button type="primary" link style="margin-left: auto;" v-if="banItem.id_number">{{ '复制' }}</el-button>
                 </el-col>
             </el-row>
             <el-row>
@@ -290,7 +308,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             <el-row>
                 <el-col :span="6" class="detail-item-left-bg">封禁时间:</el-col>
                 <el-col :span="18" class="detail-item-right-bg">
-                    <p>{{ formatDate(banItem.created_at) }}</p>
+                    <p>{{ formatTimestampWithTimezone(banItem.created_at) }}</p>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 30px;">
@@ -298,7 +316,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-row>
             <el-row>
                 <el-col :span="24" class="detail-item-right-bg" style="height: 120px;">
-                    <el-input v-model="banItem.notes" type="textarea" :row="10"/>
+                    <p>{{ banItem.notes }}</p>
                 </el-col>
             </el-row>
             <template #footer>

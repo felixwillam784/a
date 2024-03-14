@@ -287,5 +287,22 @@ export const withdrawalStore = defineStore({
         }
         await network.sendMsg(route, form_data, next, 1);
       },
+      /**
+       * 提现封禁解除
+       * Withdrawal ban lift
+       */
+      async dispatchFundsprohibitLift(form_data: Withdrawal.FundsprohibitLiftForm) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.WITHDRAWAL.FUNDSPROHIBIT_LIFT;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Withdrawal.PostRequestResponse) => {
+            if (response.code == "00") {
+                this.setSuccess(true);
+                ElMessage.success('解封成功');
+            }
+        }
+        await network.sendMsg(route, form_data, next, 1);
+      },
     }
   })
