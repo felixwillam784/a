@@ -162,9 +162,16 @@ const totalNumber = computed(() => {
 
 // 查询
 const handleQuery = async () => {
-  if (formData.value.uid && formData.value.uid.length < 3) {
-    return ElMessage.warning('查询不得少于3个字符串');
+  const isInvalid = Object.values(formData.value).some((value) => {
+    // 允许空字符串，但非空字符串必须长度不少于3
+    // Empty strings are allowed, but non-empty strings must be no less than 3 in length.
+    return typeof value === 'string' && value.trim() && value.trim().length < 3;
+  });
+
+  if (isInvalid) {
+    return ElMessage.warning('查询条件不得少于3个字符');
   }
+
   if (!orderTime.value) {
     initSubmissionTime();
   }
