@@ -291,8 +291,12 @@ const withdrawalReviewOperation = async () => {
 
 const initSubmissionTime = () => {
   submission_time.value = ['', ''];
-  submission_time.value[0] = new Date('2020-12-31 00:00:00').toISOString().split('T')[0];
-  submission_time.value[1] = new Date().toISOString().split('T')[0];
+  let orderTimeStart = new Date();
+  let orderTimeEnd = new Date();
+  orderTimeStart.setDate(orderTimeStart.getDate() - 7);
+  orderTimeEnd.setDate(orderTimeEnd.getDate() + 1);
+  submission_time.value[0] = new Date(orderTimeStart).toISOString().split('T')[0];
+  submission_time.value[1] = new Date(orderTimeEnd).toISOString().split('T')[0];
 }
 
 const sessionStorageId = (id: string) => {
