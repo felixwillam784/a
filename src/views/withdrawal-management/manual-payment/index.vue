@@ -236,6 +236,15 @@ const closeDialog = () => {
   manualPaymentDetailDialogVisible.value = false;
 };
 
+const beforeClose = (done: () => void) => {
+  // 重置表单状态
+  if (ruleFormRef.value) {
+    ruleFormRef.value.resetFields();
+  }
+  // 关闭对话框
+  done();
+};
+
 // 新增提交
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -394,6 +403,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
       width="600px"
       append-to-body
       @close="closeDialog"
+      :before-close="beforeClose"
     >
       <el-form
         label-width="auto"
