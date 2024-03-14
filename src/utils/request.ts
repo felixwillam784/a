@@ -51,40 +51,42 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { code, msg } = response.data;
-    if (code === "00000") {
-      return response.data;
-    } else if (code === "00") {
+    const { code, message } = response.data;
+    if (code === "00000" || code === "00") {
       return response.data;
     } else {
-      // 响应数据为二进制流处理(Excel导出)
+      // 响应数据为二进制流处理(Excel导出等)
       if (response.data instanceof ArrayBuffer) {
         return response;
       }
-
       ElMessage({
-        message: msg || '系统出错',
+        message: message || '系统出错',
         type: 'error',
+        duration: 5 * 1000
       });
-
-      return Promise.reject(new Error(msg || 'Error'));
+      return Promise.reject(new Error(message || 'Error'));
     }
   },
   (error: any) => {
-    if (error.response.data) {
-      const { code, msg } = error.response.data;
-      if (code === '06') {
+    if (error.response) {
+      const { config, data } = error.response;
+      // 特殊处理登录请求的错误
+      if (config && config.url && config.url.includes('/login')) {
+        ElMessage.error('登录失败，请检查用户名和密码是否正确');
+      } else if (error.response.status === 401) {
         const networkData = NetworkData.getInstance()
         networkData.resetData();
         router.push(`/login`);
-      } else {
-        ElMessage({
-          message: msg || '系统出错',
-          type: 'error',
-        });
-      }
+      } else if (error.response.data) {
+        const { message } = data;
+        ElMessage.error(message || '系统出错');
+      } 
+      return Promise.reject(error.message);
+    } else {
+      // 网络错误或服务器未响应
+      ElMessage.error('网络错误或服务器无响应');
     }
-    return Promise.reject(error.message);
+    return Promise.reject(error);
   }
 );
 

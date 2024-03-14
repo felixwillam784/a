@@ -74,23 +74,25 @@ const success = computed(() => {
   return getSuccess.value;
 });
 
-function handleLogin() {
+async function handleLogin() {
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       state.loading = true;
+      try {
+        await dispatchSignIn(state.loginForm);
 
-      await dispatchSignIn(state.loginForm);
-
-      if (success.value) {
-        router.push({ path: state.redirect || "/", query: state.otherQuery });
+        if (success.value) {
+          router.push({ path: state.redirect || "/", query: state.otherQuery });
+        }
+      } catch (error: any) {
+        // ElMessage.error(error);
+      } finally {
+        state.loading = false;
       }
-
-      state.loading = false;
-    } else {
-      return false;
     }
   });
 }
+
 
 watch(
   route,
