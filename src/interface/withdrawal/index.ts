@@ -86,6 +86,7 @@ export interface GetWithdrawalReviewList {
     lock: boolean,
     user_id: number | string
     operator_name: string
+    amount_type: string
 }
 
 export interface ManualAddListForm {
