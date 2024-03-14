@@ -70,7 +70,7 @@ const WithdrawalDetailData = computed(() => {
 const loading = ref<boolean>(false);
 
 const goBack = () => {
-  router.push({ name: "User List", params: { id: route.params.id } });
+  router.go(-1);
 };
 
 const handleChange = () => {};

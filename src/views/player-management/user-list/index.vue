@@ -2,6 +2,8 @@
 import { ref, computed, reactive } from "vue";
 import { Search, Refresh } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import { CopyDocument } from "@element-plus/icons-vue";
+import { ElInput, ElMessage } from "element-plus";
 
 import useStore from "@/store";
 import moment from "moment-timezone";
@@ -33,7 +35,10 @@ const formData = reactive<any>({
 const userList = computed(() => {
   return player.getUserList;
 });
-
+const copyText = (str: any) => {
+  navigator.clipboard.writeText(str);
+  ElMessage.success("复制成功");
+};
 const UserTypeOptions = [
   {
     label: "普通玩家",
@@ -196,12 +201,19 @@ onMounted(async () => {
           >
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">
               <template #default="scope">
-                <el-link :underline="false" style="color: #5393e0">
-                  {{ scope.row.nickname }}
-                </el-link>
+                {{ scope.row.nickname }}
+                <el-button
+                  link
+                  v-if="scope.row.nickname"
+                  @click="copyText(scope.row.nickname)"
+                >
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
               </template>
             </el-table-column>
-            <el-table-column label="用户账号" align="center" prop="uid" width="160">
+            <el-table-column label="用户账号" align="center" prop="uid" width="200">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -210,9 +222,14 @@ onMounted(async () => {
                 >
                   {{ scope.row.uid }}
                 </el-link>
+                <el-button link v-if="scope.row.uid" @click="copyText(scope.row.uid)">
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
               </template>
             </el-table-column>
-            <el-table-column label="用户ID" align="center" prop="id" width="200">
+            <el-table-column label="用户ID" align="center" prop="id" width="220">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -221,6 +238,11 @@ onMounted(async () => {
                 >
                   {{ scope.row.id }}
                 </el-link>
+                <el-button link v-if="scope.row.id" @click="copyText(scope.row.id)">
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column label="用户类型" width="100" align="center" prop="user_type">

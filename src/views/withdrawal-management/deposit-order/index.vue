@@ -48,7 +48,7 @@ const order_stats = [
   "订单生成",
   "支付中",
   "支付成功",
-  "业务处理完成",
+  "业务处理完成(补单)",
   "已退款",
 ];
 const changeStatusData = [
@@ -222,28 +222,8 @@ const copyText = (str: any) => {
       <el-col :span="24" :xs="24">
         <el-card>
           <el-form :model="formData" :inline="true" label-width="100">
-            <!-- <el-form-item label="用户昵称" prop="nick_name">
-                            <el-input v-model="formData.nick_name" placeholder="请输入用户昵称" />
-                        </el-form-item> -->
             <el-form-item label="用户ID" prop="user_id">
-              <el-input v-model="formData.id" placeholder="请输入用户ID" />
-            </el-form-item>
-            <!-- <el-form-item label="用户ID" prop="user_id">
-                            <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
-                        </el-form-item> -->
-            <el-form-item label="是否首充" prop="first_charge_status">
-              <el-select
-                v-model="formData.first_charge_status"
-                placeholder="请选择是否首充"
-                class="width"
-              >
-                <el-option
-                  v-for="item in changeStatusData"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+              <el-input v-model="formData.id" clearable placeholder="请输入用户ID" />
             </el-form-item>
             <el-form-item label="订单状态" prop="order_status">
               <el-select v-model="formData.order_status" placeholder="选择订单状态">
@@ -255,8 +235,6 @@ const copyText = (str: any) => {
                 ></el-option>
               </el-select>
             </el-form-item>
-          </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
             <el-form-item label="订单提交时间" prop="submission_time">
               <el-date-picker
                 range-separator="到"
@@ -268,6 +246,8 @@ const copyText = (str: any) => {
                 style="width: 220px"
               />
             </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
             <el-form-item label="订单更新时间" prop="order_update_time">
               <el-date-picker
                 range-separator="到"
@@ -279,11 +259,37 @@ const copyText = (str: any) => {
                 style="width: 220px"
               />
             </el-form-item>
-
+            <el-form-item label="订单号" prop="platform_order_number">
+              <el-input
+                v-model="formData.platform_order_number"
+                clearable
+                placeholder="请输入订单号"
+              />
+            </el-form-item>
             <el-form-item label="上游通道" prop="upstream_channel">
               <el-input
                 v-model="formData.upstream_channel"
+                clearable
                 placeholder="请选择上游通道"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <!-- <el-form-item label="通道订单号" prop="platform_order_number">
+                            <el-input v-model="formData.platform_order_number" placeholder="请输入通道订单号" />
+                        </el-form-item> -->
+            <el-form-item label="上游订单号" prop="upstream_order_number">
+              <el-input
+                v-model="formData.upstream_order_number"
+                clearable
+                placeholder="请输入上游订单号"
+              />
+            </el-form-item>
+            <el-form-item label="gaia订单号" prop="gaia_order_number">
+              <el-input
+                v-model="formData.gaia_order_number"
+                clearable
+                placeholder="请输入gaia"
               />
             </el-form-item>
             <el-form-item>
@@ -291,26 +297,6 @@ const copyText = (str: any) => {
                 >搜索</el-button
               >
               <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-            </el-form-item>
-          </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
-            <el-form-item label="订单号" prop="platform_order_number">
-              <el-input
-                v-model="formData.platform_order_number"
-                placeholder="请输入订单号"
-              />
-            </el-form-item>
-            <!-- <el-form-item label="通道订单号" prop="platform_order_number">
-                            <el-input v-model="formData.platform_order_number" placeholder="请输入通道订单号" />
-                        </el-form-item> -->
-            <el-form-item label="上游订单号" prop="upstream_order_number">
-              <el-input
-                v-model="formData.upstream_order_number"
-                placeholder="请输入上游订单号"
-              />
-            </el-form-item>
-            <el-form-item label="gaia订单号" prop="gaia_order_number">
-              <el-input v-model="formData.gaia_order_number" placeholder="请输入gaia" />
             </el-form-item>
           </el-form>
         </el-card>
@@ -326,25 +312,28 @@ const copyText = (str: any) => {
               label="用户ID"
               align="center"
               prop="user_account"
-              width="160"
+              width="200"
             >
               <template #default="scope">
-                <el-link
-                  :underline="false"
-                  style="color: rgb(83, 147, 224); text-decoration-line: underline"
-                  @click="
-                    router.push({ name: 'UserDetail', params: { id: scope.row.user_id } })
-                  "
-                >
+                <el-link :underline="false">
                   {{ scope.row.user_id }}
                 </el-link>
+                <el-button
+                  link
+                  v-if="scope.row.user_id"
+                  @click="copyText(scope.row.user_id)"
+                >
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column
               label="订单号"
               align="center"
               prop="platform_order_number"
-              width="220"
+              width="250"
             >
               <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -365,7 +354,7 @@ const copyText = (str: any) => {
               label="gaia订单号"
               align="center"
               prop="gaia_order_number"
-              width="220"
+              width="250"
             >
               <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -407,7 +396,7 @@ const copyText = (str: any) => {
               label="上游订单号"
               align="center"
               prop="upstream_order_number"
-              width="240"
+              width="260"
             >
               <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -448,16 +437,27 @@ const copyText = (str: any) => {
                 <p>{{ scope.row.amount_type }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="订单金额" align="center" prop="order_amount">
+            <el-table-column
+              width="100"
+              label="订单金额"
+              align="center"
+              prop="order_amount"
+            >
               <template #default="scope">
-                <p>{{ `${scope.row.amount_type} ${scope.row.order_amount}` }}</p>
+                <p>{{ scope.row.order_amount }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="实际到账" align="center" prop="actual_amount	">
+            <el-table-column
+              label="实际到账"
+              width="100"
+              align="center"
+              prop="actual_amount	"
+            >
               <template #default="scope">
-                <p>{{ `${scope.row.amount_type} ${scope.row.actual_amount}` }}</p>
+                <p>{{ scope.row.actual_amount }}</p>
               </template>
             </el-table-column>
+
             <el-table-column label="是否首充" align="center" prop="first_charge_status">
               <template #default="scope">
                 <p>{{ scope.row.first_charge_status ? "是" : "否" }}</p>
@@ -484,6 +484,7 @@ const copyText = (str: any) => {
               <template #default="scope">
                 <el-button
                   type="danger"
+                  style="color: blue"
                   link
                   @click="detailManualPaymentDialog(scope.row)"
                   >详情</el-button
