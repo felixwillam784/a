@@ -21,6 +21,7 @@ interface GetBan {
     notes: string
     operator_name: string
     created_at: number | string
+    lift_notes: string
 }
 
 const router = useRouter();
@@ -55,7 +56,8 @@ const banItem = ref<GetBan>({
     origin: "",
     notes: "",
     operator_name: "",
-    created_at: ""
+    created_at: "",
+    lift_notes: ""
 })
 
 
@@ -88,7 +90,8 @@ const addBanDialog = () => {
         origin: "",
         notes: "",
         operator_name: "",
-        created_at: ""
+        created_at: "",
+        lift_notes: ""
     }
     banDialogVisible.value = true;
     banDialogTitle.value = "新增封禁";
@@ -139,10 +142,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 await withdrawal.dispatchFundsprohibitCreate(params);
             } else if (operationType.value === 'lift') {
                 const params = {
-                    id: banItem.value.prohibit_id
+                    id: banItem.value.prohibit_id,
+                    notes: banItem.value.lift_notes
                 };
                 if (!params.id) {
                     ElMessage.error('封禁ID不能为空');
+                    return;
+                }
+                if (!params.notes) {
+                    ElMessage.error('解封备注不能为空');
                     return;
                 }
                 await withdrawal.dispatchFundsprohibitLift(params);
@@ -256,11 +264,20 @@ const resetForm = (formEl: FormInstance | undefined) => {
                 <el-form-item label="封禁时间:" v-if="operationType === 'lift'">
                     <el-input :value="formatTimestampWithTimezone(banItem.created_at)" disabled />
                 </el-form-item>
+                <!-- <el-row style="align-items: center;">
+                    <p style="font-weight: bold;">封禁备注</p>
+                </el-row> -->
+                <el-form-item label="封禁备注:" prop="notes">
+                    <el-input type="textarea" :rows="2" v-model="banItem.notes" :disabled="operationType === 'lift'"/>
+                </el-form-item>
+            </el-form>
+            <el-form v-if="operationType === 'lift'">
                 <el-row style="align-items: center;">
-                    <p style="font-weight: bold;">备注</p>
+                    <p style="font-size: 20px; color: red;">*</p>
+                    <h3>解封备注</h3>
                 </el-row>
-                <el-form-item prop="notes">
-                    <el-input type="textarea" :rows="4" v-model="banItem.notes" :disabled="operationType === 'lift'"/>
+                <el-form-item>
+                    <el-input type="textarea" :rows="2" v-model="banItem.lift_notes" />
                 </el-form-item>
             </el-form>  
             <template #footer>

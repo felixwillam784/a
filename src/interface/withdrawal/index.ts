@@ -168,4 +168,5 @@ export interface FundsprohibitCreateForm {
 // 提现封禁解除
 export interface FundsprohibitLiftForm {
   id: string // 封禁id
+  notes: string // 解封原因
 }
