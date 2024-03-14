@@ -79,7 +79,7 @@ const orderStatusData = [
     value: 0,
   },
   {
-    label: "业务处理完成",
+    label: "业务处理完成(补单)",
     value: 3,
   },
   {
@@ -176,10 +176,28 @@ onMounted(async () => {
 const getFontStyle = (orderStatus: number) => {
   let color = "";
   // Determine the color based on the order status value
-  if (orderStatus === 0 || orderStatus === 1) {
-    color = "green";
-  } else {
-    color = "red";
+  switch (orderStatus) {
+    case 0:
+      color = "black";
+      break;
+    case 1:
+      color = "red";
+      break;
+    case 2:
+      color = "black";
+      break;
+    case 3:
+      color = "black";
+      break;
+    case 4:
+      color = "green";
+      break;
+    case 5:
+      color = "green";
+      break;
+    case 6:
+      color = "black";
+      break;
   }
   return `color: ${color}; font-weight: bold;`;
 };
@@ -414,7 +432,7 @@ const copyText = (str: any) => {
             >
               <template #default="scope">
                 <font
-                  :style="getFontStyle(parseInt(scope.row.order_status))"
+                  :style="getFontStyle(parseInt(scope.row.order_status) + 2)"
                   style="font-weight: bold"
                   >{{ order_stats[parseInt(scope.row.order_status) + 2] }}</font
                 >
@@ -422,17 +440,22 @@ const copyText = (str: any) => {
             </el-table-column>
             <el-table-column label="存款类型" align="center" prop="amount_type">
               <template #default="scope">
+                <p>存款</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="货币类型" align="center" prop="amount_type">
+              <template #default="scope">
                 <p>{{ scope.row.amount_type }}</p>
               </template>
             </el-table-column>
             <el-table-column label="订单金额" align="center" prop="order_amount">
               <template #default="scope">
-                <p>${{ scope.row.order_amount }}</p>
+                <p>{{ `${scope.row.amount_type} ${scope.row.order_amount}` }}</p>
               </template>
             </el-table-column>
             <el-table-column label="实际到账" align="center" prop="actual_amount	">
               <template #default="scope">
-                <p>${{ scope.row.actual_amount }}</p>
+                <p>{{ `${scope.row.amount_type} ${scope.row.actual_amount}` }}</p>
               </template>
             </el-table-column>
             <el-table-column label="是否首充" align="center" prop="first_charge_status">
