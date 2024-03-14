@@ -41,6 +41,7 @@ interface GetWithdrawalReview {
   submission_time: string;
   order_update_time: string;
   user_id: number | string;
+  id: string;
   lock: boolean;
 }
 
@@ -647,6 +648,7 @@ const lock = () => {};
                   style="color: red;"
                   >拒绝</el-button
                 >
+                <!-- 如果条目被当前用户锁定，显示“已锁定” -->
                 <el-button
                   type="danger"
                   link
@@ -660,6 +662,15 @@ const lock = () => {};
                   style="color: black;"
                   >已锁定</el-button
                 >
+                <!-- 如果条目被其他用户锁定，显示“已被xxxx锁定” -->
+                <el-button
+                  type="warning"
+                  link
+                  v-else-if="scope.row.order_status === 0 && scope.row.lock === true"
+                  style="color: orange; font-weight: bold;"
+                >
+                  已被{{ scope.row.operator_name }}锁定
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -739,7 +750,7 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.user_id }}</p>
+          <p>{{ withdrawalReviewItem?.id }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -843,10 +854,10 @@ const lock = () => {};
       </el-row>
       <template #footer>
         <div class="dialog-footer"
-             v-if="withdrawalReviewItem?.order_status !== 1 &&
-             withdrawalReviewItem?.order_status == 0 &&
-             sessionStorageId(withdrawalReviewItem?.operator_id) &&
-             withdrawalReviewItem?.lock == true">
+            v-if="withdrawalReviewItem?.order_status !== 1 &&
+            withdrawalReviewItem?.order_status == 0 &&
+            sessionStorageId(withdrawalReviewItem?.operator_id) &&
+            withdrawalReviewItem?.lock == true">
           <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
           <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
           <el-button @click="closeDialog">取消</el-button>
