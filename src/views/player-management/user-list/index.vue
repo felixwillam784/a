@@ -188,13 +188,15 @@ onMounted(async () => {
           </el-form>
         </div>
         <el-card>
-          <el-table :data="userList" style="width: 100%" v-loading="loading" v-horizontal-scroll>
+          <el-table
+            :data="userList"
+            style="width: 100%"
+            v-loading="loading"
+            v-horizontal-scroll
+          >
             <el-table-column label="用户昵称" align="center" prop="nickname" width="160">
               <template #default="scope">
-                <el-link
-                  :underline="false"
-                  style="color: #5393e0; text-decoration-line: underline"
-                >
+                <el-link :underline="false" style="color: #5393e0">
                   {{ scope.row.nickname }}
                 </el-link>
               </template>

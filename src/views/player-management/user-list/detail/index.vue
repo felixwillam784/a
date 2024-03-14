@@ -507,7 +507,7 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="账号状态:">
-                  <font color="red">{{
+                  <font :color="basicInformation.user_status == 0 ? 'red' : 'green'">{{
                     basicInformation.user_status == 0
                       ? "無效參數"
                       : basicInformation.user_status == 1
@@ -530,11 +530,16 @@ const suspenseWithdraw = async () => {
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  {{
-                    basicInformation.account_withdrawal_prohibit == 1
-                      ? " 封禁提现"
-                      : "解除封禁"
-                  }}
+                  <font
+                    :color="
+                      basicInformation.account_withdrawal_prohibit == 1 ? 'red' : 'green'
+                    "
+                    >{{
+                      basicInformation.account_withdrawal_prohibit == 1
+                        ? " 提现封禁"
+                        : "提现正常"
+                    }}</font
+                  >
                 </el-button>
               </el-form-item>
             </el-col>
@@ -547,7 +552,12 @@ const suspenseWithdraw = async () => {
                   type="danger"
                   style="margin-left: 20px"
                 >
-                  {{ basicInformation.account_prohibit == 1 ? "拉黑" : "解除拉黑" }}
+                  <font
+                    :color="basicInformation.account_prohibit == 1 ? 'red' : 'green'"
+                    >{{
+                      basicInformation.account_prohibit == 1 ? " 拉黑" : "解除拉黑"
+                    }}</font
+                  >
                 </el-button>
               </el-form-item>
             </el-col>
