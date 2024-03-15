@@ -845,18 +845,19 @@ const suspenseWithdraw = async () => {
                 <el-link
                   :underline="false"
                   style="color: #5393e0; text-decoration-line: underline"
-                  @click="router.push({ name: 'UserDetail' })"
+                  v-if="userInviteData.sir_user_id !== '0'"
+                  @click="goCustomerDetailPage(basicInformation.sir_user_id)"
                 >
-                  {{ userInviteData.sir_user_id ? userInviteData.sir_user_id : '' }}
+                  {{ userInviteData.sir_user_id }}
                 </el-link>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理类型:">
                 {{ getInviteTypeOtions(userInviteData.invite_type) }}
-                <Font color="red" style="margin-left: 20px"
+                <!-- <Font color="red" style="margin-left: 20px"
                   >评级: {{ userInviteData.invite_grade }}</Font
-                >
+                > -->
               </el-form-item>
             </el-col>
           </el-row>
