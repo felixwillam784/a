@@ -20,9 +20,9 @@ const { agent } = useStore();
 
 const formData = ref<Agent.AgentAchievementRewardData>({
   id: 0,
-  code_magnification: '',
-  invite_number_condition: 0,
-  invite_reward_amount: 0
+  user_max: 0,
+  award: 0,
+  bet_task_rate: 0
 });
 
 const achievementRewardDialogVisible = ref<boolean>(false);
@@ -31,9 +31,12 @@ const achievementRewardCollectionDialogVisible = ref<boolean>(false);
 
 const dialogTitle = ref<string>("代理成就详情");
 const addNewItem = ref<boolean>(false);
-const showAchievementRewardDialog = async (id: number) => {
-  await agent.dispatchAgentAchievementRewardDetail({id});
-  formData.value = agent.getAgentAchievementRewardDetail;
+const showAchievementRewardDialog = async (row: any) => {
+  formData.value.id = row.id;
+  formData.value.user_max = row.user_max;
+  formData.value.award = row.award;
+  formData.value.bet_task_rate = row.bet_task_rate;
+
   dialogTitle.value = "代理成就详情";
   achievementRewardDialogVisible.value = true;
 };
@@ -42,7 +45,10 @@ const updateAchievementReward = async () => {
   loading.value = true;
   achievementRewardDialogVisible.value = true;
   if (addNewItem.value) {
-    formData.value.invite_number_condition = Number(formData.value.invite_number_condition);
+    delete formData.value.id;
+    formData.value.user_max = Number(formData.value.user_max);
+    formData.value.award = Number(formData.value.award);
+    formData.value.bet_task_rate = Number(formData.value.bet_task_rate);
     await agent.dispatchAgentAchievementRewardAdd(formData.value);
   } else {
     await agent.dispatchAgentAchievementRewardUpdate(formData.value);
@@ -55,12 +61,16 @@ const updateAchievementReward = async () => {
 const deleteAchievementReward = async (id: number) => {
   // await age
 }
+const handleCloseDialog = () => {
+  achievementRewardDialogVisible.value = false;
+  formData.value = {} as Agent.AgentAchievementRewardData;
+}
 watch(achievementRewardDialog, (value) => {
   addNewItem.value = true;
   formData.value.id=0;
-  formData.value.invite_number_condition =  0;
-  formData.value.invite_reward_amount = 0;
-  formData.value.code_magnification = '';
+  // formData.value.invite_number_condition =  0;
+  // formData.value.invite_reward_amount = 0;
+  // formData.value.code_magnification = '';
   dialogTitle.value = "新增代理成就";
   achievementRewardDialogVisible.value = value;
 });
@@ -96,22 +106,22 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     </el-table-column>
     <el-table-column label="邀请人数条件" align="center" prop="invite_number_condition">
       <template #default="scope">
-        <p>{{ scope.row.invite_number_condition }}</p>
+        <p>{{ scope.row.user_max }}</p>
       </template>
     </el-table-column>
     <el-table-column label="邀请奖励金额" align="center" prop="invite_reward_amount">
       <template #default="scope">
-        <p>{{ scope.row.invite_reward_amount }}</p>
+        <p>{{ scope.row.award }}</p>
       </template>
     </el-table-column>
     <el-table-column label="打码倍率" align="center" prop="code_magnification">
       <template #default="scope">
-        <p>{{ scope.row.code_magnification }}</p>
+        <p>{{ scope.row.bet_task_rate }}</p>
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button type="primary" link @click="showAchievementRewardDialog(scope.row.id)">
+        <el-button type="primary" link @click="showAchievementRewardDialog(scope.row)">
           详情
         </el-button>
         <el-button type="danger" @click="deleteAchievementReward(scope.row.id)" link>
@@ -132,7 +142,7 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
         <el-form-item label="邀请人数条件">
           <el-input
             class="w-200"
-            v-model="formData.invite_number_condition"
+            v-model="formData.user_max"
             placeholder="请输入邀请人数条件"
           />
         </el-form-item>
@@ -142,7 +152,7 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
           <el-input
             class="w-400"
             placeholder="请输入邀请奖励金额"
-            v-model="formData.invite_reward_amount"
+            v-model="formData.award"
           />
         </el-form-item>
       </el-row>
@@ -150,7 +160,7 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
         <el-form-item label="需求打码倍率">
           <el-input
             class="w-400"
-            v-model="formData.code_magnification"
+            v-model="formData.bet_task_rate"
             placeholder="请输入需求打码倍率"
           />
         </el-form-item>
@@ -158,7 +168,7 @@ watch(achievementRewardCollectionDialogVisible, (value) => {
     </el-form>
     <el-footer class="text-center mt-6">
       <el-button type="primary" @click="updateAchievementReward">确认</el-button>
-      <el-button @click="achievementRewardDialogVisible = false">取消</el-button>
+      <el-button @click="handleCloseDialog">取消</el-button>
     </el-footer>
   </el-dialog>
   <el-dialog

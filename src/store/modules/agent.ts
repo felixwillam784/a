@@ -268,7 +268,7 @@ export const agentStore = defineStore({
       const next = (response: Agent.GetAgentAchievementRewardListResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setAgentAchievementRewardList(response.data.data_list);
+          this.setAgentAchievementRewardList(response.data.achievement_list);
         }
       }
       await network.sendMsg(route, {}, next, 1, 4);

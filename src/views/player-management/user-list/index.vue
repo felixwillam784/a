@@ -17,7 +17,7 @@ const { player } = useStore();
 const loading = ref<boolean>(false);
 
 const formData = reactive<any>({
-  uid: "",
+  id: "",
   nickname: "",
   user_type: "",
   invitation_code: "",
@@ -59,46 +59,66 @@ const UserTypeOptions = [
 ];
 
 const handleQuery = async () => {
-  loading.value = true;
-  formData.page_num = 1;
-  formData.page_size = 20;
-  await player.dispatchGetUserList(formData);
-  loading.value = false;
+  try {
+    loading.value = true;
+    formData.page_num = 1;
+    formData.page_size = 20;
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const resetQuery = async () => {
-  loading.value = true;
-  for (let property in formData) {
-    if (formData.hasOwnProperty(property)) {
-      formData[property] = "";
+  try {
+    loading.value = true;
+    for (let property in formData) {
+      if (formData.hasOwnProperty(property)) {
+        formData[property] = "";
+      }
     }
+    formData.page_num = 1;
+    formData.page_size = 20;
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+    loading.value = false;
   }
-  formData.page_num = 1;
-  formData.page_size = 20;
-  await player.dispatchGetUserList(formData);
-  loading.value = false;
 };
 
 const prohibitWithdrawal = async (id: number, account_withdrawal_prohibit: number) => {
-  if (account_withdrawal_prohibit === 1)
-    await player.dispatchProhibitWithdrawal({
-      id: id,
-      account_withdrawal_prohibit: 2,
-    });
-  else
-    await player.dispatchProhibitWithdrawal({
-      id: id,
-      account_withdrawal_prohibit: 1,
-    });
+  try {
+    if (account_withdrawal_prohibit === 1)
+      await player.dispatchProhibitWithdrawal({
+        id: id,
+        account_withdrawal_prohibit: 2,
+      });
+    else
+      await player.dispatchProhibitWithdrawal({
+        id: id,
+        account_withdrawal_prohibit: 1,
+      });
 
-  await player.dispatchGetUserList(formData);
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+  }
 };
 
 const addBlackList = async (id: number, account_prohibit: number) => {
-  if (account_prohibit === 1)
-    await player.dispatchAddBlackList({ id, account_prohibit: 2 });
-  else await player.dispatchAddBlackList({ id: id, account_prohibit: 1 });
-  await player.dispatchGetUserList(formData);
+  try {
+    if (account_prohibit === 1)
+      await player.dispatchAddBlackList({ id, account_prohibit: 2 });
+    else await player.dispatchAddBlackList({ id: id, account_prohibit: 1 });
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+  }
 };
 
 const goCustomerDetailPage = (id: string) => {
@@ -106,17 +126,27 @@ const goCustomerDetailPage = (id: string) => {
 };
 
 const handleSizeChange = async ({ page, limit }: any) => {
-  formData.page_num = page;
-  formData.page_size = limit;
-  loading.value = true;
-  await player.dispatchGetUserList(formData);
-  loading.value = false;
+  try {
+    formData.page_num = page;
+    formData.page_size = limit;
+    loading.value = true;
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(async () => {
-  loading.value = true;
-  await player.dispatchGetUserList(formData);
-  loading.value = false;
+  try {
+    loading.value = true;
+    await player.dispatchGetUserList(formData);
+  } catch (error: any) {
+    ElMessage.error(error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 <template>
@@ -125,8 +155,8 @@ onMounted(async () => {
       <el-col :span="24" :xs="24">
         <div class="search">
           <el-form ref="formDataRef" :model="formData" :inline="true" label-width="120">
-            <el-form-item label="客户账号" prop="uid">
-              <el-input v-model="formData.uid" placeholder="请输入客户账号" clearable />
+            <el-form-item label="用户ID" prop="id">
+              <el-input v-model="formData.id" placeholder="请输入用户ID" clearable />
             </el-form-item>
             <el-form-item label="客户昵称" prop="nickname">
               <el-input
@@ -258,15 +288,51 @@ onMounted(async () => {
                 {{ "VIP" + scope.row.vip_level }}
               </template>
             </el-table-column>
+            <el-table-column label="货币类型" width="100" align="center" prop="vip_level">
+              <template #default="scope">
+                <p>{{ scope.row.currency }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="总充值次数 总提现次数"
+              width="110"
+              align="center"
+              prop="vip_level"
+            >
+              <template #default="scope">
+                <p>{{ scope.row.total_withdraw_num }} 次</p>
+                <p>{{ scope.row.total_deposit_num }} 次</p>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="总充值金额 总提现金额"
+              width="100"
+              align="center"
+              prop="vip_level"
+            >
+              <template #default="scope">
+                <p>{{ scope.row.total_withdraw_amount }}</p>
+                <p>{{ scope.row.total_deposit_amount }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="充值提现差值"
+              width="120"
+              align="center"
+              prop="vip_level"
+            >
+              <template #default="scope">
+                <p>
+                  {{ scope.row.total_withdraw_amount - scope.row.total_deposit_amount }}
+                </p>
+              </template>
+            </el-table-column>
             <el-table-column label="账号状态" align="center" prop="user_status">
               <template #default="scope">
-                {{
-                  scope.row.account_prohibit == 1
-                    ? "激活"
-                    : scope.row.account_prohibit == 2
-                    ? "禁用"
-                    : "删除"
-                }}
+                <font :color="scope.user_status == 0 ? 'red' : 'green'">{{
+                  scope.user_status == 1 ? "正常用戶" : "流失用戶"
+                }}</font>
               </template>
             </el-table-column>
             <el-table-column
@@ -275,7 +341,12 @@ onMounted(async () => {
               prop="account_withdrawal_prohibit"
             >
               <template #default="scope">
-                {{ scope.row.account_withdrawal_prohibit == 1 ? "提现正常" : "提现封禁" }}
+                <font
+                  :color="scope.row.account_withdrawal_prohibit != 1 ? 'red' : 'black'"
+                  >{{
+                    scope.row.account_withdrawal_prohibit == 1 ? "提现正常" : "提现封禁"
+                  }}</font
+                >
               </template>
             </el-table-column>
             <el-table-column
@@ -284,13 +355,9 @@ onMounted(async () => {
               prop="idnumber_withdrawal_prohibit"
             >
               <template #default="scope">
-                {{
-                  scope.row.idnumber_withdrawal_prohibit == 1
-                    ? "正常"
-                    : scope.row.idnumber_withdrawal_prohibit == 2
-                    ? "冻结"
-                    : "自我冻结"
-                }}
+                <font :color="scope.row.account_prohibit != 1 ? 'red' : 'black'">{{
+                  scope.row.account_prohibit == 1 ? "正常" : "黑名单"
+                }}</font>
               </template>
             </el-table-column>
             <el-table-column label="用户标记" align="center" prop="mark" width="180">

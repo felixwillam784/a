@@ -51,16 +51,7 @@ const order_stats = [
   "业务处理完成(补单)",
   "已退款",
 ];
-const changeStatusData = [
-  {
-    label: "是",
-    value: true,
-  },
-  {
-    label: "否",
-    value: false,
-  },
-];
+
 const orderStatusData = [
   {
     label: "支付成功",
@@ -90,10 +81,15 @@ const orderStatusData = [
     label: "订单已关闭",
     value: -2,
   },
+  {
+    label: "所有",
+    value: "",
+  },
 ];
-const depositTypesData = ["正常存款", "补单存款", "备用订单"];
+// const depositTypesData = ["正常存款", "补单存款", "备用订单"];
 const rules = ref<FormRules<Withdrawal.GetDepositOrder>>({
   order_amount: [{ required: true, message: "请输入补单金额。", trigger: "blur" }],
+  note: [{ required: true, message: "请输入备注。", trigger: "blur" }],
 });
 
 const depositOrderList = computed(() => {
@@ -105,7 +101,6 @@ const depositOrderItem = ref<Withdrawal.GetDepositOrder>(
 );
 
 const resetQuery = async () => {
-  loading.value = true;
   for (let property in formData.value) {
     if (formData.value.hasOwnProperty(property)) {
       formData.value[property] = "";
@@ -118,18 +113,31 @@ const resetQuery = async () => {
   formData.value.submission_time[1] = moment(new Date().getTime()).format(
     "YYYY-MM-DD HH:mm:ss"
   );
-  formData.value.page_num = 1;
-  formData.value.page_size = 20;
-  await withdrawal.dispatchDepositList(formData.value);
-  loading.value = false;
+  try {
+    loading.value = true;
+    formData.value.page_num = 1;
+    formData.value.page_size = 20;
+    await withdrawal.dispatchDepositList(formData.value);
+  } catch (error: any) {
+  } finally {
+    loading.value = false;
+  }
 };
 
 const handleQuery = async () => {
   loading.value = true;
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  await withdrawal.dispatchDepositList(formData.value);
-  loading.value = false;
+  try {
+    loading.value = true;
+    await withdrawal.dispatchDepositList(formData.value);
+    loading.value = false;
+
+    await withdrawal.dispatchDepositList(formData.value);
+  } catch (error: any) {
+  } finally {
+    loading.value = false;
+  }
 };
 const detailManualPaymentDialog = (item: Withdrawal.GetDepositOrder) => {
   depositOrderItem.value = item;
@@ -214,6 +222,9 @@ const copyText = (str: any) => {
   navigator.clipboard.writeText(str);
   ElMessage.success("复制成功");
 };
+const goCustomerDetailPage = (id: string) => {
+  router.push({ name: "UserDetail", params: { id: id } });
+};
 </script>
 
 <template>
@@ -224,6 +235,9 @@ const copyText = (str: any) => {
           <el-form :model="formData" :inline="true" label-width="100">
             <el-form-item label="用户ID" prop="user_id">
               <el-input v-model="formData.id" clearable placeholder="请输入用户ID" />
+            </el-form-item>
+            <el-form-item label="邮箱账号" prop="id">
+              <el-input v-model="formData.id" placeholder="请输入用户ID" clearable />
             </el-form-item>
             <el-form-item label="订单状态" prop="order_status">
               <el-select v-model="formData.order_status" placeholder="选择订单状态">
@@ -315,7 +329,11 @@ const copyText = (str: any) => {
               width="200"
             >
               <template #default="scope">
-                <el-link :underline="false">
+                <el-link
+                  style="color: #5393e0; text-decoration-line: underline"
+                  :underline="false"
+                  @click="goCustomerDetailPage(scope.row.user_id)"
+                >
                   {{ scope.row.user_id }}
                 </el-link>
                 <el-button
@@ -542,6 +560,9 @@ const copyText = (str: any) => {
         <el-form-item label="补单金额:" prop="order_amount">
           <el-input v-model="depositOrderItem.order_amount" />
         </el-form-item>
+        <el-form-item label="备注:" prop="note">
+          <el-input v-model="depositOrderItem.note" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -568,8 +589,16 @@ const copyText = (str: any) => {
             </el-row> -->
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
-        <el-col :span="18" class="detail-item-right-bg">
+        <el-col :span="18" class="detail-item-right-bg flex justify-between">
           <p>{{ depositOrderItem.user_id }}</p>
+          <el-button
+            link
+            v-if="depositOrderItem.user_id"
+            style="color: blue"
+            @click="copyText(depositOrderItem.user_id)"
+          >
+            复制
+          </el-button>
         </el-col>
       </el-row>
       <!-- <el-row>
