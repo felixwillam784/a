@@ -330,8 +330,8 @@ onMounted(async () => {
             </el-table-column>
             <el-table-column label="账号状态" align="center" prop="user_status">
               <template #default="scope">
-                <font :color="scope.user_status == 0 ? 'red' : 'green'">{{
-                  scope.user_status == 1 ? "正常用戶" : "流失用戶"
+                <font :color="scope.row.user_status == 1 ? 'green' : 'red'">{{
+                  scope.row.user_status == 1 ? "正常用戶" : "流失用戶"
                 }}</font>
               </template>
             </el-table-column>
