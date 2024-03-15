@@ -18,7 +18,7 @@ export interface GetDepositOrder {
     tax_number: string
     payment_channel: string
     recharge_type: number
-    order_number: string
+    order_id: string
     deposit_type: number
     order_amount: string
     first_charge_status:boolean

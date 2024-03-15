@@ -19,12 +19,17 @@ const router = useRouter();
 const formData = ref<any>({
   id: "",
   user_id: "",
+  uid: "",
+  id_number: "",
+  currency_type: "",
   first_charge_status: "",
   upstream_channel: "",
   platform_order_number: "",
   upstream_order_number: "",
   gaia_order_number: "",
-  order_status: "",
+  amonut_start: "",
+  amount_end: "",
+  order_status: -3,
   submission_time: [
     moment(new Date().getTime() - 30 * 24 * 60 * 60 * 1000).format("YYYY-MM-DD HH:mm:ss"),
     moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
@@ -83,7 +88,7 @@ const orderStatusData = [
   },
   {
     label: "所有",
-    value: "",
+    value: -3,
   },
 ];
 // const depositTypesData = ["正常存款", "补单存款", "备用订单"];
@@ -115,6 +120,7 @@ const resetQuery = async () => {
   );
   try {
     loading.value = true;
+    formData.value.order_status = -3;
     formData.value.page_num = 1;
     formData.value.page_size = 20;
     await withdrawal.dispatchDepositList(formData.value);
@@ -128,16 +134,9 @@ const handleQuery = async () => {
   loading.value = true;
   formData.value.page_num = 1;
   formData.value.page_size = 20;
-  try {
-    loading.value = true;
-    await withdrawal.dispatchDepositList(formData.value);
-    loading.value = false;
-
-    await withdrawal.dispatchDepositList(formData.value);
-  } catch (error: any) {
-  } finally {
-    loading.value = false;
-  }
+  loading.value = true;
+  await withdrawal.dispatchDepositList(formData.value);
+  loading.value = false;
 };
 const detailManualPaymentDialog = (item: Withdrawal.GetDepositOrder) => {
   depositOrderItem.value = item;
@@ -155,8 +154,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       await withdrawal
         .dispatchUpdateSupply({
-          id: depositOrderItem.value?.platform_order_number,
+          order_id: depositOrderItem.value?.order_id,
           order_amount: depositOrderItem.value?.order_amount,
+          note: depositOrderItem.value?.note,
         })
         .then(() => {
           closeDialog();
@@ -171,6 +171,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const makeOrder = (item: Withdrawal.GetDepositOrder) => {
+  console.log(item);
   depositOrderItem.value = Object.assign({}, item);
   depositOrderDialogVisible.value = true;
 };
@@ -237,7 +238,14 @@ const goCustomerDetailPage = (id: string) => {
               <el-input v-model="formData.id" clearable placeholder="请输入用户ID" />
             </el-form-item>
             <el-form-item label="邮箱账号" prop="id">
-              <el-input v-model="formData.id" placeholder="请输入用户ID" clearable />
+              <el-input v-model="formData.uid" placeholder="请输入邮箱账号" clearable />
+            </el-form-item>
+            <el-form-item label="身份信息" prop="id">
+              <el-input
+                v-model="formData.id_number"
+                placeholder="请输入身份信息"
+                clearable
+              />
             </el-form-item>
             <el-form-item label="订单状态" prop="order_status">
               <el-select v-model="formData.order_status" placeholder="选择订单状态">
@@ -249,6 +257,8 @@ const goCustomerDetailPage = (id: string) => {
                 ></el-option>
               </el-select>
             </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
             <el-form-item label="订单提交时间" prop="submission_time">
               <el-date-picker
                 range-separator="到"
@@ -260,8 +270,6 @@ const goCustomerDetailPage = (id: string) => {
                 style="width: 220px"
               />
             </el-form-item>
-          </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
             <el-form-item label="订单更新时间" prop="order_update_time">
               <el-date-picker
                 range-separator="到"
@@ -287,6 +295,12 @@ const goCustomerDetailPage = (id: string) => {
                 placeholder="请选择上游通道"
               />
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :icon="Search" @click="handleQuery"
+                >搜索</el-button
+              >
+              <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
           </el-form>
           <el-form :model="formData" :inline="true" label-width="100">
             <!-- <el-form-item label="通道订单号" prop="platform_order_number">
@@ -306,11 +320,28 @@ const goCustomerDetailPage = (id: string) => {
                 placeholder="请输入gaia"
               />
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :icon="Search" @click="handleQuery"
-                >搜索</el-button
-              >
-              <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
+            <el-form-item label="货币类型" prop="gaia_order_number">
+              <el-input
+                v-model="formData.currency_type"
+                clearable
+                placeholder="请输入gaia"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="金额范围" prop="amonut_start">
+              <el-input
+                v-model="formData.amonut_start"
+                clearable
+                placeholder="请输入金额范围"
+              />
+            </el-form-item>
+            <el-form-item label="至" prop="amount_end">
+              <el-input
+                v-model="formData.amount_end"
+                clearable
+                placeholder="请输入金额范围"
+              />
             </el-form-item>
           </el-form>
         </el-card>
@@ -332,15 +363,11 @@ const goCustomerDetailPage = (id: string) => {
                 <el-link
                   style="color: #5393e0; text-decoration-line: underline"
                   :underline="false"
-                  @click="goCustomerDetailPage(scope.row.user_id)"
+                  @click="goCustomerDetailPage(scope.row.id)"
                 >
-                  {{ scope.row.user_id }}
+                  {{ scope.row.id }}
                 </el-link>
-                <el-button
-                  link
-                  v-if="scope.row.user_id"
-                  @click="copyText(scope.row.user_id)"
-                >
+                <el-button link v-if="scope.row.id" @click="copyText(scope.row.id)">
                   <el-icon>
                     <CopyDocument />
                   </el-icon>

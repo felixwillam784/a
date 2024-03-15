@@ -323,15 +323,30 @@ onMounted(async () => {
               prop="vip_level"
             >
               <template #default="scope">
-                <p>
-                  {{ scope.row.total_withdraw_amount - scope.row.total_deposit_amount }}
-                </p>
+                <font
+                  :color="
+                    scope.row.total_withdraw_amount - scope.row.total_deposit_amount > 0
+                      ? 'green'
+                      : scope.row.total_withdraw_amount - scope.row.total_deposit_amount <
+                        0
+                      ? 'red'
+                      : 'black'
+                  "
+                  >{{
+                    scope.row.total_withdraw_amount - scope.row.total_deposit_amount
+                  }}</font
+                >
+                <p></p>
               </template>
             </el-table-column>
             <el-table-column label="账号状态" align="center" prop="user_status">
               <template #default="scope">
                 <font :color="scope.row.user_status == 1 ? 'green' : 'red'">{{
-                  scope.row.user_status == 1 ? "正常用戶" : "流失用戶"
+                  scope.row.user_status == 1
+                    ? "正常用戶"
+                    : scope.row.user_status == 2
+                    ? "流失用戶"
+                    : "無效參數"
                 }}</font>
               </template>
             </el-table-column>
