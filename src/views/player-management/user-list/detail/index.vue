@@ -392,6 +392,7 @@ const suspenseWithdraw = async () => {
                   <el-link
                     :underline="false"
                     style="color: #5393e0; text-decoration-line: underline"
+                    v-if="basicInformation.sir_user_id != '0'"
                     @click="goCustomerDetailPage(basicInformation.sir_user_id)"
                   >
                     {{ basicInformation.sir_user_id }}
@@ -508,11 +509,7 @@ const suspenseWithdraw = async () => {
               <el-form label-width="200">
                 <el-form-item label="账号状态:">
                   <font :color="basicInformation.user_status == 0 ? 'red' : 'green'">{{
-                    basicInformation.user_status == 0
-                      ? "無效參數"
-                      : basicInformation.user_status == 1
-                      ? "正常用戶"
-                      : "流失用戶"
+                    basicInformation.user_status == 1 ? "正常用戶" : "流失用戶"
                   }}</font>
                 </el-form-item>
               </el-form>

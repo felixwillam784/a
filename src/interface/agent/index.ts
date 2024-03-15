@@ -167,10 +167,10 @@ export interface AgentInvitationStatisticList {
 }
 
 export interface AgentAchievementRewardData {
-    code_magnification: string
-    id: number
-    invite_number_condition: number
-    invite_reward_amount: number
+    id?: number
+    user_max: number
+    award: number
+    bet_task_rate: number
 }
 
 export interface AgentAchievementStageRewardData {
@@ -229,7 +229,7 @@ export type GetAgentAchievementStageRewardResponse = {
 export type GetAgentAchievementRewardListResponse = {
     code: number | string
     data: {
-        data_list: Array<AgentAchievementRewardData>
+        achievement_list: Array<AgentAchievementRewardData>
         total_count: number
     }
     message: string

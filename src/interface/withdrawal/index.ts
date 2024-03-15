@@ -22,6 +22,7 @@ export interface GetDepositOrder {
     deposit_type: number
     order_amount: string
     first_charge_status:boolean
+    note: string
   }
 
   export type GetDepositOrderResponse = {

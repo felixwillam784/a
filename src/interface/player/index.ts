@@ -10,6 +10,11 @@ export interface GetUserData{
     account_suspend: number
     account_prohibit: number
     mark:	string
+    currency: string
+    total_deposit_amount: number
+    total_deposit_num: number
+    total_withdraw_amount: number
+    total_withdraw_num: number
 }
 export interface GetUserDataReq{
     uid:	string
