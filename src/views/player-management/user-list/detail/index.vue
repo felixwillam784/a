@@ -844,10 +844,10 @@ const suspenseWithdraw = async () => {
               <el-form-item label="归属上级:">
                 <el-link
                   :underline="false"
-                  style="color: #3afefe; text-decoration-line: underline"
+                  style="color: #5393e0; text-decoration-line: underline"
                   @click="router.push({ name: 'UserDetail' })"
                 >
-                  {{ userInviteData.sir_user_id }}
+                  {{ userInviteData.sir_user_id ? userInviteData.sir_user_id : '' }}
                 </el-link>
               </el-form-item>
             </el-col>
