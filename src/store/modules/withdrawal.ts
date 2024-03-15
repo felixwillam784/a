@@ -110,6 +110,12 @@ export const withdrawalStore = defineStore({
         } else {
           ref.order_update_end = Math.floor(new Date().getTime() / 1000);
         }
+        if (!formData.amonut_start ) {
+          ref.amonut_start = 0;
+        }
+        if (!formData.amount_end ) {
+          ref.amount_end = 0;
+        }
         const next = (response: Withdrawal.GetDepositOrderResponse) => {
           if (response.code == "00") {
             this.setSuccess(true);
