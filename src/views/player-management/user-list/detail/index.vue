@@ -22,14 +22,19 @@ const basicInformation = computed(() => {
   return player.getBasicDetail;
 });
 
-const depositAndWithdrawalData = computed(() => {
-  return player.getDepositWithrawDetail;
-});
+// const depositAndWithdrawalData = computed(() => {
+//   return player.getDepositWithrawDetail;
+// });
 
 // 账户信息
 const userAccountData = computed(() => {
   return player.getUserAccountList;
 });
+
+// 代理信息
+const userInviteData = computed(() => {
+  return player.getuserInviteList;
+})
 
 const agentInformation = ref({
   all_subordinates: 999,
@@ -92,23 +97,25 @@ const moreVipBonusShow = () => {
 
 onMounted(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
-  await player.dispatchDepositWithrawDetailData({
-    user_id: route.params.id,
-  });
+  // await player.dispatchDepositWithrawDetailData({
+  //   user_id: route.params.id,
+  // });
   await player.dispatchWithdrawalDetailData({
     id: route.params.id,
   });
   await player.dispatchUserAccountList({ id: route.params.id });
+  await player.dispatchUserInviteList({ id: route.params.id });
 });
 
 onUpdated(async () => {
   await player.dispatchPlayerBasicDetail({ id: route.params.id });
-  await player.dispatchDepositWithrawDetailData({
-    user_id: route.params.id,
-  });
+  // await player.dispatchDepositWithrawDetailData({
+  //   user_id: route.params.id,
+  // });
   await player.dispatchWithdrawalDetailData({
     id: route.params.id,
   });
+  await player.dispatchUserAccountList({ id: route.params.id });
 });
 const inputPhoneTagValue = ref("");
 const inputPhoneTagVisible = ref(false);
@@ -144,6 +151,33 @@ const BankData = ref<any>({
   bank_number: "",
   id_number: "",
 });
+
+const inviteTypeOtions = ref<any>([
+  {
+    id: 0,
+    value: '无效参数'
+  },
+  {
+    id: 1,
+    value: '一般用戶'
+  },
+  {
+    id: 2,
+    value: '测试账号'
+  },
+  {
+    id: 3,
+    value: '推广账号'
+  },
+  {
+    id: 4,
+    value: 'KOL账号'
+  }
+])
+
+const getInviteTypeOtions = (id: number) => {
+  return inviteTypeOtions.value.filter((item: any) => item.id == id)[0]?.value;
+}
 
 const showUserMarkInput = () => {
   inputUserMarkVisible.value = true;
@@ -801,7 +835,7 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="所有下级人数:">
-                  {{ agentInformation.all_subordinates }}
+                  {{ userInviteData.total_register_user }}
                 </el-form-item>
               </el-form>
             </el-col>
@@ -812,15 +846,15 @@ const suspenseWithdraw = async () => {
                   style="color: #3afefe; text-decoration-line: underline"
                   @click="router.push({ name: 'UserDetail' })"
                 >
-                  {{ agentInformation.belong_to_superior }}
+                  {{ userInviteData.sir_user_id }}
                 </el-link>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理类型:">
-                {{ agentInformation.agent_type }}
+                {{ getInviteTypeOtions(userInviteData.invite_type) }}
                 <Font color="red" style="margin-left: 20px"
-                  >评级: {{ agentInformation.rating }}</Font
+                  >评级: {{ userInviteData.invite_grade }}</Font
                 >
               </el-form-item>
             </el-col>
@@ -829,18 +863,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="代理充值金额总和:">
-                  {{ agentInformation.recharge_amount_of_sum }}
+                  {{ userInviteData.all_deposit_amount }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="下级提现总和:">
-                {{ agentInformation.subordinate_withdrawal_sum }}
+                {{ userInviteData.all_withdraw_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理总盈亏:">
-                {{ agentInformation.total_profit_and_loss }}
+                {{ userInviteData.total_pl }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -848,18 +882,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="充值人数总和:">
-                  {{ agentInformation.recharger_number }}
+                  {{ userInviteData.all_deposit_user }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="下级投注总金额:">
-                {{ agentInformation.subordinate_total_betting_amount }}
+                {{ userInviteData.all_bet_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="投注返利总金额:">
-                {{ agentInformation.betting_rebate_amount }}
+                {{ userInviteData.all_bet_award_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -867,18 +901,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="代理直接奖励:">
-                  {{ agentInformation.agent_direct_rewards }}
+                  {{ userInviteData.direct_reward }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理成就奖励:">
-                {{ agentInformation.agent_achievement_rewards }}
+                {{ userInviteData.achievement_reward }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理任务奖励:">
-                {{ agentInformation.agent_task_rewards }}
+                {{ userInviteData.task_reward }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -886,18 +920,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="昨日返佣金额:">
-                  {{ agentInformation.yesterday_rebate_amount }}
+                  {{ userInviteData.yesterday_bonus }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理最后取款间隔天数:">
-                {{ agentInformation.last_withdrawal_days_number }}
+                {{ userInviteData.last_withdraw_duration }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="代理最后邀请间隔天数:">
-                {{ agentInformation.last_invite_days_number }}
+                {{ userInviteData.last_invite_duration }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -905,18 +939,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理注册人数:">
-                  {{ agentInformation.first_level_registration_number }}
+                  {{ userInviteData.one_register_user }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理注册人数:">
-                {{ agentInformation.second_level_registration_number }}
+                {{ userInviteData.two_register_user }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理注册人数:">
-                {{ agentInformation.third_level_registration_number }}
+                {{ userInviteData.three_register_user }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -924,18 +958,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理充值人数:">
-                  {{ agentInformation.first_level_recharge_number }}
+                  {{ userInviteData.one_deposit_user }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理充值人数:">
-                {{ agentInformation.second_level_recharge_number }}
+                {{ userInviteData.two_deposit_user }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理充值人数:">
-                {{ agentInformation.third_level_recharge_number }}
+                {{ userInviteData.three_deposit_user }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -943,18 +977,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理充值金额:">
-                  {{ agentInformation.first_level_recharge_amount }}
+                  {{ userInviteData.one_deposit_amount }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理充值金额:">
-                {{ agentInformation.second_level_recharge_amount }}
+                {{ userInviteData.two_deposit_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理充值金额:">
-                {{ agentInformation.third_level_recharge_amount }}
+                {{ userInviteData.three_deposit_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -962,18 +996,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理提现金额:">
-                  {{ agentInformation.first_level_withdrawal_amount }}
+                  {{ userInviteData.one_diamond	 }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理提现金额:">
-                {{ agentInformation.second_level_withdrawal_amount }}
+                {{ userInviteData.two_diamond }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理提现金额:">
-                {{ agentInformation.third_level_withdrawal_amount }}
+                {{ userInviteData.three_diamond }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -981,18 +1015,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理充提差:">
-                  {{ agentInformation.first_level_charge_withdrawal_difference }}
+                  {{ userInviteData.one_diff_dw }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理充提差:">
-                {{ agentInformation.second_level_charge_withdrawal_difference }}
+                {{ userInviteData.two_diff_dw }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理充提差:">
-                {{ agentInformation.third_level_charge_withdrawal_difference }}
+                {{ userInviteData.three_diff_dw }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -1000,18 +1034,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="一级代理投注返佣:">
-                  {{ agentInformation.first_level_betting_rebate }}
+                  {{ userInviteData.one_bet_bonus }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="二级代理投注返佣:">
-                {{ agentInformation.second_level_betting_rebate }}
+                {{ userInviteData.two_bet_bonus }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="三级代理投注返佣:">
-                {{ agentInformation.third_level_betting_rebate }}
+                {{ userInviteData.three_bet_bonus }}
               </el-form-item>
             </el-col>
           </el-row>

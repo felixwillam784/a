@@ -504,6 +504,38 @@ const lock = () => {};
               </template>
             </el-table-column>
             <el-table-column
+              label="成功充值次数"
+              align="center"
+              prop="success_recharge_times"
+              width="120"
+            >
+              <template #default="scope">
+                <p>{{ scope.row.success_recharge_times }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="是否首次提现"
+              align="center"
+              prop="first_withdrawal_status"
+              width="120"
+            >
+              <template #default="scope">
+                <p :class="scope.row.first_withdrawal_status == false ? 'green' : 'red'">
+                  {{ scope.row.first_withdrawal_status == false ? '否' : '是' }}
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="提现次数"
+              align="center"
+              prop="withdrawal_times"
+              width="120"
+            >
+              <template #default="scope">
+                <p>{{ scope.row.withdrawal_times }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="订单状态"
               align="center"
               prop="order_status"
@@ -596,38 +628,6 @@ const lock = () => {};
                     </el-icon>
                   </el-button>
                 </div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="成功充值次数"
-              align="center"
-              prop="success_recharge_times"
-              width="120"
-            >
-              <template #default="scope">
-                <p>{{ scope.row.success_recharge_times }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="是否首次提现"
-              align="center"
-              prop="first_withdrawal_status"
-              width="120"
-            >
-              <template #default="scope">
-                <p :class="scope.row.first_withdrawal_status == false ? 'green' : 'red'">
-                  {{ scope.row.first_withdrawal_status == false ? '否' : '是' }}
-                </p>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="提现次数"
-              align="center"
-              prop="withdrawal_times"
-              width="120"
-            >
-              <template #default="scope">
-                <p>{{ scope.row.withdrawal_times }}</p>
               </template>
             </el-table-column>
             <el-table-column label="KOL用户" align="center" prop="kol_user" width="120">

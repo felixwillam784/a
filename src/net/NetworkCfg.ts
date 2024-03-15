@@ -131,6 +131,7 @@ export namespace NETWORKCFG {
     static TEST_USER_BASIC_DETAIL:string = "/user/test/detail"
     static TEST_USER_UPDATE_STATUS:string = "/user/test/status"
     static USER_ACCOUNT: string = '/user/account'  // 查询账户信息  Query account information
+    static USER_INVITE: string = '/user/invite'  // 查询代理信息  Query agent information
   }
 
   export class WITHDRAWAL{

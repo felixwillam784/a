@@ -17,7 +17,8 @@ export const playerStore = defineStore({
       WithdrawalDetailData: {} as Player.WithdrawalDetailData,
       TestAccountList: [] as Array<Player.GetTestUserData>,
       TestUserBasicDetail: {} as Player.GetTestUserBasicDetailData,
-      userAccountList: {} as Player.getUserAccountData
+      userAccountList: {} as Player.getUserAccountData,
+      userInviteList: {} as Player.getUserInviteData
     }),
     
     getters: {
@@ -32,7 +33,8 @@ export const playerStore = defineStore({
       getWithdrawalDetailData: (state) => state.WithdrawalDetailData,
       getTestAccountList: (state) => state.TestAccountList,
       getTestUserBasicDetail: (state) => state.TestUserBasicDetail,
-      getUserAccountList: (state) => state.userAccountList
+      getUserAccountList: (state) => state.userAccountList,
+      getuserInviteList: (state) => state.userInviteList
     },
   
     actions: {
@@ -71,6 +73,9 @@ export const playerStore = defineStore({
       },
       setUserAccountList(data: Player.getUserAccountData) {
         this.userAccountList = data;
+      },
+      setUserInviteList(data: Player.getUserInviteData) {
+        this.userInviteList = data;
       },
 
       async dispatchGetUserList(formData:any) {
@@ -318,6 +323,23 @@ export const playerStore = defineStore({
           if (response.code == "00") {
             this.setSuccess(true);
             this.setUserAccountList(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
+      },
+      /**
+       * 查询代理信息
+       * Query agent information 
+       */
+      async dispatchUserInviteList(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.USER_INVITE;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.getUserInviteResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setUserInviteList(response.data);
           }
         }
         await network.sendMsg(route, {params:formData}, next, 1, 4);
