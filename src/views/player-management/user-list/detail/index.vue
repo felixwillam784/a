@@ -116,6 +116,7 @@ onUpdated(async () => {
     id: route.params.id,
   });
   await player.dispatchUserAccountList({ id: route.params.id });
+  await player.dispatchUserInviteList({ id: route.params.id });
 });
 const inputPhoneTagValue = ref("");
 const inputPhoneTagVisible = ref(false);
