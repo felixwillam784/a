@@ -17,6 +17,7 @@ export const playerStore = defineStore({
       WithdrawalDetailData: {} as Player.WithdrawalDetailData,
       TestAccountList: [] as Array<Player.GetTestUserData>,
       TestUserBasicDetail: {} as Player.GetTestUserBasicDetailData,
+      userAccountList: {} as Player.getUserAccountData
     }),
     
     getters: {
@@ -31,7 +32,7 @@ export const playerStore = defineStore({
       getWithdrawalDetailData: (state) => state.WithdrawalDetailData,
       getTestAccountList: (state) => state.TestAccountList,
       getTestUserBasicDetail: (state) => state.TestUserBasicDetail,
-        
+      getUserAccountList: (state) => state.userAccountList
     },
   
     actions: {
@@ -67,6 +68,9 @@ export const playerStore = defineStore({
       setTestUserBasicDetail(data:Player.GetTestUserBasicDetailData) {
         this.TestUserBasicDetail = data;
         this.TestUserBasicDetail.account_status = this.TestUserBasicDetail.account_prohibit == 1 ? true : false;
+      },
+      setUserAccountList(data: Player.getUserAccountData) {
+        this.userAccountList = data;
       },
 
       async dispatchGetUserList(formData:any) {
@@ -300,6 +304,23 @@ export const playerStore = defineStore({
           }
         }
         await network.sendMsg(route, formData, next, 1);
+      },
+      /**
+       * 查询账户信息
+       * Query account information 
+       */
+      async dispatchUserAccountList(formData: any) {
+        this.setSuccess(false);
+        const route: string = NETWORKCFG.PLAYER.USER_ACCOUNT;
+        const network: Network = Network.getInstance();
+        // response call back function
+        const next = (response: Player.getUserAccountResponse) => {
+          if (response.code == "00") {
+            this.setSuccess(true);
+            this.setUserAccountList(response.data);
+          }
+        }
+        await network.sendMsg(route, {params:formData}, next, 1, 4);
       },
     }
   })

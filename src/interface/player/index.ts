@@ -188,3 +188,49 @@ export interface GetTestUserBasicDetailDataResponse {
     data: GetTestUserBasicDetailData
     message: string
 }
+
+export type getUserAccountResponse = {
+    code: number | string
+    data: getUserAccountData
+    message: string
+}
+
+export interface getUserAccountData {
+    activity_bonus: string
+    balance: string
+    bet_amount: string
+    bet_pl: string
+    bet_times: string
+    bonus: string
+    desirable_amount: string
+    diff_dw: string
+    frozen_amount: string
+    manual_deduct_amount: string
+    manual_deposit_amount: string
+    principal_amount: string
+    prize_amount: string
+    total_deposit_amount: string
+    total_withdraw_amount: string
+    vip_bet_award: string
+    vip_bet_exp: string
+    vip_deposit_exp: string
+    vip_free_withdrawal_amount: string
+    vip_level: string
+    vip_level_up_award: string
+    vip_rank_bet_exp: string
+    vip_rank_deposit_exp: string
+    vip_withdrawal_amount: string
+    vip_total_reward: vipTotalRewardData
+}
+
+export interface vipTotalRewardData {
+    activity_reward: string
+    day_reward: string
+    deposit_reward: string
+    month_reward: string
+    sign_reward: string
+    spin_reward: string
+    task_reward: string
+    total_reward: string
+    week_reward: string
+}

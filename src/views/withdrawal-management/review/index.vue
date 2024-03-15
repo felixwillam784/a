@@ -9,6 +9,7 @@ import { getWithdrawlReviewList } from "@/api/withdraw-management";
 import useStore from "@/store";
 import { formatDate } from "@/utils/index";
 import { ElMessage } from 'element-plus';
+import { copyText } from '@/utils/copy';
 const { withdrawal } = useStore();
 
 const { auth } = useStore();
@@ -41,7 +42,9 @@ interface GetWithdrawalReview {
   submission_time: string;
   order_update_time: string;
   user_id: number | string;
+  id: string;
   lock: boolean;
+  amount_type: string;
 }
 
 interface RejectInterface {
@@ -288,8 +291,12 @@ const withdrawalReviewOperation = async () => {
 
 const initSubmissionTime = () => {
   submission_time.value = ['', ''];
-  submission_time.value[0] = new Date('2020-12-31 00:00:00').toISOString().split('T')[0];
-  submission_time.value[1] = new Date().toISOString().split('T')[0];
+  let orderTimeStart = new Date();
+  let orderTimeEnd = new Date();
+  orderTimeStart.setDate(orderTimeStart.getDate() - 7);
+  orderTimeEnd.setDate(orderTimeEnd.getDate() + 1);
+  submission_time.value[0] = new Date(orderTimeStart).toISOString().split('T')[0];
+  submission_time.value[1] = new Date(orderTimeEnd).toISOString().split('T')[0];
 }
 
 const sessionStorageId = (id: string) => {
@@ -321,9 +328,20 @@ const getFontStyle = (orderStatus: number) => {
   }
   return `color: ${color}; font-weight: bold;`;
 };
-const copyText = (str: any) => {
-  navigator.clipboard.writeText(str);
-};
+
+const getPriceStyle = (n: number) => {
+  if (n == 0) {
+    return 'color: black';
+  } else if (n > 0) {
+    return 'color: green';
+  } else {
+    return 'color: red';
+  }
+}
+
+// const copyText = (str: any) => {
+//   navigator.clipboard.writeText(str);
+// };
 const operate = (action: number) => {};
 const lock = () => {};
 </script>
@@ -339,6 +357,7 @@ const lock = () => {};
                 <el-form-item label="用户ID" prop="id">
                   <el-input
                     v-model="formData.id"
+                    clearable
                     placeholder="请输入用户ID"
                   />
                 </el-form-item>
@@ -389,12 +408,14 @@ const lock = () => {};
                   <el-form-item label="平台订单号" prop="order_id">
                     <el-input
                       v-model="formData.platform_order_number"
+                      clearable
                       placeholder="请输入平台订单号"
                     />
                   </el-form-item>
-                  <el-form-item label="Gaia订单号" prop="gaia_order_number">
+                  <el-form-item label="Gaia订单号" clearable prop="gaia_order_number">
                     <el-input
                       v-model="formData.gaia_order_number"
+                      clearable
                       placeholder="请输入Gaia订单号"
                     />
                   </el-form-item>
@@ -418,7 +439,7 @@ const lock = () => {};
             style="width: 100%;"
             v-horizontal-scroll
           >
-            <el-table-column label="用户ID" align="center" prop="id" width="160">
+            <el-table-column label="用户ID" align="center" prop="id" width="180">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -429,6 +450,21 @@ const lock = () => {};
                 >
                   {{ scope.row.id }}
                 </el-link>
+                <el-button link @click="copyText(scope.row.id)">
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="货币类型"
+              align="center"
+              prop="amount_type"
+              width="120"
+            >
+              <template #default="scope">
+                <p>{{ scope.row.amount_type }}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -438,7 +474,7 @@ const lock = () => {};
               width="120"
             >
               <template #default="scope">
-                <p>${{ scope.row.withdrawal_amount }}</p>
+                <p>{{ scope.row.withdrawal_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -448,12 +484,23 @@ const lock = () => {};
               width="120"
             >
               <template #default="scope">
-                <p>${{ scope.row.actual_amount }}</p>
+                <p>{{ scope.row.actual_amount }}</p>
               </template>
             </el-table-column>
             <el-table-column label="免手续费" align="center" prop="fee" width="120">
               <template #default="scope">
-                <p>${{ scope.row.handling_fee }}</p>
+                <p>{{ scope.row.handling_fee }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="总充值金额 | 总提现金额" align="center" prop="fee" width="110">
+              <template #default="scope">
+                <p style="color: green;">{{ scope.row.total_recharge }}</p>
+                <p style="color: red;">{{ scope.row.total_withdrawal }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="总充提差值" align="center" width="120">
+              <template #default="scope">
+                <p :style="getPriceStyle(scope.row.total_recharge - scope.row.total_withdrawal)">{{ scope.row.total_recharge - scope.row.total_withdrawal }}</p>
               </template>
             </el-table-column>
             <el-table-column
@@ -568,7 +615,7 @@ const lock = () => {};
               width="120"
             >
               <template #default="scope">
-                <p :class="scope.row.first_withdrawal_status == false ? 'red' : 'green'">
+                <p :class="scope.row.first_withdrawal_status == false ? 'green' : 'red'">
                   {{ scope.row.first_withdrawal_status == false ? '否' : '是' }}
                 </p>
               </template>
@@ -585,7 +632,7 @@ const lock = () => {};
             </el-table-column>
             <el-table-column label="KOL用户" align="center" prop="kol_user" width="120">
               <template #default="scope">
-                <p :class="scope.row.kol_user == false ? 'red' : 'green'">
+                <p :class="scope.row.kol_user == false ? 'green' : 'red'">
                   {{ scope.row.kol_user == false ? '否' : '是' }}
                 </p>
               </template>
@@ -647,6 +694,7 @@ const lock = () => {};
                   style="color: red;"
                   >拒绝</el-button
                 >
+                <!-- 如果条目被当前用户锁定，显示“已锁定” -->
                 <el-button
                   type="danger"
                   link
@@ -660,6 +708,15 @@ const lock = () => {};
                   style="color: black;"
                   >已锁定</el-button
                 >
+                <!-- 如果条目被其他用户锁定，显示“已被xxxx锁定” -->
+                <el-button
+                  type="warning"
+                  link
+                  v-else-if="scope.row.order_status === 0 && scope.row.lock === true"
+                  style="color: orange; font-weight: bold;"
+                >
+                  已被{{ scope.row.operator_name }}锁定
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -739,7 +796,7 @@ const lock = () => {};
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">用户ID:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>{{ withdrawalReviewItem?.user_id }}</p>
+          <p>{{ withdrawalReviewItem?.id }}</p>
         </el-col>
       </el-row>
       <el-row v-if="withdrawalReviewItem?.review_status == 1">
@@ -761,27 +818,33 @@ const lock = () => {};
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="6" class="detail-item-left-bg">货币类型:</el-col>
+        <el-col :span="18" class="detail-item-right-bg">
+          <p>{{ withdrawalReviewItem?.amount_type }}</p>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="6" class="detail-item-left-bg">提现金额:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.withdrawal_amount) }}</p>
+          <p>{{ Number(withdrawalReviewItem?.withdrawal_amount) }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">实到金额:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.actual_amount) }}</p>
+          <p>{{ Number(withdrawalReviewItem?.actual_amount) }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">手续费:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.fee) }}</p>
+          <p>{{ Number(withdrawalReviewItem?.fee) }}</p>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="detail-item-left-bg">免手续费:</el-col>
         <el-col :span="18" class="detail-item-right-bg">
-          <p>${{ Number(withdrawalReviewItem?.handling_fee) }}</p>
+          <p>{{ Number(withdrawalReviewItem?.handling_fee) }}</p>
         </el-col>
       </el-row>
       <el-row>
@@ -843,10 +906,10 @@ const lock = () => {};
       </el-row>
       <template #footer>
         <div class="dialog-footer"
-             v-if="withdrawalReviewItem?.order_status !== 1 &&
-             withdrawalReviewItem?.order_status == 0 &&
-             sessionStorageId(withdrawalReviewItem?.operator_id) &&
-             withdrawalReviewItem?.lock == true">
+            v-if="withdrawalReviewItem?.order_status !== 1 &&
+            withdrawalReviewItem?.order_status == 0 &&
+            sessionStorageId(withdrawalReviewItem?.operator_id) &&
+            withdrawalReviewItem?.lock == true">
           <el-button type="primary" @click="passDialogShow(withdrawalReviewItem)">通过</el-button>
           <el-button type="warning" @click="rejectDialogShow(withdrawalReviewItem)">拒绝</el-button>
           <el-button @click="closeDialog">取消</el-button>

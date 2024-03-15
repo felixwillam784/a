@@ -26,6 +26,11 @@ const depositAndWithdrawalData = computed(() => {
   return player.getDepositWithrawDetail;
 });
 
+// 账户信息
+const userAccountData = computed(() => {
+  return player.getUserAccountList;
+});
+
 const agentInformation = ref({
   all_subordinates: 999,
   belong_to_superior: "aaaaaaaaaa",
@@ -93,6 +98,7 @@ onMounted(async () => {
   await player.dispatchWithdrawalDetailData({
     id: route.params.id,
   });
+  await player.dispatchUserAccountList({ id: route.params.id });
 });
 
 onUpdated(async () => {
@@ -585,18 +591,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="账户余额:">
-                  {{ depositAndWithdrawalData.account_balance }}
+                  {{ userAccountData.balance }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="可提现金额:">
-                {{ depositAndWithdrawalData.withdraw_amount }}
+                {{ userAccountData.desirable_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="冻结余额:">
-                {{ depositAndWithdrawalData.frozen_balance }}
+                {{ userAccountData.frozen_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -604,18 +610,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="本金余额:">
-                  {{ depositAndWithdrawalData.principal_balance }}
+                  {{ userAccountData.principal_amount }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="赠金余额:">
-                {{ depositAndWithdrawalData.bonus_balance }}
+                {{ userAccountData.bonus }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="派奖金额:">
-                {{ depositAndWithdrawalData.bonus_amount }}
+                {{ userAccountData.prize_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -623,18 +629,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="总充值:">
-                  {{ depositAndWithdrawalData.total_recharge }}
+                  {{ userAccountData.total_deposit_amount }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="总提款:">
-                {{ depositAndWithdrawalData.total_withdrawal }}
+                {{ userAccountData.total_withdraw_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="充提差:">
-                {{ depositAndWithdrawalData.charge_withdrawal_difference }}
+                {{ userAccountData.diff_dw }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -642,18 +648,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="投注次数:">
-                  {{ depositAndWithdrawalData.bet_count }}
+                  {{ userAccountData.bet_times }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="投注盈亏:">
-                {{ depositAndWithdrawalData.profit_and_loss }}
+                {{ userAccountData.bet_pl }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="活动赠金:">
-                {{ depositAndWithdrawalData.activity_bonus }}
+                {{ userAccountData.activity_bonus }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -661,18 +667,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="投注金额:">
-                  {{ depositAndWithdrawalData.bet_amount }}
+                  {{ userAccountData.bet_amount }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="人工充值金额:">
-                {{ depositAndWithdrawalData.recharge_amount }}
+                {{ userAccountData.manual_deposit_amount }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="人工扣款金额:">
-                {{ depositAndWithdrawalData.deduction_amount }}
+                {{ userAccountData.manual_deduct_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -680,18 +686,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="VIP等级:">
-                  {{ depositAndWithdrawalData.vip_level }}
+                  {{ userAccountData.vip_level }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="VIP打码返利:">
-                {{ depositAndWithdrawalData.vip_rebate }}
+                {{ userAccountData.vip_bet_award }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="VIP升级奖励总计:">
-                {{ depositAndWithdrawalData.vip_upgrade_rewards }}
+                {{ userAccountData.vip_level_up_award }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -699,18 +705,18 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="VIP存款进度:">
-                  {{ depositAndWithdrawalData.vip_deposit_progress }}
+                  {{ userAccountData.vip_deposit_exp }} / {{ userAccountData.vip_rank_deposit_exp }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="VIP投注进度:">
-                {{ depositAndWithdrawalData.vip_betting_progress }}
+                {{ userAccountData.vip_bet_exp }} / {{ userAccountData.vip_rank_bet_exp }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="VIP提现免手续费额度:">
-                {{ depositAndWithdrawalData.vip_no_handling_fee }}
+                {{ userAccountData.vip_free_withdrawal_amount }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -718,7 +724,7 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="VIP总赠金总计:">
-                  {{ depositAndWithdrawalData.total_vip_bonus }}
+                  {{ userAccountData.vip_total_reward?.total_reward }}
                   <el-button link @click="moreVipBonusShow">
                     <el-icon>
                       <ArrowRight v-if="!vipBonusShow" />
@@ -736,18 +742,18 @@ const suspenseWithdraw = async () => {
               <el-col :span="8">
                 <el-form label-width="200">
                   <el-form-item label="VIP周奖励总计:">
-                    {{ depositAndWithdrawalData.vip_weekly_rewards }}
+                    {{ userAccountData.vip_total_reward?.week_reward }}
                   </el-form-item>
                 </el-form>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="VIP月奖励总计:">
-                  {{ depositAndWithdrawalData.vip_monthly_rewards }}
+                  {{ userAccountData.vip_total_reward?.month_reward }}
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="VIP会员日奖励总计:">
-                  {{ depositAndWithdrawalData.vip_day_rewards }}
+                  {{ userAccountData.vip_total_reward?.day_reward }}
                 </el-form-item>
               </el-col>
             </el-row>
@@ -755,18 +761,18 @@ const suspenseWithdraw = async () => {
               <el-col :span="8">
                 <el-form label-width="200">
                   <el-form-item label="VIP签到奖励总计:">
-                    {{ depositAndWithdrawalData.vip_sign_rewards }}
+                    {{ userAccountData.vip_total_reward?.sign_reward }}
                   </el-form-item>
                 </el-form>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="VIP转盘奖励总计:">
-                  {{ depositAndWithdrawalData.vip_spinner_rewards }}
+                  {{ userAccountData.vip_total_reward?.spin_reward }}
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="VIP任务奖励总计:">
-                  {{ depositAndWithdrawalData.vip_task_rewards }}
+                  {{ userAccountData.vip_total_reward?.task_reward }}
                 </el-form-item>
               </el-col>
             </el-row>
@@ -774,13 +780,13 @@ const suspenseWithdraw = async () => {
               <el-col :span="8">
                 <el-form label-width="200">
                   <el-form-item label="充值返利:">
-                    {{ depositAndWithdrawalData.recharge_rebate }}
+                    {{ userAccountData.vip_total_reward?.deposit_reward }}
                   </el-form-item>
                 </el-form>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="VIP活动赠金:">
-                  {{ depositAndWithdrawalData.vip_event_bonus }}
+                  {{ userAccountData.vip_total_reward?.activity_reward }}
                 </el-form-item>
               </el-col>
               <el-col :span="8"> </el-col>

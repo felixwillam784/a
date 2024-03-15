@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { Search, Refresh, Upload, Plus } from "@element-plus/icons-vue";
+import { Search, Refresh, Upload, Plus, CopyDocument } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import type { FormInstance, FormRules } from "element-plus";
 import { getManualPaymentList, addManualPayment } from "@/api/withdraw-management";
@@ -251,7 +251,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 };
 
 const number_formatter = (value: string) =>
-  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
 </script>
 
@@ -269,7 +269,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
           >
             <div>
               <el-form-item label="用户ID" prop="id">
-                <el-input v-model="formData.id" placeholder="请输入用户ID" />
+                <el-input v-model="formData.id" clearable placeholder="请输入用户ID" />
               </el-form-item>
               <el-form-item label="订单提交时间" prop="orderTime">
                 <el-date-picker
@@ -310,7 +310,7 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                 >
               </template>
             </el-table-column> -->
-            <el-table-column label="用户ID" align="center" prop="id">
+            <el-table-column label="用户ID" align="center" prop="id" width="180">
               <template #default="scope">
                 <el-link
                   :underline="false"
@@ -318,6 +318,11 @@ const number_parser = (value: string) => value.replace(/\$\s?|(,*)/g, "");
                   @click="router.push({ name: 'UserDetail', params: { id: scope.row.id } })"
                   >{{ scope.row.id }}</el-link
                 >
+                <el-button link @click="copyText(scope.row.id)">
+                  <el-icon>
+                    <CopyDocument />
+                  </el-icon>
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column label="货币类型" align="center" prop="amount_type">
