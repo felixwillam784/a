@@ -234,3 +234,46 @@ export interface vipTotalRewardData {
     total_reward: string
     week_reward: string
 }
+
+export type getUserInviteResponse = {
+    code: number | string
+    data: getUserInviteData
+    message: string
+}
+
+export interface getUserInviteData {
+    achievement_reward: string
+    all_bet_amount: string
+    all_bet_award_amount: string
+    all_deposit_amount: string
+    all_deposit_user: string
+    all_withdraw_amount: string
+    direct_reward: string
+    invite_grade: string
+    invite_type: number
+    last_invite_duration: string
+    last_withdraw_duration: string
+    one_bet_bonus: string
+    one_deposit_amount: string
+    one_deposit_user: number
+    one_diamond: string
+    one_diff_dw: string
+    one_register_user: number
+    sir_user_id: string
+    task_reward: string
+    three_bet_bonus: string
+    three_deposit_amount: string
+    three_deposit_user: number
+    three_diamond: string
+    three_diff_dw: string
+    three_register_user: number
+    total_pl: string
+    total_register_user: number
+    two_bet_bonus: string
+    two_deposit_amount: string
+    two_deposit_user: number
+    two_diamond: string
+    two_diff_dw: string
+    two_register_user: number
+    yesterday_bonus: string
+}
