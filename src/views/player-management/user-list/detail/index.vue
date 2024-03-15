@@ -705,13 +705,13 @@ const suspenseWithdraw = async () => {
             <el-col :span="8">
               <el-form label-width="200">
                 <el-form-item label="VIP存款进度:">
-                  {{ userAccountData.vip_deposit_exp }}
+                  {{ userAccountData.vip_deposit_exp }} / {{ userAccountData.vip_rank_deposit_exp }}
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :span="8">
               <el-form-item label="VIP投注进度:">
-                {{ userAccountData.vip_bet_exp }}
+                {{ userAccountData.vip_bet_exp }} / {{ userAccountData.vip_rank_bet_exp }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
