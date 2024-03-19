@@ -4,9 +4,9 @@ const ChildrenLayout = () => import('@/views/layout/index.vue');
 
 const webpageManagementRoutes: RouteRecordRaw[] = [
     {
-        path: "/webpage/management",
+        path: "/webpage/",
         component: Layout,
-        redirect: "/top/management",
+        redirect: "/webpage/banner/",
         meta: {
             title: "网页管理",
             icon: "system",
@@ -17,8 +17,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
         },
         children: [
             {
-                path: "banner/management",
-                component: () => ChildrenLayout,
+                path: "banner/",
+                component: () => import('@/views/webpage-management/banner/index.vue'),
                 meta: {
                     title: "banner图配置",
                     hidden: false,
@@ -28,8 +28,8 @@ const webpageManagementRoutes: RouteRecordRaw[] = [
                 }
             },
             {
-                path: "advertisement/management",
-                component: () => ChildrenLayout,
+                path: "promotion/",
+                component: () => import('@/views/webpage-management/promotion/index.vue'),
                 meta: {
                     title: "广告页面配置",
                     hidden: false,
