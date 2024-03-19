@@ -19,12 +19,13 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
-import { useRoute, RouteLocationMatched } from 'vue-router';
+import { useRoute, RouteLocationMatched, useRouter } from 'vue-router';
 import { compile } from 'path-to-regexp';
-import router from '@/router';
 import { generateTitle } from '@/utils/i18n';
-
+import router from '@/router';
 const currentRoute = useRoute();
+// const router = useRouter();
+console.log(router);
 const pathCompile = (path: string) => {
   const { params } = currentRoute;
   const toPath = compile(path);
@@ -61,6 +62,7 @@ function isDashboard(route: RouteLocationMatched) {
 
 function handleLink(item: any) {
   const { redirect, path } = item;
+  console.log(redirect, path);
   if (redirect) {
     router.push(redirect).catch((err) => {
       console.warn(err);

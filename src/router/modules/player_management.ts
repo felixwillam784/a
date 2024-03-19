@@ -6,7 +6,7 @@ const playerManagementRoutes: RouteRecordRaw[] = [
     {
         path: "/player/management",
         component: Layout,
-        redirect: "user/list",
+        redirect: "/player/management/user/list",
         meta: {
             title: "player_management",
             icon: "system",
@@ -16,8 +16,8 @@ const playerManagementRoutes: RouteRecordRaw[] = [
         },
         children: [
             {
-                path: "user/list",
-                redirect: "all",
+                path: "/user/list",
+                redirect: "/user/list/all",
                 component: ChildrenLayout,
                 meta: {
                     title: "user_list",
