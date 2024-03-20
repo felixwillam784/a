@@ -19,6 +19,10 @@ export namespace NETWORKCFG {
     static STATISTIC_CHART_DATA: string = '/dashboard/statistic-chart-data' // statistic chart api
   }
 
+  export class DATA_ANALYSIS {
+    static GAME_REPORT: string = '/analyze/game-report';
+  }
+
   
   export class VIP {
 

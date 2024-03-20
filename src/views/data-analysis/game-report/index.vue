@@ -42,6 +42,7 @@ const totablBonous = ref<number>(9999);
 const recip_count = ref<number>(9999);
 const collection_count = ref<number>(9999);
 const bonous_count = ref<string>("9999.99");
+
 const gameReportList = ref<Array<GetGameReport>>([
   {
     game_time: "2020-6-30",
