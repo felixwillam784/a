@@ -18,8 +18,8 @@ const VIPCodeRebateDetailDataRef = ref();
 const VIPClientLostRebateDetailDataRef = ref();
 
 // vip_rank_dialog
-const show_vip_rank_dialog = () => {
-  vip.dispatchVIPRanks();
+const show_vip_rank_dialog = async () => {
+  await vip.dispatchVIPRanks();
   VIPRankDailogRef.value.show_vip_rank_dialog();
 };
 
