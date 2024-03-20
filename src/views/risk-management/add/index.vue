@@ -45,22 +45,22 @@ const goBack = () => {
           >
           <el-button
             :type="activeButton == 2 ? 'warning' : ''"
-            @click="handleButtonActive(2, 'AgentRebate')"
+            @click="handleButtonActive(2)"
             >新增风控设备</el-button
           >
           <el-button
             :type="activeButton == 3 ? 'warning' : ''"
-            @click="handleButtonActive(3, 'PromotionRecord')"
+            @click="handleButtonActive(3)"
             >新增风控手机号</el-button
           >
           <el-button
             :type="activeButton == 4 ? 'warning' : ''"
-            @click="handleButtonActive(4, 'RechargeRecord')"
+            @click="handleButtonActive(4)"
             >新增风控银行账号</el-button
           >
           <el-button
             :type="activeButton == 5 ? 'warning' : ''"
-            @click="handleButtonActive(5, 'WithdrawalRecord')"
+            @click="handleButtonActive(5)"
             >新增风控身份信息</el-button
           >
         </div>
