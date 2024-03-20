@@ -10,6 +10,7 @@ import { agentStore } from './modules/agent';
 import { gameStore } from './modules/game';
 import { playerStore } from './modules/player';
 import { withdrawalStore } from './modules/withdrawal';
+import { bannerStore } from './modules/banner';
 
 const useStore = () => ({
   auth: authStore(),
@@ -24,6 +25,7 @@ const useStore = () => ({
   game: gameStore(),
   player: playerStore(),
   withdrawal: withdrawalStore(),
+  banner: bannerStore(),
 });
 
 

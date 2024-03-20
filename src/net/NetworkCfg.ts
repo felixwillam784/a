@@ -18,7 +18,6 @@ export namespace NETWORKCFG {
     static GAME_DATA: string = '/dashboard/game-data' // game data api
     static STATISTIC_CHART_DATA: string = '/dashboard/statistic-chart-data' // statistic chart api
   }
-
   
   export class VIP {
 
@@ -150,4 +149,13 @@ export namespace NETWORKCFG {
   }
   //Listening events sent actively
   export class UNSOLICITED {}
+
+  export class WEBPAGE {
+    static BANNER_LIST = 'webpage/banner/list';
+    static BANNER_DETAIL = 'webpage/banner/detail';
+    static BANNER_ADD = 'webpage/banner/add';
+    static BANNER_UPDATE = 'webpage/banner/update';
+    static BANNER_DELETE = 'webpage/banner/delete';
+  }
+
 }
