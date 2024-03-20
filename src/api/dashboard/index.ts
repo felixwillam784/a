@@ -97,10 +97,3 @@ export function gameDataApi(token: string, daterange:any): any {
     end_date:new Date(daterange[1]).toISOString()
   }});
 }
-
-export function getStatisticChartData(token: string): any {
-  const baseURL = import.meta.env.VITE_APP_BASE_API;   
-  return axios.get(baseURL+'/dashboard/statistic-chart-data', {headers : {
-      Authorization: token,
-  }});
-}

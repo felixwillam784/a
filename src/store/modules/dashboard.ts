@@ -10,7 +10,12 @@ export const dashboardStore = defineStore({
     success: false as boolean,
     errMessage: '' as string,
     platformOverview: {} as Dashboard.PlatformOverviewData,
-    statisticChartList: {} as Dashboard.StatisticsChartList
+    statisticChartList: {
+      total_active_user_count: [],
+      total_realtime_online_count: [],
+      total_recharge_count: [],
+      total_visit_count: [],
+    } as Dashboard.StatisticsChartList
   }),
   getters: {
     getSuccess: (state) => state.success,
@@ -26,7 +31,7 @@ export const dashboardStore = defineStore({
       this.errMessage = message
     },
     setPlatformOverview(platformOverview: Dashboard.PlatformOverviewData) {
-        this.platformOverview = platformOverview
+      this.platformOverview = platformOverview
     },
     setStatisticChartList(statisticChartList: Dashboard.StatisticsChartList) {
       this.statisticChartList = statisticChartList
