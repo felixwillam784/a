@@ -8,9 +8,11 @@ export interface GetVIPRanksData {
   name:string
 }
 export type GetVIPRanksDataResponse = {
-  code: number | string
-  data: Array<GetVIPRanksData>,
-  message: string
+  code: number | string;
+  data: {
+    list: Array<GetVIPRanksData>;
+  };
+  message: string;
 }
 
 export interface GetVIPLevelData {
@@ -21,7 +23,7 @@ export interface GetVIPLevelData {
   bet_exp:number,
   withdrawal_fee:number,
   free_withdrawals:number,
-  withdrawals_max:number,
+  withdrawal_max:number,
   withdrawals_amonut:number
   month_withdrawals_amount:number,
   withdrawals_times:number,

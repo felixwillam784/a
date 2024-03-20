@@ -18,11 +18,22 @@ const riskManagementRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: "list",
-                component: () => import('@/views/risk-management/index.vue'),
+                component: () => import('@/views/risk-management/list/index.vue'),
                 name: "RiskList",
                 meta: {
                     title: "用户风控列表",
                     hidden: false,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "add",
+                component: () => import('@/views/risk-management/add/index.vue'),
+                name: "RiskAdd",
+                meta: {
+                    title: "新增个人风控",
+                    hidden: true,
                     roles: ["ADMIN"],
                     keepAlive: true
                 },

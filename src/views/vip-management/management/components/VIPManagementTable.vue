@@ -48,7 +48,7 @@ onMounted(async () => {
       <el-table-column
         label="单笔最高提现金额"
         align="center"
-        prop="withdrawals_max"
+        prop="withdrawal_max"
         width="160"
       />
       <el-table-column

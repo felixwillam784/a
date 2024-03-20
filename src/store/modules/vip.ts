@@ -95,7 +95,7 @@ export const vipStore = defineStore({
       const next = (response: VIP.GetVIPRanksDataResponse) => {
         if (response.code == "00") {
           this.setSuccess(true);
-          this.setVIPRanks(response.data);
+          this.setVIPRanks(response.data.list);
 
         }
       }

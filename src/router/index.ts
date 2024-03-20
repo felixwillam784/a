@@ -13,8 +13,8 @@ import vipManagementRoutes from "@/router/modules/VIP_management";
 import agencyManagementRoutes from '@/router/modules/agency_management';
 import riskManagementRoutes from '@/router/modules/risk_management';
 import newsManagementRoutes from '@/router/modules/news_management';
-import bonusManagementRoutes from './modules/bonus-management';
-import BuffManagementRoutes from './modules/buff_management';
+import bonusManagementRoutes from '@/router/modules/bonus_management';
+import BuffManagementRoutes from '@/router/modules/buff_management';
 
 export const Layout = () => import('@/layout/index.vue');
 
@@ -64,7 +64,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
   ...eventManagementRoutes,
   ...webpageManagementRoutes,
   ...gameManagementRoutes,
-  
+
   ...newsManagementRoutes,
   ...thirdpartyManagementRoutes,
   ...platformSettingRoutes,
