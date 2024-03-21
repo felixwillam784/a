@@ -184,6 +184,10 @@
         <el-form-item label="广告图资源">
           <el-upload
             list-type="picture-card"
+            v-model="formData.image"
+            :show-file-list="true"
+            :before-upload='handleBeforeUpload'
+            :http-request="handleUpload"
             :headers="{ Authorization: user.token }"
           >
             <div style="display: grid; justify-items: center">
@@ -231,10 +235,11 @@
 import useStore from '@/store';
 import * as Banner from '@/interface/banner';
 import { computed, onMounted, reactive, ref } from 'vue';
-import { ElMessage, dayjs, ElRadio, ElRadioGroup } from 'element-plus';
+import { ElMessage, dayjs, ElRadio, ElRadioGroup, UploadRequestOptions } from 'element-plus';
 import { FeedbackOption } from './utils';
 import { NewBannerRules } from './utils';
 import { Plus, View } from '@element-plus/icons-vue';
+import { uploadFileApi } from '@/api/file';
 
 const { banner } = useStore();
 const { user } = useStore();
@@ -308,7 +313,23 @@ const tableRowClassName = ({
     return 'success-row'
   }
 }
-const upLoadURL = import.meta.env.VITE_APP_BASE_API + '/upload/image/banner';
+const handleUpload = async (option: UploadRequestOptions) => {
+    const { data: fileInfo } = await uploadFileApi(option.file)
+    formData.image = fileInfo.url;
+}
+const handleBeforeUpload = (file: File): Promise<string> => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+      const base64Data = event.target!.result as string;
+      resolve(base64Data);
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 //lifecycle
 onMounted(() => {
   getBannerList();

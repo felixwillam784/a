@@ -156,11 +156,14 @@ export namespace NETWORKCFG {
   export class UNSOLICITED {}
 
   export class WEBPAGE {
+    //baner 
     static BANNER_LIST = 'webpage/banner/list';
     static BANNER_DETAIL = 'webpage/banner/detail';
     static BANNER_ADD = 'webpage/banner/add';
     static BANNER_UPDATE = 'webpage/banner/update';
     static BANNER_DELETE = 'webpage/banner/delete';
+    //promotion
+    static PROMOTION_LIST = 'webpage/activity/list';
   }
 
 }
