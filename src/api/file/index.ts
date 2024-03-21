@@ -20,6 +20,21 @@ export function uploadFileApi(file: File): AxiosPromise<FileInfo> {
   });
 }
 
+export function uploadBannerFileApi(file: string): AxiosPromise<FileInfo> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('file_type', 'banner_image');
+  formData.append('file_prefix', 'banner_image');
+  return request({
+    url: '/upload/file',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+}
+
 /**
  * 删除文件
  *
