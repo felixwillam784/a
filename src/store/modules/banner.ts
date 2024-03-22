@@ -63,7 +63,8 @@ export const bannerStore = defineStore({
           this.setErrorMessage(response.message);
         }
       }
-      await network.sendMsg(route, {formData}, next, 1, 4);
+      console.log(formData)
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
     },
     async dispatchBannerAdd(formData: any) {
       this.setSuccess(false);

@@ -1,6 +1,7 @@
 import { FormRules } from "element-plus";
 import { ref } from "vue";
 import * as Banner from '@/interface/banner';
+import { number } from "echarts";
 
 export const FeedbackOption = [
   {
@@ -57,4 +58,5 @@ export const FeedbackOption = [
 
 export const NewBannerRules = ref<FormRules<Banner.BannerListData>>({
   id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  sort: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
 });
