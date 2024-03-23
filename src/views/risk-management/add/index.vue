@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed, onUpdated } from "vue";
+import { ref, onMounted, computed, onUpdated, watch } from "vue";
 import { ArrowLeft, CopyDocument, ArrowRight, ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import NewRiskAccount from "./components/NewRiskAccount.vue";
@@ -13,6 +13,8 @@ const router = useRouter();
 
 const activeButton = ref<number>(0);
 
+const title = ref<string>("账号");
+
 const riskControlAddDialogVisible = ref<boolean>(false);
 
 const handleButtonActive = (index: number) => {
@@ -22,6 +24,29 @@ const handleButtonActive = (index: number) => {
 const goBack = () => {
   router.go(-1);
 };
+
+watch(activeButton, (value) => {
+  switch (value) {
+    case 0:
+      title.value = "账号";
+      break;
+    case 1:
+      title.value = "IP";
+      break;
+    case 2:
+      title.value = "设备";
+      break;
+    case 3:
+      title.value = "的手机号";
+      break;
+    case 4:
+      title.value = "的银行账户";
+      break;
+    case 5:
+      title.value = "的身份信息";
+      break;
+  }
+});
 </script>
 
 <template>
@@ -79,9 +104,10 @@ const goBack = () => {
     <NewRiskIdentity v-if="activeButton == 5" />
     <el-dialog title="确认新增" v-model="riskControlAddDialogVisible">
       <el-body>
-        <h4 class="text-center">确认将选中的身份信息加入风控列表</h4>
+        <h4 class="text-center">确认将选中的{{ title }}加入风控列表</h4>
         <div class="text-center">
-          <el-form-item label="风控等级"></el-form-item>
+          风控等级
+          <el-select placeholder="请选择风控等级"></el-select>
         </div>
         <el-form ref="ruleFormRef">
           <el-row style="align-items: center">

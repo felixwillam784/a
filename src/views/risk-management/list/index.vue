@@ -158,6 +158,10 @@ const goToNewRiskAddPage = () => {
   router.push({ name: "RiskAdd" });
 };
 
+const goBehaviorSetting = () => {
+  router.push({ name: "BehaviorSetting" });
+};
+
 const handleQuery = () => {};
 
 const resetQuery = () => {};
@@ -228,7 +232,7 @@ const resetQuery = () => {};
             <el-button size="large" class="w-32" @click="goToNewRiskAddPage">
               新增个人风控
             </el-button>
-            <el-button @click="resetQuery" size="large" class="w-32">
+            <el-button size="large" class="w-32" @click="goBehaviorSetting">
               个人风控设置
             </el-button>
           </div>

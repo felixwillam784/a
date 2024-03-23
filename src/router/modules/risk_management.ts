@@ -38,6 +38,17 @@ const riskManagementRoutes: RouteRecordRaw[] = [
                     keepAlive: true
                 },
             },
+            {
+                path: "behavior-setting",
+                component: () => import('@/views/risk-management/behavior-setting/index.vue'),
+                name: "BehaviorSetting",
+                meta: {
+                    title: "风控行为设置",
+                    hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
         ]
     },
 ];
