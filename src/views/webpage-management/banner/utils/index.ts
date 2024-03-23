@@ -57,4 +57,19 @@ export const FeedbackOption = [
 
 export const NewBannerRules = ref<FormRules<Banner.BannerListData>>({
   id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  name: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  desc: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  sort: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  condition: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  click_feedback: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  content: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  target: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  on_time: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  off_time: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  image: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  activity_id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  is_disappear: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  replace_id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  remark: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  status: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
 });

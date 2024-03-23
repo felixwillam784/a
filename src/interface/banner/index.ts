@@ -9,10 +9,10 @@ export interface BannerListData {
   click_feedback: number,
   content: string,
   target: number,
-  on_time: string,
-  off_time: string,
-  image: string,
-  activity_id: string
+  on_time: number,
+  off_time: number,
+  image_path: string,
+  activity_id: number
   is_disappear: number
   replace_id: number,
   remark: string,
@@ -47,4 +47,3 @@ export type GetBannerDeleteResponse = {
   code: number | string
   message: string
 }
-
