@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 import { AxiosPromise } from 'axios';
-import { FileInfo } from './types';
+import { BannerFileInfo, FileInfo } from './types';
 
 /**
  * 上传文件
@@ -20,7 +20,7 @@ export function uploadFileApi(file: File): AxiosPromise<FileInfo> {
   });
 }
 
-export function uploadBannerFileApi(file: File, file_type: string = 'banner_image', file_prefix: string = 'new' ): AxiosPromise<FileInfo> {
+export function uploadBannerFileApi(file: File, file_type = "banner_image", file_prefix = 'new' ): AxiosPromise<BannerFileInfo> {
   const formData = new FormData();
   formData.append('file', file);
   return request({

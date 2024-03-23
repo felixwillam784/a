@@ -37,9 +37,11 @@
             <el-table-column label="广告图资源" align="center" prop="id" width="100">
               <template #default="scope">
                 <div class="relative">
-                  <p class="px-4 py-2 border border-black bg-white">图片</p>
+                  <div class="w-full">
+                    <img class="w-full h-auto" :src="getImagePath(scope.row.image_path)" :alt="scope.row.image_path">
+                  </div>
                   <el-icon
-                    class="absolute right-1 cursor-pointer bottom-1"
+                    class="absolute text-black text-lg right-1 cursor-pointer bottom-2"
                     @click="openPreview(scope.row.image_path)"
                     ><View
                   /></el-icon>
@@ -84,24 +86,59 @@
       v-model="BannerDlgVisible"
       width="800px"
       append-to-body
-      @close="BannerDlgVisible = false"
+      @close="onCloseBannerDlg"
     >
       <el-form
         label-width="160px"
         label-position="left"
+        :model="formData"
+        ref="formDataRef"
         class="h-200"
         :rules="NewBannerRules"
       >
-        <el-form-item label="广告图ID">
-          <el-input v-model="formData.id" :disabled="!isEdit" />
+        <el-form-item 
+          label="广告图ID" 
+          prop="id"
+          :rules="
+          [
+            { required: true, message: 'Id is required'},
+          ]
+          "
+        >
+          <el-input 
+            v-model="formData.id" 
+            :disabled="!isEdit" 
+            :rules="[
+              { required: true, message: 'Id is required'},
+            ]"
+          />
         </el-form-item>
-        <el-form-item label="活动名称">
+        <el-form-item 
+          label="活动名称" 
+          prop="name"
+          :rules="[
+            { required: true, message: 'Id is required'},
+          ]"  
+        >
           <el-input v-model="formData.name" placeholder="请输入活动名称" />
         </el-form-item>
-        <el-form-item label="活动描述">
+        <el-form-item 
+          label="活动描述" prop="desc"
+          :rules="[
+            { required: true, message: 'Id is required'},
+          ]"
+        >
           <el-input v-model="formData.desc" placeholder="请输入活动描述" />
         </el-form-item>
-        <el-form-item label="广告图排序">
+        <el-form-item 
+          label="广告图排序" 
+          prop="sort"
+          :rules="
+          [
+            { required: true, message: 'Id is required'},
+          ]
+          "
+        >
           <el-input
             v-model="formData.sort"
             type="number"
@@ -112,7 +149,7 @@
           <el-input v-model="formData.id" placeholder="请输入广告图排序"/>
           <el-input v-model="formData.id" placeholder="请输入广告图排序"/>
         </el-form-item> -->
-        <el-form-item label="点击反馈">
+        <el-form-item label="点击反馈" prop="click_feedback">
           <el-radio-group v-model="formData.click_feedback">
             <el-radio
               v-for="items in FeedbackOption"
@@ -123,20 +160,26 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="内容">
+        <el-form-item 
+          label="内容" 
+          prop="content"
+          :rules="[
+            { required: true, message: 'Id is required'},
+          ]"
+        >
           <el-input
             v-model="formData.content"
             type="textarea"
             placeholder="请输入广告图排序"
           />
         </el-form-item>
-        <el-form-item label="链接打开方式">
+        <el-form-item label="链接打开方式" prop="target">
           <el-radio-group v-model="formData.target">
             <el-radio :label="0">当前界面打开</el-radio>
             <el-radio :label="1">新的界面打开</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="自动上架，下架时间">
+        <el-form-item label="自动上架，下架时间" prop="on_time">
           <el-date-picker
             type="daterange"
             v-model="timeVal"
@@ -144,7 +187,7 @@
             value-format="YYYY-MM-DD HH:mm:ss"
           />
         </el-form-item>
-        <el-form-item label="广告图资源">
+        <el-form-item label="广告图资源" prop="image">
           <el-upload
             :http-request="handleUpload"
             list-type="picture-card"
@@ -156,8 +199,16 @@
             </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="关联活动管理ID">
-          <el-input v-model="formData.activity_id" placeholder="请输入关联活动的ID" />
+        <el-form-item 
+          label="关联活动管理ID" 
+          prop="activity_id"
+          :rules="
+          [
+            { required: true, message: 'Id is required'},
+          ]
+          "  
+        >
+          <el-input type="number" v-model="formData.activity_id" placeholder="请输入关联活动的ID" />
         </el-form-item>
         <el-form-item label="链接打开方式">
           <el-radio-group v-model="formData.is_disappear">
@@ -165,17 +216,31 @@
             <el-radio :label="1">不消失</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="参与活动广告图消失后替换的广告图ID">
+        <el-form-item 
+          label="参与活动广告图消失后替换的广告图ID" 
+          prop="replace_id"
+          :rules="
+          [
+            { required: true, message: 'Id is required'},
+          ]
+          "  
+        >
           <el-input
             type="number"
             v-model="formData.replace_id"
             placeholder="请输入关联的广告图ID"
           />
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item 
+          label="备注" 
+          prop="remark"
+          :rules="[
+            { required: true, message: 'Id is required'},
+          ]"
+        >
           <el-input v-model="formData.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="广告图状态">
+        <el-form-item label="广告图状态" prop="status">
           <el-radio-group v-model="formData.status">
             <el-radio :label="false">暂时停用</el-radio>
             <el-radio :label="true">启用</el-radio>
@@ -184,13 +249,15 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleNewBanner">确认</el-button>
-          <el-button @click="BannerDlgVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitForm(formDataRef)">确认</el-button>
+          <el-button @click="onCloseBannerDlg">取消</el-button>
         </div>
       </template>
     </el-dialog>
     <el-dialog v-model="dialogCoverVisible">
-      <img w-full :src="dialogCoverImageUrl" alt="Preview Image" />
+      <div class="w-full">
+        <img class="w-full h-auto" :src="dialogCoverImageUrl" alt="Preview Image" />
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -205,22 +272,22 @@ import {
   ElRadio,
   ElRadioGroup,
   UploadRequestOptions,
+  FormInstance,
 } from "element-plus";
 import { FeedbackOption } from "./utils";
 import { NewBannerRules } from "./utils";
 import { Plus, View } from "@element-plus/icons-vue";
-import { uploadBannerFileApi, uploadFileApi } from "@/api/file";
+import { uploadBannerFileApi } from "@/api/file";
 
 const { banner } = useStore();
-const { user } = useStore();
-
 //ref and reactive variables
 const loading = ref(false);
 const isEdit = ref(false);
-const BannerDlgVisible = ref(true);
+const BannerDlgVisible = ref(false);
 const dialogCoverVisible = ref(false);
 const dialogCoverImageUrl = ref("");
 const formData: Banner.BannerListData = reactive({} as Banner.BannerListData);
+const formDataRef = ref<FormInstance>();
 const timeVal = ref<string[]>(["", ""]);
 const selectedImage = ref<File | null>(null);
 //computed variables
@@ -234,7 +301,7 @@ const bannerList = computed<Array<Banner.BannerListData>>(() => {
   return banner.getBannerList;
 });
 const BannerDlgTitle = computed<string>(() => {
-  return isEdit.value ? "广告图详情" : "广告图详情";
+  return isEdit.value ? "广告页面详情" : "新增广告页面";
 });
 //actions
 const getBannerList = async () => {
@@ -249,12 +316,38 @@ const openPreview = (img: string) => {
   dialogCoverImageUrl.value = `${baseURL}/res/${img}`;
   dialogCoverVisible.value = true;
 };
+const getImagePath = (img: string) => {
+  const baseURL = import.meta.env.VITE_APP_BASE;
+  return  `${baseURL}/res/${img}`;
+}
 const onNewBanner = () => {
   formData.id = 0;
+  isEdit.value = false;
   BannerDlgVisible.value = true;
 };
-const handleNewBanner = async () => {
-  console.log(formData);
+const onCloseBannerDlg = () => {
+  const empty = {} as Banner.BannerListData;
+  Object.assign(formData, empty);
+  BannerDlgVisible.value = false;
+}
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) {
+    return;
+  }
+  formEl.validate((valid) => {
+    if (valid) {
+      if (!formData.image_path || !timeVal.value[0] || !timeVal.value[1] ) {
+        ElMessage.warning('Invalid Form');
+        return false;
+      }
+      handleAddOrUpdateBanner();
+    } else {
+      return false;
+    } 
+  })
+};
+
+const handleAddOrUpdateBanner = async () => {
   loading.value = true;
   formData.on_time = new Date(timeVal.value[0]).getTime() / 1000;
   formData.off_time = new Date(timeVal.value[1]).getTime() / 1000;
@@ -271,8 +364,7 @@ const handleNewBanner = async () => {
   loading.value = false;
   BannerDlgVisible.value = false;
   getBannerList();
-};
-
+}
 const handleBannerDetail = async (id: number) => {
   loading.value = true;
   await banner.dispatchBannerDetail({ id: id });
@@ -280,6 +372,7 @@ const handleBannerDetail = async (id: number) => {
   else {
     Object.assign(formData, banner.getBannerDetail);
     BannerDlgVisible.value = true;
+    isEdit.value = true;
   }
   loading.value = false;
 };
@@ -308,10 +401,9 @@ const handleBeforeUpload = (file: File) => {
   }
   selectedImage.value = file;
 };
-async function handleUpload(options: UploadRequestOptions): Promise<any> {
+async function handleUpload(options: UploadRequestOptions) {
   const { data: file_name } = await uploadBannerFileApi(options.file);
-  console.log(file_name);
-  formData.image = file_name.file_name;
+  formData.image_path = file_name.file_name;
 }
 //lifecycle
 onMounted(() => {

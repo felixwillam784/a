@@ -5,3 +5,7 @@ export interface FileInfo {
   name: string;
   url: string;
 }
+
+export interface BannerFileInfo {
+  file_name: string
+}

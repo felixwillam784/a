@@ -11,7 +11,7 @@ export interface BannerListData {
   target: number,
   on_time: number,
   off_time: number,
-  image: string,
+  image_path: string,
   activity_id: number
   is_disappear: number
   replace_id: number,
