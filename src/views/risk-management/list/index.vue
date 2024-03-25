@@ -51,6 +51,8 @@ const handleBtnTab = (index: number) => {
 
 const buttonIndex = ref<number>(0);
 
+const batchRiskControlDialog = ref<boolean>(false);
+
 const handleDateRange = (date: string) => {
   switch (date) {
     case "before yesterday":
@@ -169,57 +171,49 @@ const resetQuery = () => {};
 
 <template>
   <div class="app-container">
-    <el-card v-if="activeIndex == 0 || activeIndex == 1">
+    <el-card>
       <el-row style="align-items: center">
-        <el-col :md="12" :lg="16">
+        <el-col :md="12" :lg="24">
           <el-form :model="formData" :inline="true" label-width="100">
-            <el-form-item label="UserID" prop="user_id">
-              <el-input v-model="formData.user_id" placeholder="请输入UserID" />
+            <el-form-item label="用户ID" prop="user_id">
+              <el-input v-model="formData.user_id" placeholder="请输入用户ID" />
             </el-form-item>
-            <el-form-item label="邮箱账号" prop="email_address">
-              <el-input
-                v-model="formData.email_address"
-                placeholder="请输入代理邮箱账号"
-              />
+            <el-form-item label="用户邮箱" prop="email_address">
+              <el-input v-model="formData.email_address" placeholder="请输入用户邮箱" />
             </el-form-item>
             <el-form-item label="身份信息" prop="identity_information">
               <el-input
                 v-model="formData.identity_information"
-                placeholder="请输入身份信息号"
+                placeholder="请输入身份信息"
               />
-            </el-form-item>
-          </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
-            <el-form-item label="风控等级" prop="user_id">
-              <el-select v-model="formData.user_id" placeholder="请选择风控等级">
-              </el-select>
             </el-form-item>
             <el-form-item label="风控行为" prop="user_id">
               <el-select v-model="formData.user_id" placeholder="请选择风控行为">
               </el-select>
             </el-form-item>
+          </el-form>
+          <el-form :model="formData" :inline="true" label-width="100">
+            <el-form-item label="处罚措施" prop="user_id">
+              <el-select v-model="formData.user_id" placeholder="全部"> </el-select>
+            </el-form-item>
+            <el-form-item label="VIP段位" prop="user_id">
+              <el-select v-model="formData.user_id" placeholder="全部"> </el-select>
+            </el-form-item>
             <el-form-item label="操作人员" prop="invitee_total_number">
               <el-select v-model="formData.user_id" placeholder="请选择操作人员">
               </el-select>
             </el-form-item>
-            <el-form-item style="float: right"> </el-form-item>
-          </el-form>
-          <el-form :model="formData" :inline="true" label-width="100">
-            <el-form-item label="IP地址" prop="invitee_total_number">
-              <el-select v-model="formData.user_id" placeholder="请输入IP地址">
-              </el-select>
-            </el-form-item>
-            <el-form-item label="设备ID" prop="invitee_total_number">
-              <el-select v-model="formData.user_id" placeholder="请输入设备ID">
-              </el-select>
-            </el-form-item>
-            <el-form-item label="支付账号" prop="invitee_total_number">
-              <el-select v-model="formData.user_id" placeholder="请输入支付账号">
-              </el-select>
+            <el-form-item style="float: right">
+              <el-button :icon="Search" type="primary" @click="handleQuery" class="w-32">
+                搜索
+              </el-button>
+              <el-button :icon="Refresh" @click="resetQuery" class="w-32">
+                重置
+              </el-button>
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :md="12" :lg="8" class="text-right">
+        <!-- <el-col :md="12" :lg="8" class="text-right">
           <div>
             <el-button :icon="Search" size="large" @click="handleQuery" class="w-32">
               搜索
@@ -236,10 +230,10 @@ const resetQuery = () => {};
               个人风控设置
             </el-button>
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </el-card>
-    <el-card class="risk-control-search-other" v-else>
+    <!-- <el-card class="risk-control-search-other" v-else>
       <el-row style="align-items: center">
         <el-col :md="12" :lg="18">
           <el-form :model="formData" :inline="true" label-width="120">
@@ -472,7 +466,7 @@ const resetQuery = () => {};
           </div>
         </el-col>
       </el-row>
-    </el-card>
+    </el-card> -->
     <el-card class="mt-1">
       <el-row>
         <el-button
@@ -571,7 +565,6 @@ const resetQuery = () => {};
       <div class="flex items-center">
         <el-button :type="activeIndex == 0 ? 'warning' : ''" @click="handleBtnTab(0)">
           <div>个人风控列表</div>
-          <div>（黑名单）</div>
         </el-button>
         <el-button :type="activeIndex == 1 ? 'warning' : ''" @click="handleBtnTab(1)">
           个人风控白名单
@@ -583,7 +576,7 @@ const resetQuery = () => {};
           风控设备ID列表
         </el-button>
         <el-button :type="activeIndex == 4 ? 'warning' : ''" @click="handleBtnTab(4)">
-          风控手机号
+          风控手机号列表
         </el-button>
         <el-button :type="activeIndex == 5 ? 'warning' : ''" @click="handleBtnTab(5)">
           风控银行账号
@@ -591,8 +584,16 @@ const resetQuery = () => {};
         <el-button :type="activeIndex == 6 ? 'warning' : ''" @click="handleBtnTab(6)">
           风控身份信息
         </el-button>
+        <el-button :type="activeIndex == 6 ? 'warning' : ''" @click="handleBtnTab(7)">
+          风控身份信息
+        </el-button>
+        <el-button :type="activeIndex == 6 ? 'warning' : ''" @click="handleBtnTab(8)">
+          风控身份信息
+        </el-button>
         <div class="d-flex justify-end risk-management-card ms-auto">
-          <el-button type="info">批量解除风控</el-button>
+          <el-button type="info" @click="batchRiskControlDialog = true">
+            批量风控
+          </el-button>
         </div>
       </div>
       <div class="mt-2">
@@ -605,6 +606,22 @@ const resetQuery = () => {};
         <RiskControlIdentityInformation v-if="activeIndex == 6" />
       </div>
     </el-card>
+    <el-dialog v-model="batchRiskControlDialog" width="600">
+      <h3 class="text-center">批量修改风控</h3>
+      <div>确定将全部选择的账号进行批量风控修改？</div>
+      <el-form ref="ruleFormRef" style="margin-top: 20px" label-width="100">
+        <el-form-item label="风控处罚措施">
+          <el-select style="width: 300px" placeholder="请选择处罚措施"></el-select>
+        </el-form-item>
+        <el-form-item label="备注:">
+          <el-input style="width: 300px" />
+        </el-form-item>
+      </el-form>
+      <el-footer class="text-center">
+        <el-button type="primary">确认</el-button>
+        <el-button @click="batchRiskControlDialog = false">取消</el-button>
+      </el-footer>
+    </el-dialog>
   </div>
 </template>
 
@@ -613,23 +630,27 @@ const resetQuery = () => {};
   .el-card__body {
     padding: 4px !important;
   }
+
   .el-form-item {
     margin-right: 0px !important;
     margin-bottom: 0px !important;
   }
 }
+
 .el-button > span {
   display: block;
 }
 
 .input-with-select .el-input-group__prepend {
   background-color: var(--el-fill-color-blank);
+
   .el-select {
     .el-input {
       width: 60px;
     }
   }
 }
+
 .risk-control-search-other {
   .el-select {
     .el-input {
