@@ -66,7 +66,7 @@ export const NewBannerRules = ref<FormRules<Banner.BannerListData>>({
   target: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
   on_time: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
   off_time: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
-  image: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
+  image_path: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
   activity_id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
   is_disappear: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
   replace_id: [{ required: false, message: "请输入补单金额。", trigger: "blur" }],
