@@ -37,13 +37,13 @@ watch(activeButton, (value) => {
       title.value = "设备";
       break;
     case 3:
-      title.value = "的手机号";
+      title.value = "手机号";
       break;
     case 4:
-      title.value = "的银行账户";
+      title.value = "银行账户";
       break;
     case 5:
-      title.value = "的身份信息";
+      title.value = "身份信息";
       break;
   }
 });

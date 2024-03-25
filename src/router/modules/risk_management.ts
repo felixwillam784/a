@@ -21,7 +21,7 @@ const riskManagementRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/risk-management/list/index.vue'),
                 name: "RiskList",
                 meta: {
-                    title: "用户风控列表",
+                    title: "风控列表",
                     hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
@@ -45,6 +45,17 @@ const riskManagementRoutes: RouteRecordRaw[] = [
                 meta: {
                     title: "风控行为设置",
                     hidden: true,
+                    roles: ["ADMIN"],
+                    keepAlive: true
+                },
+            },
+            {
+                path: "rule/configuration",
+                component: () => import('@/views/risk-management/rule-configuration/index.vue'),
+                name: "RuleConfiguration",
+                meta: {
+                    title: "风控规则配置",
+                    hidden: false,
                     roles: ["ADMIN"],
                     keepAlive: true
                 },

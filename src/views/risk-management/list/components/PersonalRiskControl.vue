@@ -27,16 +27,20 @@ const handlePagination = () => {};
 const handleRiskControlDetailShow = () => {
   riskControlDetailDialogVisible.value = true;
 };
+
+const handleSelectionChange = (val: Array<any>) => {};
 </script>
 
 <template>
   <el-table
     v-loading="loading"
     :data="firstLevelAgentList"
+    @selection-change="handleSelectionChange"
     style="width: 100%"
     class="mt-2"
   >
-    <el-table-column label="UserID" align="center" prop="item_1">
+    <el-table-column type="selection" width="55" />
+    <el-table-column label="用户ID" align="center" prop="item_1">
       <template #default="scope">
         <el-link :underline="false" class="el-link-decoration">
           {{ scope.row.item_1 }}
@@ -48,23 +52,36 @@ const handleRiskControlDetailShow = () => {
         <p>{{ scope.row.item_2 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="风控等级" align="center" prop="item_3">
+    <el-table-column label="风控行为" align="center" prop="item_3">
       <template #default="scope">
         <p>{{ scope.row.item_3 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="风控行为" align="center" prop="item_4">
+    <el-table-column label="风控处罚措施" align="center" prop="item_4">
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="充提次数" align="center" prop="item_4">
+    <el-table-column label="VIP等级 VIP段位" align="center" prop="item_4" width="80">
+      <template #default="scope">
+        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.item_4 }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column label="充值次数 提现次数" align="center" prop="item_4" width="80">
+      <template #default="scope">
+        <p>{{ scope.row.item_4 }}</p>
+        <p>{{ scope.row.item_4 }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column label="货币类型" align="center" prop="item_4">
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="充提金额" align="center" prop="item_4">
+    <el-table-column label="充值金额 提现金额" align="center" prop="item_4" width="80">
       <template #default="scope">
+        <p>{{ scope.row.item_4 }}</p>
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
@@ -73,7 +90,7 @@ const handleRiskControlDetailShow = () => {
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="风控时间" align="center" prop="item_4">
+    <el-table-column label="累计投注金额" align="center" prop="item_4">
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
@@ -83,7 +100,12 @@ const handleRiskControlDetailShow = () => {
         <p>{{ scope.row.item_4 }}</p>
       </template>
     </el-table-column>
-    <el-table-column label="备注" align="center" prop="item_4">
+    <el-table-column label="风控时间" align="center" prop="item_4">
+      <template #default="scope">
+        <p>{{ scope.row.item_4 }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column label="风控备注" align="center" prop="item_4">
       <template #default="scope">
         <p>{{ scope.row.item_4 }}</p>
       </template>
@@ -93,9 +115,27 @@ const handleRiskControlDetailShow = () => {
         <el-button type="primary" link @click="handleRiskControlDetailShow">
           详情
         </el-button>
-        <el-button type="danger" link @click="riskControlRemoveDialogVisible = true">
-          解除风控
-        </el-button>
+        <el-dropdown>
+          <el-button
+            type="primary"
+            link
+            style="width: 40px"
+            class="personal-risk-control-dropdown"
+          >
+            修改风控
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>禁止领取奖金</el-dropdown-item>
+              <el-dropdown-item>提现拒绝</el-dropdown-item>
+              <el-dropdown-item>禁止提现</el-dropdown-item>
+              <el-dropdown-item>禁止提现（扣款不打款）</el-dropdown-item>
+              <el-dropdown-item>禁止游戏</el-dropdown-item>
+              <el-dropdown-item>禁止登录（黑名单）</el-dropdown-item>
+              <el-dropdown-item>解除所有风控</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <el-button type="primary" link> 日志 </el-button>
       </template>
     </el-table-column>
@@ -273,4 +313,10 @@ const handleRiskControlDetailShow = () => {
   </el-dialog>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.personal-risk-control-dropdown {
+  span {
+    text-wrap: initial;
+  }
+}
+</style>
