@@ -9,12 +9,13 @@ export const promotionStore = defineStore({
     success: false,
     errMessage: '',
     promotionList: [] as Array<Promotion.PromotionListData>,
-    
+    promotionGroupList: [] as Array<Promotion.PromotionGroupData>
   }),
   getters: {
     getSuccess: (state) => state.success,
     getErrMessage: (state) => state.errMessage,
     getPromotionList: (state) => state.promotionList,
+    getPromotionGroupList: (state) => state.promotionGroupList
   },
   actions: {
     //set functions
@@ -26,6 +27,9 @@ export const promotionStore = defineStore({
     },
     setPromotionList(data: Array<Promotion.PromotionListData>) {
       this.promotionList = data;
+    },
+    setPromotionGroupList(data: Array<Promotion.PromotionGroupData>) {
+      this.promotionGroupList = data;
     },
     //dispatch functions
     async dispatchPromotionList() {
@@ -45,5 +49,70 @@ export const promotionStore = defineStore({
       }
       await network.sendMsg(route, {}, next, 1, 4);
     },
+    async dispatchPromotionGroupList() {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_GROUP_LIST;
+      const network = Network.getInstance();
+
+      const next = (response: Promotion.GetPromotionGroupListResponse) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+          this.setPromotionGroupList(response.data.list);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, {}, next, 1, 4);
+    },
+    async dispatchPromotionGroupAdd(formData: Promotion.PromotionGroupData) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_GROUP_ADD;
+      const network = Network.getInstance();
+
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    },
+    async dispatchPromotionGroupUpdate(formData: Array<Promotion.PromotionGroupData>) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_GROUP_UPDATE;
+      const network = Network.getInstance();
+
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    },
+    async dispatchPromotionGroupDelete(formData: Promotion.GetPromotionDeleteReq) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_GROUP_DELETE;
+      const network = Network.getInstance();
+
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    }
   }
 })
