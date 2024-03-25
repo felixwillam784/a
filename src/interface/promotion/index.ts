@@ -20,7 +20,7 @@ export interface PromotionListData {
 }
 
 export interface PromotionGroupData {
-  id: number
+  id?: number
   name: string
 }
 
@@ -31,4 +31,20 @@ export type GetPromotionListResponse = {
   data: {
     list: Array<PromotionListData>
   }
+}
+export interface GetPromotionDeleteReq {
+  id: number
+}
+
+export type GetPromotionGroupListResponse = {
+  code: number | string
+  message: string
+  data: {
+    list: Array<PromotionGroupData>
+  }
+}
+
+export type GetPromotionGroupDeleteRes = {
+  code: number | string
+  message: string
 }

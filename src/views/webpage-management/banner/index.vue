@@ -99,11 +99,6 @@
         <el-form-item 
           label="广告图ID" 
           prop="id"
-          :rules="
-          [
-            { required: true, message: 'Id is required'},
-          ]
-          "
         >
           <el-input 
             v-model="formData.id" 
