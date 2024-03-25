@@ -173,21 +173,6 @@ export function getUserWithDrawlRecordDetail(token: string, id:any, formData:any
   }});
 }
 
-export function getUserManualDeductionDetail(token: string, id:any, formData:any): any {
-  const baseURL = import.meta.env.VITE_APP_BASE_API;
-  return axios.get(baseURL+'/user/manual-deduction', {headers : {
-    Authorization: token,
-  }, params:{
-    user_id: id,
-    time_interval_key1: "submission_time",
-    start_time1: new Date(formData.dateRange[0]).toISOString(),
-    end_time1: new Date(formData.dateRange[1]).toISOString(),
-    amount_interval_key1: "change_amount",
-    min_amount1: formData.min_amount,
-    max_amount1: formData.max_amount,
-  }});
-}
-
 export function getUserManualRechargeDetail(token: string, id:any, formData:any): any {
   const baseURL = import.meta.env.VITE_APP_BASE_API;
   return axios.get(baseURL+'/user/manual-recharge', {headers : {
