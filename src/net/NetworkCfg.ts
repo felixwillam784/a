@@ -164,6 +164,10 @@ export namespace NETWORKCFG {
     static BANNER_DELETE = 'webpage/banner/delete';
     //promotion
     static PROMOTION_LIST = 'webpage/activity/list';
+    static PROMOTION_ADD = 'webpage/activity/add';
+    static PROMOTION_DETAIL = 'webpage/activity/detail';
+    static PROMOTION_UPDATE = 'webpage/activity/update';
+    static PROMOTION_DELETE = 'webpage/activity/delete';
     static PROMOTION_GROUP_LIST = 'webpage/activity/group/list';
     static PROMOTION_GROUP_ADD = 'webpage/activity/add';
     static PROMOTION_GROUP_UPDATE = 'webpage/activity/group/update';

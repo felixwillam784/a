@@ -52,8 +52,8 @@
             <el-table-column label="自动上架下架时间" align="center" prop="" width="200">
               <template #default="scope">
                 <p>
-                  {{ dayjs(scope.row.on_time).format("YYYY-MM-DD HH:mm:ss") }} <br />
-                  {{ dayjs(scope.row.off_time).format("YYYY-MM-DD HH:mm:ss") }}
+                  {{ dayjs(scope.row.on_time * 1000).format("YYYY-MM-DD HH:mm:ss") }} <br />
+                  {{ dayjs(scope.row.off_time * 1000).format("YYYY-MM-DD HH:mm:ss") }}
                 </p>
               </template>
             </el-table-column>
@@ -106,6 +106,7 @@
             :rules="[
               { required: true, message: 'Id is required'},
             ]"
+            clearable
           />
         </el-form-item>
         <el-form-item 
@@ -115,7 +116,7 @@
             { required: true, message: 'Id is required'},
           ]"  
         >
-          <el-input v-model="formData.name" placeholder="请输入活动名称" />
+          <el-input clearable v-model="formData.name" placeholder="请输入活动名称" />
         </el-form-item>
         <el-form-item 
           label="活动描述" prop="desc"
@@ -123,7 +124,7 @@
             { required: true, message: 'Id is required'},
           ]"
         >
-          <el-input v-model="formData.desc" placeholder="请输入活动描述" />
+          <el-input clearable v-model="formData.desc" placeholder="请输入活动描述" />
         </el-form-item>
         <el-form-item 
           label="广告图排序" 
@@ -137,6 +138,7 @@
           <el-input
             v-model="formData.sort"
             type="number"
+            clearable
             placeholder="请输入广告图排序"
           />
         </el-form-item>
@@ -165,6 +167,7 @@
           <el-input
             v-model="formData.content"
             type="textarea"
+            clearable
             placeholder="请输入广告图排序"
           />
         </el-form-item>
@@ -203,7 +206,7 @@
           ]
           "  
         >
-          <el-input type="number" v-model="formData.activity_id" placeholder="请输入关联活动的ID" />
+          <el-input clearable type="number" v-model="formData.activity_id" placeholder="请输入关联活动的ID" />
         </el-form-item>
         <el-form-item label="链接打开方式">
           <el-radio-group v-model="formData.is_disappear">
@@ -223,6 +226,7 @@
           <el-input
             type="number"
             v-model="formData.replace_id"
+            clearable
             placeholder="请输入关联的广告图ID"
           />
         </el-form-item>
@@ -233,7 +237,7 @@
             { required: true, message: 'Id is required'},
           ]"
         >
-          <el-input v-model="formData.remark" placeholder="请输入备注" />
+          <el-input clearable v-model="formData.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="广告图状态" prop="status">
           <el-radio-group v-model="formData.status">
@@ -360,6 +364,7 @@ const handleAddOrUpdateBanner = async () => {
   BannerDlgVisible.value = false;
   getBannerList();
 }
+
 const handleBannerDetail = async (id: number) => {
   loading.value = true;
   await banner.dispatchBannerDetail({ id: id });

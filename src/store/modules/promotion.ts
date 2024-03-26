@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { NETWORKCFG } from "@/net/NetworkCfg";
 import { Network } from "@/net/Network";
-import  type * as Promotion from '@/interface/promotion';
+import * as Promotion from '@/interface/promotion';
 
 export const promotionStore = defineStore({
   id: 'promotion',
@@ -9,12 +9,14 @@ export const promotionStore = defineStore({
     success: false,
     errMessage: '',
     promotionList: [] as Array<Promotion.PromotionListData>,
+    promotionDetail: {} as Promotion.PromotionListData,
     promotionGroupList: [] as Array<Promotion.PromotionGroupData>
   }),
   getters: {
     getSuccess: (state) => state.success,
     getErrMessage: (state) => state.errMessage,
     getPromotionList: (state) => state.promotionList,
+    getPromotionDetail: (state) => state.promotionDetail,
     getPromotionGroupList: (state) => state.promotionGroupList
   },
   actions: {
@@ -27,6 +29,9 @@ export const promotionStore = defineStore({
     },
     setPromotionList(data: Array<Promotion.PromotionListData>) {
       this.promotionList = data;
+    },
+    setPromotionDetail(data: Promotion.PromotionListData) {
+      this.promotionDetail = data;
     },
     setPromotionGroupList(data: Array<Promotion.PromotionGroupData>) {
       this.promotionGroupList = data;
@@ -48,6 +53,67 @@ export const promotionStore = defineStore({
         }
       }
       await network.sendMsg(route, {}, next, 1, 4);
+    },
+    async dispatchPromotionDetail(formData: any) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_DETAIL;
+      const network = Network.getInstance();
+      const next = (response: Promotion.GetPromotionDetailResponse) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+          this.setPromotionDetail(response.data);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, {params: formData}, next, 1, 4);
+    },
+    async dispatchPromotionAdd(formData: any) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_ADD;
+      const network = Network.getInstance();
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    },
+    async dispatchPromotionUpdate(formData: any) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_UPDATE;
+      const network = Network.getInstance();
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
+    },
+    async dispatchPromotionDelete(formData: any) {
+      this.setSuccess(false);
+      this.setErrorMessage('');
+      const route = NETWORKCFG.WEBPAGE.PROMOTION_DELETE;
+      const network = Network.getInstance();
+      const next = (response: Promotion.GetPromotionGroupDeleteRes) => {
+        if (response.code == '00') {
+          this.setSuccess(true);
+        }
+        else {
+          this.setErrorMessage(response.message);
+        }
+      }
+      await network.sendMsg(route, formData, next, 1);
     },
     async dispatchPromotionGroupList() {
       this.setSuccess(false);

@@ -4,17 +4,17 @@ export interface PromotionListData {
   group_id: string,
   group_name: string,
   desc: string,
-  activity_id: string
-  image: string,
+  activity_id: number
+  image_path: string,
   campaign_text: string
   button: string
   button_text: string
   click_feedback: number,
   content: string,
   target: number,
-  on_time: string,
-  off_time: string,
-  countdown: string
+  on_time: number,
+  off_time: number,
+  countdown: boolean
   remark: string,
   status: boolean
 }
@@ -31,6 +31,12 @@ export type GetPromotionListResponse = {
   data: {
     list: Array<PromotionListData>
   }
+}
+
+export type GetPromotionDetailResponse = {
+  code: number | string
+  message: string
+  data: PromotionListData
 }
 export interface GetPromotionDeleteReq {
   id: number
